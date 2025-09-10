@@ -1,0 +1,54 @@
+﻿{
+  "Required": {
+    "en": "The field {0} is required.",
+    "ar": "حقل {0} مطلوب (لازم تكتبه)."
+  },
+  "StringLength": {
+    "en": "The field {0} must be between {1} and {2} characters.",
+    "ar": "حقل {0} لازم يكون ما بين {1} و {2} حرف."
+  },
+  "Range": {
+    "en": "The field {0} must be between {1} and {2}.",
+    "ar": "قيمة {0} لازم تكون ما بين {1} و {2}."
+  },
+  "Email": {
+    "en": "The field {0} must be a valid email address.",
+    "ar": "حقل {0} لازم يكون بريد إلكتروني صحيح."
+  },
+  "MinLength": {
+    "en": "The field {0} must be at least {1} characters long.",
+    "ar": "حقل {0} لازم يكون على الأقل {1} حرف."
+  },
+  "MaxLength": {
+    "en": "The field {0} must be no more than {1} characters long.",
+    "ar": "حقل {0} ما ينفعش يزيد عن {1} حرف."
+  },
+  "Compare": {
+    "en": "The field {0} must match {1}.",
+    "ar": "قيمة {0} لازم تطابق {1}."
+  },
+  "RegularExpression": {
+    "en": "The field {0} is not in the correct format.",
+    "ar": "قيمة {0} مش مكتوبة بالشكل الصح."
+  },
+  "Invalid": {
+    "en": "The field {0} has an invalid value.",
+    "ar": "القيمة المدخلة في {0} غير صحيحة."
+  },
+  "GreaterThan": {
+    "en": "The field {0} must be greater than {1}.",
+    "ar": "قيمة {0} لازم تكون أكبر من {1}."
+  },
+  "LessThan": {
+    "en": "The field {0} must be less than {1}.",
+    "ar": "قيمة {0} لازم تكون أقل من {1}."
+  },
+  "NotEqual": {
+    "en": "The field {0} must not be equal to {1}.",
+    "ar": "قيمة {0} ما ينفعش تبقى زي {1}."
+  },
+  "Unique": {
+    "en": "The value of {0} must be unique.",
+    "ar": "القيمة في {0} لازم تكون مميزة ومش متكررة."
+  }
+}

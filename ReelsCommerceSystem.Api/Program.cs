@@ -1,19 +1,26 @@
+using ReelsCommerceSystem.Api.Middlewares;
+using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageProvider>();
 
-builder.Services.AddControllers();
+builder.Services.AddValidationMiddleware();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+
+app.UseExceptionHandlingMiddleware();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(op=>
+    op.SwaggerEndpoint("/openapi/v1.json", "ReelsCommerceSystem"));
 }
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

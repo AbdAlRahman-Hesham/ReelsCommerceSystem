@@ -22,4 +22,10 @@
     <None Include="Repositories\BrandRepository.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ReelsCommerceSystem.Application\ReelsCommerceSystem.Application.csproj" />
+    <ProjectReference Include="..\ReelsCommerceSystem.Domain\ReelsCommerceSystem.Domain.csproj" />
+    <ProjectReference Include="..\ReelsCommerceSystem.Shared\ReelsCommerceSystem.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

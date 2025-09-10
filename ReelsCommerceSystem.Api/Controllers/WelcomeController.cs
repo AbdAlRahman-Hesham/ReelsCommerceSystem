@@ -2,7 +2,7 @@
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
-public class WelcomeController : ControllerBase
+public class WelcomeController : AppBaseController
 {
     [HttpGet]
     public IActionResult Get()

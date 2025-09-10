@@ -1,11 +1,13 @@
-﻿namespace ReelsCommerceSystem.Shared.Responses;
+﻿using System.Net;
 
-public class ApiResponse
+namespace ReelsCommerceSystem.Shared.Responses;
+
+public class ApiResponse<T> where T : class
 {
     public bool Success { get; set; }
     public int StatusCode { get; set; }
     public Message Message { get; set; }
-    public object Data { get; set; }
+    public T? Data { get; set; }
     public List<ValidationError> Errors { get; set; }
 
     public ApiResponse()
@@ -13,25 +15,25 @@ public class ApiResponse
         Errors = new List<ValidationError>();
     }
 
-    public static ApiResponse SuccessResponse(object data,
-        int statusCode = 200, string en = "Request completed successfully.", string ar = "تم تنفيذ الطلب بنجاح.")
+    public static ApiResponse<T> SuccessResponse(T data,
+        HttpStatusCode statusCode, string en = "Request completed successfully.", string ar = "تم تنفيذ الطلب بنجاح.")
     {
-        return new ApiResponse
+        return new ApiResponse<T>
         {
             Success = true,
-            StatusCode = statusCode,
+            StatusCode = (int)statusCode,
             Message = new Message { En = en, Ar = ar },
             Data = data,
             Errors = null
         };
     }
 
-    public static ApiResponse ErrorResponse(int statusCode, string en, string ar, List<ValidationError> errors = null)
+    public static ApiResponse<T> ErrorResponse(HttpStatusCode statusCode,string en, string ar, List<ValidationError> errors = null)
     {
-        return new ApiResponse
+        return new ApiResponse<T>
         {
             Success = false,
-            StatusCode = statusCode,
+            StatusCode = (int)statusCode,
             Message = new Message { En = en, Ar = ar },
             Data = null,
             Errors = errors
