@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReelsCommerceSystem.Shared.Responses;
 using System.ComponentModel.DataAnnotations;
 
 namespace ReelsCommerceSystem.Api.Controllers;
@@ -16,6 +17,17 @@ public class ErrorController : AppBaseController
 
         return Ok("");
     }
+    [HttpGet("NotFound")]
+    public IActionResult NotFound()
+    {
+        return NotFound(new ApiResponse<object>()
+        {
+            Success = false,
+            StatusCode = 404,
+            Message = new Message { En= "The requested resource was not found.", Ar = ".المورد المطلوب غير موجود" },
+            Data = null
+        });
+    }
     [HttpPost("ValidationErrorHandlingTest")]
     public IActionResult ValidationErrorHandlingTest(Test test)
     {
@@ -27,6 +39,8 @@ public class ErrorController : AppBaseController
 
 public class Test
 {
-    [Required]
+    [Required(ErrorMessage ="This field is required")]
     public int? Id { get; set; }
+    [EmailAddress(ErrorMessage = "Please Enter a valid email address")]
+    public string?  Email { get; set; }
 }

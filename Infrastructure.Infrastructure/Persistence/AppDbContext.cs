@@ -2,6 +2,6 @@
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence;
 
-internal class AppDbContext:DbContext
+public class AppDbContext:DbContext
 {
 }

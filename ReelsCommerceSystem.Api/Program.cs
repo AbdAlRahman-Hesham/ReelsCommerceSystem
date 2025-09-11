@@ -1,3 +1,4 @@
+using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
 
@@ -6,8 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageProvider>();
 
 builder.Services.AddValidationMiddleware();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
+
+builder.Services.AddApplicationCorsConfig(builder.Configuration);
 
 var app = builder.Build();
 
@@ -21,6 +24,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(op=>
     op.SwaggerEndpoint("/openapi/v1.json", "ReelsCommerceSystem"));
 }
+
+
+app.UseStatusCodePages(async context =>
+{
+    if (context.HttpContext.Response.StatusCode == 404)
+    {
+        context.HttpContext.Response.Redirect("/Api/Error/NotFound");
+    }
+});
+
+app.UseCors("AppCorsPolicy");
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

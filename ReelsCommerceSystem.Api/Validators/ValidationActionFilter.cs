@@ -27,13 +27,12 @@ public class ValidationActionFilter : IActionFilter
                 var fieldName = modelError.Key;
                 foreach (var error in modelError.Value.Errors)
                 {
-                    var errorKey = MapErrorMessageToKey(error.ErrorMessage);
 
                     errors.Add(new ValidationError
                     {
                         Field = fieldName,
                         En = error.ErrorMessage,
-                        Ar = TranslateErrorToArabic(errorKey, fieldName)
+                        Ar = TranslateErrorToArabic(error.ErrorMessage, fieldName)
                     });
                 }
 
@@ -57,18 +56,7 @@ public class ValidationActionFilter : IActionFilter
         var template = _provider.GetMessage(errorKey, "ar");
         return string.Format(template, args);
     }
-    private string MapErrorMessageToKey(string errorMessage)
-    {
-        if (errorMessage.Contains("required", StringComparison.OrdinalIgnoreCase))
-            return "Required";
-        if (errorMessage.Contains("email", StringComparison.OrdinalIgnoreCase))
-            return "Email";
-        if (errorMessage.Contains("range", StringComparison.OrdinalIgnoreCase))
-            return "Range";
-
-        return "Invalid"; // fallback
-    }
-
+  
 
 }
 
@@ -86,7 +74,7 @@ public interface IValidationMessageProvider
 
 public class JsonValidationMessageProvider : IValidationMessageProvider
 {
-    private readonly Dictionary<string, ValidationMessageEntry> _messages;
+    private readonly List<ValidationMessageEntry> _messages;
 
     public JsonValidationMessageProvider(IWebHostEnvironment env)
     {
@@ -94,28 +82,29 @@ public class JsonValidationMessageProvider : IValidationMessageProvider
         {
             var filePath = Path.Combine(env.ContentRootPath, "Resources", "ValidationMessageResource.json");
             var json = File.ReadAllText(filePath);
-            _messages = JsonSerializer.Deserialize<Dictionary<string, ValidationMessageEntry>>(json)
-                        ?? new Dictionary<string, ValidationMessageEntry>();
+            _messages = JsonSerializer.Deserialize<List<ValidationMessageEntry>>(json)
+                        ?? new List<ValidationMessageEntry>();
         }
         catch (Exception ex)
         {
-            _messages = new Dictionary<string, ValidationMessageEntry>();
+            _messages = new List<ValidationMessageEntry>();
             Console.WriteLine($"Error reading validation messages: {ex.Message}");
         }
     }
 
-    public string GetMessage(string key, string lang = "ar")
+    public string GetMessage(string enMsg, string lang = "ar")
     {
-        if (_messages.TryGetValue(key, out var entry))
-        {
-            return lang.ToLower() switch
-            {
-                "en" => entry.En,
-                "ar" => entry.Ar,
-                _ => entry.En
-            };
-        }
+        var entry = _messages.FirstOrDefault(x => x.En == enMsg);
 
-        return lang == "ar" ? "رسالة غير معروفة" : "Unknown message";
+        if (entry == null)
+            return "No Validation Message Found";
+
+        return lang.ToLower() switch
+        {
+            "en" => entry.En,
+            "ar" => entry.Ar,
+            _ => entry.En
+        };
+        
     }
 }
