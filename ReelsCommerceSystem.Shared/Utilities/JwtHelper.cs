@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace ReelsCommerceSystem.Shared.Utilities;
 
-namespace ReelsCommerceSystem.Shared.Utilities
+public class JwtHelper
 {
-    internal class JwtHelper
-    {
-    }
 }
