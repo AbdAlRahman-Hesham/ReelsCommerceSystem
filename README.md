@@ -76,26 +76,6 @@ public interface IGenericRepository<T> where T : BaseEntity
 }
 ```
 
-### 📌 Specification Pattern
-- Encapsulates query logic
-- Located in: `Infrastructure/Specifications/Common/`
-
-```csharp
-public class ProductSpec : Specification<Product>
-{
-    public ProductSpec(ProductSpecParams specParams)
-        : base(x =>
-            (string.IsNullOrEmpty(specParams.Search) || x.Name.Contains(specParams.Search))
-            && (!specParams.BrandId.HasValue || x.BrandId == specParams.BrandId))
-    {
-        AddInclude(x => x.Brand);
-        ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
-    }
-}
-```
-
----
-
 ## 📚 Using the Specification & Pagination Pattern
 
 ### 1️⃣ Create Specification Params
@@ -301,8 +281,6 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
    - Use constructor injection with `IGenericRepository<T>` or specific service
 
 ```csharp
-[ApiController]
-[Route("api/[controller]")]
 public class ProductsController : AppBaseController
 {
     private readonly IBrandService _brandService;
