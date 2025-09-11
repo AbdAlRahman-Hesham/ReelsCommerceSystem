@@ -138,15 +138,21 @@ public class ProductSpec : Specification<Product>
         AddInclude(x => x.Brand);
 
         // Sorting
-        if (!string.IsNullOrEmpty(specParams.Sort))
+        if (!string.IsNullOrEmpty(specParams.SortBy))
         {
-            switch (specParams.Sort.ToLower())
+            switch (specParams.SortBy.ToLower())
             {
-                case "priceasc":
-                    AddOrderBy(p => p.Price);
+                case "price":
+                    if (specParams.IsAscending)
+                        AddOrderBy(p => p.Price);
+                    else
+                        AddOrderByDescending(p => p.Price);
                     break;
-                case "pricedesc":
-                    AddOrderByDescending(p => p.Price);
+                case "name":
+                    if (specParams.IsAscending)
+                        AddOrderBy(p => p.Name);
+                    else
+                        AddOrderByDescending(p => p.Name);
                     break;
                 default:
                     AddOrderBy(p => p.Name);
