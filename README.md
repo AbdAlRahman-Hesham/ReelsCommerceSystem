@@ -116,7 +116,7 @@ public class ProductSpecParams
 
     public string? Search { get; set; }
     public int? BrandId { get; set; }
-    public string? Sort { get; set; }
+    public string? SortBy { get; set; }
     public bool IsAscending { get; set; } = true;
 }
 ```
