@@ -96,6 +96,179 @@ public class ProductSpec : Specification<Product>
 
 ---
 
+## 📚 Using the Specification & Pagination Pattern
+
+### 1️⃣ Create Specification Params
+Every entity that supports filtering, sorting, and pagination needs a SpecParams class.
+
+```csharp
+public class ProductSpecParams
+{
+    private const int MaxPageSize = 50;
+
+    public int PageIndex { get; set; } = 1;
+    private int _pageSize = 10;
+    public int PageSize
+    {
+        get => _pageSize;
+        set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
+    }
+
+    public string? Search { get; set; }
+    public int? BrandId { get; set; }
+    public string? Sort { get; set; }
+}
+```
+
+➡️ This defines pagination inputs, plus filters like Search, BrandId, and sorting via Sort.
+
+### 2️⃣ Inherit from Specification<T>
+Specifications wrap query logic so repositories remain generic.
+
+```csharp
+public class ProductSpec : Specification<Product>
+{
+    public ProductSpec(ProductSpecParams specParams)
+        : base(x =>
+            (string.IsNullOrEmpty(specParams.Search) || x.Name.Contains(specParams.Search)) &&
+            (!specParams.BrandId.HasValue || x.BrandId == specParams.BrandId))
+    {
+        // Eager load related Brand
+        AddInclude(x => x.Brand);
+
+        // Sorting
+        if (!string.IsNullOrEmpty(specParams.Sort))
+        {
+            switch (specParams.Sort.ToLower())
+            {
+                case "priceasc":
+                    AddOrderBy(p => p.Price);
+                    break;
+                case "pricedesc":
+                    AddOrderByDescending(p => p.Price);
+                    break;
+                default:
+                    AddOrderBy(p => p.Name);
+                    break;
+            }
+        }
+        else
+        {
+            AddOrderBy(p => p.Name);
+        }
+
+        // Pagination (convert to 0-based index)
+        ApplyPaging(specParams.PageIndex - 1, specParams.PageSize);
+    }
+}
+```
+
+🔑 Key points:
+- **Criteria** → Where filters live
+- **AddInclude** → For Include (EF eager loading)
+- **OrderBy / OrderByDescending** → Sorting
+- **ApplyPaging** → Skip/Take applied later in evaluator
+
+### 3️⃣ Repository Usage
+Since GenericRepository<T> is wired with SpecificationEvaluator<T>, you can pass a spec directly.
+
+```csharp
+var spec = new ProductSpec(specParams);
+var products = await _productRepository.GetAllWithSpecAsync(spec);
+var totalCount = spec.GetCount(_context.Products);
+```
+
+### 4️⃣ Pagination Response
+Use PaginationResponse<T> to wrap paged data consistently.
+
+```csharp
+var totalCount = await spec.GetCountAsync(_context.Products);
+var meta = new Meta
+{
+    PageNumber = specParams.PageIndex,
+    PageSize = specParams.PageSize,
+    TotalRecords = totalCount,
+    HasPreviousPage = spec.HasPreviousPage(),
+    HasNextPage = spec.HasNextPage(totalCount)
+};
+
+return PaginationResponse<ProductDto>.SuccessResponse(
+    _mapper.Map<List<ProductDto>>(products),
+    meta,
+    HttpStatusCode.OK
+);
+```
+
+✅ Always return Meta + Data.
+
+### 5️⃣ Controller Example
+```csharp
+[HttpGet]
+public async Task<IActionResult> GetProducts([FromQuery] ProductSpecParams specParams)
+{
+    var spec = new ProductSpec(specParams);
+
+    var products = await _productRepository.GetAllWithSpecAsync(spec);
+    var totalCount = await spec.GetCountAsync(_context.Products);
+
+    var meta = new Meta
+    {
+        PageNumber = specParams.PageIndex,
+        PageSize = specParams.PageSize,
+        TotalRecords = totalCount,
+        HasPreviousPage = spec.HasPreviousPage(),
+        HasNextPage = spec.HasNextPage(totalCount)
+    };
+
+    return Ok(PaginationResponse<ProductDto>.SuccessResponse(
+        _mapper.Map<List<ProductDto>>(products),
+        meta,
+        HttpStatusCode.OK
+    ));
+}
+```
+
+### 6️⃣ Inheriting GenericRepository<T>
+If you need an entity-specific repository (e.g., ProductRepository):
+
+```csharp
+public interface IProductRepository : IGenericRepository<Product>
+{
+    Task<Product?> GetProductWithBrandAsync(long id);
+}
+
+public class ProductRepository : GenericRepository<Product>, IProductRepository
+{
+    private readonly AppDbContext _context;
+
+    public ProductRepository(AppDbContext context) : base(context)
+    {
+        _context = context;
+    }
+
+    public async Task<Product?> GetProductWithBrandAsync(long id)
+    {
+        return await _context.Products
+            .Include(p => p.Brand)
+            .FirstOrDefaultAsync(p => p.Id == id);
+    }
+}
+```
+
+➡️ Use generic methods for 80% of cases, and create specific repos only when needed.
+
+---
+
+## 🏁 Summary for Team
+
+1. **Step 1**: Create `{Entity}SpecParams` for filtering/pagination
+2. **Step 2**: Create `{Entity}Spec` inheriting `Specification<T>`
+3. **Step 3**: Use in repository (`GetAllWithSpecAsync`)
+4. **Step 4**: Return `PaginationResponse<T>` with Meta info
+5. **Step 5**: Inherit `GenericRepository<T>` only for custom queries
+
+---
+
 ## 🏗️ Workflow – From Entity to Controller
 
 1. **Create a new Entity**
@@ -200,59 +373,10 @@ public class ProductsController : AppBaseController
   "errors": null
 }
 ```
-```json
-{
-  "success": false,
-  "statusCode": 400,
-  "message": {
-    "en": "Validation failed",
-    "ar": "No Validation Message Found"
-  },
-  "data": null,
-  "errors": [
-    {
-      "field": "Email",
-      "en": "Please Enter a valid email address",
-      "ar": "يرجى إدخال عنوان بريد إلكتروني صحيح"
-    }
-  ]
-}
-```
-```json
-{
-  "success": false,
-  "statusCode": 500,
-  "message": {
-    "en": "Attempted to divide by zero.",
-    "ar": "حدث خطأ أثناء التطوير"
-  },
-  "data": {
-    "exceptionType": "DivideByZeroException",
-    "message": "Attempted to divide by zero.",
-    "stackTrace": "   at ReelsCommerceSystem.Api.Controllers.ErrorController.ExceptionHandlingTest() in D:\\Graduation Project\\BackEnd\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\Controllers\\ErrorController.cs:line 14\r\n   at lambda_method14(Closure, Object, Object[])\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.Invoke(HttpContext context)\r\n   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at ReelsCommerceSystem.Api.Middlewares.ExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in D:\\Graduation Project\\BackEnd\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\Middlewares\\ExceptionHandlingMiddleware.cs:line 27",
-    "innerException": null,
-    "innerExceptionStackTrace": null,
-    "source": "ReelsCommerceSystem.Api",
-    "helpLink": null,
-    "data": null
-  },
-  "errors": null
-}
-```
-```json
-{
-  "success": false,
-  "statusCode": 500,
-  "message": {
-    "en": "An internal server error occurred. Please try again later.",
-    "ar": "حدث خطأ داخلي في الخادم. يرجى المحاولة مرة أخرى لاحقاً."
-  },
-  "data": null,
-  "errors": null
-}
-```
+
 ✅ **Supported codes**: 200, 201, 204, 400, 401, 403, 404, 500
 
+📖 See detailed examples in `Shared/Responses/ApiResponse.cs`
 
 ---
 
@@ -264,3 +388,4 @@ public class ProductsController : AppBaseController
 - Follow GitHub branching & commit rules
 - API must return standardized JSON responses
 
+---
