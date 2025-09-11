@@ -27,7 +27,8 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DevelperName": "AbdAlRahman"
+        "DevelperName": "AbdAlRahman" 
+
       }
     }
   },
