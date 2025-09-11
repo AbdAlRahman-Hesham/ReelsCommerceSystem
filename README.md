@@ -200,10 +200,59 @@ public class ProductsController : AppBaseController
   "errors": null
 }
 ```
-
+```json
+{
+  "success": false,
+  "statusCode": 400,
+  "message": {
+    "en": "Validation failed",
+    "ar": "No Validation Message Found"
+  },
+  "data": null,
+  "errors": [
+    {
+      "field": "Email",
+      "en": "Please Enter a valid email address",
+      "ar": "يرجى إدخال عنوان بريد إلكتروني صحيح"
+    }
+  ]
+}
+```
+```json
+{
+  "success": false,
+  "statusCode": 500,
+  "message": {
+    "en": "Attempted to divide by zero.",
+    "ar": "حدث خطأ أثناء التطوير"
+  },
+  "data": {
+    "exceptionType": "DivideByZeroException",
+    "message": "Attempted to divide by zero.",
+    "stackTrace": "   at ReelsCommerceSystem.Api.Controllers.ErrorController.ExceptionHandlingTest() in D:\\Graduation Project\\BackEnd\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\Controllers\\ErrorController.cs:line 14\r\n   at lambda_method14(Closure, Object, Object[])\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()\r\n--- End of stack trace from previous location ---\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)\r\n   at Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.Invoke(HttpContext context)\r\n   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)\r\n   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)\r\n   at ReelsCommerceSystem.Api.Middlewares.ExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in D:\\Graduation Project\\BackEnd\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\Middlewares\\ExceptionHandlingMiddleware.cs:line 27",
+    "innerException": null,
+    "innerExceptionStackTrace": null,
+    "source": "ReelsCommerceSystem.Api",
+    "helpLink": null,
+    "data": null
+  },
+  "errors": null
+}
+```
+```json
+{
+  "success": false,
+  "statusCode": 500,
+  "message": {
+    "en": "An internal server error occurred. Please try again later.",
+    "ar": "حدث خطأ داخلي في الخادم. يرجى المحاولة مرة أخرى لاحقاً."
+  },
+  "data": null,
+  "errors": null
+}
+```
 ✅ **Supported codes**: 200, 201, 204, 400, 401, 403, 404, 500
 
-📖 See detailed examples in `Shared/Responses/ApiResponse.cs`
 
 ---
 
@@ -215,8 +264,3 @@ public class ProductsController : AppBaseController
 - Follow GitHub branching & commit rules
 - API must return standardized JSON responses
 
----
-
-
-*Last Updated: {Current Date}*  
-*Maintained by: Development Team*
