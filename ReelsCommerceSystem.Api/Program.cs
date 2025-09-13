@@ -12,7 +12,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddApplicationCorsConfig(builder.Configuration);
 
-builder.Services.AddApplicationDBConfig(builder.Configuration);
+//builder.Services.AddApplicationDBConfig(builder.Configuration);
     
 builder.Services.AddRepositoriesAndServices();
 
