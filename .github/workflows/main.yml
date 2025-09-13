@@ -1,5 +1,9 @@
 name: Build, publish and deploy to MonsterASP.NET
-on: [push]
+
+on:
+  push:
+    branches:
+      - staging   # ✅ only runs when you push to staging branch
 
 jobs:
   build_and_deploy:
@@ -15,6 +19,12 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
         
+      - name: Replace DeveloperName with OnlineDB in launchSettings.json
+        run: |
+          echo "🔧 Updating launchSettings.json..."
+          (Get-Content ./Properties/launchSettings.json) `
+            -replace '"DeveloperName"', '"OnlineDB"' | Set-Content ./Properties/launchSettings.json
+
       - name: Build
         run: dotnet build --configuration Release --no-restore
 
