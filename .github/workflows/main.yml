@@ -49,7 +49,7 @@ jobs:
       - name: Publish
         run: dotnet publish --configuration Release --output ./publish --runtime win-x86
 
-      - name: Deploy to MonsterASP.NET via WebDeploy
+      - name: Deploy to  MonsterASP.NET via WebDeploy
         uses: rasmusbuchholdt/simply-web-deploy@2.1.0
         with:
           website-name: site36480
