@@ -8,7 +8,7 @@ public static class AddApplicationDatabaseConfig
 {
     public static IServiceCollection AddApplicationDBConfig(this IServiceCollection services, IConfiguration configuration)
     {
-        var devName = Environment.GetEnvironmentVariable("DevelperName");
+        var devName = Environment.GetEnvironmentVariable("DeveloperName");
         var connString = configuration.GetConnectionString(devName!);
 
         // Add a separator line
@@ -25,7 +25,7 @@ public static class AddApplicationDatabaseConfig
         services.AddDbContext<AppDbContext>(options =>
         {
             options.UseSqlServer(connString);
-            options.UseLazyLoadingProxies(); // enable lazy loading
+            //options.UseLazyLoadingProxies(); // enable lazy loading
         });
 
         // Add Identity and configure EF store

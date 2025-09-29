@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace ReelsCommerceSystem.Domain.Enums
 {
-   public enum OrderStatus
+    public enum PaymentStatus
     {
         Pending,
-        Processing,
-        Shipped,
-        Deliverd,
-        Cancelled
+        Paid,
+        Failed,
+        Refunded
 
     }
 }
