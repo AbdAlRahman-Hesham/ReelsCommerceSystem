@@ -6,6 +6,6 @@ public static class WelcomeEndpoint
 {
     public static void MapWelcomeEndpoint(this WebApplication app)
     {
-        app.MapGet("/welcome", () => "Welcome! It will be a good project 🙌🥰🥰🥰🥰");
+        app.MapGet("/welcome1", () => "Welcome! It will be a good project 🙌🥰🥰🥰🥰");
     }
 }
