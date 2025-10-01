@@ -16,12 +16,12 @@ public static class AppMiddlewareExtentions
         }
 
 
-        /*// Auto apply migrations on startup
+        // Auto apply migrations on startup
         using (var scope = app.Services.CreateScope())
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             dbContext.Database.Migrate();
-        }*/
+        }
 
         
 
