@@ -6,9 +6,9 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 
 public static class AddApplicationDatabaseConfig
 {
-    public static IServiceCollection AddApplicationDBConfig(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApplicationDBConfig(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
-        var devName = Environment.GetEnvironmentVariable("DeveloperName");
+        var devName =env.IsDevelopment()? Environment.GetEnvironmentVariable("DeveloperName"):"OnlineDB";
         var connString = configuration.GetConnectionString(devName!);
 
         // Add a separator line
