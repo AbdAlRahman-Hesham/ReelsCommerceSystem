@@ -238,18 +238,20 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                 name: "UserInterests",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    Interests = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Interests = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserInterests", x => new { x.UserId, x.Interests });
+                    table.PrimaryKey("PK_UserInterests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserInterests_Users_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_UserInterests_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -554,9 +556,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserInterests_UserId1",
+                name: "IX_UserInterests_UserId",
                 table: "UserInterests",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserLogins_UserId",
