@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities.AiChatsEntities;
 using ReelsCommerceSystem.Domain.Entities.CartEntities;
@@ -15,15 +11,11 @@ using ReelsCommerceSystem.Domain.Enums;
 
 namespace ReelsCommerceSystem.Domain.Entities.UserEntities
 {
-    public class User:BaseEntity
+    public class User:IdentityUser
     {
-        public string Name { get; set; } = null!;
-        public string Email { get; set; } = null!;
         public string Address { get; set; } = null!;
-        public string PhoneNumber { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Role Role { get; set; } 
-        public string PasswordHash { get; set; } = null!;
         public ICollection<UserOrder> UserOrders { get; set; } = new List<UserOrder>();
         public ICollection<Cart> Carts { get; set; } = new List<Cart>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
