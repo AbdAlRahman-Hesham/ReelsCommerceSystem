@@ -7,4 +7,3 @@ namespace ReelsCommerceSystem.Api.Controllers;
 public class AppBaseController : ControllerBase
 {
 }
-
