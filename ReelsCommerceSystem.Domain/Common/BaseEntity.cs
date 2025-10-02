@@ -1,6 +1,9 @@
-﻿namespace ReelsCommerceSystem.Domain.Common;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ReelsCommerceSystem.Domain.Common;
 
 public class BaseEntity
 {
+    [Key]
     public int Id { get; set; }
 }

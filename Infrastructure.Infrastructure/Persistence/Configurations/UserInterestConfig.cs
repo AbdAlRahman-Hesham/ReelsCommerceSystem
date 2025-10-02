@@ -13,7 +13,6 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<UserInterest> builder)
         {
-            builder.HasKey(ui => new { ui.UserId, ui.Interests });
 
             builder.Property(ui => ui.Interests)
                    .IsRequired()
