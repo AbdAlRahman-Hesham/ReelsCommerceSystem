@@ -1,9 +1,10 @@
 ﻿using ReelsCommerceSystem.Application.Interfaces.Repositories;
+using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Infrastructure.Repositories;
 using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 
-namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions;
+namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
 {
     public static class RegisterRepositoriesAndServicesExtention
     {
