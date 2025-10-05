@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using ReelsCommerceSystem.Infrastructure.Persistence;
 
 namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 
 public static class AddApplicationCors
 {
+
     public static IServiceCollection AddApplicationCorsConfig(this IServiceCollection services, IConfiguration configuration)
     {
         // read from appsettings.json
@@ -32,4 +35,9 @@ public static class AddApplicationCors
         return services;
     }
 }
+
+
+
+
+
 
