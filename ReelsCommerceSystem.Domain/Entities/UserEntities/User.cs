@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Net.Sockets;
+using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities.AiChatsEntities;
 using ReelsCommerceSystem.Domain.Entities.CartEntities;
@@ -13,7 +14,8 @@ namespace ReelsCommerceSystem.Domain.Entities.UserEntities
 {
     public class User:IdentityUser
     {
-        public string Address { get; set; } = null!;
+        public string DisplayName { get; set; } = default!;
+        public Address? Address { get; set; } = null!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Role Role { get; set; } 
         public ICollection<UserOrder> UserOrders { get; set; } = new List<UserOrder>();

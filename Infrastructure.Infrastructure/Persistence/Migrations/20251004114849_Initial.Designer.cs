@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace ReelsCommerceSystem.Infrastructure.Migrations
+namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251004114849_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -499,6 +502,46 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Addresses", (string)null);
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -507,16 +550,16 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -814,6 +857,17 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.Address", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "user")
+                        .WithOne("Address")
+                        .HasForeignKey("ReelsCommerceSystem.Domain.Entities.UserEntities.Address", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserInterestEntities.UserInterest", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
@@ -878,6 +932,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("AiChats");
 
                     b.Navigation("Carts");

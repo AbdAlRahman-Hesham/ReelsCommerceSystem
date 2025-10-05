@@ -3,7 +3,7 @@ using ReelsCommerceSystem.Infrastructure.Repositories;
 using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 
-namespace ReelsCommerceSystem.Infrastructure.Extensions
+namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 {
     public static class RegisterRepositoriesAndServicesExtention
     {
