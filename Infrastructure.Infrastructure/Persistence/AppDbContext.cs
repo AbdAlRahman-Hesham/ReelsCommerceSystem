@@ -30,6 +30,10 @@ public class AppDbContext :IdentityDbContext<User>
         {
             b.ToTable("Roles");
         });
+        modelBuilder.Entity<User>(b =>
+        { b.ToTable("Users"); });
+        modelBuilder.Entity<Address>(b =>
+        { b.ToTable("Addresses"); });
         modelBuilder.Entity<IdentityUserRole<string>>(b =>
         {
             b.ToTable("UserRoles");
