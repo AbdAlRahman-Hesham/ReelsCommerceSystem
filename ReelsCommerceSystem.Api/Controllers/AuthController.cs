@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.Identity;
-using ReelsCommerceSystem.Shared.Responses;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Shared.Responses;
 using MyAuthService = ReelsCommerceSystem.Application.Interfaces.Services.IAuthenticationService;
 
 
@@ -23,19 +25,22 @@ public class AuthController:AppBaseController
     public async Task<ActionResult<LoginResDto>> Login([FromBody] LoginReqDto loginReq)
     {
         var User = await _authenticationService.LoginAsync(loginReq);
-        return Ok(User);
+        var response = ApiResponse<LoginResDto>.SuccessResponse(User, HttpStatusCode.OK);
+        return Ok(response);
     }
     [HttpPost("Register")]
     public async Task<ActionResult<RegisterResDto>> Register([FromBody] RegisterReqDto registerReqDto)
     {
         var User = await _authenticationService.RegisterAsync(registerReqDto);
-        return Ok(User);
+        var response = ApiResponse<RegisterResDto>.SuccessResponse(User, HttpStatusCode.OK);
+        return Ok(response);
     }
 
     [HttpGet("CheckEmail")]
     public async Task<ActionResult<bool>> CheckEmail(string Email)
     {
         var Result = await _authenticationService.CheckEmailAsync(Email);
-        return Ok(Result);
+        var response = ApiResponse<bool>.SuccessResponse(Result, HttpStatusCode.OK);
+        return Ok(response);
     }
 }
