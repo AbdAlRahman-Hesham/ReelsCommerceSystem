@@ -1,6 +1,8 @@
 using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
+using ReelsCommerceSystem.Infrastructure.Extensions;
+using ReelsCommerceSystem.Shared.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ builder.Services.AddApplicationCorsConfig(builder.Configuration);
 builder.Services.AddApplicationDBConfig(builder.Configuration, builder.Environment);
     
 builder.Services.AddRepositoriesAndServices();
+
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
 
 
 var app = builder.Build();

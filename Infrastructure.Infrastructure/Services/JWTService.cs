@@ -2,7 +2,7 @@
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
-public class JwtService : IJWTService
+public class JwtService : IJwtService
 {
     public string GenerateToken(string userId, string email)
     {
