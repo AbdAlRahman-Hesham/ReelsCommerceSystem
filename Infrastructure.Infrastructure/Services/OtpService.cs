@@ -24,15 +24,15 @@ public class OtpService : IOtpService
 
     public string GenerateOtp(string email)
     {
-        // Generate a cryptographically secure 6-digit OTP
+        // Generate a cryptographically secure 5-digit OTP (00000–99999)
         using var rng = RandomNumberGenerator.Create();
         var bytes = new byte[4];
         rng.GetBytes(bytes);
         var randomNumber = BitConverter.ToUInt32(bytes, 0);
-        var otp = (randomNumber % 1000000).ToString("D5");
-
+        var otp = (randomNumber % 100000).ToString("D5"); // ensure exactly 5 digits
         return otp;
     }
+
 
     public async Task SendOtpAsync(string email)
     {
