@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReelsCommerceSystem.Application.DTOs.Request.OTP;
+using ReelsCommerceSystem.Application.DTOs.Response.OTP;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Responses;
 using System.Net;
@@ -58,11 +60,11 @@ public class OtpController:AppBaseController
 
 
     [HttpPost("VerifyOtp")]
-    public async Task<ActionResult<ApiResponse<string>>> VerifyOtp([FromBody] VerifyOtpRequest model)
+    public async Task<ActionResult<ApiResponse<VerifyOtpRes>>> VerifyOtp([FromBody] VerifyOtpReq model)
     {
-        var isValid = await _otpService.ValidateOtp(model.Email, model.Otp);
+        var token = await _otpService.ValidateOtp(model.Email, model.Otp);
 
-        if (!isValid)
+        if (token == null)
         {
             var response = ApiResponse<string>.ErrorResponse(
                 HttpStatusCode.BadRequest,
@@ -72,19 +74,11 @@ public class OtpController:AppBaseController
             return BadRequest(response);
         }
 
-        var successResponse = ApiResponse<string>.SuccessResponse(
-            "OTP verified successfully.",
+        var successResponse = ApiResponse<VerifyOtpRes>.SuccessResponse(
+            new VerifyOtpRes() { Token = token, ExpiresAt = DateTime.UtcNow.AddMonths(1) },
             HttpStatusCode.OK
         );
 
         return Ok(successResponse);
     }
 }
-
-public class VerifyOtpRequest
-{
-    public string Email { get; set; } = string.Empty;
-    public string Otp { get; set; } = string.Empty;
-}
-
-
