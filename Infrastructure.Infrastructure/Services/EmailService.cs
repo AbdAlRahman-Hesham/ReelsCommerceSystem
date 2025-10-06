@@ -9,78 +9,62 @@ namespace ReelsCommerceSystem.Infrastructure.Services;
 
 public class EmailService(IOptions<EmailSettings> options) : IEmailService
 {
-    private EmailSettings _options = options.Value;
+        private EmailSettings _options = options.Value;
 
-        public bool SendOTPEmail(string toEmail, string otp)
+    public bool SendOTPEmail(string toEmail, string otp)
+    {
+        return SendOtpEmailTemplate(
+            toEmail,
+            otp,
+            subject: "Your OTP Verification Code",
+            headerTitle: "Email Verification",
+            bodyMessage: "Thank you for registering with <strong>ALLUVO</strong>. To complete your registration, please use the following One-Time Password (OTP):",
+            warningMessage: "⚠️ If you didn’t request this code, please ignore this email or contact our support team."
+        );
+    }
+
+    public bool SendOTPEmailResetPassword(string toEmail, string otp)
+    {
+        return SendOtpEmailTemplate(
+            toEmail,
+            otp,
+            subject: "Password Reset OTP",
+            headerTitle: "Password Reset",
+            bodyMessage: "We received a request to reset your password for your <strong>ALLUVO</strong> account. Use the following One-Time Password (OTP) to proceed:",
+            warningMessage: "⚠️ If you didn’t request a password reset, please ignore this email or contact our support team."
+        );
+    }
+
+    private bool SendOtpEmailTemplate(string toEmail, string otp, string subject, string headerTitle, string bodyMessage, string warningMessage)
+    {
+        try
         {
-            try
-            {
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(_options.UserName, _options.Email));
-                message.To.Add(new MailboxAddress(toEmail, toEmail));
-                message.Subject = "Your OTP Verification Code";
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_options.UserName, _options.Email));
+            message.To.Add(new MailboxAddress(toEmail, toEmail));
+            message.Subject = subject;
 
-                // Create HTML email body
-                var htmlBody = $@"
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <style>
-                            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-                            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
-                            .header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }}
-                            .content {{ background-color: #f9f9f9; padding: 30px; border-radius: 0 0 5px 5px; }}
-                            .otp-code {{ font-size: 32px; font-weight: bold; color: #4CAF50; text-align: center; letter-spacing: 5px; margin: 20px 0; padding: 15px; background-color: #fff; border: 2px dashed #4CAF50; border-radius: 5px; }}
-                            .footer {{ text-align: center; margin-top: 20px; color: #666; font-size: 12px; }}
-                            .warning {{ color: #d32f2f; margin-top: 15px; }}
-                        </style>
-                    </head>
-                    <body>
-                        <div class='container'>
-                            <div class='header'>
-                                <h1>Email Verification</h1>
-                            </div>
-                            <div class='content'>
-                                <h2>Hello!</h2>
-                                <p>Thank you for registering with Reels Commerce System. To complete your registration, please use the following One-Time Password (OTP):</p>
-            
-                                <div class='otp-code'>{otp}</div>
-            
-                                <p>This OTP is valid for <strong>10 minutes</strong>. Please do not share this code with anyone.</p>
-            
-                                <p class='warning'>⚠️ If you didn't request this code, please ignore this email or contact our support team.</p>
-            
-                                <p>Best regards,<br>Reels Commerce System Team</p>
-                            </div>
-                            <div class='footer'>
-                                <p>This is an automated message, please do not reply to this email.</p>
-                            </div>
-                        </div>
-                    </body>
-                    </html>";
+            var htmlBody = $@"<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>{headerTitle}</title><style>body{{font-family:Arial,sans-serif;line-height:1.6;color:#333333;margin:0;padding:0;background-color:#f2f2f7}}.container{{max-width:600px;margin:40px auto;background-color:#ffffff;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.08);overflow:hidden}}.header{{background-color:#1b2351;background-image:linear-gradient(to right,#1b2351,#47c0d2);color:#ffffff;padding:25px 20px;text-align:center}}.header h1{{margin:0;font-size:24px;letter-spacing:1px}}.content{{padding:30px 25px;background-color:#fdfdfd}}.content h2{{color:#1b2351;margin-top:0}}.content p{{font-size:15px;margin-bottom:16px}}.otp-code{{font-size:36px;font-weight:bold;text-align:center;letter-spacing:8px;margin:25px 0;padding:18px;border:2px dashed #47c0d2;border-radius:8px;background-color:#f0faff;color:#1b2351}}.warning{{color:#F59E0B;background-color:#FEF3C7;padding:16px;border-radius:8px;font-weight:600;font-size:15px}}.footer{{background-color:#f8f8f8;text-align:center;padding:15px;font-size:12px;color:#888888;border-top:1px solid #e0e0e0}}</style></head><body><div class='container'><div class='header'><h1>{headerTitle}</h1></div><div class='content'><h2>Hello!</h2><p>{bodyMessage}</p><div class='otp-code'>{otp}</div><p>This OTP is valid for <strong>10 minutes</strong>. Please do not share this code with anyone.</p><div class='warning'>{warningMessage}</div><p style='margin-top:25px;'>Best regards,<br/><strong>ALLUVO Team</strong></p></div><div class='footer'><p>This is an automated message. Please do not reply to this email.</p></div></div></body></html>";
 
-                message.Body = new TextPart("html")
-                {
-                    Text = htmlBody
-                };
 
-                using (var client = new SmtpClient())
-                {
-                    client.Connect(_options.Server, _options.Port, false);
-                    client.Authenticate(_options.Email, _options.Password);
-                    client.Send(message);
-                    client.Disconnect(true);
-                }
+            message.Body = new TextPart("html") { Text = htmlBody };
 
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            using var client = new SmtpClient();
+            client.Connect(_options.Server, _options.Port, false);
+            client.Authenticate(_options.Email, _options.Password);
+            client.Send(message);
+            client.Disconnect(true);
+
+            return true;
         }
+        catch
+        {
+            return false;
+        }
+    }
 
-        public async void SendAsync(Email email)
+
+    public async void SendAsync(Email email)
     {
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(_options.UserName, _options.Email));
