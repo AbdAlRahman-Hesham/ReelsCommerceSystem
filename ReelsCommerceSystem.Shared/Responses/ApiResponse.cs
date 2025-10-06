@@ -35,7 +35,7 @@ public class ApiResponse<T>
             Success = false,
             StatusCode = (int)statusCode,
             Message = new Message { En = en, Ar = ar },
-            Data = null,
+            Data = default,
             Errors = errors
         };
     }

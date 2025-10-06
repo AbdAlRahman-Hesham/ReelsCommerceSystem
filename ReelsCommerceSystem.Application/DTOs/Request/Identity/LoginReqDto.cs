@@ -9,11 +9,11 @@ namespace ReelsCommerceSystem.Application.DTOs.Request.Identity
 {
     public class LoginReqDto
     {
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Please Enter a valid email address")]
         [Required]
         public string Email { get; set; } = default!;
         [Required]
-        [MinLength(6)]
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
         public string Password { get; set; } = default!;
     }
 }

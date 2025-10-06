@@ -1,6 +1,8 @@
-﻿namespace ReelsCommerceSystem.Application.Interfaces.Services;
+﻿using ReelsCommerceSystem.Domain.Entities.UserEntities;
+
+namespace ReelsCommerceSystem.Application.Interfaces.Services;
 
 public interface IJwtService
 {
-    public string GenerateToken(string userId, string email);
+    Task<string> CreateTokenAsync(User user);    
 }

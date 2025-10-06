@@ -34,4 +34,6 @@ app.MapControllers();
 
 app.AddAppMiddleware();
 
+app.UseStaticFiles();
+
 app.Run();

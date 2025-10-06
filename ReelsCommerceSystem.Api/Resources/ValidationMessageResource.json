@@ -98,5 +98,34 @@
   {
     "En": "Verification code has expired",
     "Ar": "رمز التحقق منتهي الصلاحية"
+  },
+  {
+    "En": "The Email field is required.",
+    "Ar": "البريد الإلكتروني مطلوب."
+  },
+  {
+    "En": "The Last Name field is required.",
+    "Ar": "الاسم الأخير مطلوب."
+  },
+  {
+    "En": "The First Name field is required.",
+    "Ar": "الاسم الأول مطلوب."
+  },
+  {
+    "En": "The Password field is required.",
+    "Ar": "كلمة المرور مطلوب."
+  },
+  {
+    "En": "The Phone Number field is required.",
+    "Ar": "رقم الهاتف مطلوب."
+  },
+  {
+    "En": "Invalid phone number format.",
+    "Ar": "رقم الهاتف غير صحيح."
+  },
+  {
+    "En": "Password must be at least 6 characters.",
+    "Ar": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل."
   }
+
 ]

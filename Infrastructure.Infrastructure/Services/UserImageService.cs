@@ -1,49 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using ReelsCommerceSystem.Application.Interfaces.Services;
-using Microsoft.Extensions.Hosting;
 
 
-namespace ReelsCommerceSystem.Infrastructure.Services
+namespace ReelsCommerceSystem.Infrastructure.Services;
+
+public class UserImageService(string _webRootPath) : IUserImageService
 {
-    public class UserImageService : IUserImageService
+    
+
+    public async Task<string> SaveUserImageAsync(IFormFile file)
     {
-        private readonly string _webRootPath;
+        if (file == null || file.Length == 0)
+            return null;
 
-        public UserImageService(string webRootPath)
+        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+        var relativePath = Path.Combine("images", "users", fileName);
+        var fullPath = Path.Combine(_webRootPath, relativePath);
+
+        var directory = Path.GetDirectoryName(fullPath);
+        if (!Directory.Exists(directory))
         {
-            _webRootPath = webRootPath;
+            Directory.CreateDirectory(directory);
         }
 
-        public async Task<string> SaveUserImageAsync(IFormFile file)
+        using (var stream = new FileStream(fullPath, FileMode.Create))
         {
-            if (file == null || file.Length == 0)
-                return null;
-
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            var relativePath = Path.Combine("images", "users", fileName);
-            var fullPath = Path.Combine(_webRootPath, relativePath);
-
-            var directory = Path.GetDirectoryName(fullPath);
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            using (var stream = new FileStream(fullPath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            return relativePath.Replace("\\", "/");
+            await file.CopyToAsync(stream);
         }
+
+        return relativePath.Replace("\\", "/");
     }
-
-
-
 }
 

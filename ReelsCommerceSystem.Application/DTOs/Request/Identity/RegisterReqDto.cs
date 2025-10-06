@@ -10,21 +10,21 @@ namespace ReelsCommerceSystem.Application.DTOs.Request.Identity
 {
     public class RegisterReqDto
     {
-        [Required]
+        [Required(ErrorMessage = "The First Name field is required.")]
         public string FirstName { get; set; } = default!;
-        [Required]
+        [Required(ErrorMessage = "The Last Name field is required.")]
         public string LastName { get; set; } = default!;
         [Required]
         [EmailAddress]
         public string Email { get; set; } = default!;
-        [Required]
-        [RegularExpression(@"^\+20(10|11|12|15)\d{8}$")]
+        [Required(ErrorMessage = "The Phone Number field is required.")]
+        [RegularExpression(@"^\+20(10|11|12|15)\d{8}$",ErrorMessage ="Invalid phone number format.")]
         public string PhoneNumber { get; set; } = default!;
         [Required]
         [MinLength(6)]
         public string Password { get; set; } = default!;
         public DateTime? DateOfBirth { get; set; }
-        [RegularExpression("^(Male|Female|Other)$")]
+        [RegularExpression("^(Male|Female)$")]
         public string? Gender { get; set; }
         public IFormFile? ProfileImage { get; set; }
 

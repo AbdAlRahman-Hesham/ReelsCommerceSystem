@@ -2,7 +2,8 @@
 
 public interface IOtpService
 {
-    public bool ValidateOtp(string email, string otp);
+    public Task<bool> ValidateOtp(string email, string otp);
     public string GenerateOtp(string email);
-    public string ResendOtp(string email);
+    public Task<bool> ResendOtp(string email);
+    public Task SendOtpAsync(string email);
 }
