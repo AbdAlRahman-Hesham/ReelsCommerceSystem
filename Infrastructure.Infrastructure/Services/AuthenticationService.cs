@@ -23,7 +23,7 @@ public class AuthenticationService(UserManager<User> _userManager,
             return new LoginResDto
             {
                 Token =await _jwtService.CreateTokenAsync(User),
-                ExpiresAt = DateTime.UtcNow.AddHours(1)
+                ExpiresAt = DateTime.UtcNow.AddMonths(1)
 
 
             };
