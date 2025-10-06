@@ -1,6 +1,7 @@
-﻿using ReelsCommerceSystem.Shared.Responses;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
+using ReelsCommerceSystem.Shared.Exceptions;
+using ReelsCommerceSystem.Shared.Responses;
 
 namespace ReelsCommerceSystem.Api.Middlewares;
 
@@ -40,16 +41,46 @@ public class ExceptionHandlingMiddleware
 
         ApiResponse<object> response;
 
-        if (_environment.IsDevelopment())
+
+        switch (exception)
         {
-            // Development mode - show detailed error information
-            response = CreateDevelopmentErrorResponse(exception);
+            case UserNotFoundException notFoundEx:
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                response = ApiResponse<object>.ErrorResponse(
+                    HttpStatusCode.NotFound,
+                    notFoundEx.Message,
+                    "المستخدم غير موجود"
+                );
+                break;
+
+            case UnauthorizedException unauthorizedEx:
+                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                response = ApiResponse<object>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    unauthorizedEx.Message,
+                    "غير مصرح بالدخول"
+                );
+                break;
+
+            case BadRequestException badReqEx:
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                response = ApiResponse<object>.ErrorResponse(
+                    HttpStatusCode.BadRequest,
+                    badReqEx.Message,
+                    "طلب غير صحيح",
+                    badReqEx.Errors
+                ); 
+                break;
+
+
+            default:
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                response = _environment.IsDevelopment()
+                    ? CreateDevelopmentErrorResponse(exception)
+                    : CreateProductionErrorResponse();
+                break;
         }
-        else
-        {
-            // Production mode - show generic error message
-            response = CreateProductionErrorResponse();
-        }
+
 
         var jsonOptions = new JsonSerializerOptions
         {

@@ -1,0 +1,91 @@
+﻿using Microsoft.AspNetCore.Identity;
+using ReelsCommerceSystem.Application.DTOs.Request.Identity;
+using ReelsCommerceSystem.Application.DTOs.Response.Identity;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Shared.Exceptions;
+using ReelsCommerceSystem.Shared.Responses;
+
+namespace ReelsCommerceSystem.Infrastructure.Services;
+
+public class AuthenticationService(UserManager<User> _userManager, 
+    IJwtService _jwtService, IOtpService _otpService, IUserImageService _userImageService) : IAuthenticationService
+{
+
+
+    public async Task<LoginResDto> LoginAsync(LoginReqDto loginReqDto)
+    {
+        var User = await _userManager.FindByEmailAsync(loginReqDto.Email) ?? throw new UserNotFoundException(loginReqDto.Email);
+
+        var IsPasswordValid = await _userManager.CheckPasswordAsync(User, loginReqDto.Password);
+        if (IsPasswordValid)
+        {
+            return new LoginResDto
+            {
+                Token =await _jwtService.CreateTokenAsync(User),
+                ExpiresAt = DateTime.UtcNow.AddHours(1)
+
+
+            };
+        }
+        else throw new UnauthorizedException();
+
+
+    }
+    public async Task<RegisterResDto> RegisterAsync(RegisterReqDto registerReqDto)
+    {
+        if (await CheckEmailAsync(registerReqDto.Email))
+        {
+            var errors = new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Email",
+                    En = "Email is already in use.",
+                    Ar = "البريد الإلكتروني مستخدم بالفعل."
+                }
+            };
+            throw new BadRequestException(errors);
+        }
+
+        string? imagePath = null;
+        if (registerReqDto.ProfileImage != null)
+        {
+            imagePath = await _userImageService.SaveUserImageAsync(registerReqDto.ProfileImage);
+        }
+
+        var user = new User
+        {
+            DisplayName = $"{registerReqDto.FirstName} {registerReqDto.LastName}",
+            Email = registerReqDto.Email,
+            PhoneNumber = registerReqDto.PhoneNumber,
+            UserName = registerReqDto.Email,
+            ImageURL = imagePath?? string.Empty
+        };
+
+        var result = await _userManager.CreateAsync(user, registerReqDto.Password);
+
+        if (result.Succeeded)
+        {
+            await _otpService.SendOtpAsync(user.Email!);
+
+            return new RegisterResDto();
+        }
+        else
+        {
+            var errors = result.Errors.Select(e => new ValidationError
+            {
+                Field = e.Code,
+                En = e.Description,
+                Ar = "خطأ في الإدخال"
+            }).ToList();
+
+            throw new BadRequestException(errors);
+        }
+    }
+    public async Task<bool> CheckEmailAsync(string Email)
+    {
+        var User = await _userManager.FindByEmailAsync(Email);
+        return User is not null;
+    }
+}

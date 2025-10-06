@@ -2,7 +2,7 @@
 
 namespace ReelsCommerceSystem.Shared.Responses;
 
-public class ApiResponse<T> where T : class
+public class ApiResponse<T> 
 {
     public bool Success { get; set; }
     public int StatusCode { get; set; }
@@ -35,7 +35,7 @@ public class ApiResponse<T> where T : class
             Success = false,
             StatusCode = (int)statusCode,
             Message = new Message { En = en, Ar = ar },
-            Data = null,
+            Data = default,
             Errors = errors
         };
     }

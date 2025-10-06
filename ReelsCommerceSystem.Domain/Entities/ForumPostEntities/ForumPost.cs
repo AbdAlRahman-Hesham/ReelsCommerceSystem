@@ -14,7 +14,7 @@ namespace ReelsCommerceSystem.Domain.Entities.ForumPostEntities
         public string Title { get; set; } = null!;
         public string Content { get; set; } = null!;
         public DateTime PostDate { get; set; } = DateTime.UtcNow;
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; } = null!;
         public int BrandId { get; set; }
         public Brand Brand { get; set; } = null!;
