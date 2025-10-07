@@ -20,6 +20,8 @@ builder.Services.AddRepositoriesAndServices();
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
+builder.Services.AddHttpClient();
+
 
 var app = builder.Build();
 
