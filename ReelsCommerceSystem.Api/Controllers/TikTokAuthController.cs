@@ -5,262 +5,258 @@ using ReelsCommerceSystem.Application.DTOs.Request.TikTok;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Shared.Responses;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text.Json;
 using System.Web;
 
-namespace ReelsCommerceSystem.API.Controllers
+namespace ReelsCommerceSystem.API.Controllers;
+
+public class TikTokAuthController : AppBaseController
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TikTokAuthController : AppBaseController
+    private readonly IConfiguration _config;
+    private readonly HttpClient _httpClient;
+    private readonly UserManager<User> _userManager;
+    private readonly IJwtService _jwtService;
+
+    // State tracking in memory (for demo; move to Redis/DB for scale)
+    private static readonly Dictionary<string, DateTime> _validStates = new();
+    private static readonly Dictionary<string, string> _stateSuccessRedirects = new();
+    private static readonly Dictionary<string, string> _stateFailRedirects = new();
+
+    public TikTokAuthController(
+        IConfiguration config,
+        IHttpClientFactory httpClientFactory,
+        UserManager<User> userManager,
+        IJwtService jwtService)
     {
-        private readonly IConfiguration _config;
-        private readonly HttpClient _httpClient;
-        private readonly UserManager<User> _userManager;
-        private readonly IJwtService _jwtService;
+        _config = config;
+        _httpClient = httpClientFactory.CreateClient();
+        _userManager = userManager;
+        _jwtService = jwtService;
+    }
 
-        // State tracking in memory (for demo; move to Redis/DB for scale)
-        private static readonly Dictionary<string, DateTime> _validStates = new();
-        private static readonly Dictionary<string, string> _stateSuccessRedirects = new();
-        private static readonly Dictionary<string, string> _stateFailRedirects = new();
-
-        public TikTokAuthController(
-            IConfiguration config,
-            IHttpClientFactory httpClientFactory,
-            UserManager<User> userManager,
-            IJwtService jwtService)
-        {
-            _config = config;
-            _httpClient = httpClientFactory.CreateClient();
-            _userManager = userManager;
-            _jwtService = jwtService;
-        }
-
-        [HttpGet("login")]
-        public IActionResult TikTokLogin(
-            [FromQuery] string frontendLoginSuccessUrl,
-            [FromQuery] string frontendLoginFailUrl,
-            [FromQuery] string? redirectUri = null) // optional (for mobile deep link)
-        {
-            var clientKey = _config["TikTokAuth:ClientKey"];
-            var defaultRedirectUri = _config["TikTokAuth:RedirectUri"];
-            var finalRedirectUri = redirectUri ?? defaultRedirectUri;
-
-            var state = Guid.NewGuid().ToString("N");
-            _validStates[state] = DateTime.UtcNow.AddMinutes(5);
-            _stateSuccessRedirects[state] = frontendLoginSuccessUrl;
-            _stateFailRedirects[state] = frontendLoginFailUrl;
-
-            var url = $"https://www.tiktok.com/v2/auth/authorize/?" +
-                      $"client_key={clientKey}&" +
-                      $"scope=user.info.basic&" +
-                      $"response_type=code&" +
-                      $"redirect_uri={HttpUtility.UrlEncode(finalRedirectUri)}&" +
-                      $"state={state}";
-
-            return Redirect(url);
-        }
-
-        // (Web): TikTok → Callback
-        [HttpGet("callback")]
-        public async Task<IActionResult> TikTokCallback(string? code, string? state, string? error)
-        {
-            if (string.IsNullOrEmpty(state) || !_validStates.ContainsKey(state))
-                return Redirect(GetFailRedirect(state, "Invalid state — possible CSRF attack"));
-
-            var successUrl = _stateSuccessRedirects.GetValueOrDefault(state) ?? _config["TikTokAuth:DefaultSuccessUrl"];
-            var failUrl = _stateFailRedirects.GetValueOrDefault(state) ?? _config["TikTokAuth:DefaultFailUrl"];
-
-            _validStates.Remove(state);
-            _stateSuccessRedirects.Remove(state);
-            _stateFailRedirects.Remove(state);
-
-            if (!string.IsNullOrEmpty(error))
-                return Redirect($"{failUrl}?error={Uri.EscapeDataString(error)}");
-
-            try
-            {
-                var (user, jwt, expiresAt) = await ExchangeTikTokCodeAsync(code!);
-
-                // Store in cookies for web
-                Response.Cookies.Append("auth_token", jwt, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.None,
-                    Expires = expiresAt
-                });
-
-                Response.Cookies.Append("auth_expiry", expiresAt.ToString("o"), new CookieOptions
-                {
-                    HttpOnly = false,
-                    Secure = true,
-                    SameSite = SameSiteMode.None,
-                    Expires = expiresAt
-                });
-
-                return Redirect(successUrl!);
-            }
-            catch (Exception ex)
-            {
-                return Redirect($"{failUrl}?error={Uri.EscapeDataString(ex.Message)}");
-            }
-        }
-
-        // (Mobile): Exchange Code → 
-    [HttpPost("exchange")]
-    public async Task<IActionResult> ExchangeCode([FromBody] TikTokExchangeReq request)
+    [HttpGet("login")]
+    public IActionResult TikTokLogin(
+        [FromQuery] string frontendLoginSuccessUrl,
+        [FromQuery] string frontendLoginFailUrl,
+        [FromQuery] string? redirectUri = null) // optional (for mobile deep link)
     {
-        if (string.IsNullOrEmpty(request.Code) || string.IsNullOrEmpty(request.State))
-        {
-            return BadRequest(ApiResponse<object>.ErrorResponse(
-                HttpStatusCode.BadRequest,
-                en: "Missing code or state.",
-                ar: "الرمز أو الحالة مفقودة."
-            ));
-        }
+        var clientKey = _config["TikTokAuth:ClientKey"];
+        var defaultRedirectUri = _config["TikTokAuth:RedirectUri"];
+        var finalRedirectUri = redirectUri ?? defaultRedirectUri;
 
-        if (!_validStates.ContainsKey(request.State))
-        {
-            return BadRequest(ApiResponse<object>.ErrorResponse(
-                HttpStatusCode.BadRequest,
-                en: "Invalid or expired state.",
-                ar: "رمز الحالة غير صالح أو منتهي الصلاحية."
-            ));
-        }
+        var state = Guid.NewGuid().ToString("N");
+        _validStates[state] = DateTime.UtcNow.AddMinutes(5);
+        _stateSuccessRedirects[state] = frontendLoginSuccessUrl;
+        _stateFailRedirects[state] = frontendLoginFailUrl;
 
-        _validStates.Remove(request.State);
+        var url = $"https://www.tiktok.com/v2/auth/authorize/?" +
+                  $"client_key={clientKey}&" +
+                  $"scope=user.info.basic&" +
+                  $"response_type=code&" +
+                  $"redirect_uri={HttpUtility.UrlEncode(finalRedirectUri)}&" +
+                  $"state={state}";
+
+        return Redirect(url);
+    }
+
+    // (Web): TikTok → Callback
+    [HttpGet("callback")]
+    public async Task<IActionResult> TikTokCallback(string? code, string? state, string? error)
+    {
+        if (string.IsNullOrEmpty(state) || !_validStates.ContainsKey(state))
+            return Redirect(GetFailRedirect(state, "Invalid state — possible CSRF attack"));
+
+        var successUrl = _stateSuccessRedirects.GetValueOrDefault(state) ?? _config["TikTokAuth:DefaultSuccessUrl"];
+        var failUrl = _stateFailRedirects.GetValueOrDefault(state) ?? _config["TikTokAuth:DefaultFailUrl"];
+
+        _validStates.Remove(state);
+        _stateSuccessRedirects.Remove(state);
+        _stateFailRedirects.Remove(state);
+
+        if (!string.IsNullOrEmpty(error))
+            return Redirect($"{failUrl}?error={Uri.EscapeDataString(error)}");
 
         try
         {
-            var (user, jwt, expiresAt) = await ExchangeTikTokCodeAsync(request.Code);
+            var (user, jwt, expiresAt) = await ExchangeTikTokCodeAsync(code!);
 
-            var data = new
+            // Store in cookies for web
+            Response.Cookies.Append("auth_token", jwt, new CookieOptions
             {
-                token = jwt,
-                expiresAt,
-                user = new
-                {
-                    user.Id,
-                    user.DisplayName,
-                    user.ImageURL,
-                    user.Email
-                }
-            };
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = expiresAt
+            });
 
-            return Ok(ApiResponse<object>.SuccessResponse(
-                data,
-                HttpStatusCode.OK,
-                en: "TikTok login successful.",
-                ar: "تم تسجيل الدخول عبر تيك توك بنجاح."
-            ));
+            Response.Cookies.Append("auth_expiry", expiresAt.ToString("o"), new CookieOptions
+            {
+                HttpOnly = false,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = expiresAt
+            });
+
+            return Redirect(successUrl!);
         }
         catch (Exception ex)
         {
-            return BadRequest(ApiResponse<object>.ErrorResponse(
-                HttpStatusCode.BadRequest,
-                en: ex.Message,
-                ar: "حدث خطأ أثناء تسجيل الدخول عبر تيك توك."
-            ));
+            return Redirect($"{failUrl}?error={Uri.EscapeDataString(ex.Message)}");
         }
     }
 
-    private async Task<(User user, string jwt, DateTime expiresAt)> ExchangeTikTokCodeAsync(string code)
-        {
-            var clientKey = _config["TikTokAuth:ClientKey"];
-            var clientSecret = _config["TikTokAuth:ClientSecret"];
-            var redirectUri = _config["TikTokAuth:RedirectUri"];
-
-            var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                { "client_key", clientKey! },
-                { "client_secret", clientSecret! },
-                { "code", code },
-                { "grant_type", "authorization_code" },
-                { "redirect_uri", redirectUri! }
-            });
-
-            var tokenResponse = await _httpClient.PostAsync("https://open.tiktokapis.com/v2/oauth/token/", tokenRequest);
-            var tokenResult = await tokenResponse.Content.ReadAsStringAsync();
-
-            if (!tokenResponse.IsSuccessStatusCode)
-                throw new Exception($"Token exchange failed: {tokenResult}");
-
-            using var tokenDoc = JsonDocument.Parse(tokenResult);
-            var root = tokenDoc.RootElement;
-
-            if (!root.TryGetProperty("access_token", out var accessTokenProp))
-                throw new Exception("TikTok token response missing 'access_token'");
-
-            var accessToken = accessTokenProp.GetString();
-            var openId = root.GetProperty("open_id").GetString();
-
-            // Get user info
-            var userInfoRequest = new HttpRequestMessage(HttpMethod.Get,
-                "https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,avatar_url");
-            userInfoRequest.Headers.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-
-            var userInfoResponse = await _httpClient.SendAsync(userInfoRequest);
-            var userInfoResult = await userInfoResponse.Content.ReadAsStringAsync();
-
-            if (!userInfoResponse.IsSuccessStatusCode)
-                throw new Exception($"User info request failed: {userInfoResult}");
-
-            using var userDoc = JsonDocument.Parse(userInfoResult);
-            if (!userDoc.RootElement.TryGetProperty("data", out var userData) ||
-                !userData.TryGetProperty("user", out var userJson))
-                throw new Exception("TikTok user info invalid response");
-
-            var displayName = userJson.GetProperty("display_name").GetString();
-            var avatar = userJson.TryGetProperty("avatar_url", out var avatarProp) ? avatarProp.GetString() : null;
-
-            // Create or find user
-            var existingUser = await _userManager.FindByLoginAsync("TikTok", openId!);
-            User user;
-
-            if (existingUser == null)
-            {
-                user = new User
-                {
-                    EmailConfirmed = true,
-                    Role = Domain.Enums.Role.Customer,
-                    UserName = $"tiktok_{openId}",
-                    Email = $"{openId}@tiktok.local",
-                    DisplayName = displayName ?? "TikTok User",
-                    ImageURL = avatar ?? string.Empty
-                };
-
-                var createResult = await _userManager.CreateAsync(user);
-                if (!createResult.Succeeded)
-                    throw new Exception("User creation failed");
-
-                await _userManager.AddLoginAsync(user, new UserLoginInfo("TikTok", openId!, "TikTok"));
-            }
-            else
-            {
-                user = existingUser;
-            }
-
-            var jwt = await _jwtService.CreateTokenAsync(user);
-            var expiresAt = DateTime.UtcNow.AddMonths(1);
-
-            return (user, jwt, expiresAt);
-        }
-
-        private string GetFailRedirect(string? state, string message)
-        {
-            if (state != null && _stateFailRedirects.TryGetValue(state, out var failUrl))
-            {
-                _stateFailRedirects.Remove(state);
-                return $"{failUrl}?error={Uri.EscapeDataString(message)}";
-            }
-
-            var defaultFail = _config["TikTokAuth:DefaultFailUrl"] ?? "https://localhost:4200/login/tiktok/fail";
-            return $"{defaultFail}?error={Uri.EscapeDataString(message)}";
-        }
+    // (Mobile): Exchange Code → 
+[HttpPost("exchange")]
+public async Task<IActionResult> ExchangeCode([FromBody] TikTokExchangeReq request)
+{
+    if (string.IsNullOrEmpty(request.Code) || string.IsNullOrEmpty(request.State))
+    {
+        return BadRequest(ApiResponse<object>.ErrorResponse(
+            HttpStatusCode.BadRequest,
+            en: "Missing code or state.",
+            ar: "الرمز أو الحالة مفقودة."
+        ));
     }
-    
+
+    if (!_validStates.ContainsKey(request.State))
+    {
+        return BadRequest(ApiResponse<object>.ErrorResponse(
+            HttpStatusCode.BadRequest,
+            en: "Invalid or expired state.",
+            ar: "رمز الحالة غير صالح أو منتهي الصلاحية."
+        ));
+    }
+
+    _validStates.Remove(request.State);
+
+    try
+    {
+        var (user, jwt, expiresAt) = await ExchangeTikTokCodeAsync(request.Code);
+
+        var data = new
+        {
+            token = jwt,
+            expiresAt,
+            user = new
+            {
+                user.Id,
+                user.DisplayName,
+                user.ImageURL,
+                user.Email
+            }
+        };
+
+        return Ok(ApiResponse<object>.SuccessResponse(
+            data,
+            HttpStatusCode.OK,
+            en: "TikTok login successful.",
+            ar: "تم تسجيل الدخول عبر تيك توك بنجاح."
+        ));
+    }
+    catch (Exception ex)
+    {
+        return BadRequest(ApiResponse<object>.ErrorResponse(
+            HttpStatusCode.BadRequest,
+            en: ex.Message,
+            ar: "حدث خطأ أثناء تسجيل الدخول عبر تيك توك."
+        ));
+    }
 }
+
+private async Task<(User user, string jwt, DateTime expiresAt)> ExchangeTikTokCodeAsync(string code)
+    {
+        var clientKey = _config["TikTokAuth:ClientKey"];
+        var clientSecret = _config["TikTokAuth:ClientSecret"];
+        var redirectUri = _config["TikTokAuth:RedirectUri"];
+
+        var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            { "client_key", clientKey! },
+            { "client_secret", clientSecret! },
+            { "code", code },
+            { "grant_type", "authorization_code" },
+            { "redirect_uri", redirectUri! }
+        });
+
+        var tokenResponse = await _httpClient.PostAsync("https://open.tiktokapis.com/v2/oauth/token/", tokenRequest);
+        var tokenResult = await tokenResponse.Content.ReadAsStringAsync();
+
+        if (!tokenResponse.IsSuccessStatusCode)
+            throw new Exception($"Token exchange failed: {tokenResult}");
+
+        using var tokenDoc = JsonDocument.Parse(tokenResult);
+        var root = tokenDoc.RootElement;
+
+        if (!root.TryGetProperty("access_token", out var accessTokenProp))
+            throw new Exception("TikTok token response missing 'access_token'");
+
+        var accessToken = accessTokenProp.GetString();
+        var openId = root.GetProperty("open_id").GetString();
+
+        // Get user info
+        var userInfoRequest = new HttpRequestMessage(HttpMethod.Get,
+            "https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,avatar_url");
+        userInfoRequest.Headers.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+        var userInfoResponse = await _httpClient.SendAsync(userInfoRequest);
+        var userInfoResult = await userInfoResponse.Content.ReadAsStringAsync();
+
+        if (!userInfoResponse.IsSuccessStatusCode)
+            throw new Exception($"User info request failed: {userInfoResult}");
+
+        using var userDoc = JsonDocument.Parse(userInfoResult);
+        if (!userDoc.RootElement.TryGetProperty("data", out var userData) ||
+            !userData.TryGetProperty("user", out var userJson))
+            throw new Exception("TikTok user info invalid response");
+
+        var displayName = userJson.GetProperty("display_name").GetString();
+        var avatar = userJson.TryGetProperty("avatar_url", out var avatarProp) ? avatarProp.GetString() : null;
+
+        // Create or find user
+        var existingUser = await _userManager.FindByLoginAsync("TikTok", openId!);
+        User user;
+
+        if (existingUser == null)
+        {
+            user = new User
+            {
+                EmailConfirmed = true,
+                Role = Domain.Enums.Role.Customer,
+                UserName = $"tiktok_{openId}",
+                Email = $"{openId}@tiktok.local",
+                DisplayName = displayName ?? "TikTok User",
+                ImageURL = avatar ?? string.Empty
+            };
+
+            var createResult = await _userManager.CreateAsync(user);
+            if (!createResult.Succeeded)
+                throw new Exception("User creation failed");
+
+            await _userManager.AddLoginAsync(user, new UserLoginInfo("TikTok", openId!, "TikTok"));
+        }
+        else
+        {
+            user = existingUser;
+        }
+
+        var jwt = await _jwtService.CreateTokenAsync(user);
+        var expiresAt = DateTime.UtcNow.AddMonths(1);
+
+        return (user, jwt, expiresAt);
+    }
+
+    private string GetFailRedirect(string? state, string message)
+    {
+        if (state != null && _stateFailRedirects.TryGetValue(state, out var failUrl))
+        {
+            _stateFailRedirects.Remove(state);
+            return $"{failUrl}?error={Uri.EscapeDataString(message)}";
+        }
+
+        var defaultFail = _config["TikTokAuth:DefaultFailUrl"] ?? "https://localhost:4200/login/tiktok/fail";
+        return $"{defaultFail}?error={Uri.EscapeDataString(message)}";
+    }
+}
+
