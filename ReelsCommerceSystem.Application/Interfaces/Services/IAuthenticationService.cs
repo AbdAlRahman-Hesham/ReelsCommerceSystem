@@ -10,5 +10,6 @@ public interface IAuthenticationService
     
     Task<RegisterResDto> RegisterAsync(RegisterReqDto registerReqDto);
     Task<bool> CheckEmailAsync(string Email);
+    Task SignOutAsync(string token);
 
 }

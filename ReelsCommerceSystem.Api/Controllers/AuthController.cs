@@ -1,18 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Net;
+using Azure;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.Identity;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
-using System.Net;
 using MyAuthService = ReelsCommerceSystem.Application.Interfaces.Services.IAuthenticationService;
 
 
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
-public class AuthController(MyAuthService _authenticationService) : AppBaseController
+public class AuthController(MyAuthService _authenticationService,ITokenBlacklistService _tokenBlacklist) : AppBaseController
 {
-   
 
     [HttpPost("Login")]
     public async Task<ActionResult<ApiResponse<LoginResDto>>> Login([FromBody] LoginReqDto loginReq)
@@ -60,7 +65,7 @@ public class AuthController(MyAuthService _authenticationService) : AppBaseContr
     }
 
     [HttpPost("Register")]
-    public async Task<ActionResult<ApiResponse<RegisterResDto>>> Register([FromForm] RegisterReqDto registerReqDto)
+    public async Task<ActionResult<ApiResponse<RegisterResDto>>> Register([FromBody] RegisterReqDto registerReqDto)
     {
         try
         {
@@ -103,5 +108,63 @@ public class AuthController(MyAuthService _authenticationService) : AppBaseContr
         var response = ApiResponse<bool>.SuccessResponse(result, HttpStatusCode.OK);
         return Ok(response);
     }
+
+
+    
+    [HttpPost("SignOut")]
+    public async Task<ActionResult<ApiResponse<SignOutRes>>> SignOut()
+    {
+        try
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                var response = ApiResponse<SignOutRes>.ErrorResponse(
+                    HttpStatusCode.BadRequest,
+                    "Authorization token is missing.",
+                    "رمز الجلسة مفقود."
+                );
+                return BadRequest(response);
+            }
+
+          
+            token = token.Replace("Bearer ", "").Trim();
+
+            await _tokenBlacklist.AddAsync(token);
+
+         
+            await _authenticationService.SignOutAsync(token);
+
+            var responseSuccess = ApiResponse<SignOutRes>.SuccessResponse(
+                new SignOutRes(),
+                HttpStatusCode.OK,
+                "Signed out successfully.",
+                "تم تسجيل الخروج بنجاح."
+            );
+
+            return Ok(responseSuccess);
+        }
+        catch (UnauthorizedException ex)
+        {
+            var response = ApiResponse<SignOutRes>.ErrorResponse(
+                HttpStatusCode.Unauthorized,
+                ex.Message,
+                "صلاحية الجلسة غير صالحة."
+            );
+            return Unauthorized(response);
+        }
+        catch (Exception ex)
+        {
+            var response = ApiResponse<SignOutRes>.ErrorResponse(
+                HttpStatusCode.InternalServerError,
+                ex.Message,
+                "حدث خطأ أثناء تسجيل الخروج."
+            );
+            return StatusCode((int)HttpStatusCode.InternalServerError, response);
+        }
+    }
+
+
 
 }
