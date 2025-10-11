@@ -60,7 +60,8 @@ public class AuthenticationService(UserManager<User> _userManager,
             Email = registerReqDto.Email,
             PhoneNumber = registerReqDto.PhoneNumber,
             UserName = registerReqDto.Email,
-            ImageURL = imagePath?? string.Empty
+            ImageURL = imagePath?? string.Empty,
+            Role = Domain.Enums.Role.Customer
         };
 
         var result = await _userManager.CreateAsync(user, registerReqDto.Password);
