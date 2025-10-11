@@ -23,6 +23,8 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserInfoService, UserInfoService>();
+
 
 
 

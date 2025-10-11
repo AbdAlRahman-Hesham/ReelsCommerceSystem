@@ -57,6 +57,10 @@ public class AuthenticationService(UserManager<User> _userManager,
         var user = new User
         {
             DisplayName = $"{registerReqDto.FirstName} {registerReqDto.LastName}",
+            FirstName=registerReqDto.FirstName,
+            LastName=registerReqDto.LastName,
+            Gender=registerReqDto.Gender,
+            DateOfBirth=registerReqDto.DateOfBirth,
             Email = registerReqDto.Email,
             PhoneNumber = registerReqDto.PhoneNumber,
             UserName = registerReqDto.Email,

@@ -1,18 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.Identity;
+using ReelsCommerceSystem.Application.DTOs.Response.UserInfo;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
-using System.Net;
 using MyAuthService = ReelsCommerceSystem.Application.Interfaces.Services.IAuthenticationService;
 
 
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
-public class AuthController(MyAuthService _authenticationService) : AppBaseController
+public class AuthController : AppBaseController
 {
-   
+    private readonly IAuthenticationService _authenticationService;
+    private readonly IUserInfoService _userInfoService;
+
+    public AuthController(IAuthenticationService authenticationService, IUserInfoService userInfoService)
+    {
+        _authenticationService = authenticationService;
+        _userInfoService = userInfoService;
+    }
+
+
+
+
 
     [HttpPost("Login")]
     public async Task<ActionResult<ApiResponse<LoginResDto>>> Login([FromBody] LoginReqDto loginReq)
@@ -60,7 +76,7 @@ public class AuthController(MyAuthService _authenticationService) : AppBaseContr
     }
 
     [HttpPost("Register")]
-    public async Task<ActionResult<ApiResponse<RegisterResDto>>> Register([FromForm] RegisterReqDto registerReqDto)
+    public async Task<ActionResult<ApiResponse<RegisterResDto>>> Register([FromBody] RegisterReqDto registerReqDto)
     {
         try
         {
@@ -102,6 +118,43 @@ public class AuthController(MyAuthService _authenticationService) : AppBaseContr
         var result = await _authenticationService.CheckEmailAsync(Email);
         var response = ApiResponse<bool>.SuccessResponse(result, HttpStatusCode.OK);
         return Ok(response);
+    }
+    [Authorize]
+    [HttpGet("UserInfo")]
+   
+    public async Task<ActionResult<ApiResponse<UserInfoResDto>>> GetUserInfo()
+    {
+        try
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(ApiResponse<UserInfoResDto>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Token is missing or invalid.",
+                    "التوكن مفقود أو غير صالح."
+                ));
+            }
+
+            var userInfo = await _userInfoService.GetUserInfoAsync(userId);
+            return Ok(ApiResponse<UserInfoResDto>.SuccessResponse(userInfo, HttpStatusCode.OK));
+        }
+        catch (UserNotFoundException)
+        {
+            return NotFound(ApiResponse<UserInfoResDto>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "User not found.",
+                "المستخدم غير موجود."
+            ));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ApiResponse<UserInfoResDto>.ErrorResponse(
+                HttpStatusCode.InternalServerError,
+                ex.Message,
+                "حدث خطأ في السيرفر."
+            ));
+        }
     }
 
 }
