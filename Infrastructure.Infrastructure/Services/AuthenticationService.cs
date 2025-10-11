@@ -9,7 +9,7 @@ using ReelsCommerceSystem.Shared.Responses;
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
 public class AuthenticationService(UserManager<User> _userManager, 
-    IJwtService _jwtService, IOtpService _otpService, IUserImageService _userImageService) : IAuthenticationService
+    IJwtService _jwtService, IOtpService _otpService, IUserImageService _userImageService,ITokenBlacklistService _tokenBlacklist) : IAuthenticationService
 {
 
 
@@ -88,5 +88,14 @@ public class AuthenticationService(UserManager<User> _userManager,
     {
         var User = await _userManager.FindByEmailAsync(Email);
         return User is not null;
+    }
+
+    public async Task SignOutAsync(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            throw new UnauthorizedException("Token is missing");
+
+        token = token.StartsWith("Bearer ") ? token.Substring(7).Trim() : token.Trim();
+        await _tokenBlacklist.AddAsync(token);
     }
 }

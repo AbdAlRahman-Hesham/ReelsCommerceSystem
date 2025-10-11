@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities.AiChatsEntities;
+using ReelsCommerceSystem.Domain.Entities.BlacklistToken;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.CartEntities;
 using ReelsCommerceSystem.Domain.Entities.DisputeEntities;
@@ -68,6 +69,8 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<Review> Reviews { get; set; }
     public DbSet<UserInterest> UserInterests { get; set; }
     public DbSet<UserOrder> UserOrders { get; set; }
+    public DbSet<BlacklistedToken> BlacklistedTokens { get; set; }
+
 }
 
 
