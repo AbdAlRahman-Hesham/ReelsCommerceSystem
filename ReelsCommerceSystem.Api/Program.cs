@@ -42,6 +42,8 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(builder.Configuration["JWTOptions:SecretKey"]!))
     };
 });
+builder.Services.AddHttpClient();
+
 
 var app = builder.Build();
 
