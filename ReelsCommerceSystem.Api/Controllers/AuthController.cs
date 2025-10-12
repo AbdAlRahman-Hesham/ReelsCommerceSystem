@@ -69,7 +69,7 @@ public class AuthController : AppBaseController
     }
 
     [HttpPost("Register")]
-    public async Task<ActionResult<ApiResponse<RegisterResDto>>> Register([FromBody] RegisterReqDto registerReqDto)
+    public async Task<ActionResult<ApiResponse<RegisterResDto>>> Register([FromForm] RegisterReqDto registerReqDto)
     {
         try
         {
