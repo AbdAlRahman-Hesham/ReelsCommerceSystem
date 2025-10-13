@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251010235231_AddUserExtraFields")]
+    partial class AddUserExtraFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,26 +193,6 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
                     b.ToTable("AiChats");
                 });
 
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BlacklistToken.BlacklistedToken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BlacklistedTokens");
-                });
-
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", b =>
                 {
                     b.Property<int>("Id")
@@ -342,23 +325,6 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ForumPosts");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Interests");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
@@ -672,18 +638,24 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserInterestEntities.UserInterest", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Interests")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("InterestId")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "InterestId");
-
-                    b.HasIndex("InterestId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserInterests");
                 });
@@ -942,19 +914,11 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserInterestEntities.UserInterest", b =>
                 {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", "Interest")
-                        .WithMany("UserInterests")
-                        .HasForeignKey("InterestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
                         .WithMany("Interests")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Interest");
 
                     b.Navigation("User");
                 });
@@ -988,11 +952,6 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>
                 {
                     b.Navigation("ProductCarts");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", b =>
-                {
-                    b.Navigation("UserInterests");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>

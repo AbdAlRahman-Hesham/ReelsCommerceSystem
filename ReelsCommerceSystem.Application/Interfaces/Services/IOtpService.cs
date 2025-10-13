@@ -2,8 +2,8 @@
 
 public interface IOtpService
 {
-    public Task<bool> ValidateOtp(string email, string otp);
+    public Task<string?> ValidateOtp(string email, string otp);
     public string GenerateOtp(string email);
     public Task<bool> ResendOtp(string email);
-    public Task SendOtpAsync(string email);
+    public Task SendOtpAsync(string email, bool isForResetPassword = false);
 }

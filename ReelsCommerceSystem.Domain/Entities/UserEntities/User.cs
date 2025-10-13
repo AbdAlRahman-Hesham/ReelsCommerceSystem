@@ -20,6 +20,10 @@ public class User : IdentityUser
     public Otp? Otp { get; set; }
 
     public Role Role { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string Gender { get; set; } = string.Empty; 
+    public DateTime? DateOfBirth { get; set; }
 
     public ICollection<UserOrder> UserOrders { get; set; } = new List<UserOrder>();
     public ICollection<Cart> Carts { get; set; } = new List<Cart>();

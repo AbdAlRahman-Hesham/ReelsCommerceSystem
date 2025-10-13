@@ -24,23 +24,21 @@ public class OtpService : IOtpService
 
     public string GenerateOtp(string email)
     {
-        // Generate a cryptographically secure 6-digit OTP
+        // Generate a cryptographically secure 5-digit OTP (00000–99999)
         using var rng = RandomNumberGenerator.Create();
         var bytes = new byte[4];
         rng.GetBytes(bytes);
         var randomNumber = BitConverter.ToUInt32(bytes, 0);
-        var otp = (randomNumber % 1000000).ToString("D5");
-
+        var otp = (randomNumber % 100000).ToString("D5"); // ensure exactly 5 digits
         return otp;
     }
 
-    public async Task SendOtpAsync(string email)
+
+    public async Task SendOtpAsync(string email, bool isForResetPassword = false)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
-        {
             throw new InvalidOperationException("User not found");
-        }
 
         // Generate new OTP
         var otpCode = GenerateOtp(email);
@@ -54,17 +52,17 @@ public class OtpService : IOtpService
 
         var result = await _userManager.UpdateAsync(user);
         if (!result.Succeeded)
-        {
             throw new InvalidOperationException("Failed to update user with OTP");
-        }
 
-        // Send OTP email
-        var emailSent = _emailService.SendOTPEmail(email, otpCode);
+        // Send the appropriate email
+        bool emailSent = isForResetPassword
+            ? _emailService.SendOTPEmailResetPassword(email, otpCode)
+            : _emailService.SendOTPEmail(email, otpCode);
+
         if (!emailSent)
-        {
             throw new InvalidOperationException("Failed to send OTP email");
-        }
     }
+
 
     public async Task<bool> ResendOtp(string email)
     {
@@ -86,30 +84,30 @@ public class OtpService : IOtpService
         return true;
     }
 
-    public async Task<bool> ValidateOtp(string email, string otp)
+    public async Task<string?> ValidateOtp(string email, string otp)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
-            return false;
+            return null;
         }
 
         // Check if OTP exists
         if (user.Otp == null)
         {
-            return false;
+            return null;
         }
 
         // Check if OTP is still valid (using the IsValid property)
         if (!user.Otp.IsValid)
         {
-            return false;
+            return null;
         }
 
         // Validate OTP code
         if (user.Otp.Code != otp)
         {
-            return false;
+            return null;
         }
 
         // OTP is valid - clear it and confirm email
@@ -119,8 +117,8 @@ public class OtpService : IOtpService
         await _userManager.UpdateAsync(user);
 
         // Generate JWT token for the user
-        await _jwtService.CreateTokenAsync(user);
+        var token = await _jwtService.CreateTokenAsync(user);
 
-        return true;
+        return token;
     }
 }

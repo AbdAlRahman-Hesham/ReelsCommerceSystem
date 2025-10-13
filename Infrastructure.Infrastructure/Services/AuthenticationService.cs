@@ -9,7 +9,7 @@ using ReelsCommerceSystem.Shared.Responses;
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
 public class AuthenticationService(UserManager<User> _userManager, 
-    IJwtService _jwtService, IOtpService _otpService, IUserImageService _userImageService) : IAuthenticationService
+    IJwtService _jwtService, IOtpService _otpService, IUserImageService _userImageService,ITokenBlacklistService _tokenBlacklist) : IAuthenticationService
 {
 
 
@@ -23,7 +23,7 @@ public class AuthenticationService(UserManager<User> _userManager,
             return new LoginResDto
             {
                 Token =await _jwtService.CreateTokenAsync(User),
-                ExpiresAt = DateTime.UtcNow.AddHours(1)
+                ExpiresAt = DateTime.UtcNow.AddMonths(1)
 
 
             };
@@ -57,10 +57,15 @@ public class AuthenticationService(UserManager<User> _userManager,
         var user = new User
         {
             DisplayName = $"{registerReqDto.FirstName} {registerReqDto.LastName}",
+            FirstName=registerReqDto.FirstName,
+            LastName=registerReqDto.LastName,
+            Gender=registerReqDto.Gender,
+            DateOfBirth=registerReqDto.DateOfBirth,
             Email = registerReqDto.Email,
             PhoneNumber = registerReqDto.PhoneNumber,
             UserName = registerReqDto.Email,
-            ImageURL = imagePath?? string.Empty
+            ImageURL = imagePath?? string.Empty,
+            Role = Domain.Enums.Role.Customer
         };
 
         var result = await _userManager.CreateAsync(user, registerReqDto.Password);
@@ -87,5 +92,14 @@ public class AuthenticationService(UserManager<User> _userManager,
     {
         var User = await _userManager.FindByEmailAsync(Email);
         return User is not null;
+    }
+
+    public async Task SignOutAsync(string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            throw new UnauthorizedException("Token is missing");
+
+        token = token.StartsWith("Bearer ") ? token.Substring(7).Trim() : token.Trim();
+        await _tokenBlacklist.AddAsync(token);
     }
 }
