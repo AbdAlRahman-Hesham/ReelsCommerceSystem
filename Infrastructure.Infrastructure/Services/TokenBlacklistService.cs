@@ -39,10 +39,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
         public async Task<bool> IsBlacklistedAsync(string token)
         {
-            if (string.IsNullOrWhiteSpace(token)) return false;
+            if (string.IsNullOrWhiteSpace(token)) return true;
             token = token.StartsWith("Bearer ") ? token.Substring(7).Trim() : token.Trim();
 
-            return await _dbContext.BlacklistedTokens.AnyAsync(x => x.Token == token);
+            return ( await _dbContext.BlacklistedTokens.AnyAsync(x => x.Token == token));
         }
     }
 }
