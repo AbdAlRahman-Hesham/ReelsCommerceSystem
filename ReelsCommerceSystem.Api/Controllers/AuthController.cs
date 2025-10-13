@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -30,6 +31,10 @@ public class AuthController : AppBaseController
         ITokenBlacklistService tokenBlacklistService,
         IOtpService otpService,
         UserManager<User> userManager)
+        ITokenBlacklistService tokenBlacklistService,
+        UserManager<User> userManager,
+        IOtpService otpService)
+        
     {
         _authenticationService = authenticationService;
         _userInfoService = userInfoService;
@@ -213,68 +218,93 @@ public class AuthController : AppBaseController
             ));
         }
     }
-    
-    [HttpPost("ForgetPassword")]
-    public async Task<ActionResult<ApiResponse<string>>> ForgetPassword([FromBody] ForgetPasswordReqDto forgetPassword)
+
+    [Authorize]
+    [HttpPost("ResetPassword")]
+    public async Task<ActionResult<ApiResponse<string>>> ResetPassword([FromBody] ResetPasswordReqDto resetPassword)
     {
         try
         {
-            string email = forgetPassword.Email;
+            if(resetPassword is null || string.IsNullOrWhiteSpace(resetPassword.NewPassword))
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse(HttpStatusCode.BadRequest,
+                    "New password is required.",
+                    "كلمة المرور الجديدة مطلوب."));
+            }
+            var token = HttpContext.Request.Headers["Authorization"].ToString()?.Replace("Bearer ", "");
+            if (string.IsNullOrEmpty(token))
+            {
+                return Unauthorized(ApiResponse<string>.ErrorResponse(HttpStatusCode.Unauthorized,
+                    "Missing Token",
+                    "التوكن مفقود"));
+            }
+            var checkToken = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtToken;
+            try
+            {
+                jwtToken = checkToken.ReadJwtToken(token);
+            }
+            catch
+            {
+                return Unauthorized(ApiResponse<string>.ErrorResponse(HttpStatusCode.Unauthorized,
+                    "Invalid Token.",
+                    "التوكن غير صالح."));
+            }
+            if (jwtToken.ValidTo < DateTime.UtcNow)
+            {
+                return Unauthorized(ApiResponse<string>.ErrorResponse(HttpStatusCode.Unauthorized,
+                    "Expiration date has passed.",
+                     "تاريخ انتهاء الصلاحية قد مضى."));
+            }
+            var email = jwtToken.Claims.FirstOrDefault(j => j.Type == ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email))
             {
-                var response = ApiResponse<string>.ErrorResponse(
-                    HttpStatusCode.BadRequest,
-                    "The Email field is required.",
-                    "البريد الإلكتروني مطلوب."
-                );
-                return BadRequest(response);
+                return Unauthorized(ApiResponse<string>.ErrorResponse(HttpStatusCode.Unauthorized,
+                        "Token does not contain user email.",
+                "التوكن لا يحتوي على البريد الإلكتروني للمستخدم."));
             }
-
             var user = await _userManager.FindByEmailAsync(email);
-            if (user is null)
+            if(user is null)
             {
-                var errors = new List<ValidationError>
-            {
-                new ValidationError
-                {
-                    Field = "Email",
-                    En = "Email does not exist in the system.",
-                    Ar = "البريد الإلكتروني غير موجود في النظام."
-                }
-            };
-
-                var errorResponse = ApiResponse<string>.ErrorResponse(
-                    HttpStatusCode.NotFound,
-                    "User not found with the provided email.",
-                    "لم يتم العثور على مستخدم بهذا البريد الإلكتروني.",
-                    errors
-                );
-                return NotFound(errorResponse);
+                return NotFound(ApiResponse<string>.ErrorResponse(HttpStatusCode.NotFound,
+                    "User not found.",
+                    "المستخدم غير موجود.")); 
             }
-
-            await _otpService.SendOtpAsync(email, true);
-
-            var successResponse = ApiResponse<string>.SuccessResponse(
+            var removepassword = await _userManager.RemovePasswordAsync(user);
+            if (!removepassword.Succeeded)
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse(HttpStatusCode.BadRequest,
+                    "Failed to remove old password.",
+                     "فشل في إزالة كلمة المرور القديمة."
+                    ));
+            }
+            var addpassword = await _userManager.AddPasswordAsync(user, resetPassword.NewPassword);
+            if (!addpassword.Succeeded)
+            {
+                var errors = addpassword.Errors.Select(e => new ValidationError
+                {
+                    Field = "Password",
+                    En = e.Description,
+                    Ar = "خطأ في كلمة المرور الجديدة."
+                }).ToList();
+                return BadRequest(ApiResponse<string>.ErrorResponse(HttpStatusCode.BadRequest,
+                    "Failed to set new password.",
+                    "فشل في تعيين كلمه المرور الجديدة."));
+            }
+            return Ok(ApiResponse<string>.SuccessResponse(
                 null,
                 HttpStatusCode.OK,
-                "An OTP has been sent to your email for password reset.",
-                "تم إرسال رمز التحقق إلى بريدك الإلكتروني لإعادة تعيين كلمة المرور."
-            );
+                "Password has been reset successfully.",
+                 "تم إعادة تعيين كلمة المرور بنجاح."));
 
-            return Ok(successResponse);
         }
         catch (Exception)
         {
             return StatusCode(500, ApiResponse<string>.ErrorResponse(
                 HttpStatusCode.InternalServerError,
-                "An error occurred while processing your request. Please try again later.",
-                "حدث خطأ أثناء إرسال رمز التحقق، برجاء المحاولة لاحقًا."
+                "An error occurred while resetting the password.",
+                "حدث خطأ أثناء إعادة تعيين كلمة المرور."
             ));
         }
-
     }
 }
-
-
-
-
