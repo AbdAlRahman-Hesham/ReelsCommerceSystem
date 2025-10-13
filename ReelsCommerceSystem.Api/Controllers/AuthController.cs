@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.UserInfo;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
 
@@ -17,15 +21,21 @@ public class AuthController : AppBaseController
     private readonly IAuthenticationService _authenticationService;
     private readonly IUserInfoService _userInfoService;
     private readonly ITokenBlacklistService _tokenBlacklist;
+    private readonly IOtpService _otpService;
+    private readonly UserManager<User> _userManager;
 
     public AuthController(
         IAuthenticationService authenticationService,
         IUserInfoService userInfoService,
-        ITokenBlacklistService tokenBlacklistService)
+        ITokenBlacklistService tokenBlacklistService,
+        IOtpService otpService,
+        UserManager<User> userManager)
     {
         _authenticationService = authenticationService;
         _userInfoService = userInfoService;
         _tokenBlacklist = tokenBlacklistService;
+        _otpService = otpService;
+        _userManager = userManager;
     }
 
     [HttpPost("Login")]
@@ -202,4 +212,68 @@ public class AuthController : AppBaseController
             ));
         }
     }
+    
+    [HttpPost("ForgetPassword")]
+    public async Task<ActionResult<ApiResponse<string>>> ForgetPassword([FromBody] ForgetPasswordReqDto forgetPassword)
+    {
+        try
+        {
+            string email = forgetPassword.Email;
+            if (string.IsNullOrEmpty(email))
+            {
+                var response = ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.BadRequest,
+                    "The Email field is required.",
+                    "البريد الإلكتروني مطلوب."
+                );
+                return BadRequest(response);
+            }
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+            {
+                var errors = new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Email",
+                    En = "Email does not exist in the system.",
+                    Ar = "البريد الإلكتروني غير موجود في النظام."
+                }
+            };
+
+                var errorResponse = ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.NotFound,
+                    "User not found with the provided email.",
+                    "لم يتم العثور على مستخدم بهذا البريد الإلكتروني.",
+                    errors
+                );
+                return NotFound(errorResponse);
+            }
+
+            await _otpService.SendOtpAsync(email, true);
+
+            var successResponse = ApiResponse<string>.SuccessResponse(
+                null,
+                HttpStatusCode.OK,
+                "An OTP has been sent to your email for password reset.",
+                "تم إرسال رمز التحقق إلى بريدك الإلكتروني لإعادة تعيين كلمة المرور."
+            );
+
+            return Ok(successResponse);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<string>.ErrorResponse(
+                HttpStatusCode.InternalServerError,
+                "An error occurred while processing your request. Please try again later.",
+                "حدث خطأ أثناء إرسال رمز التحقق، برجاء المحاولة لاحقًا."
+            ));
+        }
+
+    }
 }
+
+
+
+
