@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.Identity;
+using ReelsCommerceSystem.Application.DTOs.Response.Interest;
 using ReelsCommerceSystem.Application.DTOs.Response.UserInfo;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Exceptions;
@@ -17,15 +18,18 @@ public class AuthController : AppBaseController
     private readonly IAuthenticationService _authenticationService;
     private readonly IUserInfoService _userInfoService;
     private readonly ITokenBlacklistService _tokenBlacklist;
+    private readonly IInterestService _interestService;
 
     public AuthController(
         IAuthenticationService authenticationService,
         IUserInfoService userInfoService,
-        ITokenBlacklistService tokenBlacklistService)
+        ITokenBlacklistService tokenBlacklistService,
+        IInterestService interestService)
     {
         _authenticationService = authenticationService;
         _userInfoService = userInfoService;
         _tokenBlacklist = tokenBlacklistService;
+        _interestService = interestService;
     }
 
     [HttpPost("Login")]
@@ -202,4 +206,43 @@ public class AuthController : AppBaseController
             ));
         }
     }
+    [Authorize]
+    [HttpGet("UserInterests")]
+    public async Task<ActionResult<ApiResponse<List<UserInterestResDto>>>> GetUserInterests()
+    {
+        try
+        {
+           
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(ApiResponse<List<UserInterestResDto>>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Token is invalid or expired.",
+                    "التوكن غير صالح أو منتهي الصلاحية."
+                ));
+            }
+
+          
+            var interests = await _interestService.GetAllInterestsAsync();
+
+           
+            return Ok(ApiResponse<List<UserInterestResDto>>.SuccessResponse(
+                interests,
+                HttpStatusCode.OK,
+                "Here are your selected interests.",
+                "إليك اهتماماتك المختارة."
+            ));
+        }
+     
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<List<UserInterestResDto>>.ErrorResponse(
+                HttpStatusCode.InternalServerError,
+                "Something went wrong while fetching your interests.",
+                "حدث خطأ أثناء جلب اهتماماتك."
+            ));
+        }
+    }
+
 }
