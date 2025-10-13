@@ -14,9 +14,15 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<UserInterest> builder)
         {
 
-            builder.Property(ui => ui.Interests)
-                   .IsRequired()
-                   .HasMaxLength(100);
+            builder.HasKey(ui => new { ui.UserId, ui.InterestId });
+            builder
+                  .HasOne(ui => ui.User)
+                  .WithMany(u => u.Interests)
+                  .HasForeignKey(ui => ui.UserId);
+            builder.HasOne(ui => ui.Interest)
+                .WithMany(i => i.UserInterests)
+                .HasForeignKey(ui => ui.InterestId);
+
         }
     }
 }
