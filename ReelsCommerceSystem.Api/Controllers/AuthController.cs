@@ -217,6 +217,66 @@ public class AuthController : AppBaseController
         }
     }
 
+    [HttpPost("ForgetPassword")]
+    public async Task<ActionResult<ApiResponse<string>>> ForgetPassword([FromBody] ForgetPasswordReqDto forgetPassword)
+    {
+        try
+        {
+            string email = forgetPassword.Email;
+            if (string.IsNullOrEmpty(email))
+            {
+                var response = ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.BadRequest,
+                    "The Email field is required.",
+                    "البريد الإلكتروني مطلوب."
+                );
+                return BadRequest(response);
+            }
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+            {
+                var errors = new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Email",
+                    En = "Email does not exist in the system.",
+                    Ar = "البريد الإلكتروني غير موجود في النظام."
+                }
+            };
+
+                var errorResponse = ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.NotFound,
+                    "User not found with the provided email.",
+                    "لم يتم العثور على مستخدم بهذا البريد الإلكتروني.",
+                    errors
+                );
+                return NotFound(errorResponse);
+            }
+
+            await _otpService.SendOtpAsync(email, true);
+
+            var successResponse = ApiResponse<string>.SuccessResponse(
+                null,
+                HttpStatusCode.OK,
+                "An OTP has been sent to your email for password reset.",
+                "تم إرسال رمز التحقق إلى بريدك الإلكتروني لإعادة تعيين كلمة المرور."
+            );
+
+            return Ok(successResponse);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, ApiResponse<string>.ErrorResponse(
+                HttpStatusCode.InternalServerError,
+                "An error occurred while processing your request. Please try again later.",
+                "حدث خطأ أثناء إرسال رمز التحقق، برجاء المحاولة لاحقًا."
+            ));
+        }
+
+    }
+
     [Authorize]
     [HttpPost("ResetPassword")]
     public async Task<ActionResult<ApiResponse<string>>> ResetPassword([FromBody] ResetPasswordReqDto resetPassword)
@@ -305,6 +365,7 @@ public class AuthController : AppBaseController
             ));
         }
     }
+    
     [Authorize]
     [HttpGet("UserInterests")]
     public async Task<ActionResult<ApiResponse<List<UserInterestResDto>>>> GetUserInterests()
