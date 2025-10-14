@@ -67,7 +67,7 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<ProductCart> ProductCarts { get; set; }
     public DbSet<Reel> Reels { get; set; }
-    public DbSet<Review> Reviews { get; set; }
+    public DbSet<ProductReview> Reviews { get; set; }
     public DbSet<UserInterest> UserInterests { get; set; }
     public DbSet<UserOrder> UserOrders { get; set; }
     public DbSet<BlacklistedToken> BlacklistedTokens { get; set; }

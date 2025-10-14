@@ -7,21 +7,27 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 
-namespace ReelsCommerceSystem.Infrastructure.Persistence.Configurations
+namespace ReelsCommerceSystem.Infrastructure.Persistence.Configurations;
+
+public class ReelConfig : IEntityTypeConfiguration<Reel>
 {
-    public class ReelConfig : IEntityTypeConfiguration<Reel>
+    public void Configure(EntityTypeBuilder<Reel> builder)
     {
-        public void Configure(EntityTypeBuilder<Reel> builder)
-        {
-           
+        builder.HasKey(r => r.Id);
 
-            builder.Property(r => r.VideoUrl)
-                   .IsRequired();
+        builder.Property(r => r.VideoUrl)
+               .IsRequired();
 
-            builder.HasOne(r => r.Product)
-                  .WithMany(p => p.Reels)
-                  .HasForeignKey(r => r.ProductId)
-                  .OnDelete(DeleteBehavior.Cascade);
-        }
+        // Product relationship - Cascade
+        builder.HasOne(r => r.Product)
+               .WithMany(p => p.Reels)
+               .HasForeignKey(r => r.ProductId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+        // Brand relationship - NO ACTION (to avoid cascade conflicts)
+        builder.HasOne(r => r.Brand)
+               .WithMany(b => b.Reels)
+               .HasForeignKey(r => r.BrandId)
+               .OnDelete(DeleteBehavior.NoAction);
     }
 }

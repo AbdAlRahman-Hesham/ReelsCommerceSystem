@@ -4,7 +4,7 @@ using ReelsCommerceSystem.Domain.Entities.UserEntities;
 
 namespace ReelsCommerceSystem.Domain.Entities.Reviews
 {
-    public class Review:BaseEntity
+    public class ProductReview:BaseEntity
     {
         public int Rating { get; set; }
         public string Comment { get; set; } = null!;

@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
+namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251014205456_Antitial")]
+    partial class Antitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,16 +229,16 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Logo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ReturnPolicy")
+                    b.Property<string>("LogoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReturnPolicyAsHtml")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -246,6 +249,73 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Brands");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("numOfDislikes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("numOfLikes")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BrandReview");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.UserBrandFollow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FollowedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserBrandFollow");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>
@@ -484,8 +554,17 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("NumOfLikes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumOfWatches")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -496,12 +575,14 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BrandId");
+
                     b.HasIndex("ProductId");
 
                     b.ToTable("Reels");
                 });
 
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Reviews.Review", b =>
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Reviews.ProductReview", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -776,6 +857,44 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReview", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany("Reviews")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.UserBrandFollow", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany("UserFollows")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
+                        .WithMany("BrandFollows")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
@@ -876,16 +995,24 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.Reel", b =>
                 {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany("Reels")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", "Product")
                         .WithMany("Reels")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Brand");
+
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Reviews.Review", b =>
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Reviews.ProductReview", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", "Product")
                         .WithMany("Reviews")
@@ -983,6 +1110,12 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
                     b.Navigation("ForumPosts");
 
                     b.Navigation("Products");
+
+                    b.Navigation("Reels");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("UserFollows");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>
@@ -1020,6 +1153,8 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Migrations
                     b.Navigation("Address");
 
                     b.Navigation("AiChats");
+
+                    b.Navigation("BrandFollows");
 
                     b.Navigation("Carts");
 
