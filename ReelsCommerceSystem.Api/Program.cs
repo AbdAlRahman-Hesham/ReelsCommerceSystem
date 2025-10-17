@@ -5,6 +5,7 @@ using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Contracts;
 using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Shared.Responses;
 using ReelsCommerceSystem.Shared.Utilities;
@@ -108,7 +109,12 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHttpClient();
 
 
+#region Seeding
 var app = builder.Build();
+using var scope = app.Services.CreateScope();
+var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+await dbInitializer.InitializeAsync(); 
+#endregion
 
 
 app.UseExceptionHandlingMiddleware();

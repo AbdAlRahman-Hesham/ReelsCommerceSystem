@@ -1,5 +1,7 @@
 ﻿using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Contracts;
+using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Infrastructure.Repositories;
 using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
@@ -28,6 +30,7 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
 
 
             services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
+            services.AddScoped<IDbInitializer, DbInitializer>();
 
 
 
