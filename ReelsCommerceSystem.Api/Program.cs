@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.IdentityModel.Tokens;
 using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
 using ReelsCommerceSystem.Application.Interfaces.Services;
-using ReelsCommerceSystem.Domain.Contracts;
 using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Shared.Responses;
 using ReelsCommerceSystem.Shared.Utilities;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -109,12 +106,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHttpClient();
 
 
-#region Seeding
 var app = builder.Build();
-using var scope = app.Services.CreateScope();
-var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
-await dbInitializer.InitializeAsync(); 
-#endregion
+
 
 
 app.UseExceptionHandlingMiddleware();
