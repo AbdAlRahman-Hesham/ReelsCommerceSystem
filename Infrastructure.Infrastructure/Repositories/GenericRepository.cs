@@ -61,9 +61,9 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
        return await _context.SaveChangesAsync();
     }
 
-    public Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FindAsync(id);
     }
     #endregion
 }
