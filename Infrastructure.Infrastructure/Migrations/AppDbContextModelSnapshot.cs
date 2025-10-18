@@ -657,9 +657,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Breathable organic cotton tee for everyday comfort.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand1\\EcoFlexT-Shirt.png",
+                            MediaUrl = "https://example.com/media/novawear_tshirt.jpg",
                             Name = "EcoFlex T-Shirt",
-                            Price = 180.00m,
+                            Price = 29.99m,
                             Quantity = 120
                         },
                         new
@@ -671,9 +671,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Stylish recycled denim jacket for a sustainable look.",
                             DiscountPercentage = 20m,
                             IsCustomizable = true,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand1\\ReVibe Denim Jacket.jfif",
+                            MediaUrl = "https://example.com/media/novawear_jacket.jpg",
                             Name = "ReVibe Denim Jacket",
-                            Price = 420.00m,
+                            Price = 79.99m,
                             Quantity = 80
                         },
                         new
@@ -685,9 +685,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Lightweight sneakers made from recycled fibers.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand1\\EcoStride Sneakers.jfif",
+                            MediaUrl = "https://example.com/media/novawear_sneakers.jpg",
                             Name = "EcoStride Sneakers",
-                            Price = 360.00m,
+                            Price = 89.99m,
                             Quantity = 150
                         },
                         new
@@ -699,9 +699,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Soft hoodie crafted from sustainable bamboo fabric.",
                             DiscountPercentage = 40m,
                             IsCustomizable = true,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand1\\Bamboo Breeze Hoodie.png",
+                            MediaUrl = "https://example.com/media/novawear_hoodie.jpg",
                             Name = "Bamboo Breeze Hoodie",
-                            Price = 280.00m,
+                            Price = 59.99m,
                             Quantity = 100
                         },
                         new
@@ -712,9 +712,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2020, 9, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Eco-friendly tote bag with minimalist design.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand1\\ReLeaf Tote Bag.jfif",
+                            MediaUrl = "https://example.com/media/novawear_tote.jpg",
                             Name = "ReLeaf Tote Bag",
-                            Price = 150.00m,
+                            Price = 19.99m,
                             Quantity = 200
                         },
                         new
@@ -725,9 +725,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Comfortable pants made from recycled polyester.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand1\\NatureFlow Pants.webp",
+                            MediaUrl = "https://example.com/media/novawear_pants.jpg",
                             Name = "NatureFlow Pants",
-                            Price = 310.00m,
+                            Price = 54.99m,
                             Quantity = 90
                         },
                         new
@@ -739,9 +739,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Fast-charging braided USB-C cable with smart chip.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand2\\SyncCharge Cable.jfif",
+                            MediaUrl = "https://example.com/media/techease_cable.jpg",
                             Name = "SyncCharge Cable",
-                            Price = 180.00m,
+                            Price = 14.99m,
                             Quantity = 300
                         },
                         new
@@ -753,9 +753,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Multi-device charging dock with wireless pad.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand2\\SmartDock Pro.jfif",
+                            MediaUrl = "https://example.com/media/techease_dock.jpg",
                             Name = "SmartDock Pro",
-                            Price = 420.00m,
+                            Price = 49.99m,
                             Quantity = 120
                         },
                         new
@@ -767,9 +767,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Noise-cancelling Bluetooth earbuds with 24h battery.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand2\\AirPulse Earbuds.jfif",
+                            MediaUrl = "https://example.com/media/techease_earbuds.jpg",
                             Name = "AirPulse Earbuds",
-                            Price = 540.00m,
+                            Price = 89.99m,
                             Quantity = 200
                         },
                         new
@@ -781,9 +781,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Smart magnetic car mount with auto-lock system.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand2\\MagGrip Phone Mount.jfif",
+                            MediaUrl = "https://example.com/media/techease_mount.jpg",
                             Name = "MagGrip Phone Mount",
-                            Price = 190.00m,
+                            Price = 24.99m,
                             Quantity = 150
                         },
                         new
@@ -794,9 +794,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2020, 5, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Fitness smartwatch with heart-rate and sleep tracking.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand2\\PulseTrack Watch.jfif",
+                            MediaUrl = "https://example.com/media/techease_watch.jpg",
                             Name = "PulseTrack Watch",
-                            Price = 690.00m,
+                            Price = 129.99m,
                             Quantity = 80
                         },
                         new
@@ -807,9 +807,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "MagSafe-compatible slim phone case.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand2\\GlideCase.jfif",
+                            MediaUrl = "https://example.com/media/techease_case.jpg",
                             Name = "GlideCase",
-                            Price = 160.00m,
+                            Price = 19.99m,
                             Quantity = 180
                         },
                         new
@@ -821,9 +821,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Vitamin C serum that brightens and smooths skin.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand3\\HydraBloom Serum.jpg",
+                            MediaUrl = "https://example.com/media/glowify_serum.jpg",
                             Name = "HydraBloom Serum",
-                            Price = 250.00m,
+                            Price = 39.99m,
                             Quantity = 120
                         },
                         new
@@ -835,9 +835,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Gentle cleanser with aloe and green tea.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand3\\PureDew Cleanser.png",
+                            MediaUrl = "https://example.com/media/glowify_cleanser.jpg",
                             Name = "PureDew Cleanser",
-                            Price = 180.00m,
+                            Price = 19.99m,
                             Quantity = 200
                         },
                         new
@@ -849,9 +849,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Hydrating toner that refines pores naturally.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand3\\LumiMist Toner.webp",
+                            MediaUrl = "https://example.com/media/glowify_toner.jpg",
                             Name = "LumiMist Toner",
-                            Price = 210.00m,
+                            Price = 24.99m,
                             Quantity = 150
                         },
                         new
@@ -863,9 +863,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Rich moisturizer for overnight skin repair.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand3\\Radiant Night Cream.webp",
+                            MediaUrl = "https://example.com/media/glowify_nightcream.jpg",
                             Name = "Radiant Night Cream",
-                            Price = 330.00m,
+                            Price = 44.99m,
                             Quantity = 100
                         },
                         new
@@ -876,9 +876,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "SPF 50 mineral sunscreen with lightweight feel.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand3\\GlowShield Sunscreen.jpg",
+                            MediaUrl = "https://example.com/media/glowify_sunscreen.jpg",
                             Name = "GlowShield Sunscreen",
-                            Price = 290.00m,
+                            Price = 29.99m,
                             Quantity = 180
                         },
                         new
@@ -889,9 +889,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 4, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "All-day hydration for sensitive skin.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand3\\SilkTouch Moisturizer.png",
+                            MediaUrl = "https://example.com/media/glowify_moisturizer.jpg",
                             Name = "SilkTouch Moisturizer",
-                            Price = 270.00m,
+                            Price = 34.99m,
                             Quantity = 160
                         },
                         new
@@ -903,9 +903,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Oversized hoodie with minimalist street-style logo.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand4\\StreetCore Hoodie.png",
+                            MediaUrl = "https://example.com/media/urbanfuel_hoodie.jpg",
                             Name = "StreetCore Hoodie",
-                            Price = 320.00m,
+                            Price = 64.99m,
                             Quantity = 120
                         },
                         new
@@ -917,9 +917,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Slim-fit joggers for comfort and performance.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand4\\UrbanFlex Joggers.png",
+                            MediaUrl = "https://example.com/media/urbanfuel_joggers.jpg",
                             Name = "UrbanFlex Joggers",
-                            Price = 270.00m,
+                            Price = 49.99m,
                             Quantity = 100
                         },
                         new
@@ -931,9 +931,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Modern street sneakers with breathable mesh upper.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand4\\FuelRunner Sneakers.png",
+                            MediaUrl = "https://example.com/media/urbanfuel_sneakers.jpg",
                             Name = "FuelRunner Sneakers",
-                            Price = 540.00m,
+                            Price = 89.99m,
                             Quantity = 150
                         },
                         new
@@ -945,9 +945,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Lightweight windbreaker with waterproof coating.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand4\\CityWave Jacket.png",
+                            MediaUrl = "https://example.com/media/urbanfuel_jacket.jpg",
                             Name = "CityWave Jacket",
-                            Price = 620.00m,
+                            Price = 99.99m,
                             Quantity = 80
                         },
                         new
@@ -958,9 +958,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2020, 5, 29, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Classic snapback cap with embroidered logo.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand4\\SnapEdge Cap.webp",
+                            MediaUrl = "https://example.com/media/urbanfuel_cap.jpg",
                             Name = "SnapEdge Cap",
-                            Price = 180.00m,
+                            Price = 24.99m,
                             Quantity = 200
                         },
                         new
@@ -971,9 +971,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 2, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Soft cotton tee with subtle reflective branding.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand4\\MetroLayer Tee.jpg",
+                            MediaUrl = "https://example.com/media/urbanfuel_tee.jpg",
                             Name = "MetroLayer Tee",
-                            Price = 190.00m,
+                            Price = 34.99m,
                             Quantity = 140
                         },
                         new
@@ -985,9 +985,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Premium non-slip yoga mat made with eco rubber.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand5\\ZenMat.webp",
+                            MediaUrl = "https://example.com/media/zenora_mat.jpg",
                             Name = "ZenMat Pro",
-                            Price = 350.00m,
+                            Price = 59.99m,
                             Quantity = 110
                         },
                         new
@@ -999,9 +999,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Ultrasonic diffuser with ambient lighting.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand5\\AromaBliss Diffuser.webp",
+                            MediaUrl = "https://example.com/media/zenora_diffuser.jpg",
                             Name = "AromaBliss Diffuser",
-                            Price = 290.00m,
+                            Price = 39.99m,
                             Quantity = 150
                         },
                         new
@@ -1013,9 +1013,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Soy candle infused with lavender and chamomile.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand5\\CalmWave Candle.webp",
+                            MediaUrl = "https://example.com/media/zenora_candle.jpg",
                             Name = "CalmWave Candle",
-                            Price = 170.00m,
+                            Price = 19.99m,
                             Quantity = 180
                         },
                         new
@@ -1027,9 +1027,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Glass water bottle with bamboo lid and sleeve.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand5\\Balance Bottle.webp",
+                            MediaUrl = "https://example.com/media/zenora_bottle.jpg",
                             Name = "Balance Bottle",
-                            Price = 210.00m,
+                            Price = 24.99m,
                             Quantity = 160
                         },
                         new
@@ -1040,9 +1040,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 3, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Guided journal for mindfulness and productivity.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand5\\Focus Journal.webp",
+                            MediaUrl = "https://example.com/media/zenora_journal.jpg",
                             Name = "Focus Journal",
-                            Price = 150.00m,
+                            Price = 14.99m,
                             Quantity = 200
                         },
                         new
@@ -1053,9 +1053,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2021, 4, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Natural lavender mist for better sleep.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand5\\Serenity Pillow Spray.jpg",
+                            MediaUrl = "https://example.com/media/zenora_spray.jpg",
                             Name = "Serenity Pillow Spray",
-                            Price = 180.00m,
+                            Price = 17.99m,
                             Quantity = 180
                         },
                         new
@@ -1067,9 +1067,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Fitness tracker with pulse and oxygen monitoring.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand6\\AeroTrack Smart Band.png",
+                            MediaUrl = "https://example.com/media/aerofit_band.jpg",
                             Name = "AeroTrack Smart Band",
-                            Price = 540.00m,
+                            Price = 79.99m,
                             Quantity = 130
                         },
                         new
@@ -1081,9 +1081,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Adjustable dumbbells for home strength training.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand6\\bowflex-dumbbells.jpg",
+                            MediaUrl = "https://example.com/media/aerofit_dumbbells.jpg",
                             Name = "FlexCore Dumbbells",
-                            Price = 720.00m,
+                            Price = 129.99m,
                             Quantity = 90
                         },
                         new
@@ -1095,9 +1095,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Heart-rate strap compatible with popular apps.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand6\\PulsePro Chest Strap.webp",
+                            MediaUrl = "https://example.com/media/aerofit_strap.jpg",
                             Name = "PulsePro Chest Strap",
-                            Price = 210.00m,
+                            Price = 59.99m,
                             Quantity = 100
                         },
                         new
@@ -1109,9 +1109,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "High-density mat ideal for HIIT and yoga.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand6\\AeroMat Trainer.webp",
+                            MediaUrl = "https://example.com/media/aerofit_mat.jpg",
                             Name = "AeroMat Trainer",
-                            Price = 250.00m,
+                            Price = 39.99m,
                             Quantity = 140
                         },
                         new
@@ -1122,9 +1122,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 6, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Smart bottle that tracks hydration levels.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand6\\HydraFuel Bottle.jfif",
+                            MediaUrl = "https://example.com/media/aerofit_bottle.jpg",
                             Name = "HydraFuel Bottle",
-                            Price = 170.00m,
+                            Price = 34.99m,
                             Quantity = 160
                         },
                         new
@@ -1135,9 +1135,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Lightweight shorts with moisture-wicking tech.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand6\\TrainLite Shorts.jpg",
+                            MediaUrl = "https://example.com/media/aerofit_shorts.jpg",
                             Name = "TrainLite Shorts",
-                            Price = 260.00m,
+                            Price = 29.99m,
                             Quantity = 200
                         },
                         new
@@ -1149,9 +1149,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Bamboo desk lamp with rechargeable LED bulb.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand7\\EcoGlow Lamp.webp",
+                            MediaUrl = "https://example.com/media/econest_lamp.jpg",
                             Name = "EcoGlow Lamp",
-                            Price = 250.00m,
+                            Price = 49.99m,
                             Quantity = 110
                         },
                         new
@@ -1163,9 +1163,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Soft throw blanket made from recycled cotton.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand7\\GreenWave Blanket.jfif",
+                            MediaUrl = "https://example.com/media/econest_blanket.jpg",
                             Name = "GreenWave Blanket",
-                            Price = 320.00m,
+                            Price = 59.99m,
                             Quantity = 100
                         },
                         new
@@ -1177,9 +1177,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Biodegradable planters perfect for indoor herbs.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand7\\PlantPure Planter Set.jpg",
+                            MediaUrl = "https://example.com/media/econest_planters.jpg",
                             Name = "PlantPure Planter Set",
-                            Price = 180.00m,
+                            Price = 29.99m,
                             Quantity = 180
                         },
                         new
@@ -1191,9 +1191,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Natural reed diffuser with citrus essential oils.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand7\\EcoFresh Diffuser.webp",
+                            MediaUrl = "https://example.com/media/econest_diffuser.jpg",
                             Name = "EcoFresh Diffuser",
-                            Price = 210.00m,
+                            Price = 24.99m,
                             Quantity = 150
                         },
                         new
@@ -1204,9 +1204,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Reusable air filter system for cleaner home air.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand7\\PureBreeze Air Filter.webp",
+                            MediaUrl = "https://example.com/media/econest_filter.jpg",
                             Name = "PureBreeze Air Filter",
-                            Price = 640.00m,
+                            Price = 99.99m,
                             Quantity = 90
                         },
                         new
@@ -1217,9 +1217,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Cork coasters made from renewable materials.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand7\\Harmony Coasters.jfif",
+                            MediaUrl = "https://example.com/media/econest_coasters.jpg",
                             Name = "Harmony Coasters",
-                            Price = 160.00m,
+                            Price = 14.99m,
                             Quantity = 200
                         },
                         new
@@ -1231,9 +1231,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "High-speed GaN charger with dual USB-C output.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand8\\VoltSync Charger.webp",
+                            MediaUrl = "https://example.com/media/bytewave_charger.jpg",
                             Name = "VoltSync Charger",
-                            Price = 280.00m,
+                            Price = 39.99m,
                             Quantity = 150
                         },
                         new
@@ -1245,9 +1245,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Ergonomic wireless mouse with silent clicks.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand8\\StreamPad Mouse.jpg",
+                            MediaUrl = "https://example.com/media/bytewave_mouse.jpg",
                             Name = "StreamPad Mouse",
-                            Price = 240.00m,
+                            Price = 29.99m,
                             Quantity = 180
                         },
                         new
@@ -1259,9 +1259,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Shockproof case for portable SSDs.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand8\\DataShell SSD Case.jpg",
+                            MediaUrl = "https://example.com/media/bytewave_ssdcase.jpg",
                             Name = "DataShell SSD Case",
-                            Price = 190.00m,
+                            Price = 19.99m,
                             Quantity = 220
                         },
                         new
@@ -1273,9 +1273,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Compact true wireless earbuds with clear audio.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand8\\WavePods Mini.jpg",
+                            MediaUrl = "https://example.com/media/bytewave_earbuds.jpg",
                             Name = "WavePods Mini",
-                            Price = 420.00m,
+                            Price = 59.99m,
                             Quantity = 140
                         },
                         new
@@ -1286,9 +1286,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2020, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Color-coded USB-C and Lightning cable pack.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand8\\NeonLink Cable Set.webp",
+                            MediaUrl = "https://example.com/media/bytewave_cables.jpg",
                             Name = "NeonLink Cable Set",
-                            Price = 160.00m,
+                            Price = 24.99m,
                             Quantity = 200
                         },
                         new
@@ -1299,9 +1299,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 7, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Foldable aluminum laptop stand with cooling vents.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand8\\GlideStand Laptop Dock.jpg",
+                            MediaUrl = "https://example.com/media/bytewave_stand.jpg",
                             Name = "GlideStand Laptop Dock",
-                            Price = 360.00m,
+                            Price = 44.99m,
                             Quantity = 130
                         },
                         new
@@ -1313,9 +1313,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Refreshing foaming cleanser for daily use.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand9\\AquaRenew Cleanser.png",
+                            MediaUrl = "https://example.com/media/pureglow_cleanser.jpg",
                             Name = "AquaRenew Cleanser",
-                            Price = 180.00m,
+                            Price = 24.99m,
                             Quantity = 160
                         },
                         new
@@ -1327,9 +1327,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Lightweight daily cream with niacinamide for radiant skin.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand9\\BrightVeil Moisturizer.png",
+                            MediaUrl = "https://example.com/media/pureglow_moisturizer.jpg",
                             Name = "BrightVeil Moisturizer",
-                            Price = 220.00m,
+                            Price = 34.99m,
                             Quantity = 140
                         },
                         new
@@ -1341,9 +1341,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Detoxifying clay mask that purifies pores naturally.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand9\\PureCure Mask.jpg",
+                            MediaUrl = "https://example.com/media/pureglow_mask.jpg",
                             Name = "PureCure Mask",
-                            Price = 240.00m,
+                            Price = 29.99m,
                             Quantity = 150
                         },
                         new
@@ -1355,9 +1355,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Deep hydration serum enriched with hyaluronic acid.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand9\\GlowHydra Serum.webp",
+                            MediaUrl = "https://example.com/media/pureglow_serum.jpg",
                             Name = "GlowHydra Serum",
-                            Price = 390.00m,
+                            Price = 44.99m,
                             Quantity = 130
                         },
                         new
@@ -1368,9 +1368,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2022, 12, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Nourishing night cream with plant-based peptides.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand9\\VitaLush Night Cream.webp",
+                            MediaUrl = "https://example.com/media/pureglow_nightcream.jpg",
                             Name = "VitaLush Night Cream",
-                            Price = 260.00m,
+                            Price = 39.99m,
                             Quantity = 120
                         },
                         new
@@ -1381,9 +1381,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2025, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Balancing toner that smooths skin and reduces shine.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand9\\FreshTone Toner.webp",
+                            MediaUrl = "https://example.com/media/pureglow_toner.jpg",
                             Name = "FreshTone Toner",
-                            Price = 210.00m,
+                            Price = 22.99m,
                             Quantity = 160
                         },
                         new
@@ -1395,9 +1395,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Chic velvet dress perfect for evening occasions.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand10\\VelvetEdge Dress.webp",
+                            MediaUrl = "https://example.com/media/trendora_dress.jpg",
                             Name = "VelvetEdge Dress",
-                            Price = 780.00m,
+                            Price = 89.99m,
                             Quantity = 90
                         },
                         new
@@ -1409,9 +1409,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Metallic cropped jacket for a bold statement look.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand10\\UrbanGleam Jacket.jfif",
+                            MediaUrl = "https://example.com/media/trendora_jacket.jpg",
                             Name = "UrbanGleam Jacket",
-                            Price = 650.00m,
+                            Price = 119.99m,
                             Quantity = 80
                         },
                         new
@@ -1423,9 +1423,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Color-shifting sneakers that stand out everywhere.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand10\\ChromaSneak Shoes.webp",
+                            MediaUrl = "https://example.com/media/trendora_sneakers.jpg",
                             Name = "ChromaSneak Shoes",
-                            Price = 540.00m,
+                            Price = 99.99m,
                             Quantity = 120
                         },
                         new
@@ -1437,9 +1437,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Description = "Elegant faux-leather handbag with gold accents.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand10\\LuxeLine Handbag.jfif",
+                            MediaUrl = "https://example.com/media/trendora_bag.jpg",
                             Name = "LuxeLine Handbag",
-                            Price = 720.00m,
+                            Price = 149.99m,
                             Quantity = 70
                         },
                         new
@@ -1450,9 +1450,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2024, 6, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Trendy cropped top for modern streetwear style.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand10\\PulseFit Crop Top.webp",
+                            MediaUrl = "https://example.com/media/trendora_croptop.jpg",
                             Name = "PulseFit Crop Top",
-                            Price = 190.00m,
+                            Price = 39.99m,
                             Quantity = 150
                         },
                         new
@@ -1463,9 +1463,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             CreatedAt = new DateTime(2021, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Retro-futuristic shades with UV400 protection.",
                             IsCustomizable = false,
-                            MediaUrl = "D:\\Nada\\GradProject\\ReelsCommerceSystem\\ReelsCommerceSystem.Api\\wwwroot\\Products\\Brand10\\NeoAura Sunglasses.jfif",
+                            MediaUrl = "https://example.com/media/trendora_sunglasses.jpg",
                             Name = "NeoAura Sunglasses",
-                            Price = 350.00m,
+                            Price = 59.99m,
                             Quantity = 200
                         });
                 });

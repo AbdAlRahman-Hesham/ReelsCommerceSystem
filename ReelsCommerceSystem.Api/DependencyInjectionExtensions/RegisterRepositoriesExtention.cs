@@ -25,7 +25,6 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserInfoService, UserInfoService>();
             services.AddScoped<IInterestService, InterestService>();
-            services.AddScoped<IProductsPerBrandService,ProductsPerBrandService>();
 
 
             services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
