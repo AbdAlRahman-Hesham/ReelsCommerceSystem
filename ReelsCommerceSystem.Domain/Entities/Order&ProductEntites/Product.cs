@@ -17,6 +17,7 @@ public class Product:BaseEntity
     public string MediaUrl { get; set; } = null!;
     public bool IsCustomizable { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public decimal? DiscountPercentage { get; set; }
     public int BrandId { get; set; }
     public Brand Brand { get; set; } = null!;
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
