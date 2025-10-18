@@ -17,11 +17,12 @@ public class Product:BaseEntity
     public string MediaUrl { get; set; } = null!;
     public bool IsCustomizable { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public decimal? DiscountPercentage { get; set; }
     public int BrandId { get; set; }
     public Brand Brand { get; set; } = null!;
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     public ICollection<ProductCart> ProductCarts { get; set; } = new List<ProductCart>();
-    public ICollection<Review> Reviews { get; set; } = new List<Review>();
+    public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
     public ICollection<Reel> Reels { get; set; } = new List<Reel>();
 
 }

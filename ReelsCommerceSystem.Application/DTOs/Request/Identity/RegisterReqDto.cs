@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using ReelsCommerceSystem.Application.Attributies;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+
 
 namespace ReelsCommerceSystem.Application.DTOs.Request.Identity
 {
@@ -26,6 +23,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Request.Identity
         public DateTime? DateOfBirth { get; set; }
         [RegularExpression("^(Male|Female)$")]
         public string? Gender { get; set; }
+        [AllowedImageExtensions]
         public IFormFile? ProfileImage { get; set; }
 
 

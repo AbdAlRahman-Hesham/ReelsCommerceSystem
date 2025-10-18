@@ -7,17 +7,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 
-namespace ReelsCommerceSystem.Infrastructure.Persistence.Configurations
-{
-    public class ReviewConfig : IEntityTypeConfiguration<Review>
-    {
-        public void Configure(EntityTypeBuilder<Review> builder)
-        {
-            builder.Property(r => r.Rating)
-                .IsRequired();
+namespace ReelsCommerceSystem.Infrastructure.Persistence.Configurations;
 
-            builder.Property(r => r.Comment)
-                   .HasMaxLength(1000);
-        }
+public class ReviewConfig : IEntityTypeConfiguration<ProductReview>
+{
+    public void Configure(EntityTypeBuilder<ProductReview> builder)
+    {
+        builder.Property(r => r.Rating)
+            .IsRequired();
+
+        builder.Property(r => r.Comment)
+               .HasMaxLength(1000);
     }
 }
