@@ -17,6 +17,9 @@ public class AuthenticationService(UserManager<User> _userManager,
     {
         var User = await _userManager.FindByEmailAsync(loginReqDto.Email) ?? throw new UserNotFoundException(loginReqDto.Email);
 
+        if (!User.EmailConfirmed)
+            throw new UnauthorizedException();
+
         var IsPasswordValid = await _userManager.CheckPasswordAsync(User, loginReqDto.Password);
         if (IsPasswordValid)
         {

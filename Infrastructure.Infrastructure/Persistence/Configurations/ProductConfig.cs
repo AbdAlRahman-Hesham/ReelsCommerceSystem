@@ -13,6 +13,6 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
         builder.Property(P => P.Category).IsRequired();
         builder.Property(P => P.MediaUrl).IsRequired();
         builder.Property(P => P.Price).HasColumnType("decimal(18,2)");
-
+        builder.Property(p => p.DiscountPercentage).HasPrecision(5, 2);
     }
 }

@@ -27,23 +27,11 @@ namespace ReelsCommerceSystem.Api.Controllers
             };
 
             return Ok(
-       ApiResponse<BrandPolicyRes>.SuccessResponse(
-       
-           response,
-           HttpStatusCode.OK,
-           "Brand policy retrieved successfully.",
-           "تم جلب سياسة الاسترجاع بنجاح.")
-
-
-
-           );
-
-
-
-
-
-
-
+            ApiResponse<BrandPolicyRes>.SuccessResponse(
+                response,
+                HttpStatusCode.OK,
+                "Brand policy retrieved successfully.",
+                "تم جلب سياسة الاسترجاع بنجاح."));
         }
 
     }
