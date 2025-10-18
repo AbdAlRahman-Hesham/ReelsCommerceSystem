@@ -1,6 +1,6 @@
 ﻿using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
-using ReelsCommerceSystem.Infrastructure.Specifications.SpecificationsParams;
+using ReelsCommerceSystem.Shared.SpecificationsParams;
 using System.Xml.XPath;
 
 namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
