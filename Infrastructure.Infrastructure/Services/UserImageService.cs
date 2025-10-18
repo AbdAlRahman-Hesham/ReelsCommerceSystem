@@ -1,34 +1,41 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 
-
-namespace ReelsCommerceSystem.Infrastructure.Services;
-
-public class UserImageService(string _webRootPath) : IUserImageService
+namespace ReelsCommerceSystem.Infrastructure.Services
 {
-    
-
-    public async Task<string> SaveUserImageAsync(IFormFile file)
+    public class UserImageService : IUserImageService
     {
-        if (file == null || file.Length == 0)
-            return null;
+        private readonly Cloudinary _cloudinary;
 
-        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-        var relativePath = Path.Combine("images", "users", fileName);
-        var fullPath = Path.Combine(_webRootPath, relativePath);
-
-        var directory = Path.GetDirectoryName(fullPath);
-        if (!Directory.Exists(directory))
+        public UserImageService(Cloudinary cloudinary)
         {
-            Directory.CreateDirectory(directory);
+            _cloudinary = cloudinary;
         }
 
-        using (var stream = new FileStream(fullPath, FileMode.Create))
+        public async Task<string?> SaveUserImageAsync(IFormFile file)
         {
-            await file.CopyToAsync(stream);
-        }
+            if (file == null || file.Length == 0)
+                return null;
 
-        return relativePath.Replace("\\", "/");
+            await using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Folder = "reels-commerce/users", // custom folder path in Cloudinary
+                PublicId = Guid.NewGuid().ToString(),
+                Transformation = new Transformation()
+                    .Quality("auto")
+                    .FetchFormat("auto")
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            return uploadResult?.SecureUrl?.ToString();
+        }
     }
 }
+
 

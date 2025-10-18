@@ -14,13 +14,6 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
             RegisterAllServices(services); 
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            services.AddScoped<IUserImageService>(provider =>
-            {
-                var env = provider.GetRequiredService<IWebHostEnvironment>();
-                return new UserImageService(env.WebRootPath);
-            });
-
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -54,8 +47,7 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
                         !t.IsAbstract &&
                         t.Name.EndsWith("Service") &&
                         t.Namespace != null &&
-                        t.Namespace.StartsWith("ReelsCommerceSystem") &&
-                        t.Name != nameof(UserImageService))
+                        t.Namespace.StartsWith("ReelsCommerceSystem"))
                     .ToList();
 
                 foreach (var implType in serviceTypes)

@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+﻿using CloudinaryDotNet;
+using Microsoft.Extensions.Options;
 using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
-using ReelsCommerceSystem.Application.Interfaces.Services;
-using ReelsCommerceSystem.Infrastructure.Services;
-using ReelsCommerceSystem.Shared.Responses;
 using ReelsCommerceSystem.Shared.Utilities;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +21,16 @@ builder.Services.AddRepositoriesAndServices();
 
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
+
+builder.Services.AddSingleton(provider =>
+{
+    var settings = provider.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+    var account = new Account(settings.CloudName, settings.ApiKey, settings.ApiSecret);
+    return new Cloudinary(account);
+});
 
 builder.Services.AddAppAuthenticationServices(builder.Configuration);
 
