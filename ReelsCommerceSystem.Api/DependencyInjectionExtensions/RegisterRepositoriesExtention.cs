@@ -23,12 +23,10 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUserInfoService, UserInfoService>();
-            services.AddScoped<IInterestService, InterestService>();
 
 
 
-            services.AddScoped<ITokenBlacklistService, TokenBlacklistService>();
+            
 
 
 
