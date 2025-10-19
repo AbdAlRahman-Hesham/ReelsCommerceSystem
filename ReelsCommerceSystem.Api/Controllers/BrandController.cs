@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using Azure;
+using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Responses;
-using System.Net;
 
 namespace ReelsCommerceSystem.Api.Controllers
 {
@@ -32,6 +33,12 @@ namespace ReelsCommerceSystem.Api.Controllers
                 HttpStatusCode.OK,
                 "Brand policy retrieved successfully.",
                 "تم جلب سياسة الاسترجاع بنجاح."));
+        }
+        [HttpGet("BrandInfo/{brandId}")]
+        public async Task<IActionResult> GetBrandInfo(int brandId)
+        {
+            var result = await _brandService.GetBrandInfoAsync(brandId);
+            return StatusCode(result.StatusCode, result);
         }
 
     }
