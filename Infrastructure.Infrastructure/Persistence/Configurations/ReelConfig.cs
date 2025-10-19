@@ -29,5 +29,6 @@ public class ReelConfig : IEntityTypeConfiguration<Reel>
                .WithMany(b => b.Reels)
                .HasForeignKey(r => r.BrandId)
                .OnDelete(DeleteBehavior.NoAction);
+
     }
 }
