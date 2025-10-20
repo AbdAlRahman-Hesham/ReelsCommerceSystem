@@ -12,8 +12,8 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251018175656_DiscountPercentageConfigration")]
-    partial class DiscountPercentageConfigration
+    [Migration("20251019164827_UpdateReelSeed")]
+    partial class UpdateReelSeed
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1840,6 +1840,508 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Reels");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1200,
+                            NumOfWatches = 8000,
+                            ProductId = 1,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2300,
+                            NumOfWatches = 15000,
+                            ProductId = 2,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1800,
+                            NumOfWatches = 11000,
+                            ProductId = 3,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2600,
+                            NumOfWatches = 20000,
+                            ProductId = 4,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 3400,
+                            NumOfWatches = 25000,
+                            ProductId = 5,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 800,
+                            NumOfWatches = 5000,
+                            ProductId = 7,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 6000,
+                            NumOfWatches = 95000,
+                            ProductId = 8,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 9000,
+                            NumOfWatches = 30000,
+                            ProductId = 9,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 15000,
+                            NumOfWatches = 35000,
+                            ProductId = 10,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 100000,
+                            NumOfWatches = 300000,
+                            ProductId = 11,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2000,
+                            NumOfWatches = 10000,
+                            ProductId = 13,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 5000,
+                            NumOfWatches = 20000,
+                            ProductId = 14,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 8000,
+                            NumOfWatches = 25000,
+                            ProductId = 15,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 10000,
+                            NumOfWatches = 40000,
+                            ProductId = 16,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 15000,
+                            NumOfWatches = 50000,
+                            ProductId = 17,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1700,
+                            NumOfWatches = 12000,
+                            ProductId = 19,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2500,
+                            NumOfWatches = 18000,
+                            ProductId = 20,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 4000,
+                            NumOfWatches = 23000,
+                            ProductId = 21,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 5200,
+                            NumOfWatches = 30000,
+                            ProductId = 22,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 7500,
+                            NumOfWatches = 35000,
+                            ProductId = 23,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1300,
+                            NumOfWatches = 10000,
+                            ProductId = 25,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2000,
+                            NumOfWatches = 14000,
+                            ProductId = 26,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 3600,
+                            NumOfWatches = 20000,
+                            ProductId = 27,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 4500,
+                            NumOfWatches = 26000,
+                            ProductId = 28,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 6000,
+                            NumOfWatches = 30000,
+                            ProductId = 29,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1800,
+                            NumOfWatches = 9000,
+                            ProductId = 31,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2200,
+                            NumOfWatches = 15000,
+                            ProductId = 32,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 3500,
+                            NumOfWatches = 22000,
+                            ProductId = 33,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 4800,
+                            NumOfWatches = 28000,
+                            ProductId = 34,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 5200,
+                            NumOfWatches = 31000,
+                            ProductId = 35,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1500,
+                            NumOfWatches = 7000,
+                            ProductId = 37,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2100,
+                            NumOfWatches = 13000,
+                            ProductId = 38,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2700,
+                            NumOfWatches = 20000,
+                            ProductId = 39,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 4000,
+                            NumOfWatches = 26000,
+                            ProductId = 40,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 5200,
+                            NumOfWatches = 32000,
+                            ProductId = 41,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1800,
+                            NumOfWatches = 11000,
+                            ProductId = 43,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2500,
+                            NumOfWatches = 16000,
+                            ProductId = 44,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 3900,
+                            NumOfWatches = 22000,
+                            ProductId = 45,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 4800,
+                            NumOfWatches = 27000,
+                            ProductId = 46,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 6500,
+                            NumOfWatches = 33000,
+                            ProductId = 47,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1200,
+                            NumOfWatches = 8000,
+                            ProductId = 49,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2000,
+                            NumOfWatches = 12000,
+                            ProductId = 50,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2700,
+                            NumOfWatches = 18000,
+                            ProductId = 51,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 3600,
+                            NumOfWatches = 25000,
+                            ProductId = 52,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 4900,
+                            NumOfWatches = 30000,
+                            ProductId = 53,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 1500,
+                            NumOfWatches = 7000,
+                            ProductId = 55,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 2200,
+                            NumOfWatches = 14000,
+                            ProductId = 56,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 3000,
+                            NumOfWatches = 20000,
+                            ProductId = 57,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 4200,
+                            NumOfWatches = 25000,
+                            ProductId = 58,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
+                            NumOfLikes = 5100,
+                            NumOfWatches = 32000,
+                            ProductId = 59,
+                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
+                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Reviews.ProductReview", b =>

@@ -117,8 +117,8 @@ public class BrandReviewSeeding : IEntityTypeConfiguration<BrandReview>
                     CreatedAt = _staticSeedDate.AddDays(brandId * 3 + i),
                     UserId = userId,
                     BrandId = brandId,
-                    numOfLikes = likes,
-                    numOfDislikes = dislikes
+                    NumOfLikes = likes,
+                    NumOfDislikes = dislikes
                 });
             }
         }
