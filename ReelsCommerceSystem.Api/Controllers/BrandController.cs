@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Brand;
-using Microsoft.Identity.Client;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -40,44 +39,14 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
                 "Brand policy retrieved successfully.",
                 "تم جلب سياسة الاسترجاع بنجاح."));
         }
-        [HttpGet("BrandInfo/{brandId}")]
-        public async Task<IActionResult> GetBrandInfo(int brandId)
-        {
-            var result = await _brandService.GetBrandInfoAsync(brandId);
-            return StatusCode(result.StatusCode, result);
-        }
-        [Authorize] 
-        [HttpPost("ToggleFollow/{brandId}")]
-        public async Task<IActionResult> ToggleFollowBrand(int brandId)
-        {
-           
-            var userId = User.FindFirst("sub")?.Value; 
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return StatusCode((int)HttpStatusCode.Unauthorized,
-                    ApiResponse<string>.ErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized user.", "المستخدم غير مصرح له."));
-            }
-
-            var response = await _brandService.ToggleFollowAsync(brandId, userId);
-
-            return StatusCode(response.StatusCode, response);
-        }
-        return Ok(
-        ApiResponse<BrandPolicyRes>.SuccessResponse(
-            response,
-            HttpStatusCode.OK,
-            "Brand policy retrieved successfully.",
-            "تم جلب سياسة الاسترجاع بنجاح."));
-    }
-
+    
     [HttpGet("BrandInfo/{brandId}")]
     public async Task<IActionResult> GetBrandInfo(int brandId)
     {
         var result = await _brandService.GetBrandInfoAsync(brandId);
         return StatusCode(result.StatusCode, result);
     }
-
+        
     [HttpGet("GetReviewsForBrand")]
     public async Task<IActionResult> GetReviewsForBrand(int brandId)
     {
@@ -99,7 +68,6 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
         var genaricRes = ApiResponse<List<BrandReviewRes>>.SuccessResponse(res, HttpStatusCode.OK);
         return Ok(genaricRes);
     }
-
 
     [Authorize]
     [HttpPost("ToggleLikeToReview")]
@@ -152,5 +120,24 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
 
         return Ok(response);
     }
+   
+    [Authorize]
+    [HttpPost("ToggleFollow/{brandId}")]
+    public async Task<IActionResult> ToggleFollowBrand(int brandId)
+    {
+
+        var userId = User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return StatusCode((int)HttpStatusCode.Unauthorized,
+                ApiResponse<string>.ErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized user.", "المستخدم غير مصرح له."));
+        }
+
+        var response = await _brandService.ToggleFollowAsync(brandId, userId);
+
+        return StatusCode(response.StatusCode, response);
+    }
+        
 
 }
