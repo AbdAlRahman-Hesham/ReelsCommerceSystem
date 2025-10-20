@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251020124416_FollowBrand")]
+    partial class FollowBrand
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -368,18 +371,18 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("NumOfDislikes")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumOfLikes")
-                        .HasColumnType("int");
-
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("numOfDislikes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("numOfLikes")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -396,10 +399,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 1,
                             Comment = "Love their sustainable approach! The quality is amazing and the materials feel premium. Definitely worth the price.",
                             CreatedAt = new DateTime(2024, 1, 4, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 25,
                             Rating = 5,
-                            UserId = "user1"
+                            UserId = "user1",
+                            numOfDislikes = 1,
+                            numOfLikes = 25
                         },
                         new
                         {
@@ -407,10 +410,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 1,
                             Comment = "Good products but shipping took longer than expected. The eco-friendly packaging was a nice touch though.",
                             CreatedAt = new DateTime(2024, 1, 5, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 2,
-                            NumOfLikes = 12,
                             Rating = 4,
-                            UserId = "user2"
+                            UserId = "user2",
+                            numOfDislikes = 2,
+                            numOfLikes = 12
                         },
                         new
                         {
@@ -418,10 +421,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 1,
                             Comment = "The clothes are comfortable and stylish. Happy to support a brand that cares about the environment.",
                             CreatedAt = new DateTime(2024, 1, 6, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 18,
                             Rating = 5,
-                            UserId = "user3"
+                            UserId = "user3",
+                            numOfDislikes = 0,
+                            numOfLikes = 18
                         },
                         new
                         {
@@ -429,10 +432,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 2,
                             Comment = "Their charging dock is a game-changer! Charges all my devices simultaneously without overheating.",
                             CreatedAt = new DateTime(2024, 1, 7, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 32,
                             Rating = 5,
-                            UserId = "user4"
+                            UserId = "user4",
+                            numOfDislikes = 0,
+                            numOfLikes = 32
                         },
                         new
                         {
@@ -440,10 +443,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 2,
                             Comment = "Decent products but customer service could be better. Had an issue with my order resolution.",
                             CreatedAt = new DateTime(2024, 1, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 3,
-                            NumOfLikes = 8,
                             Rating = 3,
-                            UserId = "user5"
+                            UserId = "user5",
+                            numOfDislikes = 3,
+                            numOfLikes = 8
                         },
                         new
                         {
@@ -451,10 +454,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 2,
                             Comment = "The smart accessories are innovative and well-designed. Perfect for my tech-heavy lifestyle.",
                             CreatedAt = new DateTime(2024, 1, 9, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 15,
                             Rating = 4,
-                            UserId = "user6"
+                            UserId = "user6",
+                            numOfDislikes = 1,
+                            numOfLikes = 15
                         },
                         new
                         {
@@ -462,10 +465,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 3,
                             Comment = "The serum transformed my skin! Natural ingredients actually work. My skin has never looked better.",
                             CreatedAt = new DateTime(2024, 1, 10, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 28,
                             Rating = 5,
-                            UserId = "user7"
+                            UserId = "user7",
+                            numOfDislikes = 0,
+                            numOfLikes = 28
                         },
                         new
                         {
@@ -473,10 +476,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 3,
                             Comment = "Products are good but a bit pricey for the quantity. The results are noticeable though.",
                             CreatedAt = new DateTime(2024, 1, 11, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 10,
                             Rating = 4,
-                            UserId = "user8"
+                            UserId = "user8",
+                            numOfDislikes = 1,
+                            numOfLikes = 10
                         },
                         new
                         {
@@ -484,10 +487,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 3,
                             Comment = "Had an allergic reaction to one product. Customer service was helpful with the return.",
                             CreatedAt = new DateTime(2024, 1, 12, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 5,
-                            NumOfLikes = 3,
                             Rating = 2,
-                            UserId = "user9"
+                            UserId = "user9",
+                            numOfDislikes = 5,
+                            numOfLikes = 3
                         },
                         new
                         {
@@ -495,10 +498,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 4,
                             Comment = "Best streetwear brand out there! The hoodies are super comfortable and the designs are unique.",
                             CreatedAt = new DateTime(2024, 1, 13, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 35,
                             Rating = 5,
-                            UserId = "user10"
+                            UserId = "user10",
+                            numOfDislikes = 1,
+                            numOfLikes = 35
                         },
                         new
                         {
@@ -506,10 +509,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 4,
                             Comment = "Quality is good but sizes run small. Make sure to order a size up for the perfect fit.",
                             CreatedAt = new DateTime(2024, 1, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 2,
-                            NumOfLikes = 14,
                             Rating = 4,
-                            UserId = "user1"
+                            UserId = "user1",
+                            numOfDislikes = 2,
+                            numOfLikes = 14
                         },
                         new
                         {
@@ -517,10 +520,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 4,
                             Comment = "Love their style! The jackets are my favorite - perfect for urban fashion enthusiasts.",
                             CreatedAt = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 22,
                             Rating = 5,
-                            UserId = "user2"
+                            UserId = "user2",
+                            numOfDislikes = 0,
+                            numOfLikes = 22
                         },
                         new
                         {
@@ -528,10 +531,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 5,
                             Comment = "The yoga mat is incredible! Non-slip and eco-friendly. My practice has improved significantly.",
                             CreatedAt = new DateTime(2024, 1, 16, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 30,
                             Rating = 5,
-                            UserId = "user3"
+                            UserId = "user3",
+                            numOfDislikes = 0,
+                            numOfLikes = 30
                         },
                         new
                         {
@@ -539,10 +542,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 5,
                             Comment = "Their wellness products create such a calming atmosphere at home. The diffuser is a must-have.",
                             CreatedAt = new DateTime(2024, 1, 17, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 12,
                             Rating = 4,
-                            UserId = "user4"
+                            UserId = "user4",
+                            numOfDislikes = 1,
+                            numOfLikes = 12
                         },
                         new
                         {
@@ -550,10 +553,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 5,
                             Comment = "Good quality products but the scent options are limited. Would love to see more variety.",
                             CreatedAt = new DateTime(2024, 1, 18, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 2,
-                            NumOfLikes = 6,
                             Rating = 3,
-                            UserId = "user5"
+                            UserId = "user5",
+                            numOfDislikes = 2,
+                            numOfLikes = 6
                         },
                         new
                         {
@@ -561,10 +564,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 6,
                             Comment = "The fitness tracker is accurate and durable. Battery life exceeds expectations.",
                             CreatedAt = new DateTime(2024, 1, 19, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 27,
                             Rating = 5,
-                            UserId = "user6"
+                            UserId = "user6",
+                            numOfDislikes = 0,
+                            numOfLikes = 27
                         },
                         new
                         {
@@ -572,10 +575,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 6,
                             Comment = "Smart dumbbells are innovative but the app connectivity can be glitchy sometimes.",
                             CreatedAt = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 4,
-                            NumOfLikes = 5,
                             Rating = 3,
-                            UserId = "user7"
+                            UserId = "user7",
+                            numOfDislikes = 4,
+                            numOfLikes = 5
                         },
                         new
                         {
@@ -583,10 +586,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 6,
                             Comment = "Great fitness equipment for home workouts. The chest strap provides accurate heart rate data.",
                             CreatedAt = new DateTime(2024, 1, 21, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 11,
                             Rating = 4,
-                            UserId = "user8"
+                            UserId = "user8",
+                            numOfDislikes = 1,
+                            numOfLikes = 11
                         },
                         new
                         {
@@ -594,10 +597,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 7,
                             Comment = "Love their eco-friendly approach! The air filter has improved our home air quality noticeably.",
                             CreatedAt = new DateTime(2024, 1, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 29,
                             Rating = 5,
-                            UserId = "user9"
+                            UserId = "user9",
+                            numOfDislikes = 0,
+                            numOfLikes = 29
                         },
                         new
                         {
@@ -605,10 +608,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 7,
                             Comment = "Sustainable products that actually work. The bamboo lamp is both functional and beautiful.",
                             CreatedAt = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 16,
                             Rating = 4,
-                            UserId = "user10"
+                            UserId = "user10",
+                            numOfDislikes = 1,
+                            numOfLikes = 16
                         },
                         new
                         {
@@ -616,10 +619,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 7,
                             Comment = "Good concept but some products feel overpriced for what they offer.",
                             CreatedAt = new DateTime(2024, 1, 24, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 3,
-                            NumOfLikes = 7,
                             Rating = 3,
-                            UserId = "user1"
+                            UserId = "user1",
+                            numOfDislikes = 3,
+                            numOfLikes = 7
                         },
                         new
                         {
@@ -627,10 +630,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 8,
                             Comment = "Their tech accessories are top-notch! The charger is fast and reliable for all my devices.",
                             CreatedAt = new DateTime(2024, 1, 25, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 31,
                             Rating = 5,
-                            UserId = "user2"
+                            UserId = "user2",
+                            numOfDislikes = 1,
+                            numOfLikes = 31
                         },
                         new
                         {
@@ -638,10 +641,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 8,
                             Comment = "Great mouse design but the battery life could be better. Comfortable for long work sessions.",
                             CreatedAt = new DateTime(2024, 1, 26, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 2,
-                            NumOfLikes = 13,
                             Rating = 4,
-                            UserId = "user3"
+                            UserId = "user3",
+                            numOfDislikes = 2,
+                            numOfLikes = 13
                         },
                         new
                         {
@@ -649,10 +652,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 8,
                             Comment = "The earbuds have clear sound quality. Perfect for both calls and music.",
                             CreatedAt = new DateTime(2024, 1, 27, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 17,
                             Rating = 4,
-                            UserId = "user4"
+                            UserId = "user4",
+                            numOfDislikes = 0,
+                            numOfLikes = 17
                         },
                         new
                         {
@@ -660,10 +663,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 9,
                             Comment = "My skin has never been happier! The cleanser is gentle yet effective. Love the ethical approach.",
                             CreatedAt = new DateTime(2024, 1, 28, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 26,
                             Rating = 5,
-                            UserId = "user5"
+                            UserId = "user5",
+                            numOfDislikes = 0,
+                            numOfLikes = 26
                         },
                         new
                         {
@@ -671,10 +674,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 9,
                             Comment = "Good skincare line but the moisturizer could be more hydrating for dry skin types.",
                             CreatedAt = new DateTime(2024, 1, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 2,
-                            NumOfLikes = 4,
                             Rating = 3,
-                            UserId = "user6"
+                            UserId = "user6",
+                            numOfDislikes = 2,
+                            numOfLikes = 4
                         },
                         new
                         {
@@ -682,10 +685,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 9,
                             Comment = "The night cream works wonders! Woke up with glowing skin after just one use.",
                             CreatedAt = new DateTime(2024, 1, 30, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 24,
                             Rating = 5,
-                            UserId = "user7"
+                            UserId = "user7",
+                            numOfDislikes = 1,
+                            numOfLikes = 24
                         },
                         new
                         {
@@ -693,10 +696,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 10,
                             Comment = "Fashion-forward pieces that always get compliments! The dress quality is exceptional.",
                             CreatedAt = new DateTime(2024, 1, 31, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 33,
                             Rating = 5,
-                            UserId = "user8"
+                            UserId = "user8",
+                            numOfDislikes = 0,
+                            numOfLikes = 33
                         },
                         new
                         {
@@ -704,10 +707,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 10,
                             Comment = "Trendy designs but some items sell out too quickly. Wish they had better stock management.",
                             CreatedAt = new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 1,
-                            NumOfLikes = 11,
                             Rating = 4,
-                            UserId = "user9"
+                            UserId = "user9",
+                            numOfDislikes = 1,
+                            numOfLikes = 11
                         },
                         new
                         {
@@ -715,55 +718,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 10,
                             Comment = "Love their unique style! The handbag is my new favorite accessory for every occasion.",
                             CreatedAt = new DateTime(2024, 2, 2, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfDislikes = 0,
-                            NumOfLikes = 19,
                             Rating = 5,
-                            UserId = "user10"
+                            UserId = "user10",
+                            numOfDislikes = 0,
+                            numOfLikes = 19
                         });
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReviewDislikes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ReviewId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReviewId");
-
-                    b.ToTable("BrandReviewDislikes");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReviewLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ReviewId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReviewId");
-
-                    b.ToTable("BrandReviewLikes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.UserBrandFollow", b =>
@@ -1881,508 +1840,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Reels");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BrandId = 1,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1200,
-                            NumOfWatches = 8000,
-                            ProductId = 1,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BrandId = 1,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2300,
-                            NumOfWatches = 15000,
-                            ProductId = 2,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            BrandId = 1,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1800,
-                            NumOfWatches = 11000,
-                            ProductId = 3,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            BrandId = 1,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2600,
-                            NumOfWatches = 20000,
-                            ProductId = 4,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            BrandId = 1,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 3400,
-                            NumOfWatches = 25000,
-                            ProductId = 5,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            BrandId = 2,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 800,
-                            NumOfWatches = 5000,
-                            ProductId = 7,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            BrandId = 2,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 6000,
-                            NumOfWatches = 95000,
-                            ProductId = 8,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            BrandId = 2,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 9000,
-                            NumOfWatches = 30000,
-                            ProductId = 9,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            BrandId = 2,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 15000,
-                            NumOfWatches = 35000,
-                            ProductId = 10,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            BrandId = 2,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 100000,
-                            NumOfWatches = 300000,
-                            ProductId = 11,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            BrandId = 3,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2000,
-                            NumOfWatches = 10000,
-                            ProductId = 13,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            BrandId = 3,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 5000,
-                            NumOfWatches = 20000,
-                            ProductId = 14,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            BrandId = 3,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 8000,
-                            NumOfWatches = 25000,
-                            ProductId = 15,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            BrandId = 3,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 10000,
-                            NumOfWatches = 40000,
-                            ProductId = 16,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            BrandId = 3,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 15000,
-                            NumOfWatches = 50000,
-                            ProductId = 17,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            BrandId = 4,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1700,
-                            NumOfWatches = 12000,
-                            ProductId = 19,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            BrandId = 4,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2500,
-                            NumOfWatches = 18000,
-                            ProductId = 20,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            BrandId = 4,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 4000,
-                            NumOfWatches = 23000,
-                            ProductId = 21,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            BrandId = 4,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 5200,
-                            NumOfWatches = 30000,
-                            ProductId = 22,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            BrandId = 4,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 7500,
-                            NumOfWatches = 35000,
-                            ProductId = 23,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            BrandId = 5,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1300,
-                            NumOfWatches = 10000,
-                            ProductId = 25,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            BrandId = 5,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2000,
-                            NumOfWatches = 14000,
-                            ProductId = 26,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            BrandId = 5,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 3600,
-                            NumOfWatches = 20000,
-                            ProductId = 27,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            BrandId = 5,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 4500,
-                            NumOfWatches = 26000,
-                            ProductId = 28,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            BrandId = 5,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 6000,
-                            NumOfWatches = 30000,
-                            ProductId = 29,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            BrandId = 6,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1800,
-                            NumOfWatches = 9000,
-                            ProductId = 31,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 27,
-                            BrandId = 6,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2200,
-                            NumOfWatches = 15000,
-                            ProductId = 32,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 28,
-                            BrandId = 6,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 3500,
-                            NumOfWatches = 22000,
-                            ProductId = 33,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 29,
-                            BrandId = 6,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 4800,
-                            NumOfWatches = 28000,
-                            ProductId = 34,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 30,
-                            BrandId = 6,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 5200,
-                            NumOfWatches = 31000,
-                            ProductId = 35,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 31,
-                            BrandId = 7,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1500,
-                            NumOfWatches = 7000,
-                            ProductId = 37,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            BrandId = 7,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2100,
-                            NumOfWatches = 13000,
-                            ProductId = 38,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 33,
-                            BrandId = 7,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2700,
-                            NumOfWatches = 20000,
-                            ProductId = 39,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 34,
-                            BrandId = 7,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 4000,
-                            NumOfWatches = 26000,
-                            ProductId = 40,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 35,
-                            BrandId = 7,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 5200,
-                            NumOfWatches = 32000,
-                            ProductId = 41,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 36,
-                            BrandId = 8,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1800,
-                            NumOfWatches = 11000,
-                            ProductId = 43,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 37,
-                            BrandId = 8,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2500,
-                            NumOfWatches = 16000,
-                            ProductId = 44,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 38,
-                            BrandId = 8,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 3900,
-                            NumOfWatches = 22000,
-                            ProductId = 45,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 39,
-                            BrandId = 8,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 4800,
-                            NumOfWatches = 27000,
-                            ProductId = 46,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 40,
-                            BrandId = 8,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 6500,
-                            NumOfWatches = 33000,
-                            ProductId = 47,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 41,
-                            BrandId = 9,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1200,
-                            NumOfWatches = 8000,
-                            ProductId = 49,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 42,
-                            BrandId = 9,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2000,
-                            NumOfWatches = 12000,
-                            ProductId = 50,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 43,
-                            BrandId = 9,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2700,
-                            NumOfWatches = 18000,
-                            ProductId = 51,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 44,
-                            BrandId = 9,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 3600,
-                            NumOfWatches = 25000,
-                            ProductId = 52,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 45,
-                            BrandId = 9,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 4900,
-                            NumOfWatches = 30000,
-                            ProductId = 53,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 46,
-                            BrandId = 10,
-                            CreatedAt = new DateTime(2024, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 1500,
-                            NumOfWatches = 7000,
-                            ProductId = 55,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 47,
-                            BrandId = 10,
-                            CreatedAt = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 2200,
-                            NumOfWatches = 14000,
-                            ProductId = 56,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 48,
-                            BrandId = 10,
-                            CreatedAt = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 3000,
-                            NumOfWatches = 20000,
-                            ProductId = 57,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 49,
-                            BrandId = 10,
-                            CreatedAt = new DateTime(2024, 9, 22, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 4200,
-                            NumOfWatches = 25000,
-                            ProductId = 58,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        },
-                        new
-                        {
-                            Id = 50,
-                            BrandId = 10,
-                            CreatedAt = new DateTime(2024, 9, 29, 0, 0, 0, 0, DateTimeKind.Utc),
-                            NumOfLikes = 5100,
-                            NumOfWatches = 32000,
-                            ProductId = 59,
-                            VideoUrl = "https://drive.google.com/file/d/1LClVnDoZRd4HGWi0Lt25ks6Av3r-XHxW/view?usp=drive_link"
-                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Reviews.ProductReview", b =>
@@ -2921,28 +2378,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReviewDislikes", b =>
-                {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReview", "Review")
-                        .WithMany("Dislikes")
-                        .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Review");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReviewLike", b =>
-                {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReview", "Review")
-                        .WithMany("Likes")
-                        .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Review");
-                });
-
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.UserBrandFollow", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
@@ -3183,13 +2618,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("UserFollows");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReview", b =>
-                {
-                    b.Navigation("Dislikes");
-
-                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>

@@ -10,4 +10,5 @@ public interface IBrandService
     Task<string?> GetBrandPolicyAsync(int brandId);
     Task<ToggleLikeRes> BrandReviewLikeAsync(string userId, ToggleLikeReq req);
     Task<ToggleDislikeRes> BrandReviewDislikeAsync(string userId, ToggleDislikeReq req);
+    Task<ApiResponse<BrandFollowResponse>> ToggleFollowAsync(int brandId, string userId);
 }

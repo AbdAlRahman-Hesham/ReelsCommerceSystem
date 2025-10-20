@@ -73,6 +73,7 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<BlacklistedToken> BlacklistedTokens { get; set; }
     public DbSet<Interest> Interests { get; set; }
     public DbSet<BrandReviewLike> BrandReviewLikes { get; set; }
+    public DbSet<UserBrandFollow> UserBrandFollows { get; set; }
 
 }
 
