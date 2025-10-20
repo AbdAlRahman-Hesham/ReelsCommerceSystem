@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace ReelsCommerceSystem.Application.DTOs.Request.Brand
+namespace ReelsCommerceSystem.Application.DTOs.Request.Brand;
+
+public class ToggleLikeReq
 {
-    public class ToggleLikeReq
-    {
-        public int ReviewId { get; set; }
-        public bool IsLiked { get; set; }
-    }
+    public int ReviewId { get; set; }
+    public bool IsLiked { get; set; }
+}
+public class ToggleDislikeReq
+{
+    public int ReviewId { get; set; }
+    public bool IsDisliked { get; set; }
 }

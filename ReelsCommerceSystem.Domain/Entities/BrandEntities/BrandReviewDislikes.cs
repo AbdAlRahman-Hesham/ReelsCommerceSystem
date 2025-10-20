@@ -2,8 +2,7 @@
 
 namespace ReelsCommerceSystem.Domain.Entities.BrandEntities;
 
-//ERD
-public class BrandReviewLike:BaseEntity
+public class BrandReviewDislikes : BaseEntity
 {
     public int ReviewId { get; set; }
     public string UserId { get; set; }
