@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Responses;
@@ -40,6 +42,24 @@ namespace ReelsCommerceSystem.Api.Controllers
             var result = await _brandService.GetBrandInfoAsync(brandId);
             return StatusCode(result.StatusCode, result);
         }
+        [Authorize] 
+        [HttpPost("ToggleFollow/{brandId}")]
+        public async Task<IActionResult> ToggleFollowBrand(int brandId)
+        {
+           
+            var userId = User.FindFirst("sub")?.Value; 
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return StatusCode((int)HttpStatusCode.Unauthorized,
+                    ApiResponse<string>.ErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized user.", "المستخدم غير مصرح له."));
+            }
+
+            var response = await _brandService.ToggleFollowAsync(brandId, userId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
 
     }
 }

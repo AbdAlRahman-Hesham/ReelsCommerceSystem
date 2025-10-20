@@ -12,5 +12,6 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
     {
          Task<string?> GetBrandPolicyAsync(int brandId);
         Task<ApiResponse<BrandInfoRes>> GetBrandInfoAsync(int brandId);
+        Task<ApiResponse<BrandFollowResponse>> ToggleFollowAsync(int brandId, string userId);
     }
 }
