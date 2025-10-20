@@ -14,5 +14,6 @@ public class BrandReview:BaseEntity
     public Brand Brand { get; set; } = null!;
     public int numOfLikes { get; set; }
     public int numOfDislikes { get; set; }
+    public virtual ICollection<BrandReviewLike>? Likes { get; set; } = new HashSet<BrandReviewLike>();
 
 }
