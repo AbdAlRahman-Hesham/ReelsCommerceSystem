@@ -12,7 +12,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Brand
     {
         public BrandByIdSpec(int brandId) : base(b=>b.Id==brandId)
         {
-            
+            AddInclude(b => b.Reels);
+            AddInclude(b => b.UserFollows);
         }
 
     }
