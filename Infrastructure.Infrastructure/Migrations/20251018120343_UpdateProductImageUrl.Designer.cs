@@ -378,10 +378,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("numOfDislikes")
+                    b.Property<int>("NumOfDislikes")
                         .HasColumnType("int");
 
-                    b.Property<int>("numOfLikes")
+                    b.Property<int>("NumOfLikes")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

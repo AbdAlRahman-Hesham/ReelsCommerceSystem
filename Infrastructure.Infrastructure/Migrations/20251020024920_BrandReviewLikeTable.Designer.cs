@@ -12,8 +12,8 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251018175656_DiscountPercentageConfigration")]
-    partial class DiscountPercentageConfigration
+    [Migration("20251020024920_BrandReviewLikeTable")]
+    partial class BrandReviewLikeTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -723,6 +723,28 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             numOfDislikes = 0,
                             numOfLikes = 19
                         });
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReviewLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ReviewId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewId");
+
+                    b.ToTable("BrandReviewLikes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.UserBrandFollow", b =>
@@ -2378,6 +2400,17 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReviewLike", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReview", "Review")
+                        .WithMany("Likes")
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Review");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.UserBrandFollow", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
@@ -2618,6 +2651,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("UserFollows");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReview", b =>
+                {
+                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>

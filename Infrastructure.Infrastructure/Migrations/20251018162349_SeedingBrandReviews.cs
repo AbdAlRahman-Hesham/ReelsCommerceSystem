@@ -32,7 +32,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "BrandReview",
-                columns: new[] { "Id", "BrandId", "Comment", "CreatedAt", "Rating", "UserId", "numOfDislikes", "numOfLikes" },
+                columns: new[] { "Id", "BrandId", "Comment", "CreatedAt", "Rating", "UserId", "NumOfDislikes", "NumOfLikes" },
                 values: new object[,]
                 {
                     { 1, 1, "Love their sustainable approach! The quality is amazing and the materials feel premium. Definitely worth the price.", new DateTime(2024, 1, 4, 0, 0, 0, 0, DateTimeKind.Utc), 5, "user1", 1, 25 },

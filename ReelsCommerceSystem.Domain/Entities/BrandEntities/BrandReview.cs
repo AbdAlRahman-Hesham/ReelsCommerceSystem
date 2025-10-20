@@ -12,7 +12,9 @@ public class BrandReview:BaseEntity
     public User User { get; set; } = null!;
     public int BrandId { get; set; }
     public Brand Brand { get; set; } = null!;
-    public int numOfLikes { get; set; }
-    public int numOfDislikes { get; set; }
+    public int NumOfLikes { get; set; }
+    public int NumOfDislikes { get; set; }
+    public virtual ICollection<BrandReviewLike>? Likes { get; set; } = new HashSet<BrandReviewLike>();
+    public virtual ICollection<BrandReviewDislikes>? Dislikes { get; set; } = new HashSet<BrandReviewDislikes>();
 
 }
