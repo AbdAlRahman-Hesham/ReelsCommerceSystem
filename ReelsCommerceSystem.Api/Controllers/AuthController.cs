@@ -114,6 +114,7 @@ public class AuthController : AppBaseController
         }
     }
 
+
     [HttpGet("CheckEmail")]
     public async Task<ActionResult<ApiResponse<bool>>> CheckEmail([FromQuery] string Email)
     {
