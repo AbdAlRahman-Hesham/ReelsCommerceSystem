@@ -9,6 +9,7 @@ using ReelsCommerceSystem.Domain.Entities.CartEntities;
 using ReelsCommerceSystem.Domain.Entities.DisputeEntities;
 using ReelsCommerceSystem.Domain.Entities.ForumPostEntities;
 using ReelsCommerceSystem.Domain.Entities.InterestEntities;
+using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductCartEntities;
@@ -74,6 +75,7 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<Interest> Interests { get; set; }
     public DbSet<BrandReviewLike> BrandReviewLikes { get; set; }
     public DbSet<UserBrandFollow> UserBrandFollows { get; set; }
+    public DbSet<WishlistItem> WishlistItems { get; set; }
 
 }
 
