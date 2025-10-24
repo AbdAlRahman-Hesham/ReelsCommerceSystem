@@ -18,6 +18,7 @@ using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
 using ReelsCommerceSystem.Domain.Entities.UserOrderEntities;
+using ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -26,6 +27,8 @@ public class AppDbContext :IdentityDbContext<User>
     public AppDbContext(DbContextOptions<AppDbContext> options):base(options){ }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+       
+
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.Entity<IdentityRole>(b =>
