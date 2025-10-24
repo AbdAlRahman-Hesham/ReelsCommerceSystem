@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251022212510_UpdatedWishlist")]
+    partial class UpdatedWishlist
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -904,58 +907,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Interests");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Fashion"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Makeup"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Shoes"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Candles"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Perfumes"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Jewelry"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Accessories"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Travel"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Bags"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Handmade Crafts"
-                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
