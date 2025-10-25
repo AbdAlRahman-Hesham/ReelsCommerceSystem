@@ -15,7 +15,6 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            services.AddScoped<ICartRepository, CartRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

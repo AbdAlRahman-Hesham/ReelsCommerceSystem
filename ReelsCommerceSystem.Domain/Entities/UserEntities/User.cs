@@ -28,7 +28,6 @@ public class User : IdentityUser
     public DateTime? DateOfBirth { get; set; }
 
     public ICollection<UserOrder> UserOrders { get; set; } = new List<UserOrder>();
-    public ICollection<Cart> Carts { get; set; } = new List<Cart>();
     public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
     public ICollection<ForumPost> ForumPosts { get; set; } = new List<ForumPost>();
     public ICollection<AiChat> AiChats { get; set; } = new List<AiChat>();

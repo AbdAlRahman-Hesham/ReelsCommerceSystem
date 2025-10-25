@@ -22,10 +22,6 @@ public static class AddApplicationDatabaseConfig
         {
             options.UseSqlServer(connString);
         });
-        services.AddDbContext<CartDbContext>(options =>
-        {
-            options.UseInMemoryDatabase("CartDatabase");
-        });
 
         services.AddIdentity<User, IdentityRole>(options =>
         {
