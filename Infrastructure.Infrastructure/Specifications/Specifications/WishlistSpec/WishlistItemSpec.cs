@@ -18,6 +18,15 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Wishl
             )
         {
         }
+        public WishlistItemSpec(string userId) : base
+            (
+            criteria: (item => item.UserId == userId),
+            includes: [item => item.Product,item=>item.Product.Brand],
+            orderBy: item => item.CreatedAt,
+            sortOrder: XmlSortOrder.Descending
+            )
+        {
+        }
 
 
     }
