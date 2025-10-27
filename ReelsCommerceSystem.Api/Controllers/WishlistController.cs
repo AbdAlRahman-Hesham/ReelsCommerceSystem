@@ -51,5 +51,26 @@ namespace ReelsCommerceSystem.Api.Controllers
                 ));
             }
         }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetWishlist()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var result = await _wishlistService.GetWishlistProductsAsync(userId);
+            var messageEn = result.IsEmpty
+                ? "Wishlist is empty."
+                : "Wishlist retrieved successfully.";
+
+            var messageAr = result.IsEmpty
+                ? "قائمة المفضلة فارغة."
+                : "تم جلب قائمة المفضلة بنجاح.";
+
+            return Ok(ApiResponse<GetWishlistProductsRes>.SuccessResponse(
+                result,
+                HttpStatusCode.OK,
+                messageEn,
+                messageAr
+            ));
+        }
     }
 }
