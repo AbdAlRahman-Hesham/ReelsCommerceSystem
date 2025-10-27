@@ -44,6 +44,7 @@ public class ProductsPerBrandService(IUnitOfWork unitOfWork, IHttpContextAccesso
         var products = await _unitOfWork.Repository<Product>().GetAllWithSpecAsync(spec);
         var result = products.Select(p => new GetProductRes
         {
+            Id = p.Id,
             ProductName = p.Name,
             ImageUrl = p.MediaUrl != null && p.MediaUrl.StartsWith("Products/")
                         ? $"{baseUrl}{p.MediaUrl}"

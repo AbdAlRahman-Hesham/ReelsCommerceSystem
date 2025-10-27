@@ -80,7 +80,6 @@ public class AuthController : AppBaseController
             ));
         }
     }
-
     [Consumes("multipart/form-data")]
     [HttpPost("Register")]
     public async Task<ActionResult<ApiResponse<RegisterResDto>>> Register([FromForm] RegisterReqDto registerReqDto)
@@ -114,6 +113,7 @@ public class AuthController : AppBaseController
             ));
         }
     }
+
 
     [HttpGet("CheckEmail")]
     public async Task<ActionResult<ApiResponse<bool>>> CheckEmail([FromQuery] string Email)

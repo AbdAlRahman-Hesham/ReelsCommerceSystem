@@ -1,5 +1,6 @@
 ﻿using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
+using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductCartEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
@@ -25,5 +26,8 @@ public class Product:BaseEntity
     public ICollection<ProductCart> ProductCarts { get; set; } = new List<ProductCart>();
     public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
     public ICollection<Reel> Reels { get; set; } = new List<Reel>();
+    //ERD
+    public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
+
 
 }
