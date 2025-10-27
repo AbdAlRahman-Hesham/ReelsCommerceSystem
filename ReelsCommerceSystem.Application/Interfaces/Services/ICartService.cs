@@ -7,7 +7,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services;
 
 public interface ICartService
 {
-    public Task<ApiResponse<CartRes>> AddToCartAsync(AddToCartReq req);
+    public Task<ApiResponse<CartRes>> AddToCartAsync(string userId,AddToCartReq req);
 
     public ApiResponse<CartRes> GetUserCart(string userId);
 }

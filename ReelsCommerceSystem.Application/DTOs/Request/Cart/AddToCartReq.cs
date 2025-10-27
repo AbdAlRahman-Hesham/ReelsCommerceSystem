@@ -8,9 +8,12 @@ namespace ReelsCommerceSystem.Application.DTOs.Request.Cart
 {
     public class AddToCartReq
     {
-        public string  userId { get; set; }
-        public int productId { get; set; }
-        public int quantity { get; set; }
-        
+        public List<CartItemReq> Items { get; set; } = new();
+    }
+
+    public class CartItemReq
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
     }
 }
