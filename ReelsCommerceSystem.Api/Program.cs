@@ -32,11 +32,13 @@ builder.Services.AddSingleton(provider =>
     return new Cloudinary(account);
 });
 
+
 builder.Services.AddAppAuthenticationServices(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddHttpClient();
+builder.Services.AddMemoryCache();
 
 
 var app = builder.Build();

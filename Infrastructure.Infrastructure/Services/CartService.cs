@@ -1,0 +1,106 @@
+﻿using Microsoft.AspNetCore.Identity;
+using ReelsCommerceSystem.Application.DTOs.Request.Cart;
+using ReelsCommerceSystem.Application.DTOs.Response.Cart;
+using ReelsCommerceSystem.Application.Interfaces.Repositories;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.CartEntities;
+using ReelsCommerceSystem.Domain.Entities.ProductCartEntities;
+using ReelsCommerceSystem.Domain.Entities.ProductEntites;
+using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Shared.Responses;
+using System.Net;
+
+namespace ReelsCommerceSystem.Infrastructure.Services;
+
+public class CartService : ICartService
+{
+    private readonly ICartCacheService _cartCache;
+    private readonly IGenericRepository<Product> _productRepo;
+    private readonly UserManager<User> _userManager;
+
+
+    public CartService(ICartCacheService cartCache, IGenericRepository<Product> productRepo, UserManager<User> userManager)
+    {
+        _cartCache = cartCache;
+        _productRepo = productRepo;
+        _userManager = userManager;
+    }
+
+    public async Task<ApiResponse<CartRes>> AddToCartAsync(string userId,AddToCartReq req)
+    {
+        if (req.Items == null || !req.Items.Any())
+            return ApiResponse<CartRes>.ErrorResponse(HttpStatusCode.BadRequest, en: "No products provided.", "لم يتم إرسال أي منتجات.");
+
+        var cart = _cartCache.GetCart(userId) ?? new Cart { UserId = userId };
+
+        foreach (var item in req.Items)
+        {
+            var product = await _productRepo.GetByIdAsync(item.ProductId);
+            if (product == null)
+                continue; 
+
+            var existing = cart.ProductCarts.FirstOrDefault(p => p.ProductId == item.ProductId);
+            if (existing != null)
+                existing.Quantity += item.Quantity;
+            else
+            {
+                cart.ProductCarts.Add(new ProductCart
+                {
+                    ProductId = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Price = product.Price * (product.DiscountPercentage ?? 1),
+                    Category = product.Category,
+                    MediaUrl = product.MediaUrl,
+                    Quantity = item.Quantity
+                });
+            }
+        }
+
+        _cartCache.SaveCart(userId, cart);
+        var updatedCart = _cartCache.GetCart(userId);
+
+        var cartRes = new CartRes
+        {
+            CartId = updatedCart.Id,
+            UserId = userId,
+            CartItems = updatedCart.ProductCarts.Select(ci => new CartItemRes
+            {
+                ProductId = ci.ProductId,
+                ProductName = ci.Name,
+                ProductMediaUrl = ci.MediaUrl,
+                ProductPrice = ci.Price,
+                Quantity = ci.Quantity
+            }).ToList()
+        };
+
+        return ApiResponse<CartRes>.SuccessResponse(cartRes, HttpStatusCode.OK, en: "Products added to cart successfully.", "تمت إضافة المنتجات إلى عربة التسوق بنجاح");
+    }
+
+    public ApiResponse<CartRes> GetUserCart(string userId)
+    {
+        var cart = _cartCache.GetCart(userId);
+        if (cart == null || cart.ProductCarts == null || !cart.ProductCarts.Any())
+            return ApiResponse<CartRes>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                en: "Your cart is empty.",
+                ar: "عربة التسوق فارغة."
+            );
+
+        var res = new CartRes
+        {
+            CartId = cart.Id,
+            UserId = userId,
+            CartItems = cart.ProductCarts.Select(ci => new CartItemRes
+            {
+                ProductId = ci.ProductId,
+                ProductName = ci.Name,
+                ProductMediaUrl = ci.MediaUrl,
+                ProductPrice = ci.Price,
+                Quantity = ci.Quantity
+            }).ToList()
+        };
+
+        return ApiResponse<CartRes>.SuccessResponse(res, HttpStatusCode.OK, en: "Cart fetched.", "تم جلب عربة التسوق");
+    }
+}

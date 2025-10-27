@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251025183642_Remove-Cart-Table")]
+    partial class RemoveCartTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -793,6 +796,28 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.ToTable("UserBrandFollows");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Cart");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.DisputeEntities.Dispute", b =>
                 {
                     b.Property<int>("Id")
@@ -1015,6 +1040,27 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("WishlistItems", (string)null);
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductCartEntities.ProductCart", b =>
+                {
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductCart");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", b =>
@@ -3005,6 +3051,17 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.DisputeEntities.Dispute", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", "Order")
@@ -3079,6 +3136,25 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductCartEntities.ProductCart", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", "Cart")
+                        .WithMany("ProductCarts")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", "Product")
+                        .WithMany("ProductCarts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", b =>
@@ -3224,6 +3300,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("Likes");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CartEntities.Cart", b =>
+                {
+                    b.Navigation("ProductCarts");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", b =>
                 {
                     b.Navigation("UserInterests");
@@ -3242,6 +3323,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                 {
                     b.Navigation("OrderProducts");
 
+                    b.Navigation("ProductCarts");
+
                     b.Navigation("Reels");
 
                     b.Navigation("Reviews");
@@ -3256,6 +3339,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("AiChats");
 
                     b.Navigation("BrandFollows");
+
+                    b.Navigation("Carts");
 
                     b.Navigation("Disputes");
 

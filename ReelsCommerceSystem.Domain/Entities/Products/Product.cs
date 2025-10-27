@@ -23,7 +23,6 @@ public class Product:BaseEntity
     public int BrandId { get; set; }
     public Brand Brand { get; set; } = null!;
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
-    public ICollection<ProductCart> ProductCarts { get; set; } = new List<ProductCart>();
     public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
     public ICollection<Reel> Reels { get; set; } = new List<Reel>();
     //ERD
