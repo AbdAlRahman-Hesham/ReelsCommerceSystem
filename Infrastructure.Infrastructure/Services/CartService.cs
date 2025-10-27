@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Cart;
 using ReelsCommerceSystem.Application.DTOs.Response.Cart;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
@@ -49,7 +51,7 @@ public class CartService : ICartService
                     ProductId = product.Id,
                     Name = product.Name,
                     Description = product.Description,
-                    Price = product.Price * (product.DiscountPercentage ?? 1),
+                    Price = product.Price * (1 - ((product.DiscountPercentage ?? 0) / 100m)),
                     Category = product.Category,
                     MediaUrl = product.MediaUrl,
                     Quantity = item.Quantity
@@ -103,4 +105,74 @@ public class CartService : ICartService
 
         return ApiResponse<CartRes>.SuccessResponse(res, HttpStatusCode.OK, en: "Cart fetched.", "تم جلب عربة التسوق");
     }
+
+    public async Task<ApiResponse<CartRes>> UpdateCartAsync(string userId, UpdateCartReq updates)
+    {
+        var cart = _cartCache.GetCart(userId);
+        if (cart == null)
+            return ApiResponse<CartRes>.ErrorResponse(HttpStatusCode.NotFound, en: "Cart not found.", "لم يتم العثور على عربة التسوق");
+
+        foreach (var update in updates.Items)
+        {
+            var item = cart.ProductCarts.FirstOrDefault(p => p.ProductId == update.ProductId);
+
+            if (item == null && (!update.Quantity.HasValue || update.Quantity.Value <= 0) &&
+            (!update.Change.HasValue || update.Change.Value <= 0))
+                continue;
+
+
+            if (item == null)
+            {
+                var product = await _productRepo.GetByIdAsync(update.ProductId);
+                if (product == null) continue;
+
+                int initialQuantity = (update.Change ?? update.Quantity ?? 0);
+                if (initialQuantity <= 0) continue;
+
+                cart.ProductCarts.Add(new ProductCart
+                {
+                    ProductId = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Price = product.Price * (1 - ((product.DiscountPercentage ?? 0) / 100m)),
+                    Category = product.Category,
+                    MediaUrl = product.MediaUrl,
+                    Quantity = initialQuantity
+                });
+            }
+            else
+            {
+                if (update.Change.HasValue)
+                    item.Quantity += update.Change.Value;
+
+                else if (update.Quantity.HasValue)
+                    item.Quantity = update.Quantity.Value;
+
+                if (item.Quantity <= 0)
+                    cart.ProductCarts.Remove(item);
+            }
+        }
+        
+
+        _cartCache.SaveCart(userId, cart);
+        var updatedCart = _cartCache.GetCart(userId);
+
+        var res = new CartRes
+        {
+            CartId = updatedCart.Id,
+            UserId = userId,
+            CartItems = updatedCart.ProductCarts.Select(ci => new CartItemRes
+            {
+                ProductId = ci.ProductId,
+                ProductName = ci.Name,
+                ProductMediaUrl = ci.MediaUrl,
+                ProductPrice = ci.Price,
+                Quantity = ci.Quantity
+            }).ToList()
+        };
+
+        return ApiResponse<CartRes>.SuccessResponse(res, HttpStatusCode.OK,
+            en: "Cart updated successfully.", ar: "تم تحديث عربة التسوق بنجاح");
+    }
+
 }

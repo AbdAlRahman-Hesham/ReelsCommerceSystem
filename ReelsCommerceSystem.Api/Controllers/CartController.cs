@@ -8,11 +8,10 @@ using ReelsCommerceSystem.Infrastructure.Services;
 using System.Security.Claims;
 
 namespace ReelsCommerceSystem.Api.Controllers;
-
+[Authorize]
 public class CartController(ICartService _cartservice) : AppBaseController
 {
     [HttpGet]
-    [Authorize]
     public IActionResult GetCartByUser()
     {
         var UserId= User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -23,7 +22,6 @@ public class CartController(ICartService _cartservice) : AppBaseController
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> AddToCart([FromBody] AddToCartReq request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -34,6 +32,17 @@ public class CartController(ICartService _cartservice) : AppBaseController
         var response = await _cartservice.AddToCartAsync(userId, request);
 
         return StatusCode(response.StatusCode,response);
+    }
+    [HttpPut]
+    public async Task<IActionResult> UpdateCart([FromBody] UpdateCartReq request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized(new { message = "User not authenticated" });
+
+        var response = await _cartservice.UpdateCartAsync(userId, request);
+
+        return StatusCode(response.StatusCode, response);
     }
 
 }
