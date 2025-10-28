@@ -5,15 +5,55 @@ using System.Xml.XPath;
 
 namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
 
-public class ProductSpec(ProductSpecParams productSpecParams) : Specification<Product>
-    (
-    criteria: p=> p.Quantity == productSpecParams.Quantity,
-    includes: null,
-    orderBy: null,
-    sortOrder: XmlSortOrder.Ascending,
-    pageSize: 3,
-    pageIndex:2
-    )
+public class ProductSpec() : Specification<Product>
 {
-    
+
+    public ProductSpec(ProductSpecParams productSpecParams):this()
+    {
+        AddCriteria(p =>
+       (string.IsNullOrEmpty(productSpecParams.Search) || p.Name.ToLower().Contains(productSpecParams.Search.ToLower())) &&
+       (string.IsNullOrEmpty(productSpecParams.Color) || p.Color.ToLower() == productSpecParams.Color.ToLower()) &&
+       (string.IsNullOrEmpty(productSpecParams.Size) || p.Size.ToLower() == productSpecParams.Size.ToLower()) &&
+       (!productSpecParams.MinPrice.HasValue || p.Price >= productSpecParams.MinPrice.Value) &&
+       (!productSpecParams.MaxPrice.HasValue || p.Price <= productSpecParams.MaxPrice.Value) &&
+       (!productSpecParams.HaveOffer.HasValue || p.HaveOffer == productSpecParams.HaveOffer.Value) &&
+       (string.IsNullOrEmpty(productSpecParams.Status) || p.Status.ToLower() == productSpecParams.Status.ToLower())
+   );
+        
+        AddInclude(p => p.Brand);
+
+        switch (productSpecParams.Sort)
+        {
+            case "priceAsc":
+                AddOrderBy(p => p.Price);
+                break;
+            case "priceDesc":
+                AddOrderByDescending(p => p.Price);
+                break;
+            case "nameAsc":
+                AddOrderBy(p => p.Name);
+                break;
+            case "nameDesc":
+                AddOrderByDescending(p => p.Name);
+                break;
+            case "newest":
+                AddOrderByDescending(p => p.CreatedAt);
+                break;
+            case "oldest":
+                AddOrderBy(p => p.CreatedAt);
+                break;
+            default:
+                AddOrderBy(p => p.Name);
+                break;
+        }
+
+        if (productSpecParams.PageIndex.HasValue && productSpecParams.PageSize.HasValue)
+        {
+            var pageIndex = productSpecParams.PageIndex.Value < 1 ? 1 : productSpecParams.PageIndex.Value;
+            ApplyPaging(pageIndex, productSpecParams.PageSize.Value);
+
+        }
+
+    }
+
 }
