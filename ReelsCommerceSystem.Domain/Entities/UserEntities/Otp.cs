@@ -1,5 +1,7 @@
-﻿namespace ReelsCommerceSystem.Domain.Entities.UserEntities;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace ReelsCommerceSystem.Domain.Entities.UserEntities;
+[Owned]
 public class Otp
 {
     public string Code { get; set; } = string.Empty;
