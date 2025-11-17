@@ -22,6 +22,11 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.Configurations
             builder.Property(o => o.PaymentStatus)
                    .HasConversion<string>()
                    .HasMaxLength(20);
+
+            builder.HasOne(o => o.User)
+                    .WithMany()
+                    .HasForeignKey(o => o.UserId)
+                    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
