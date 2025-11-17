@@ -18,7 +18,7 @@ public abstract class Specification<T>(
 
     #region Properties
     public Expression<Func<T, bool>>? Criteria { get; private set; } = criteria;
-    public List<Expression<Func<T, object>>>? Includes { get; private set; } = includes;
+    public List<Expression<Func<T, object>>> Includes { get; private set; } = new();
     public Expression<Func<T, object>>? OrderBy { get; private set; } = orderBy;
     public XmlSortOrder SortOrder { get; set; } = sortOrder;
     public int? PageSize { get; private set; } = pageSize;
@@ -29,7 +29,10 @@ public abstract class Specification<T>(
     #region Builder Helpers
     protected void AddCriteria(Expression<Func<T, bool>> criteria) => Criteria = criteria;
 
-    protected void AddInclude(Expression<Func<T, object>> includeExpression) => Includes?.Add(includeExpression);
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }
 
     protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
     {

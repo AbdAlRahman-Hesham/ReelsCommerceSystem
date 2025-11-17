@@ -66,4 +66,11 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
         return await _dbSet.FindAsync(id);
     }
     #endregion
+    public async Task<int> CountAsync(ISpecification<T> specification)
+    {
+        return await SpecificationEvaluator<T>
+            .GetQuery(_dbSet.AsQueryable(), specification)
+            .CountAsync();
+    }
+
 }

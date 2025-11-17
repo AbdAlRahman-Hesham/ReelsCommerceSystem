@@ -28,5 +28,10 @@ public class Product:BaseEntity
     //ERD
     public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
 
+    public string? Color { get; set; } 
+    public string? Size { get; set; } 
+    public string? Status { get; set; } 
+    public bool HaveOffer { get; set; }
+
 
 }
