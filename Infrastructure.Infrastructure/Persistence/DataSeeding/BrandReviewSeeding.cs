@@ -115,6 +115,7 @@ public class BrandReviewSeeding : IEntityTypeConfiguration<BrandReview>
                     Rating = rating,
                     Comment = comment,
                     CreatedAt = _staticSeedDate.AddDays(brandId * 3 + i),
+                    UpdatedAt = _staticSeedDate.AddDays(brandId * 3 + i),
                     UserId = userId,
                     BrandId = brandId,
                     NumOfLikes = likes,

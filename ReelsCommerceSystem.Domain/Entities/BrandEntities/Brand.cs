@@ -9,7 +9,6 @@ public class Brand:BaseEntity
     public string DisplayName { get; set; } = null!;
     public string Description { get; set; } = null!;
     public string LogoUrl { get; set; } = null!;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string VerificationStatus { get; set; } = null!;
     public string ReturnPolicyAsHtml { get; set; } = null!;
     public ICollection<Product> Products { get; set; } = new List<Product>();

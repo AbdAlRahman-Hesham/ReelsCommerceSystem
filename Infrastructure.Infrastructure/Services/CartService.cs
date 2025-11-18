@@ -52,7 +52,7 @@ public class CartService : ICartService
                     Name = product.Name,
                     Description = product.Description,
                     Price = product.Price * (1 - ((product.DiscountPercentage ?? 0) / 100m)),
-                    Category = product.Category,
+                    Category = product.Category.Name,
                     MediaUrl = product.MediaUrl,
                     Quantity = item.Quantity
                 });
@@ -135,7 +135,7 @@ public class CartService : ICartService
                     Name = product.Name,
                     Description = product.Description,
                     Price = product.Price * (1 - ((product.DiscountPercentage ?? 0) / 100m)),
-                    Category = product.Category,
+                    Category = product.Category.Name,
                     MediaUrl = product.MediaUrl,
                     Quantity = initialQuantity
                 });

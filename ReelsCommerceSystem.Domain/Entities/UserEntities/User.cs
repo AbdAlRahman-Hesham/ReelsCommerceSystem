@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Domain.Entities.AiChatsEntities;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
-using ReelsCommerceSystem.Domain.Entities.CartEntities;
 using ReelsCommerceSystem.Domain.Entities.DisputeEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
@@ -32,7 +31,6 @@ public class User : IdentityUser
     public ICollection<Dispute> Disputes { get; set; } = new List<Dispute>();
     public ICollection<UserInterest> Interests { get; set; } = new List<UserInterest>();
     public ICollection<UserBrandFollow> BrandFollows { get; set; } = new List<UserBrandFollow>();
-    //ERD
     public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
 
 }

@@ -1035,7 +1035,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Color")
+                    b.Property<string>("AvailableColors")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1070,7 +1070,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("Size")
+                    b.Property<string>("AvailableSize")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
@@ -1765,7 +1765,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 8,
                             Category = "Accessories",
                             CreatedAt = new DateTime(2020, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Color-coded USB-C and Lightning cable pack.",
+                            Description = "AvailableColors-coded USB-C and Lightning cable pack.",
                             HaveOffer = false,
                             IsCustomizable = false,
                             MediaUrl = "Products/Brand8/NeonLink Cable Set.webp",
@@ -1911,7 +1911,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 10,
                             Category = "Footwear",
                             CreatedAt = new DateTime(2023, 12, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Color-shifting sneakers that stand out everywhere.",
+                            Description = "AvailableColors-shifting sneakers that stand out everywhere.",
                             DiscountPercentage = 30m,
                             HaveOffer = false,
                             IsCustomizable = false,

@@ -43,7 +43,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 ProductId = item.ProductId,
                 Name = item.Product.Name,
                 Description = item.Product.Description,
-                Category = item.Product.Category,
+                Category = item.Product.Category.Name,
                 Price = item.Product.Price,
                 DiscountPercentage = item.Product.DiscountPercentage,
                 BrandName = item.Product.Brand.DisplayName,

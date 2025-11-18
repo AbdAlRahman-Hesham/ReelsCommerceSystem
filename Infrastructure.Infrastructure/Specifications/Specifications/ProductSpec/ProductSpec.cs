@@ -1,7 +1,6 @@
 ﻿using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using ReelsCommerceSystem.Shared.SpecificationsParams;
-using System.Xml.XPath;
 
 namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
 
@@ -12,15 +11,16 @@ public class ProductSpec() : Specification<Product>
     {
         AddCriteria(p =>
        (string.IsNullOrEmpty(productSpecParams.Search) || p.Name.ToLower().Contains(productSpecParams.Search.ToLower())) &&
-       (string.IsNullOrEmpty(productSpecParams.Color) || p.Color.ToLower() == productSpecParams.Color.ToLower()) &&
-       (string.IsNullOrEmpty(productSpecParams.Size) || p.Size.ToLower() == productSpecParams.Size.ToLower()) &&
+       (string.IsNullOrEmpty(productSpecParams.Color) || p.AvailableColors.ToString()!.ToLower() == productSpecParams.Color.ToLower()) &&
+       (string.IsNullOrEmpty(productSpecParams.Size) || p.AvailableSizes.ToString().ToLower() == productSpecParams.Size.ToLower()) &&
        (!productSpecParams.MinPrice.HasValue || p.Price >= productSpecParams.MinPrice.Value) &&
        (!productSpecParams.MaxPrice.HasValue || p.Price <= productSpecParams.MaxPrice.Value) &&
        (!productSpecParams.HaveOffer.HasValue || p.HaveOffer == productSpecParams.HaveOffer.Value) &&
-       (string.IsNullOrEmpty(productSpecParams.Status) || p.Status.ToLower() == productSpecParams.Status.ToLower())
+       (string.IsNullOrEmpty(productSpecParams.Status) || p.StockStatus.ToString().ToLower() == productSpecParams.Status.ToLower())
    );
         
         AddInclude(p => p.Brand);
+        AddInclude(p => p.Category);
 
         switch (productSpecParams.Sort)
         {
