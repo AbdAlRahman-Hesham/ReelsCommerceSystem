@@ -1,14 +1,6 @@
-﻿using MailKit.Search;
-using ReelsCommerceSystem.Domain.Entities.OrderEntities;
-using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+﻿using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
+
 
 namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec
 {

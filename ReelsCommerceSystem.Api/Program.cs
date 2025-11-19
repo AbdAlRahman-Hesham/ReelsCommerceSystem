@@ -1,10 +1,10 @@
 ﻿using CloudinaryDotNet;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
 using ReelsCommerceSystem.Shared.Utilities;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +12,7 @@ builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageP
 
 builder.Services.AddValidationMiddleware();
 
+#region OpenApi
 builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer((document, context, cancellationToken) =>
@@ -54,6 +55,30 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
+#endregion
+
+#region Serilog
+// Configure Serilog (reads from appsettings.json)
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+// Replace built-in logging with Serilog
+builder.Host.UseSerilog(); 
+#endregion
+
+#region Cloudinary
+builder.Services.Configure<CloudinarySettings>(
+builder.Configuration.GetSection("CloudinarySettings"));
+
+builder.Services.AddSingleton(provider =>
+{
+    var settings = provider.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+    var account = new Account(settings.CloudName, settings.ApiKey, settings.ApiSecret);
+    return new Cloudinary(account);
+}); 
+#endregion
 
 builder.Services.AddApplicationCorsConfig(builder.Configuration);
 
@@ -64,33 +89,25 @@ builder.Services.AddRepositoriesAndServices();
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
-builder.Services.Configure<CloudinarySettings>(
-    builder.Configuration.GetSection("CloudinarySettings"));
-
-builder.Services.AddSingleton(provider =>
-{
-    var settings = provider.GetRequiredService<IOptions<CloudinarySettings>>().Value;
-    var account = new Account(settings.CloudName, settings.ApiKey, settings.ApiSecret);
-    return new Cloudinary(account);
-});
-
-
 builder.Services.AddAppAuthenticationServices(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddHttpClient();
+
 builder.Services.AddMemoryCache();
 
 
 var app = builder.Build();
 
-
+app.UseSerilogRequestLogging();
 
 app.UseExceptionHandlingMiddleware();
 
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

@@ -69,7 +69,7 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
     public async Task<int> CountAsync(ISpecification<T> specification)
     {
         return await SpecificationEvaluator<T>
-            .GetQuery(_dbSet.AsQueryable(), specification)
+            .GetQuery(_dbSet.AsQueryable(), specification, false)
             .CountAsync();
     }
 

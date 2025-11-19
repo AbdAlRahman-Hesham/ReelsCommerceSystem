@@ -22,6 +22,11 @@ public static class SpecificationEvaluator<T> where T : BaseEntity
         {
             query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
         }
+        if (specification.IncludeStrings != null && specification.IncludeStrings.Any())
+        {
+            query = specification.IncludeStrings
+                .Aggregate(query, (current, include) => current.Include(include));
+        }
 
         // Apply ordering
         if (specification.OrderBy != null && specification.SortOrder == XmlSortOrder.Ascending)

@@ -22,6 +22,7 @@ public class Product : BaseEntity
 
     public decimal? DiscountPercentage { get; set; }
     public bool HaveOffer => DiscountPercentage != null ? ( DiscountPercentage > 0 ) : false;
+    public StockStatus Status => Quantity > 0 ? StockStatus.InStock : StockStatus.OutOfStock;
 
     public int BrandId { get; set; }
     public Brand Brand { get; set; } = null!;
@@ -37,7 +38,6 @@ public class Product : BaseEntity
     public ICollection<ProductColorMapping> AvailableColors { get; set; } = new List<ProductColorMapping>();
     public ICollection<ProductSizeMapping> AvailableSizes { get; set; } = new List<ProductSizeMapping>();
     public ICollection<ProductInformation> ProductInformations { get; set; } = new List<ProductInformation>();
-    public StockStatus StockStatus { get; set; } = StockStatus.InStock;
 
 
 }

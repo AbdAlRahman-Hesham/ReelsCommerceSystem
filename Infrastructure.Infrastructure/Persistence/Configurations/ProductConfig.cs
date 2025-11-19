@@ -13,7 +13,6 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
         builder.Property(P => P.MediaUrl).IsRequired();
         builder.Property(P => P.Price).HasColumnType("decimal(18,2)");
         builder.Property(p => p.DiscountPercentage).HasPrecision(5, 2);
-        builder.Property(p => p.StockStatus).HasConversion<string>();
 
         builder.HasOne(p => p.Category)
               .WithMany(c => c.Products)

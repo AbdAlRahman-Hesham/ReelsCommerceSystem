@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.DTOs.Response.Product;
-using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Shared.Responses;
-using ReelsCommerceSystem.Shared.SpecificationsParams;
 
-namespace ReelsCommerceSystem.Application.Interfaces.Services
+namespace ReelsCommerceSystem.Application.Interfaces.Services;
+
+public interface IProductService
 {
-    public interface IProductService
-    {
-        Task<ApiResponse<PaginationResponse<ProductPag>>> GetProductsAsync(ProductSpecParams productSpecParams);
-    }
+    Task<ApiResponse<PaginationResponse<GetAllProductsResponse>>> GetProductsAsync(ProductSpecParams productSpecParams);
+    Task<ApiResponse<PaginationResponse<GetAllProductsForAiResponse>>> GetAllProductsForAiAsync();
+    Task<ApiResponse<GetProductResponse>> GetProductAsync(int productId);
+    Task<ApiResponse<List<ProductCategoryResponse>>> GetProductCategoriesAsync();
 }

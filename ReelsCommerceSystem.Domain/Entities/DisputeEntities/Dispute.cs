@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReelsCommerceSystem.Domain.Common;
+﻿using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Enums;
@@ -19,7 +14,5 @@ namespace ReelsCommerceSystem.Domain.Entities.DisputeEntities
         public User User { get; set; } = null!;
         public  int OrderId { get; set; }
         public Order Order { get; set; } = null!;
-
-
     }
 }
