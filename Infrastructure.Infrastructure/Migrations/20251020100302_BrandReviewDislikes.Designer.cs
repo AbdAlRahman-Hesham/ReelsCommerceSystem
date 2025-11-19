@@ -837,7 +837,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("StockStatus")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -1664,7 +1664,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 8,
                             Category = "Accessories",
                             CreatedAt = new DateTime(2020, 3, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Color-coded USB-C and Lightning cable pack.",
+                            Description = "AvailableColors-coded USB-C and Lightning cable pack.",
                             IsCustomizable = false,
                             MediaUrl = "Products/Brand8/NeonLink Cable Set.webp",
                             Name = "NeonLink Cable Set",
@@ -1800,7 +1800,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             BrandId = 10,
                             Category = "Footwear",
                             CreatedAt = new DateTime(2023, 12, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Color-shifting sneakers that stand out everywhere.",
+                            Description = "AvailableColors-shifting sneakers that stand out everywhere.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
                             MediaUrl = "Products/Brand10/ChromaSneak Shoes.webp",

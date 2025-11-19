@@ -22,6 +22,11 @@ public static class SpecificationEvaluator<T> where T : BaseEntity
         {
             query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
         }
+        if (specification.IncludeStrings != null && specification.IncludeStrings.Any())
+        {
+            query = specification.IncludeStrings
+                .Aggregate(query, (current, include) => current.Include(include));
+        }
 
         // Apply ordering
         if (specification.OrderBy != null && specification.SortOrder == XmlSortOrder.Ascending)
@@ -37,8 +42,8 @@ public static class SpecificationEvaluator<T> where T : BaseEntity
         if (applyPaging && specification.IsPagingEnabled)
         {
             query = query
-                .Skip(specification.PageIndex.Value * specification.PageSize.Value)
-                .Take(specification.PageSize.Value);
+               .Skip((specification.PageIndex.Value - 1) * specification.PageSize.Value)
+               .Take(specification.PageSize.Value);
         }
 
         return query;

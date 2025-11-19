@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace ReelsCommerceSystem.Domain.Enums;
 
-namespace ReelsCommerceSystem.Domain.Enums
+public enum Role
 {
-    public enum Role
-    {
-        Admin,
-        BrandOwner,
-        Customer
+    Admin,
+    BrandOwner,
+    Customer
 
-    }
 }

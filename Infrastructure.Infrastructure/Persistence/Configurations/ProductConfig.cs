@@ -10,9 +10,22 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
     {
         builder.Property(P => P.Name).IsRequired()
                                       .HasMaxLength(100);
-        builder.Property(P => P.Category).IsRequired();
         builder.Property(P => P.MediaUrl).IsRequired();
         builder.Property(P => P.Price).HasColumnType("decimal(18,2)");
         builder.Property(p => p.DiscountPercentage).HasPrecision(5, 2);
+
+        builder.HasOne(p => p.Category)
+              .WithMany(c => c.Products)
+              .HasForeignKey(p => p.CategoryId)
+              .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(p => p.AvailableColors)
+            .WithOne(c => c.Product)
+            .HasForeignKey(c=>c.ProductId);
+        
+        builder.HasMany(p => p.AvailableSizes)
+            .WithOne(c => c.Product)
+            .HasForeignKey(c=>c.ProductId);
+
     }
 }

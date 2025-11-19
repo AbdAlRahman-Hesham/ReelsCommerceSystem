@@ -5,21 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities.AiChatsEntities;
 using ReelsCommerceSystem.Domain.Entities.BlacklistToken;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
-using ReelsCommerceSystem.Domain.Entities.CartEntities;
 using ReelsCommerceSystem.Domain.Entities.DisputeEntities;
-using ReelsCommerceSystem.Domain.Entities.ForumPostEntities;
 using ReelsCommerceSystem.Domain.Entities.InterestEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
-using ReelsCommerceSystem.Domain.Entities.ProductCartEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
-using ReelsCommerceSystem.Domain.Entities.UserOrderEntities;
-using ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -37,7 +32,10 @@ public class AppDbContext :IdentityDbContext<User>
             b.ToTable("Roles");
         });
         modelBuilder.Entity<User>(b =>
-        { b.ToTable("Users"); });
+        {
+            b.ToTable("Users");
+            b.OwnsOne(u => u.Otp);
+        });
         modelBuilder.Entity<Address>(b =>
         { b.ToTable("Addresses"); });
         modelBuilder.Entity<IdentityUserRole<string>>(b =>
@@ -64,16 +62,12 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<Product> Products { get; set; }
     public DbSet<AiChat> AiChats { get; set; }
     public DbSet<Brand> Brands { get; set; }
-    public DbSet<Cart> Carts { get; set; }
     public DbSet<Dispute> Disputes { get; set; }
-    public DbSet<ForumPost> ForumPosts { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
-    public DbSet<ProductCart> ProductCarts { get; set; }
     public DbSet<Reel> Reels { get; set; }
     public DbSet<ProductReview> Reviews { get; set; }
     public DbSet<UserInterest> UserInterests { get; set; }
-    public DbSet<UserOrder> UserOrders { get; set; }
     public DbSet<BlacklistedToken> BlacklistedTokens { get; set; }
     public DbSet<Interest> Interests { get; set; }
     public DbSet<BrandReviewLike> BrandReviewLikes { get; set; }

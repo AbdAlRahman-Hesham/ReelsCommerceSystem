@@ -5,9 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
-public abstract class Specification<T>(
+public class Specification<T>(
                             Expression<Func<T, bool>>? criteria = null,
-                            List<Expression<Func<T, object>>>? includes = null,
                             Expression<Func<T, object>>? orderBy = null, 
                             XmlSortOrder sortOrder = XmlSortOrder.Ascending,
                             int? pageIndex = null, 
@@ -18,7 +17,8 @@ public abstract class Specification<T>(
 
     #region Properties
     public Expression<Func<T, bool>>? Criteria { get; private set; } = criteria;
-    public List<Expression<Func<T, object>>>? Includes { get; private set; } = includes;
+    public List<Expression<Func<T, object>>> Includes { get; set; } = new();
+    public List<string> IncludeStrings { get; } = new List<string>();
     public Expression<Func<T, object>>? OrderBy { get; private set; } = orderBy;
     public XmlSortOrder SortOrder { get; set; } = sortOrder;
     public int? PageSize { get; private set; } = pageSize;
@@ -29,7 +29,14 @@ public abstract class Specification<T>(
     #region Builder Helpers
     protected void AddCriteria(Expression<Func<T, bool>> criteria) => Criteria = criteria;
 
-    protected void AddInclude(Expression<Func<T, object>> includeExpression) => Includes?.Add(includeExpression);
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }
+    protected void AddInclude(string includeString)
+    {
+        IncludeStrings.Add(includeString);
+    }
 
     protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
     {
@@ -88,7 +95,7 @@ public abstract class Specification<T>(
 
     public bool HasPreviousPage()
     {
-        return IsPagingEnabled && PageIndex!.Value > 0;
+        return IsPagingEnabled && PageIndex!.Value > 1;
     }
     #endregion
 

@@ -12,7 +12,13 @@ public static class AppMiddlewareExtentions
         {
             app.MapOpenApi();
             app.UseSwaggerUI(op =>
-            op.SwaggerEndpoint("/openapi/v1.json", "ReelsCommerceSystem"));
+            {
+
+                op.DisplayRequestDuration();
+                op.SwaggerEndpoint("/openapi/v1.json", "ReelsCommerceSystem");
+            }
+
+            );
         }
 
 
