@@ -1,6 +1,4 @@
-﻿using CloudinaryDotNet;
-using Microsoft.Extensions.Options;
-using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
+﻿using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
 using ReelsCommerceSystem.Shared.Utilities;
@@ -12,73 +10,12 @@ builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageP
 
 builder.Services.AddValidationMiddleware();
 
-#region OpenApi
-builder.Services.AddOpenApi(options =>
-{
-    options.AddDocumentTransformer((document, context, cancellationToken) =>
-    {
-        document.Info = new()
-        {
-            Title = "ReelsCommerceSystem.Api",
-            Version = "v1"
-        };
+builder.Services.AddOpenApiConfig();
 
-        // Add Bearer token security definition
-        document.Components ??= new();
-        document.Components.SecuritySchemes["Bearer"] = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-        {
-            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-            Scheme = "bearer",
-            BearerFormat = "JWT",
-            In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-            Name = "Authorization",
-            Description = "Enter 'Bearer' followed by a space and your JWT token.\nExample: Bearer eyJhbGciOiJIUzI1NiIs...",
-        };
+builder.Services.AddCloudinary(builder.Configuration);
 
-        // Require the Bearer token globally
-        document.SecurityRequirements.Add(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-        {
-            {
-                new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-                {
-                    Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                    {
-                        Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                Array.Empty<string>()
-            }
-        });
+builder.Host.AddSerilog(builder.Configuration); 
 
-        return Task.CompletedTask;
-    });
-});
-
-#endregion
-
-#region Serilog
-// Configure Serilog (reads from appsettings.json)
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .CreateLogger();
-
-// Replace built-in logging with Serilog
-builder.Host.UseSerilog(); 
-#endregion
-
-#region Cloudinary
-builder.Services.Configure<CloudinarySettings>(
-builder.Configuration.GetSection("CloudinarySettings"));
-
-builder.Services.AddSingleton(provider =>
-{
-    var settings = provider.GetRequiredService<IOptions<CloudinarySettings>>().Value;
-    var account = new Account(settings.CloudName, settings.ApiKey, settings.ApiSecret);
-    return new Cloudinary(account);
-}); 
-#endregion
 
 builder.Services.AddApplicationCorsConfig(builder.Configuration);
 

@@ -7,7 +7,6 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
 public class Specification<T>(
                             Expression<Func<T, bool>>? criteria = null,
-                            List<Expression<Func<T, object>>>? includes = null,
                             Expression<Func<T, object>>? orderBy = null, 
                             XmlSortOrder sortOrder = XmlSortOrder.Ascending,
                             int? pageIndex = null, 

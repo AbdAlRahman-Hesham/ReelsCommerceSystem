@@ -12,10 +12,10 @@ public class ProductsPerBrandSpec : Specification<Product>
         base(
             criteria: p => p.BrandId == productsPerBrandSpecParams.BrandId &&
                 (!productsPerBrandSpecParams.IsOffered || (p.DiscountPercentage != null && p.DiscountPercentage > 0)),
-            includes: [p => p.Brand],
             orderBy: p => p.Price,
             sortOrder: XmlSortOrder.Ascending
             )
     {
+        AddInclude(p => p.Brand);
     }
 }
