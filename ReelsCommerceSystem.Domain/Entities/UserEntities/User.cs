@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ReelsCommerceSystem.Domain.Entities.AiChatsEntities;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.DisputeEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
@@ -27,7 +26,6 @@ public class User : IdentityUser
 
     public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
-    public ICollection<AiChat> AiChats { get; set; } = new List<AiChat>();
     public ICollection<Dispute> Disputes { get; set; } = new List<Dispute>();
     public ICollection<UserInterest> Interests { get; set; } = new List<UserInterest>();
     public ICollection<UserBrandFollow> BrandFollows { get; set; } = new List<UserBrandFollow>();
