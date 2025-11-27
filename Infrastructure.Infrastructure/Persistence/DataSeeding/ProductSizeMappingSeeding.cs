@@ -5,7 +5,7 @@ using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
 
-public class ProductSizeMappingSeeding : IEntityTypeConfiguration<ProductSizeMapping>
+/*public class ProductSizeMappingSeeding : IEntityTypeConfiguration<ProductSizeMapping>
 {
     public void Configure(EntityTypeBuilder<ProductSizeMapping> builder)
     {
@@ -37,7 +37,6 @@ public class ProductSizeMappingSeeding : IEntityTypeConfiguration<ProductSizeMap
                 productSizeMappings.Add(new ProductSizeMapping
                 {
                     Id = mappingId++,
-                    ProductId = productId,
                     ProductSizeId = sizeId,
                     Quantity = sizeQuantity
                 });
@@ -130,3 +129,4 @@ public class ProductSizeMappingSeeding : IEntityTypeConfiguration<ProductSizeMap
         builder.HasData(productSizeMappings);
     }
 }
+*/

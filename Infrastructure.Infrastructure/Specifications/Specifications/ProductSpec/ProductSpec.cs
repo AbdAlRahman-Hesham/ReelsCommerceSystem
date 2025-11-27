@@ -20,9 +20,9 @@ public class ProductSpec : Specification<Product>
                  ac.ProductColor.Name.ToLower() == productSpecParams.Color.ToLower() ||
                  ac.ProductColor.ArName.ToLower() == productSpecParams.Color.ToLower())) &&
 
-            (string.IsNullOrEmpty(productSpecParams.Size) ||
+            /*(string.IsNullOrEmpty(productSpecParams.Size) ||
              p.AvailableSizes.Any(asize =>
-                 asize.ProductSize.Size.ToString().ToLower() == productSpecParams.Size.ToLower())) &&
+                 asize.ProductSize.Size.ToString().ToLower() == productSpecParams.Size.ToLower())) &&*/
 
             (!productSpecParams.MinPrice.HasValue || p.Price >= productSpecParams.MinPrice.Value) &&
             (!productSpecParams.MaxPrice.HasValue || p.Price <= productSpecParams.MaxPrice.Value) &&
@@ -193,7 +193,7 @@ public class ProductSpec : Specification<Product>
         AddInclude(p => p.Category);
         AddInclude(p => p.AvailableColors);
         AddInclude("AvailableColors.ProductColor");
-        AddInclude(p => p.AvailableSizes);
+        /*AddInclude(p => p.AvailableSizes);*/
         AddInclude("AvailableSizes.ProductSize");
         AddInclude(p => p.Reviews);
         AddInclude(p => p.ProductInformations);

@@ -1006,13 +1006,16 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("OrderDate")
+                    b.Property<DateTime?>("DeleviredDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderStatus")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
@@ -1038,28 +1041,55 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderProductEntities.OrderProduct", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id")
+                    b.Property<decimal>("FinalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsCustomized")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MediaUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MoreDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("OrderId", "ProductId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -1140,9 +1170,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -1167,7 +1194,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand1/EcoFlexT-Shirt.png",
                             Name = "EcoFlex T-Shirt",
                             Price = 180.00m,
-                            Quantity = 120,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1182,7 +1208,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand1/ReVibe Denim Jacket.jfif",
                             Name = "ReVibe Denim Jacket",
                             Price = 420.00m,
-                            Quantity = 80,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1197,7 +1222,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand1/EcoStride Sneakers.jfif",
                             Name = "EcoStride Sneakers",
                             Price = 360.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1212,7 +1236,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand1/Bamboo Breeze Hoodie.png",
                             Name = "Bamboo Breeze Hoodie",
                             Price = 280.00m,
-                            Quantity = 100,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1226,7 +1249,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand1/ReLeaf Tote Bag.jfif",
                             Name = "ReLeaf Tote Bag",
                             Price = 150.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1240,7 +1262,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand1/NatureFlow Pants.webp",
                             Name = "NatureFlow Pants",
                             Price = 310.00m,
-                            Quantity = 90,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1255,7 +1276,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand2/SyncCharge Cable.jfif",
                             Name = "SyncCharge Cable",
                             Price = 180.00m,
-                            Quantity = 300,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1270,7 +1290,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand2/SmartDock Pro.jfif",
                             Name = "SmartDock Pro",
                             Price = 420.00m,
-                            Quantity = 120,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1285,7 +1304,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand2/AirPulse Earbuds.jfif",
                             Name = "AirPulse Earbuds",
                             Price = 540.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1300,7 +1318,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand2/MagGrip Phone Mount.jfif",
                             Name = "MagGrip Phone Mount",
                             Price = 190.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1314,7 +1331,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand2/PulseTrack Watch.jfif",
                             Name = "PulseTrack Watch",
                             Price = 690.00m,
-                            Quantity = 80,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1328,7 +1344,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand2/GlideCase.jfif",
                             Name = "GlideCase",
                             Price = 160.00m,
-                            Quantity = 180,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1343,7 +1358,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand3/HydraBloom Serum.jpg",
                             Name = "HydraBloom Serum",
                             Price = 250.00m,
-                            Quantity = 120,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1358,7 +1372,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand3/PureDew Cleanser.png",
                             Name = "PureDew Cleanser",
                             Price = 180.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1373,7 +1386,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand3/LumiMist Toner.webp",
                             Name = "LumiMist Toner",
                             Price = 210.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1388,7 +1400,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand3/Radiant Night Cream.webp",
                             Name = "Radiant Night Cream",
                             Price = 330.00m,
-                            Quantity = 100,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1402,7 +1413,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand3/GlowShield Sunscreen.jpg",
                             Name = "GlowShield Sunscreen",
                             Price = 290.00m,
-                            Quantity = 180,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1416,7 +1426,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand3/SilkTouch Moisturizer.png",
                             Name = "SilkTouch Moisturizer",
                             Price = 270.00m,
-                            Quantity = 160,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1431,7 +1440,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand4/StreetCore Hoodie.png",
                             Name = "StreetCore Hoodie",
                             Price = 320.00m,
-                            Quantity = 120,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1446,7 +1454,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand4/UrbanFlex Joggers.png",
                             Name = "UrbanFlex Joggers",
                             Price = 270.00m,
-                            Quantity = 100,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1461,7 +1468,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand4/FuelRunner Sneakers.png",
                             Name = "FuelRunner Sneakers",
                             Price = 540.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1476,7 +1482,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand4/CityWave Jacket.png",
                             Name = "CityWave Jacket",
                             Price = 620.00m,
-                            Quantity = 80,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1490,7 +1495,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand4/SnapEdge Cap.webp",
                             Name = "SnapEdge Cap",
                             Price = 180.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1504,7 +1508,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand4/MetroLayer Tee.jpg",
                             Name = "MetroLayer Tee",
                             Price = 190.00m,
-                            Quantity = 140,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1519,7 +1522,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand5/ZenMat.webp",
                             Name = "ZenMat Pro",
                             Price = 350.00m,
-                            Quantity = 110,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1534,7 +1536,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand5/AromaBliss Diffuser.webp",
                             Name = "AromaBliss Diffuser",
                             Price = 290.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1549,7 +1550,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand5/CalmWave Candle.webp",
                             Name = "CalmWave Candle",
                             Price = 170.00m,
-                            Quantity = 180,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1564,7 +1564,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand5/Balance Bottle.webp",
                             Name = "Balance Bottle",
                             Price = 210.00m,
-                            Quantity = 160,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1578,7 +1577,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand5/Focus Journal.webp",
                             Name = "Focus Journal",
                             Price = 150.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1592,7 +1590,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand5/Serenity Pillow Spray.jpg",
                             Name = "Serenity Pillow Spray",
                             Price = 180.00m,
-                            Quantity = 180,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1607,7 +1604,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand6/AeroTrack Smart Band.png",
                             Name = "AeroTrack Smart Band",
                             Price = 540.00m,
-                            Quantity = 130,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1622,7 +1618,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand6/bowflex-dumbbells.jpg",
                             Name = "FlexCore Dumbbells",
                             Price = 720.00m,
-                            Quantity = 90,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1637,7 +1632,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand6/PulsePro Chest Strap.webp",
                             Name = "PulsePro Chest Strap",
                             Price = 210.00m,
-                            Quantity = 100,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1652,7 +1646,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand6/AeroMat Trainer.webp",
                             Name = "AeroMat Trainer",
                             Price = 250.00m,
-                            Quantity = 140,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1666,7 +1659,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand6/HydraFuel Bottle.jfif",
                             Name = "HydraFuel Bottle",
                             Price = 170.00m,
-                            Quantity = 160,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1680,7 +1672,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand6/TrainLite Shorts.jpg",
                             Name = "TrainLite Shorts",
                             Price = 260.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1695,7 +1686,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand7/EcoGlow Lamp.webp",
                             Name = "EcoGlow Lamp",
                             Price = 250.00m,
-                            Quantity = 110,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1710,7 +1700,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand7/GreenWave Blanket.jfif",
                             Name = "GreenWave Blanket",
                             Price = 320.00m,
-                            Quantity = 100,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1725,7 +1714,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand7/PlantPure Planter Set.jpg",
                             Name = "PlantPure Planter Set",
                             Price = 180.00m,
-                            Quantity = 180,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1740,7 +1728,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand7/EcoFresh Diffuser.webp",
                             Name = "EcoFresh Diffuser",
                             Price = 210.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1754,7 +1741,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand7/PureBreeze Air Filter.webp",
                             Name = "PureBreeze Air Filter",
                             Price = 640.00m,
-                            Quantity = 90,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1768,7 +1754,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand7/Harmony Coasters.jfif",
                             Name = "Harmony Coasters",
                             Price = 160.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1783,7 +1768,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand8/VoltSync Charger.webp",
                             Name = "VoltSync Charger",
                             Price = 280.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1798,7 +1782,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand8/StreamPad Mouse.jpg",
                             Name = "StreamPad Mouse",
                             Price = 240.00m,
-                            Quantity = 180,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1813,7 +1796,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand8/DataShell SSD Case.jpg",
                             Name = "DataShell SSD Case",
                             Price = 190.00m,
-                            Quantity = 220,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1828,7 +1810,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand8/WavePods Mini.jpg",
                             Name = "WavePods Mini",
                             Price = 420.00m,
-                            Quantity = 140,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1842,7 +1823,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand8/NeonLink Cable Set.webp",
                             Name = "NeonLink Cable Set",
                             Price = 160.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1856,7 +1836,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand8/GlideStand Laptop Dock.jpg",
                             Name = "GlideStand Laptop Dock",
                             Price = 360.00m,
-                            Quantity = 130,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1871,7 +1850,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand9/AquaRenew Cleanser.png",
                             Name = "AquaRenew Cleanser",
                             Price = 180.00m,
-                            Quantity = 160,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1886,7 +1864,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand9/BrightVeil Moisturizer.png",
                             Name = "BrightVeil Moisturizer",
                             Price = 220.00m,
-                            Quantity = 140,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1901,7 +1878,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand9/PureCure Mask.jpg",
                             Name = "PureCure Mask",
                             Price = 240.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1916,7 +1892,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand9/GlowHydra Serum.webp",
                             Name = "GlowHydra Serum",
                             Price = 390.00m,
-                            Quantity = 130,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1930,7 +1905,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand9/VitaLush Night Cream.webp",
                             Name = "VitaLush Night Cream",
                             Price = 260.00m,
-                            Quantity = 120,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1944,7 +1918,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand9/FreshTone Toner.webp",
                             Name = "FreshTone Toner",
                             Price = 210.00m,
-                            Quantity = 160,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1959,7 +1932,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand10/VelvetEdge Dress.webp",
                             Name = "VelvetEdge Dress",
                             Price = 780.00m,
-                            Quantity = 90,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1974,7 +1946,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand10/UrbanGleam Jacket.jfif",
                             Name = "UrbanGleam Jacket",
                             Price = 650.00m,
-                            Quantity = 80,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -1989,7 +1960,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand10/ChromaSneak Shoes.webp",
                             Name = "ChromaSneak Shoes",
                             Price = 540.00m,
-                            Quantity = 120,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -2004,7 +1974,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand10/LuxeLine Handbag.jfif",
                             Name = "LuxeLine Handbag",
                             Price = 720.00m,
-                            Quantity = 70,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -2018,7 +1987,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand10/PulseFit Crop Top.webp",
                             Name = "PulseFit Crop Top",
                             Price = 190.00m,
-                            Quantity = 150,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
@@ -2032,7 +2000,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             MediaUrl = "Products/Brand10/NeoAura Sunglasses.jfif",
                             Name = "NeoAura Sunglasses",
                             Price = 350.00m,
-                            Quantity = 200,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
@@ -2350,9 +2317,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductColorId");
@@ -2360,1282 +2324,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductColorMapping");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ProductColorId = 4,
-                            ProductId = 1,
-                            Quantity = 48
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ProductColorId = 5,
-                            ProductId = 1,
-                            Quantity = 42
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ProductColorId = 3,
-                            ProductId = 1,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ProductColorId = 2,
-                            ProductId = 2,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ProductColorId = 4,
-                            ProductId = 2,
-                            Quantity = 24
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ProductColorId = 1,
-                            ProductId = 2,
-                            Quantity = 16
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ProductColorId = 4,
-                            ProductId = 3,
-                            Quantity = 52
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ProductColorId = 2,
-                            ProductId = 3,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ProductColorId = 5,
-                            ProductId = 3,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ProductColorId = 1,
-                            ProductId = 3,
-                            Quantity = 23
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ProductColorId = 3,
-                            ProductId = 4,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ProductColorId = 5,
-                            ProductId = 4,
-                            Quantity = 35
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ProductColorId = 10,
-                            ProductId = 4,
-                            Quantity = 25
-                        },
-                        new
-                        {
-                            Id = 14,
-                            ProductColorId = 4,
-                            ProductId = 5,
-                            Quantity = 90
-                        },
-                        new
-                        {
-                            Id = 15,
-                            ProductColorId = 5,
-                            ProductId = 5,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 16,
-                            ProductColorId = 3,
-                            ProductId = 5,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 17,
-                            ProductColorId = 10,
-                            ProductId = 6,
-                            Quantity = 36
-                        },
-                        new
-                        {
-                            Id = 18,
-                            ProductColorId = 4,
-                            ProductId = 6,
-                            Quantity = 31
-                        },
-                        new
-                        {
-                            Id = 19,
-                            ProductColorId = 2,
-                            ProductId = 6,
-                            Quantity = 23
-                        },
-                        new
-                        {
-                            Id = 20,
-                            ProductColorId = 4,
-                            ProductId = 7,
-                            Quantity = 120
-                        },
-                        new
-                        {
-                            Id = 21,
-                            ProductColorId = 2,
-                            ProductId = 7,
-                            Quantity = 90
-                        },
-                        new
-                        {
-                            Id = 22,
-                            ProductColorId = 5,
-                            ProductId = 7,
-                            Quantity = 90
-                        },
-                        new
-                        {
-                            Id = 23,
-                            ProductColorId = 4,
-                            ProductId = 8,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 24,
-                            ProductColorId = 10,
-                            ProductId = 8,
-                            Quantity = 36
-                        },
-                        new
-                        {
-                            Id = 25,
-                            ProductColorId = 5,
-                            ProductId = 8,
-                            Quantity = 24
-                        },
-                        new
-                        {
-                            Id = 26,
-                            ProductColorId = 4,
-                            ProductId = 9,
-                            Quantity = 90
-                        },
-                        new
-                        {
-                            Id = 27,
-                            ProductColorId = 2,
-                            ProductId = 9,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 28,
-                            ProductColorId = 7,
-                            ProductId = 9,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 29,
-                            ProductColorId = 4,
-                            ProductId = 10,
-                            Quantity = 75
-                        },
-                        new
-                        {
-                            Id = 30,
-                            ProductColorId = 10,
-                            ProductId = 10,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 31,
-                            ProductColorId = 5,
-                            ProductId = 10,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 32,
-                            ProductColorId = 4,
-                            ProductId = 11,
-                            Quantity = 32
-                        },
-                        new
-                        {
-                            Id = 33,
-                            ProductColorId = 2,
-                            ProductId = 11,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 34,
-                            ProductColorId = 1,
-                            ProductId = 11,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 35,
-                            ProductColorId = 4,
-                            ProductId = 12,
-                            Quantity = 63
-                        },
-                        new
-                        {
-                            Id = 36,
-                            ProductColorId = 7,
-                            ProductId = 12,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 37,
-                            ProductColorId = 9,
-                            ProductId = 12,
-                            Quantity = 36
-                        },
-                        new
-                        {
-                            Id = 38,
-                            ProductColorId = 2,
-                            ProductId = 12,
-                            Quantity = 36
-                        },
-                        new
-                        {
-                            Id = 39,
-                            ProductColorId = 5,
-                            ProductId = 13,
-                            Quantity = 72
-                        },
-                        new
-                        {
-                            Id = 40,
-                            ProductColorId = 9,
-                            ProductId = 13,
-                            Quantity = 48
-                        },
-                        new
-                        {
-                            Id = 41,
-                            ProductColorId = 5,
-                            ProductId = 14,
-                            Quantity = 140
-                        },
-                        new
-                        {
-                            Id = 42,
-                            ProductColorId = 3,
-                            ProductId = 14,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 43,
-                            ProductColorId = 5,
-                            ProductId = 15,
-                            Quantity = 75
-                        },
-                        new
-                        {
-                            Id = 44,
-                            ProductColorId = 2,
-                            ProductId = 15,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 45,
-                            ProductColorId = 7,
-                            ProductId = 15,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 46,
-                            ProductColorId = 5,
-                            ProductId = 16,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 47,
-                            ProductColorId = 9,
-                            ProductId = 16,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 48,
-                            ProductColorId = 5,
-                            ProductId = 17,
-                            Quantity = 99
-                        },
-                        new
-                        {
-                            Id = 49,
-                            ProductColorId = 6,
-                            ProductId = 17,
-                            Quantity = 81
-                        },
-                        new
-                        {
-                            Id = 50,
-                            ProductColorId = 5,
-                            ProductId = 18,
-                            Quantity = 104
-                        },
-                        new
-                        {
-                            Id = 51,
-                            ProductColorId = 9,
-                            ProductId = 18,
-                            Quantity = 56
-                        },
-                        new
-                        {
-                            Id = 52,
-                            ProductColorId = 4,
-                            ProductId = 19,
-                            Quantity = 48
-                        },
-                        new
-                        {
-                            Id = 53,
-                            ProductColorId = 10,
-                            ProductId = 19,
-                            Quantity = 42
-                        },
-                        new
-                        {
-                            Id = 54,
-                            ProductColorId = 1,
-                            ProductId = 19,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 55,
-                            ProductColorId = 4,
-                            ProductId = 20,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 56,
-                            ProductColorId = 10,
-                            ProductId = 20,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 57,
-                            ProductColorId = 2,
-                            ProductId = 20,
-                            Quantity = 25
-                        },
-                        new
-                        {
-                            Id = 58,
-                            ProductColorId = 4,
-                            ProductId = 21,
-                            Quantity = 52
-                        },
-                        new
-                        {
-                            Id = 59,
-                            ProductColorId = 1,
-                            ProductId = 21,
-                            Quantity = 37
-                        },
-                        new
-                        {
-                            Id = 60,
-                            ProductColorId = 2,
-                            ProductId = 21,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 61,
-                            ProductColorId = 6,
-                            ProductId = 21,
-                            Quantity = 31
-                        },
-                        new
-                        {
-                            Id = 62,
-                            ProductColorId = 2,
-                            ProductId = 22,
-                            Quantity = 32
-                        },
-                        new
-                        {
-                            Id = 63,
-                            ProductColorId = 4,
-                            ProductId = 22,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 64,
-                            ProductColorId = 1,
-                            ProductId = 22,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 65,
-                            ProductColorId = 4,
-                            ProductId = 23,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 66,
-                            ProductColorId = 2,
-                            ProductId = 23,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 67,
-                            ProductColorId = 1,
-                            ProductId = 23,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 68,
-                            ProductColorId = 4,
-                            ProductId = 24,
-                            Quantity = 56
-                        },
-                        new
-                        {
-                            Id = 69,
-                            ProductColorId = 5,
-                            ProductId = 24,
-                            Quantity = 49
-                        },
-                        new
-                        {
-                            Id = 70,
-                            ProductColorId = 10,
-                            ProductId = 24,
-                            Quantity = 35
-                        },
-                        new
-                        {
-                            Id = 71,
-                            ProductColorId = 3,
-                            ProductId = 25,
-                            Quantity = 44
-                        },
-                        new
-                        {
-                            Id = 72,
-                            ProductColorId = 5,
-                            ProductId = 25,
-                            Quantity = 38
-                        },
-                        new
-                        {
-                            Id = 73,
-                            ProductColorId = 10,
-                            ProductId = 25,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 74,
-                            ProductColorId = 5,
-                            ProductId = 26,
-                            Quantity = 75
-                        },
-                        new
-                        {
-                            Id = 75,
-                            ProductColorId = 7,
-                            ProductId = 26,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 76,
-                            ProductColorId = 9,
-                            ProductId = 26,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 77,
-                            ProductColorId = 5,
-                            ProductId = 27,
-                            Quantity = 81
-                        },
-                        new
-                        {
-                            Id = 78,
-                            ProductColorId = 7,
-                            ProductId = 27,
-                            Quantity = 54
-                        },
-                        new
-                        {
-                            Id = 79,
-                            ProductColorId = 9,
-                            ProductId = 27,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 80,
-                            ProductColorId = 3,
-                            ProductId = 28,
-                            Quantity = 56
-                        },
-                        new
-                        {
-                            Id = 81,
-                            ProductColorId = 5,
-                            ProductId = 28,
-                            Quantity = 56
-                        },
-                        new
-                        {
-                            Id = 82,
-                            ProductColorId = 2,
-                            ProductId = 28,
-                            Quantity = 48
-                        },
-                        new
-                        {
-                            Id = 83,
-                            ProductColorId = 5,
-                            ProductId = 29,
-                            Quantity = 120
-                        },
-                        new
-                        {
-                            Id = 84,
-                            ProductColorId = 3,
-                            ProductId = 29,
-                            Quantity = 80
-                        },
-                        new
-                        {
-                            Id = 85,
-                            ProductColorId = 5,
-                            ProductId = 30,
-                            Quantity = 99
-                        },
-                        new
-                        {
-                            Id = 86,
-                            ProductColorId = 7,
-                            ProductId = 30,
-                            Quantity = 81
-                        },
-                        new
-                        {
-                            Id = 87,
-                            ProductColorId = 4,
-                            ProductId = 31,
-                            Quantity = 52
-                        },
-                        new
-                        {
-                            Id = 88,
-                            ProductColorId = 2,
-                            ProductId = 31,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 89,
-                            ProductColorId = 1,
-                            ProductId = 31,
-                            Quantity = 33
-                        },
-                        new
-                        {
-                            Id = 90,
-                            ProductColorId = 4,
-                            ProductId = 32,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 91,
-                            ProductColorId = 10,
-                            ProductId = 32,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 92,
-                            ProductColorId = 5,
-                            ProductId = 32,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 93,
-                            ProductColorId = 4,
-                            ProductId = 33,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 94,
-                            ProductColorId = 1,
-                            ProductId = 33,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 95,
-                            ProductColorId = 2,
-                            ProductId = 33,
-                            Quantity = 25
-                        },
-                        new
-                        {
-                            Id = 96,
-                            ProductColorId = 3,
-                            ProductId = 34,
-                            Quantity = 56
-                        },
-                        new
-                        {
-                            Id = 97,
-                            ProductColorId = 4,
-                            ProductId = 34,
-                            Quantity = 49
-                        },
-                        new
-                        {
-                            Id = 98,
-                            ProductColorId = 5,
-                            ProductId = 34,
-                            Quantity = 35
-                        },
-                        new
-                        {
-                            Id = 99,
-                            ProductColorId = 2,
-                            ProductId = 35,
-                            Quantity = 64
-                        },
-                        new
-                        {
-                            Id = 100,
-                            ProductColorId = 4,
-                            ProductId = 35,
-                            Quantity = 56
-                        },
-                        new
-                        {
-                            Id = 101,
-                            ProductColorId = 5,
-                            ProductId = 35,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 102,
-                            ProductColorId = 4,
-                            ProductId = 36,
-                            Quantity = 70
-                        },
-                        new
-                        {
-                            Id = 103,
-                            ProductColorId = 2,
-                            ProductId = 36,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 104,
-                            ProductColorId = 1,
-                            ProductId = 36,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 105,
-                            ProductColorId = 6,
-                            ProductId = 36,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 106,
-                            ProductColorId = 3,
-                            ProductId = 37,
-                            Quantity = 44
-                        },
-                        new
-                        {
-                            Id = 107,
-                            ProductColorId = 5,
-                            ProductId = 37,
-                            Quantity = 38
-                        },
-                        new
-                        {
-                            Id = 108,
-                            ProductColorId = 10,
-                            ProductId = 37,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 109,
-                            ProductColorId = 3,
-                            ProductId = 38,
-                            Quantity = 35
-                        },
-                        new
-                        {
-                            Id = 110,
-                            ProductColorId = 5,
-                            ProductId = 38,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 111,
-                            ProductColorId = 2,
-                            ProductId = 38,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 112,
-                            ProductColorId = 7,
-                            ProductId = 38,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 113,
-                            ProductColorId = 3,
-                            ProductId = 39,
-                            Quantity = 81
-                        },
-                        new
-                        {
-                            Id = 114,
-                            ProductColorId = 5,
-                            ProductId = 39,
-                            Quantity = 54
-                        },
-                        new
-                        {
-                            Id = 115,
-                            ProductColorId = 10,
-                            ProductId = 39,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 116,
-                            ProductColorId = 5,
-                            ProductId = 40,
-                            Quantity = 75
-                        },
-                        new
-                        {
-                            Id = 117,
-                            ProductColorId = 3,
-                            ProductId = 40,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 118,
-                            ProductColorId = 8,
-                            ProductId = 40,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 119,
-                            ProductColorId = 5,
-                            ProductId = 41,
-                            Quantity = 54
-                        },
-                        new
-                        {
-                            Id = 120,
-                            ProductColorId = 10,
-                            ProductId = 41,
-                            Quantity = 36
-                        },
-                        new
-                        {
-                            Id = 121,
-                            ProductColorId = 3,
-                            ProductId = 42,
-                            Quantity = 80
-                        },
-                        new
-                        {
-                            Id = 122,
-                            ProductColorId = 5,
-                            ProductId = 42,
-                            Quantity = 70
-                        },
-                        new
-                        {
-                            Id = 123,
-                            ProductColorId = 10,
-                            ProductId = 42,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 124,
-                            ProductColorId = 4,
-                            ProductId = 43,
-                            Quantity = 67
-                        },
-                        new
-                        {
-                            Id = 125,
-                            ProductColorId = 2,
-                            ProductId = 43,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 126,
-                            ProductColorId = 5,
-                            ProductId = 43,
-                            Quantity = 38
-                        },
-                        new
-                        {
-                            Id = 127,
-                            ProductColorId = 4,
-                            ProductId = 44,
-                            Quantity = 72
-                        },
-                        new
-                        {
-                            Id = 128,
-                            ProductColorId = 10,
-                            ProductId = 44,
-                            Quantity = 54
-                        },
-                        new
-                        {
-                            Id = 129,
-                            ProductColorId = 2,
-                            ProductId = 44,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 130,
-                            ProductColorId = 1,
-                            ProductId = 44,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 131,
-                            ProductColorId = 4,
-                            ProductId = 45,
-                            Quantity = 110
-                        },
-                        new
-                        {
-                            Id = 132,
-                            ProductColorId = 10,
-                            ProductId = 45,
-                            Quantity = 66
-                        },
-                        new
-                        {
-                            Id = 133,
-                            ProductColorId = 5,
-                            ProductId = 45,
-                            Quantity = 44
-                        },
-                        new
-                        {
-                            Id = 134,
-                            ProductColorId = 4,
-                            ProductId = 46,
-                            Quantity = 56
-                        },
-                        new
-                        {
-                            Id = 135,
-                            ProductColorId = 7,
-                            ProductId = 46,
-                            Quantity = 35
-                        },
-                        new
-                        {
-                            Id = 136,
-                            ProductColorId = 9,
-                            ProductId = 46,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 137,
-                            ProductColorId = 2,
-                            ProductId = 46,
-                            Quantity = 21
-                        },
-                        new
-                        {
-                            Id = 138,
-                            ProductColorId = 4,
-                            ProductId = 47,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 139,
-                            ProductColorId = 2,
-                            ProductId = 47,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 140,
-                            ProductColorId = 1,
-                            ProductId = 47,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 141,
-                            ProductColorId = 6,
-                            ProductId = 47,
-                            Quantity = 36
-                        },
-                        new
-                        {
-                            Id = 142,
-                            ProductColorId = 3,
-                            ProductId = 47,
-                            Quantity = 34
-                        },
-                        new
-                        {
-                            Id = 143,
-                            ProductColorId = 10,
-                            ProductId = 48,
-                            Quantity = 58
-                        },
-                        new
-                        {
-                            Id = 144,
-                            ProductColorId = 4,
-                            ProductId = 48,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 145,
-                            ProductColorId = 5,
-                            ProductId = 48,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 146,
-                            ProductColorId = 5,
-                            ProductId = 49,
-                            Quantity = 96
-                        },
-                        new
-                        {
-                            Id = 147,
-                            ProductColorId = 3,
-                            ProductId = 49,
-                            Quantity = 64
-                        },
-                        new
-                        {
-                            Id = 148,
-                            ProductColorId = 5,
-                            ProductId = 50,
-                            Quantity = 77
-                        },
-                        new
-                        {
-                            Id = 149,
-                            ProductColorId = 9,
-                            ProductId = 50,
-                            Quantity = 63
-                        },
-                        new
-                        {
-                            Id = 150,
-                            ProductColorId = 3,
-                            ProductId = 51,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 151,
-                            ProductColorId = 5,
-                            ProductId = 51,
-                            Quantity = 52
-                        },
-                        new
-                        {
-                            Id = 152,
-                            ProductColorId = 10,
-                            ProductId = 51,
-                            Quantity = 38
-                        },
-                        new
-                        {
-                            Id = 153,
-                            ProductColorId = 5,
-                            ProductId = 52,
-                            Quantity = 65
-                        },
-                        new
-                        {
-                            Id = 154,
-                            ProductColorId = 7,
-                            ProductId = 52,
-                            Quantity = 39
-                        },
-                        new
-                        {
-                            Id = 155,
-                            ProductColorId = 9,
-                            ProductId = 52,
-                            Quantity = 26
-                        },
-                        new
-                        {
-                            Id = 156,
-                            ProductColorId = 5,
-                            ProductId = 53,
-                            Quantity = 72
-                        },
-                        new
-                        {
-                            Id = 157,
-                            ProductColorId = 9,
-                            ProductId = 53,
-                            Quantity = 48
-                        },
-                        new
-                        {
-                            Id = 158,
-                            ProductColorId = 5,
-                            ProductId = 54,
-                            Quantity = 88
-                        },
-                        new
-                        {
-                            Id = 159,
-                            ProductColorId = 2,
-                            ProductId = 54,
-                            Quantity = 72
-                        },
-                        new
-                        {
-                            Id = 160,
-                            ProductColorId = 7,
-                            ProductId = 55,
-                            Quantity = 31
-                        },
-                        new
-                        {
-                            Id = 161,
-                            ProductColorId = 4,
-                            ProductId = 55,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 162,
-                            ProductColorId = 1,
-                            ProductId = 55,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 163,
-                            ProductColorId = 9,
-                            ProductId = 55,
-                            Quantity = 14
-                        },
-                        new
-                        {
-                            Id = 164,
-                            ProductColorId = 6,
-                            ProductId = 56,
-                            Quantity = 32
-                        },
-                        new
-                        {
-                            Id = 165,
-                            ProductColorId = 8,
-                            ProductId = 56,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 166,
-                            ProductColorId = 1,
-                            ProductId = 56,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 167,
-                            ProductColorId = 4,
-                            ProductId = 57,
-                            Quantity = 36
-                        },
-                        new
-                        {
-                            Id = 168,
-                            ProductColorId = 7,
-                            ProductId = 57,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 169,
-                            ProductColorId = 2,
-                            ProductId = 57,
-                            Quantity = 24
-                        },
-                        new
-                        {
-                            Id = 170,
-                            ProductColorId = 6,
-                            ProductId = 57,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 171,
-                            ProductColorId = 1,
-                            ProductId = 57,
-                            Quantity = 12
-                        },
-                        new
-                        {
-                            Id = 172,
-                            ProductColorId = 4,
-                            ProductId = 58,
-                            Quantity = 35
-                        },
-                        new
-                        {
-                            Id = 173,
-                            ProductColorId = 7,
-                            ProductId = 58,
-                            Quantity = 21
-                        },
-                        new
-                        {
-                            Id = 174,
-                            ProductColorId = 9,
-                            ProductId = 58,
-                            Quantity = 14
-                        },
-                        new
-                        {
-                            Id = 175,
-                            ProductColorId = 1,
-                            ProductId = 59,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 176,
-                            ProductColorId = 4,
-                            ProductId = 59,
-                            Quantity = 37
-                        },
-                        new
-                        {
-                            Id = 177,
-                            ProductColorId = 2,
-                            ProductId = 59,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 178,
-                            ProductColorId = 7,
-                            ProductId = 59,
-                            Quantity = 22
-                        },
-                        new
-                        {
-                            Id = 179,
-                            ProductColorId = 9,
-                            ProductId = 59,
-                            Quantity = 16
-                        },
-                        new
-                        {
-                            Id = 180,
-                            ProductColorId = 4,
-                            ProductId = 60,
-                            Quantity = 90
-                        },
-                        new
-                        {
-                            Id = 181,
-                            ProductColorId = 10,
-                            ProductId = 60,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 182,
-                            ProductColorId = 7,
-                            ProductId = 60,
-                            Quantity = 50
-                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.ProductInformation", b =>
@@ -4737,7 +3425,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ProductColorMappingId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductSizeId")
@@ -4748,818 +3436,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductColorMappingId");
 
                     b.HasIndex("ProductSizeId");
 
                     b.ToTable("ProductSizeMapping");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ProductId = 1,
-                            ProductSizeId = 1,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ProductId = 1,
-                            ProductSizeId = 2,
-                            Quantity = 24
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ProductId = 1,
-                            ProductSizeId = 3,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ProductId = 1,
-                            ProductSizeId = 4,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ProductId = 1,
-                            ProductSizeId = 5,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ProductId = 2,
-                            ProductSizeId = 2,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ProductId = 2,
-                            ProductSizeId = 3,
-                            Quantity = 24
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ProductId = 2,
-                            ProductSizeId = 4,
-                            Quantity = 24
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ProductId = 2,
-                            ProductSizeId = 5,
-                            Quantity = 12
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ProductId = 3,
-                            ProductSizeId = 3,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ProductId = 3,
-                            ProductSizeId = 4,
-                            Quantity = 37
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ProductId = 3,
-                            ProductSizeId = 5,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ProductId = 3,
-                            ProductSizeId = 6,
-                            Quantity = 38
-                        },
-                        new
-                        {
-                            Id = 14,
-                            ProductId = 4,
-                            ProductSizeId = 1,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            Id = 15,
-                            ProductId = 4,
-                            ProductSizeId = 2,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 16,
-                            ProductId = 4,
-                            ProductSizeId = 3,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 17,
-                            ProductId = 4,
-                            ProductSizeId = 4,
-                            Quantity = 25
-                        },
-                        new
-                        {
-                            Id = 18,
-                            ProductId = 4,
-                            ProductSizeId = 5,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 19,
-                            ProductId = 5,
-                            ProductSizeId = 3,
-                            Quantity = 80
-                        },
-                        new
-                        {
-                            Id = 20,
-                            ProductId = 5,
-                            ProductSizeId = 4,
-                            Quantity = 70
-                        },
-                        new
-                        {
-                            Id = 21,
-                            ProductId = 5,
-                            ProductSizeId = 5,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 22,
-                            ProductId = 6,
-                            ProductSizeId = 2,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 23,
-                            ProductId = 6,
-                            ProductSizeId = 3,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 24,
-                            ProductId = 6,
-                            ProductSizeId = 4,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 25,
-                            ProductId = 6,
-                            ProductSizeId = 5,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 26,
-                            ProductId = 7,
-                            ProductSizeId = 3,
-                            Quantity = 300
-                        },
-                        new
-                        {
-                            Id = 27,
-                            ProductId = 8,
-                            ProductSizeId = 3,
-                            Quantity = 120
-                        },
-                        new
-                        {
-                            Id = 28,
-                            ProductId = 9,
-                            ProductSizeId = 3,
-                            Quantity = 200
-                        },
-                        new
-                        {
-                            Id = 29,
-                            ProductId = 10,
-                            ProductSizeId = 3,
-                            Quantity = 150
-                        },
-                        new
-                        {
-                            Id = 30,
-                            ProductId = 11,
-                            ProductSizeId = 3,
-                            Quantity = 80
-                        },
-                        new
-                        {
-                            Id = 31,
-                            ProductId = 12,
-                            ProductSizeId = 2,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 32,
-                            ProductId = 12,
-                            ProductSizeId = 3,
-                            Quantity = 63
-                        },
-                        new
-                        {
-                            Id = 33,
-                            ProductId = 12,
-                            ProductSizeId = 4,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 34,
-                            ProductId = 12,
-                            ProductSizeId = 5,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 35,
-                            ProductId = 13,
-                            ProductSizeId = 3,
-                            Quantity = 120
-                        },
-                        new
-                        {
-                            Id = 36,
-                            ProductId = 14,
-                            ProductSizeId = 3,
-                            Quantity = 200
-                        },
-                        new
-                        {
-                            Id = 37,
-                            ProductId = 15,
-                            ProductSizeId = 3,
-                            Quantity = 150
-                        },
-                        new
-                        {
-                            Id = 38,
-                            ProductId = 16,
-                            ProductSizeId = 3,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 39,
-                            ProductId = 17,
-                            ProductSizeId = 3,
-                            Quantity = 180
-                        },
-                        new
-                        {
-                            Id = 40,
-                            ProductId = 18,
-                            ProductSizeId = 3,
-                            Quantity = 160
-                        },
-                        new
-                        {
-                            Id = 41,
-                            ProductId = 19,
-                            ProductSizeId = 1,
-                            Quantity = 12
-                        },
-                        new
-                        {
-                            Id = 42,
-                            ProductId = 19,
-                            ProductSizeId = 2,
-                            Quantity = 24
-                        },
-                        new
-                        {
-                            Id = 43,
-                            ProductId = 19,
-                            ProductSizeId = 3,
-                            Quantity = 36
-                        },
-                        new
-                        {
-                            Id = 44,
-                            ProductId = 19,
-                            ProductSizeId = 4,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 45,
-                            ProductId = 19,
-                            ProductSizeId = 5,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 46,
-                            ProductId = 20,
-                            ProductSizeId = 2,
-                            Quantity = 25
-                        },
-                        new
-                        {
-                            Id = 47,
-                            ProductId = 20,
-                            ProductSizeId = 3,
-                            Quantity = 35
-                        },
-                        new
-                        {
-                            Id = 48,
-                            ProductId = 20,
-                            ProductSizeId = 4,
-                            Quantity = 25
-                        },
-                        new
-                        {
-                            Id = 49,
-                            ProductId = 20,
-                            ProductSizeId = 5,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 50,
-                            ProductId = 21,
-                            ProductSizeId = 3,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 51,
-                            ProductId = 21,
-                            ProductSizeId = 4,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 52,
-                            ProductId = 21,
-                            ProductSizeId = 5,
-                            Quantity = 45
-                        },
-                        new
-                        {
-                            Id = 53,
-                            ProductId = 21,
-                            ProductSizeId = 6,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 54,
-                            ProductId = 22,
-                            ProductSizeId = 3,
-                            Quantity = 24
-                        },
-                        new
-                        {
-                            Id = 55,
-                            ProductId = 22,
-                            ProductSizeId = 4,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 56,
-                            ProductId = 22,
-                            ProductSizeId = 5,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 57,
-                            ProductId = 23,
-                            ProductSizeId = 1,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 58,
-                            ProductId = 23,
-                            ProductSizeId = 2,
-                            Quantity = 50
-                        },
-                        new
-                        {
-                            Id = 59,
-                            ProductId = 23,
-                            ProductSizeId = 3,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 60,
-                            ProductId = 23,
-                            ProductSizeId = 4,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 61,
-                            ProductId = 23,
-                            ProductSizeId = 5,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 62,
-                            ProductId = 24,
-                            ProductSizeId = 2,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 63,
-                            ProductId = 24,
-                            ProductSizeId = 3,
-                            Quantity = 49
-                        },
-                        new
-                        {
-                            Id = 64,
-                            ProductId = 24,
-                            ProductSizeId = 4,
-                            Quantity = 42
-                        },
-                        new
-                        {
-                            Id = 65,
-                            ProductId = 24,
-                            ProductSizeId = 5,
-                            Quantity = 21
-                        },
-                        new
-                        {
-                            Id = 66,
-                            ProductId = 25,
-                            ProductSizeId = 3,
-                            Quantity = 110
-                        },
-                        new
-                        {
-                            Id = 67,
-                            ProductId = 26,
-                            ProductSizeId = 3,
-                            Quantity = 150
-                        },
-                        new
-                        {
-                            Id = 68,
-                            ProductId = 27,
-                            ProductSizeId = 3,
-                            Quantity = 180
-                        },
-                        new
-                        {
-                            Id = 69,
-                            ProductId = 28,
-                            ProductSizeId = 3,
-                            Quantity = 160
-                        },
-                        new
-                        {
-                            Id = 70,
-                            ProductId = 29,
-                            ProductSizeId = 3,
-                            Quantity = 200
-                        },
-                        new
-                        {
-                            Id = 71,
-                            ProductId = 30,
-                            ProductSizeId = 3,
-                            Quantity = 180
-                        },
-                        new
-                        {
-                            Id = 72,
-                            ProductId = 31,
-                            ProductSizeId = 3,
-                            Quantity = 130
-                        },
-                        new
-                        {
-                            Id = 73,
-                            ProductId = 32,
-                            ProductSizeId = 3,
-                            Quantity = 90
-                        },
-                        new
-                        {
-                            Id = 74,
-                            ProductId = 33,
-                            ProductSizeId = 3,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 75,
-                            ProductId = 34,
-                            ProductSizeId = 3,
-                            Quantity = 140
-                        },
-                        new
-                        {
-                            Id = 76,
-                            ProductId = 35,
-                            ProductSizeId = 3,
-                            Quantity = 160
-                        },
-                        new
-                        {
-                            Id = 77,
-                            ProductId = 36,
-                            ProductSizeId = 2,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 78,
-                            ProductId = 36,
-                            ProductSizeId = 3,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 79,
-                            ProductId = 36,
-                            ProductSizeId = 4,
-                            Quantity = 60
-                        },
-                        new
-                        {
-                            Id = 80,
-                            ProductId = 36,
-                            ProductSizeId = 5,
-                            Quantity = 40
-                        },
-                        new
-                        {
-                            Id = 81,
-                            ProductId = 37,
-                            ProductSizeId = 3,
-                            Quantity = 110
-                        },
-                        new
-                        {
-                            Id = 82,
-                            ProductId = 38,
-                            ProductSizeId = 3,
-                            Quantity = 100
-                        },
-                        new
-                        {
-                            Id = 83,
-                            ProductId = 39,
-                            ProductSizeId = 3,
-                            Quantity = 180
-                        },
-                        new
-                        {
-                            Id = 84,
-                            ProductId = 40,
-                            ProductSizeId = 3,
-                            Quantity = 150
-                        },
-                        new
-                        {
-                            Id = 85,
-                            ProductId = 41,
-                            ProductSizeId = 3,
-                            Quantity = 90
-                        },
-                        new
-                        {
-                            Id = 86,
-                            ProductId = 42,
-                            ProductSizeId = 3,
-                            Quantity = 200
-                        },
-                        new
-                        {
-                            Id = 87,
-                            ProductId = 43,
-                            ProductSizeId = 3,
-                            Quantity = 150
-                        },
-                        new
-                        {
-                            Id = 88,
-                            ProductId = 44,
-                            ProductSizeId = 3,
-                            Quantity = 180
-                        },
-                        new
-                        {
-                            Id = 89,
-                            ProductId = 45,
-                            ProductSizeId = 3,
-                            Quantity = 220
-                        },
-                        new
-                        {
-                            Id = 90,
-                            ProductId = 46,
-                            ProductSizeId = 3,
-                            Quantity = 140
-                        },
-                        new
-                        {
-                            Id = 91,
-                            ProductId = 47,
-                            ProductSizeId = 3,
-                            Quantity = 200
-                        },
-                        new
-                        {
-                            Id = 92,
-                            ProductId = 48,
-                            ProductSizeId = 3,
-                            Quantity = 130
-                        },
-                        new
-                        {
-                            Id = 93,
-                            ProductId = 49,
-                            ProductSizeId = 3,
-                            Quantity = 160
-                        },
-                        new
-                        {
-                            Id = 94,
-                            ProductId = 50,
-                            ProductSizeId = 3,
-                            Quantity = 140
-                        },
-                        new
-                        {
-                            Id = 95,
-                            ProductId = 51,
-                            ProductSizeId = 3,
-                            Quantity = 150
-                        },
-                        new
-                        {
-                            Id = 96,
-                            ProductId = 52,
-                            ProductSizeId = 3,
-                            Quantity = 130
-                        },
-                        new
-                        {
-                            Id = 97,
-                            ProductId = 53,
-                            ProductSizeId = 3,
-                            Quantity = 120
-                        },
-                        new
-                        {
-                            Id = 98,
-                            ProductId = 54,
-                            ProductSizeId = 3,
-                            Quantity = 160
-                        },
-                        new
-                        {
-                            Id = 99,
-                            ProductId = 55,
-                            ProductSizeId = 1,
-                            Quantity = 13
-                        },
-                        new
-                        {
-                            Id = 100,
-                            ProductId = 55,
-                            ProductSizeId = 2,
-                            Quantity = 22
-                        },
-                        new
-                        {
-                            Id = 101,
-                            ProductId = 55,
-                            ProductSizeId = 3,
-                            Quantity = 27
-                        },
-                        new
-                        {
-                            Id = 102,
-                            ProductId = 55,
-                            ProductSizeId = 4,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 103,
-                            ProductId = 55,
-                            ProductSizeId = 5,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            Id = 104,
-                            ProductId = 56,
-                            ProductSizeId = 2,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 105,
-                            ProductId = 56,
-                            ProductSizeId = 3,
-                            Quantity = 28
-                        },
-                        new
-                        {
-                            Id = 106,
-                            ProductId = 56,
-                            ProductSizeId = 4,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 107,
-                            ProductId = 56,
-                            ProductSizeId = 5,
-                            Quantity = 12
-                        },
-                        new
-                        {
-                            Id = 108,
-                            ProductId = 57,
-                            ProductSizeId = 3,
-                            Quantity = 120
-                        },
-                        new
-                        {
-                            Id = 109,
-                            ProductId = 58,
-                            ProductSizeId = 3,
-                            Quantity = 70
-                        },
-                        new
-                        {
-                            Id = 110,
-                            ProductId = 59,
-                            ProductSizeId = 1,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 111,
-                            ProductId = 59,
-                            ProductSizeId = 2,
-                            Quantity = 37
-                        },
-                        new
-                        {
-                            Id = 112,
-                            ProductId = 59,
-                            ProductSizeId = 3,
-                            Quantity = 52
-                        },
-                        new
-                        {
-                            Id = 113,
-                            ProductId = 59,
-                            ProductSizeId = 4,
-                            Quantity = 30
-                        },
-                        new
-                        {
-                            Id = 114,
-                            ProductId = 59,
-                            ProductSizeId = 5,
-                            Quantity = 16
-                        },
-                        new
-                        {
-                            Id = 115,
-                            ProductId = 60,
-                            ProductSizeId = 3,
-                            Quantity = 200
-                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.Reel", b =>
@@ -10615,6 +8496,12 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderProductEntities.OrderProduct", b =>
                 {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", "Order")
                         .WithMany("OrderProducts")
                         .HasForeignKey("OrderId")
@@ -10623,9 +8510,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", "Product")
                         .WithMany("OrderProducts")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Brand");
 
                     b.Navigation("Order");
 
@@ -10702,9 +8589,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.ProductSizeMapping", b =>
                 {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", "Product")
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.ProductColorMapping", "ProductColorMapping")
                         .WithMany("AvailableSizes")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductColorMappingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -10714,7 +8601,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("ProductColorMapping");
 
                     b.Navigation("ProductSize");
                 });
@@ -10846,8 +8733,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                 {
                     b.Navigation("AvailableColors");
 
-                    b.Navigation("AvailableSizes");
-
                     b.Navigation("OrderProducts");
 
                     b.Navigation("ProductInformations");
@@ -10867,6 +8752,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.ProductColor", b =>
                 {
                     b.Navigation("ProductColorMapping");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.ProductColorMapping", b =>
+                {
+                    b.Navigation("AvailableSizes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.ProductSize", b =>

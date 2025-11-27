@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Application.DTOs.Request.Cart;
 using ReelsCommerceSystem.Application.DTOs.Response.Cart;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
@@ -46,7 +44,7 @@ public class CartService : ICartService
                 existing.Quantity += item.Quantity;
             else
             {
-                cart.ProductCarts.Add(new ProductCart
+                cart.ProductCarts.Add(new CartProduct
                 {
                     ProductId = product.Id,
                     Name = product.Name,
@@ -129,7 +127,7 @@ public class CartService : ICartService
                 int initialQuantity = (update.Change ?? update.Quantity ?? 0);
                 if (initialQuantity <= 0) continue;
 
-                cart.ProductCarts.Add(new ProductCart
+                cart.ProductCarts.Add(new CartProduct
                 {
                     ProductId = product.Id,
                     Name = product.Name,

@@ -12,7 +12,6 @@ public class ProductByIdSpec : Specification<Product>
         AddInclude(p => p.Category);
         AddInclude(p => p.AvailableColors);
         AddInclude("AvailableColors.ProductColor");
-        AddInclude(p => p.AvailableSizes);
         AddInclude("AvailableSizes.ProductSize");
         AddInclude(p => p.Reviews);
         AddInclude("Reviews.User");

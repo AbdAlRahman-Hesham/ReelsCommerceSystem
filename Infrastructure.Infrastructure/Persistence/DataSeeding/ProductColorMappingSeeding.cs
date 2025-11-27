@@ -5,7 +5,7 @@ using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
 
-public class ProductColorMappingSeeding : IEntityTypeConfiguration<ProductColorMapping>
+/*public class ProductColorMappingSeeding : IEntityTypeConfiguration<ProductColorMapping>
 {
     public void Configure(EntityTypeBuilder<ProductColorMapping> builder)
     {
@@ -38,7 +38,6 @@ public class ProductColorMappingSeeding : IEntityTypeConfiguration<ProductColorM
                     Id = mappingId++,
                     ProductId = productId,
                     ProductColorId = colorId,
-                    Quantity = colorQuantity
                 });
             }
         }
@@ -126,4 +125,4 @@ public class ProductColorMappingSeeding : IEntityTypeConfiguration<ProductColorM
 
         builder.HasData(productColorMappings);
     }
-}
+}*/
