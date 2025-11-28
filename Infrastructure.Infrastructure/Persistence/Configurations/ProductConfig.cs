@@ -22,10 +22,6 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
         builder.HasMany(p => p.AvailableColors)
             .WithOne(c => c.Product)
             .HasForeignKey(c=>c.ProductId);
-        
-        builder.HasMany(p => p.AvailableSizes)
-            .WithOne(c => c.Product)
-            .HasForeignKey(c=>c.ProductId);
 
     }
 }

@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Ocsp;
 using ReelsCommerceSystem.Application.DTOs.Request.Cart;
 using ReelsCommerceSystem.Application.Interfaces.Services;
-using ReelsCommerceSystem.Domain.Entities.UserEntities;
-using ReelsCommerceSystem.Infrastructure.Services;
 using System.Security.Claims;
 
 namespace ReelsCommerceSystem.Api.Controllers;

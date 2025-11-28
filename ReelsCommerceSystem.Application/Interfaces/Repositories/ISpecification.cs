@@ -6,6 +6,7 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
 public interface ISpecification<T> where T : BaseEntity
 {
+    List<Func<IQueryable<T>, IQueryable<T>>> QueryModifiers { get; }
     Expression<Func<T, bool>>? Criteria { get; }
     List<Expression<Func<T, object>>>? Includes { get; }
     List<string> IncludeStrings { get; }

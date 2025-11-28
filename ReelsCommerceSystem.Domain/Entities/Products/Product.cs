@@ -16,7 +16,7 @@ public class Product : BaseEntity
     public string? ArDescription { get; set; }
 
     public decimal Price { get; set; }
-    public int Quantity { get; set; }
+    public int Quantity => AvailableColors.Sum(c=>c.Quantity);
     public string MediaUrl { get; set; } = null!;
     public bool IsCustomizable { get; set; }
 
@@ -36,7 +36,6 @@ public class Product : BaseEntity
     public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
 
     public ICollection<ProductColorMapping> AvailableColors { get; set; } = new List<ProductColorMapping>();
-    public ICollection<ProductSizeMapping> AvailableSizes { get; set; } = new List<ProductSizeMapping>();
     public ICollection<ProductInformation> ProductInformations { get; set; } = new List<ProductInformation>();
 
 

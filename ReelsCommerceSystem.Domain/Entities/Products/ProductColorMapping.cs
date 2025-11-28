@@ -7,6 +7,8 @@ public class ProductColorMapping
     public Product Product { get; set; }
     public int ProductColorId { get; set; }
     public ProductColor ProductColor { get; set; }
-    public int Quantity { get; set; }
+    public int Quantity => AvailableSizes.Sum(s=>s.Quantity);
+    public ICollection<ProductSizeMapping> AvailableSizes { get; set; } = new List<ProductSizeMapping>();
+
 
 }

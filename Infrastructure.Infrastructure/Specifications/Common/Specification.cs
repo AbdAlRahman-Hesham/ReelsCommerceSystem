@@ -13,9 +13,10 @@ public class Specification<T>(
                             int? pageSize = null
                             ) : ISpecification<T> where T : BaseEntity
 {
-    
+
 
     #region Properties
+    public List<Func<IQueryable<T>, IQueryable<T>>> QueryModifiers { get; } = new();
     public Expression<Func<T, bool>>? Criteria { get; private set; } = criteria;
     public List<Expression<Func<T, object>>> Includes { get; set; } = new();
     public List<string> IncludeStrings { get; } = new List<string>();
@@ -56,6 +57,10 @@ public class Specification<T>(
         PageSize = pageSize;
     }
     #endregion
+    protected void AsSplitQuery()
+    {
+        QueryModifiers.Add(q => q.AsSplitQuery());
+    }
 
     #region Pagination Helpers
     public int GetCount(IQueryable<T> query)

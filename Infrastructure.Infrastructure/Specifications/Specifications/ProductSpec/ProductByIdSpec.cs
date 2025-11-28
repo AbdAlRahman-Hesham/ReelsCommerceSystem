@@ -10,12 +10,29 @@ public class ProductByIdSpec : Specification<Product>
     {
         AddInclude(p => p.Brand);
         AddInclude(p => p.Category);
+
+        // Include ProductColorMapping
         AddInclude(p => p.AvailableColors);
+
+        // Include ProductColor inside ProductColorMapping
         AddInclude("AvailableColors.ProductColor");
-        AddInclude(p => p.AvailableSizes);
-        AddInclude("AvailableSizes.ProductSize");
+
+        // Include AvailableSizes inside ProductColorMapping
+        AddInclude("AvailableColors.AvailableSizes");
+
+        // Include ProductSize inside AvailableSizes (ProductSizeMapping)
+        AddInclude("AvailableColors.AvailableSizes.ProductSize");
+
+        // Reviews + User
         AddInclude(p => p.Reviews);
         AddInclude("Reviews.User");
+
+        // Product Informations
         AddInclude(p => p.ProductInformations);
+       
+        AddOrderByDescending(p => p.Id);
+
+        AsSplitQuery();
+
     }
 }
