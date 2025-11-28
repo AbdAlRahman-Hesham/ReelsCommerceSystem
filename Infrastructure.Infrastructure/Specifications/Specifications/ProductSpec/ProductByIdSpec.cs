@@ -29,5 +29,10 @@ public class ProductByIdSpec : Specification<Product>
 
         // Product Informations
         AddInclude(p => p.ProductInformations);
+       
+        AddOrderByDescending(p => p.Id);
+
+        AsSplitQuery();
+
     }
 }
