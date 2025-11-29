@@ -1,6 +1,5 @@
 ﻿using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
-using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
 namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
@@ -20,9 +19,9 @@ public class ProductSpec : Specification<Product>
                  ac.ProductColor.Name.ToLower() == productSpecParams.Color.ToLower() ||
                  ac.ProductColor.ArName.ToLower() == productSpecParams.Color.ToLower())) &&
 
-            (string.IsNullOrEmpty(productSpecParams.Size) ||
-             p.AvailableSizes.Any(asize =>
-                 asize.ProductSize.Size.ToString().ToLower() == productSpecParams.Size.ToLower())) &&
+            (string.IsNullOrEmpty(productSpecParams.Size) || p.AvailableColors.SelectMany(c => c.AvailableSizes)
+                                                                               .Any(s => s.ProductSize.Size.ToString().ToLower() 
+                                                                                         == productSpecParams.Size.ToLower())) &&
 
             (!productSpecParams.MinPrice.HasValue || p.Price >= productSpecParams.MinPrice.Value) &&
             (!productSpecParams.MaxPrice.HasValue || p.Price <= productSpecParams.MaxPrice.Value) &&
@@ -39,13 +38,23 @@ public class ProductSpec : Specification<Product>
 
         AddIncludes();
 
-        ApplySorting(productSpecParams.SortBy, productSpecParams.SortOrder);
+        if(!string.IsNullOrEmpty(productSpecParams.SortBy))
+        {
+            ApplySorting(productSpecParams.SortBy, productSpecParams.SortOrder);
+        }
+        else
+        {
+            AddOrderByDescending(p => p.Id);
+        }
+
 
         if (productSpecParams.PageIndex.HasValue && productSpecParams.PageSize.HasValue)
         {
             var pageIndex = productSpecParams.PageIndex.Value < 1 ? 1 : productSpecParams.PageIndex.Value;
             ApplyPaging(pageIndex, productSpecParams.PageSize.Value);
         }
+
+        AsSplitQuery();
     }
 
     // Default constructor for fluent API
@@ -54,62 +63,10 @@ public class ProductSpec : Specification<Product>
         AddIncludes();
     }
 
-    public ProductSpec(int productId) : base(p => p.Id == productId)
-    {
-        AddIncludes();
-    }
+ 
 
-    public ProductSpec(string searchTerm) : base(p =>
-        p.Name.Contains(searchTerm) ||
-        p.Description.Contains(searchTerm) ||
-        p.Brand.DisplayName.Contains(searchTerm))
-    {
-        AddIncludes();
-    }
+    
 
-    public ProductSpec(int categoryId, bool includeSubCategories = false)
-    {
-        if (includeSubCategories)
-        {
-            // This would need additional logic for category hierarchy
-            AddCriteria(p => p.CategoryId == categoryId);
-        }
-        else
-        {
-            AddCriteria(p => p.CategoryId == categoryId);
-        }
-        AddIncludes();
-    }
-
-    public ProductSpec(int brandId, int? categoryId = null)
-    {
-        AddCriteria(p => p.BrandId == brandId);
-
-        if (categoryId.HasValue)
-        {
-            AddCriteria(p => p.CategoryId == categoryId.Value);
-        }
-
-        AddIncludes();
-    }
-
-    public ProductSpec(decimal minPrice, decimal maxPrice)
-    {
-        AddCriteria(p => p.Price >= minPrice && p.Price <= maxPrice);
-        AddIncludes();
-    }
-
-    public ProductSpec(bool hasOfferOnly)
-    {
-        AddCriteria(p => p.HaveOffer == hasOfferOnly);
-        AddIncludes();
-    }
-
-    public ProductSpec(StockStatus stockStatus)
-    {
-        AddCriteria(p => p.Status == stockStatus);
-        AddIncludes();
-    }
 
     private void ApplySorting(string? sortBy, string? sortOrder)
     {
@@ -191,91 +148,27 @@ public class ProductSpec : Specification<Product>
     {
         AddInclude(p => p.Brand);
         AddInclude(p => p.Category);
+
+        // Include ProductColorMapping
         AddInclude(p => p.AvailableColors);
+
+        // Include ProductColor inside ProductColorMapping
         AddInclude("AvailableColors.ProductColor");
-        AddInclude(p => p.AvailableSizes);
-        AddInclude("AvailableSizes.ProductSize");
+
+        // Include AvailableSizes inside ProductColorMapping
+        AddInclude("AvailableColors.AvailableSizes");
+
+        // Include ProductSize inside AvailableSizes (ProductSizeMapping)
+        AddInclude("AvailableColors.AvailableSizes.ProductSize");
+
+        // Reviews + User
         AddInclude(p => p.Reviews);
+
+        // Product Informations
         AddInclude(p => p.ProductInformations);
+
     }
 
-    // Fluent API methods for building complex queries
-    public ProductSpec WithBrand(int brandId)
-    {
-        AddCriteria(p => p.BrandId == brandId);
-        return this;
-    }
 
-    public ProductSpec WithCategory(int categoryId)
-    {
-        AddCriteria(p => p.CategoryId == categoryId);
-        return this;
-    }
-
-    public ProductSpec WithPriceRange(decimal minPrice, decimal maxPrice)
-    {
-        AddCriteria(p => p.Price >= minPrice && p.Price <= maxPrice);
-        return this;
-    }
-
-    public ProductSpec WithOfferOnly()
-    {
-        AddCriteria(p => p.HaveOffer);
-        return this;
-    }
-
-    public ProductSpec InStockOnly()
-    {
-        AddCriteria(p => p.Status == StockStatus.InStock);
-        return this;
-    }
-
-    public ProductSpec WithSearch(string searchTerm)
-    {
-        if (!string.IsNullOrEmpty(searchTerm))
-        {
-            AddCriteria(p => p.Name.Contains(searchTerm) ||
-                           p.Description.Contains(searchTerm) ||
-                           p.Brand.DisplayName.Contains(searchTerm));
-        }
-        return this;
-    }
-
-    public ProductSpec SortByPrice(bool ascending = true)
-    {
-        if (ascending)
-            AddOrderBy(p => p.Price);
-        else
-            AddOrderByDescending(p => p.Price);
-        return this;
-    }
-
-    public ProductSpec SortByName(bool ascending = true)
-    {
-        if (ascending)
-            AddOrderBy(p => p.Name);
-        else
-            AddOrderByDescending(p => p.Name);
-        return this;
-    }
-
-    public ProductSpec SortByNewest()
-    {
-        AddOrderByDescending(p => p.CreatedAt);
-        return this;
-    }
-
-    public ProductSpec SortByDiscount()
-    {
-        AddOrderByDescending(p => p.DiscountPercentage ?? 0);
-        return this;
-    }
-
-    // Static factory methods for common scenarios
-    public static ProductSpec ForSearch(string searchTerm) => new ProductSpec(searchTerm);
-    public static ProductSpec ForCategory(int categoryId) => new ProductSpec(categoryId);
-    public static ProductSpec ForBrand(int brandId) => new ProductSpec(brandId, null);
-    public static ProductSpec ForOffers() => new ProductSpec(true);
-    public static ProductSpec InStock() => new ProductSpec(StockStatus.InStock);
-    public static ProductSpec ById(int productId) => new ProductSpec(productId);
+ 
 }

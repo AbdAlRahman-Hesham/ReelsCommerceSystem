@@ -1,20 +1,23 @@
 ﻿using ReelsCommerceSystem.Domain.Common;
-using ReelsCommerceSystem.Domain.Entities.CartEntities;
-using ReelsCommerceSystem.Domain.Entities.ProductEntites;
+using ReelsCommerceSystem.Domain.Enums;
 
 namespace ReelsCommerceSystem.Domain.Entities.ProductCartEntities;
 
-public class ProductCart : BaseEntity
+public class CartProduct : BaseEntity
 {
     public int ProductId { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public Decimal Price { get; set; }
+    public string Name { get; set; } = null!;
+    public string? Description { get; set; }
+    public decimal Price { get; set; }
+    public int Quantity { get; set; } = 1;
+
     public string Category { get; set; }
-    public string MediaUrl { get; set; } = null!;
+    public string? Color { get; set; }
+    public Size Size { get; set; }
 
-    public int Quantity { get; set; }
-    public int CartId { get; set; }
-    public Cart? Cart { get; set; } = null!;
+    public bool IsCustomized { get; set; } = false;
+    public string? MoreDetails { get; set; }
+    public string? MediaUrl { get; set; }
 
+    public decimal FinalPrice { get; set; }
 }

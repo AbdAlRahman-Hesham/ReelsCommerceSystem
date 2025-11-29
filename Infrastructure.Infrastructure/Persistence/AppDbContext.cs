@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ReelsCommerceSystem.Domain.Entities.AiChatsEntities;
-using ReelsCommerceSystem.Domain.Entities.BlacklistToken;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
-using ReelsCommerceSystem.Domain.Entities.DisputeEntities;
 using ReelsCommerceSystem.Domain.Entities.InterestEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
@@ -60,15 +57,12 @@ public class AppDbContext :IdentityDbContext<User>
         });
     }
     public DbSet<Product> Products { get; set; }
-    public DbSet<AiChat> AiChats { get; set; }
     public DbSet<Brand> Brands { get; set; }
-    public DbSet<Dispute> Disputes { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Reel> Reels { get; set; }
     public DbSet<ProductReview> Reviews { get; set; }
     public DbSet<UserInterest> UserInterests { get; set; }
-    public DbSet<BlacklistedToken> BlacklistedTokens { get; set; }
     public DbSet<Interest> Interests { get; set; }
     public DbSet<BrandReviewLike> BrandReviewLikes { get; set; }
     public DbSet<UserBrandFollow> UserBrandFollows { get; set; }

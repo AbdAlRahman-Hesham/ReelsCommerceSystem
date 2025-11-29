@@ -38,7 +38,6 @@ public class ProductColorMappingSeeding : IEntityTypeConfiguration<ProductColorM
                     Id = mappingId++,
                     ProductId = productId,
                     ProductColorId = colorId,
-                    Quantity = colorQuantity
                 });
             }
         }

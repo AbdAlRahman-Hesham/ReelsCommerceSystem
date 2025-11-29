@@ -42,8 +42,13 @@ public static class SpecificationEvaluator<T> where T : BaseEntity
         if (applyPaging && specification.IsPagingEnabled)
         {
             query = query
-               .Skip((specification.PageIndex.Value - 1) * specification.PageSize.Value)
+               .Skip((specification.PageIndex!.Value - 1) * specification.PageSize!.Value)
                .Take(specification.PageSize.Value);
+        }
+
+        foreach (var modifier in specification.QueryModifiers)
+        {
+            query = modifier(query);
         }
 
         return query;

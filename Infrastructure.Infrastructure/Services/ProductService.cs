@@ -179,7 +179,8 @@ public class ProductService(
             Brand = MapToBrandDto(product.Brand),
             Category = MapToCategoryDto(product.Category),
             ReviewsSummary = MapToReviewsSummary(product.Reviews),
-            
+            AvailableColors = MapToColorDtos(product.AvailableColors),
+
         };
     }
     private GetAllProductsForAiResponse MapToGetAllProductsFoAiResponse(Product product, List<GetRelatedProductDto> relatedProducts)
@@ -200,7 +201,6 @@ public class ProductService(
             Brand = MapToBrandDto(product.Brand),
             Category = MapToCategoryDto(product.Category),
             AvailableColors = MapToColorDtos(product.AvailableColors),
-            AvailableSizes = MapToSizeDtos(product.AvailableSizes),
             ProductInformations = MapToProductInformationDtos(product.ProductInformations),
             ReviewsSummary = MapToReviewsSummary(product.Reviews),
             Reviews = MapToReviewDtos(product.Reviews),
@@ -226,7 +226,6 @@ public class ProductService(
             Brand = MapToBrandDto(product.Brand),
             Category = MapToCategoryDto(product.Category),
             AvailableColors = MapToColorDtos(product.AvailableColors),
-            AvailableSizes = MapToSizeDtos(product.AvailableSizes),
             ProductInformations = MapToProductInformationDtos(product.ProductInformations),
             ReviewsSummary = MapToReviewsSummary(product.Reviews),
             Reviews = MapToReviewDtos(product.Reviews),
@@ -281,7 +280,9 @@ public class ProductService(
             Name = ac.ProductColor?.Name ?? "Unknown",
             ArName = ac.ProductColor?.ArName ?? "غير معروف",
             HexCode = ac.ProductColor?.HexCode ?? "#000000",
-            Quantity = ac.Quantity
+            Quantity = ac.Quantity,
+            AvailableSizes = MapToSizeDtos(ac.AvailableSizes)
+
         }).ToList();
     }
 

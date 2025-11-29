@@ -1,4 +1,6 @@
-﻿namespace ReelsCommerceSystem.Application.DTOs.Response.Product;
+﻿using System.Text.Json.Serialization;
+
+namespace ReelsCommerceSystem.Application.DTOs.Response.Product;
 
 public class GetAllProductsResponse
 {
@@ -29,6 +31,8 @@ public class GetAllProductsResponse
     public ProductCategoryDto? Category { get; set; } = null!;
     public ProductReviewsSummaryDto? ReviewsSummary { get; set; } = new();
     public bool IsInWishlist { get; set; }  // TODO: Set this property based on user's wishlist
+    [JsonPropertyOrder(100)]
+    public List<ProductColorDto> AvailableColors { get; set; } = new();
 }
 
 
@@ -56,6 +60,8 @@ public class ProductColorDto
     public string ArName { get; set; } = null!;
     public string HexCode { get; set; } = null!;
     public int Quantity { get; set; }
+
+    public List<ProductSizeDto> AvailableSizes { get; set; } = new();
 }
 
 public class ProductSizeDto
