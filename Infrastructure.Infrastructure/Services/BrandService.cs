@@ -70,7 +70,8 @@ public class BrandService : IBrandService
     {
         var brand = await _dbContext.Brands.AsNoTracking()
             .Include(b => b.Products)
-                .ThenInclude(p => p.Reels)
+                .ThenInclude(p => p.ProductReels)
+                .ThenInclude(pr => pr.Reel)
             .Include(b => b.UserFollows)
             .FirstOrDefaultAsync(b => b.Id == brandId);
 
@@ -84,8 +85,9 @@ public class BrandService : IBrandService
         }
 
         var totalLikes = brand.Products
-            .SelectMany(p => p.Reels ?? Enumerable.Empty<Reel>())
-            .Sum(r => r.NumOfLikes);
+                         .SelectMany(p => p.ProductReels)
+                         .Select(pr => pr.Reel)
+                         .Sum(r => r.NumOfLikes);
 
         var followersCount = brand.UserFollows?.Count ?? 0;
 

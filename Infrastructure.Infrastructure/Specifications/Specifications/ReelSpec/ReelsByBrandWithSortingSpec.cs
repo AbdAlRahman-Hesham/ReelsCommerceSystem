@@ -9,7 +9,6 @@ internal class ReelsByBrandWithSortingSpec : Specification<Reel>
     public ReelsByBrandWithSortingSpec(int brandId, string? sortBy = null)
         : base(criteria: r => r.BrandId == brandId)
     {
-        AddInclude(r => r.Product);
 
         if (sortBy == "oldest")
             AddOrderBy(r => r.CreatedAt);

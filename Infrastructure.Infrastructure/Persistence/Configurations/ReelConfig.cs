@@ -18,12 +18,6 @@ public class ReelConfig : IEntityTypeConfiguration<Reel>
         builder.Property(r => r.VideoUrl)
                .IsRequired();
 
-        // Product relationship - Cascade
-        builder.HasOne(r => r.Product)
-               .WithMany(p => p.Reels)
-               .HasForeignKey(r => r.ProductId)
-               .OnDelete(DeleteBehavior.Cascade);
-
         // Brand relationship - NO ACTION (to avoid cascade conflicts)
         builder.HasOne(r => r.Brand)
                .WithMany(b => b.Reels)
