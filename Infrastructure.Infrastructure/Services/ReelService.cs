@@ -6,7 +6,6 @@ using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
 using System.Net;
-using System.Text.RegularExpressions;
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
@@ -44,7 +43,7 @@ public class ReelService(IUnitOfWork _unitOfWork) : IReelService
             var result = new AllReelsInBrandRes
             {
                 ReelId= reel.Id,
-                ThumbnailUrl= GenerateThumbnailFromDrive(reel.VideoUrl),
+                ThumbnailUrl= GenerateThumbnailUrl(reel.VideoUrl),
                 NumOfLikes=reel.NumOfLikes,
                 NumOfWatches=reel.NumOfWatches,
                 CreatedAt=reel.CreatedAt,
@@ -65,12 +64,24 @@ public class ReelService(IUnitOfWork _unitOfWork) : IReelService
 
     }
 
-    private string GenerateThumbnailFromDrive(string videoUrl)
+    private string GenerateThumbnailUrl(string videoUrl, int second = 1)
     {
-        var match = Regex.Match(videoUrl ?? "", @"\/d\/(.*?)\/");
-        if (match.Success)
-            return $"https://drive.google.com/thumbnail?id={match.Groups[1].Value}";
+        if (string.IsNullOrWhiteSpace(videoUrl))
+            throw new ArgumentException("Video URL cannot be empty");
 
-        return null; 
+        var split = videoUrl.Split("/video/upload/");
+        if (split.Length != 2)
+            throw new Exception("Invalid Cloudinary URL format");
+
+        var prefix = split[0];
+        var suffix = split[1];
+
+        if (suffix.EndsWith(".mp4"))
+            suffix = suffix[..^4] + ".jpg";
+
+        string transform = $"video/upload/so_{second},f_jpg/";
+
+        return $"{prefix}/{transform}{suffix}";
     }
+
 }
