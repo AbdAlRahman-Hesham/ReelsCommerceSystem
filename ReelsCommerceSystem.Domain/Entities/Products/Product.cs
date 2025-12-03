@@ -37,6 +37,7 @@ public class Product : BaseEntity
 
     public ICollection<ProductColorMapping> AvailableColors { get; set; } = new List<ProductColorMapping>();
     public ICollection<ProductInformation> ProductInformations { get; set; } = new List<ProductInformation>();
+    public ICollection<UserProductView> UserProductViews { get; set; } = new List<UserProductView>();
 
 
 }

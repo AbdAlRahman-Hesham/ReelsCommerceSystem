@@ -55,6 +55,40 @@ public class AppDbContext :IdentityDbContext<User>
         {
             b.ToTable("UserTokens");
         });
+
+
+        // ReelComment - FK على Reel مع Cascade
+        modelBuilder.Entity<ReelComment>()
+            .HasOne(rc => rc.Reel)
+            .WithMany(r => r.ReelComments) // أو Navigation Property المناسب
+            .HasForeignKey(rc => rc.ReelId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // ReelComment - FK على User بدون Cascade
+        modelBuilder.Entity<ReelComment>()
+            .HasOne(rc => rc.User)
+            .WithMany(u=>u.ReelComments) // بدون Navigation Property على User
+            .HasForeignKey(rc => rc.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // ReelCommentLove - FK على ReelComment مع Cascade
+        modelBuilder.Entity<ReelCommentLove>()
+            .HasOne(rcl => rcl.ReelComment)
+            .WithMany(rc => rc.Loves)
+            .HasForeignKey(rcl => rcl.ReelCommentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // ReelCommentLove - FK على User بدون Cascade
+        modelBuilder.Entity<ReelCommentLove>()
+            .HasOne(rcl => rcl.User)
+            .WithMany(u=>u.ReelCommentLoves)
+            .HasForeignKey(rcl => rcl.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // منع تكرار Love لنفس Comment من نفس User
+        modelBuilder.Entity<ReelCommentLove>()
+            .HasIndex(rcl => new { rcl.ReelCommentId, rcl.UserId })
+            .IsUnique();
     }
     public DbSet<Product> Products { get; set; }
     public DbSet<Brand> Brands { get; set; }

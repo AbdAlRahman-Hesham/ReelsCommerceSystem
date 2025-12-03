@@ -2,6 +2,8 @@
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
+using ReelsCommerceSystem.Domain.Entities.ProductEntites;
+using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
 using ReelsCommerceSystem.Domain.Enums;
@@ -28,5 +30,10 @@ public class User : IdentityUser
     public ICollection<UserInterest> Interests { get; set; } = new List<UserInterest>();
     public ICollection<UserBrandFollow> BrandFollows { get; set; } = new List<UserBrandFollow>();
     public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
+    public ICollection<UserReelLike> UserReelLikes { get; set; } = new List<UserReelLike>();
+    public ICollection<UserReelView> UserReelViews { get; set; } = new List<UserReelView>();
+    public ICollection<ReelComment> ReelComments { get; set; } = new List<ReelComment>();
+    public ICollection<ReelCommentLove> ReelCommentLoves { get; set; } = new List<ReelCommentLove>();
+    public ICollection<UserProductView> UserProductViews { get; set; } = new List<UserProductView>();
 
 }
