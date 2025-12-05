@@ -11,6 +11,6 @@ public class ReelComment : BaseEntity
     public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
     public ICollection<ReelCommentLove> Loves { get; set; } = new List<ReelCommentLove>();
-
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 }
