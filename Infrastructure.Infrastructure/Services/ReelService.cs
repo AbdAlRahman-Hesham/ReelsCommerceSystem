@@ -1,7 +1,13 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Response.Reel;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Ocsp;
+using ReelsCommerceSystem.Application.DTOs.Response.Brand;
+using ReelsCommerceSystem.Application.DTOs.Response.Reel;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
@@ -9,7 +15,7 @@ using System.Net;
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
-public class ReelService(IUnitOfWork _unitOfWork) : IReelService
+public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager) : IReelService
 
 {
     public async Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy)
@@ -33,25 +39,25 @@ public class ReelService(IUnitOfWork _unitOfWork) : IReelService
                 }
             }
         );
-            
+
         }
         var spec = new ReelsByBrandWithSortingSpec(brandId, sortBy);
         var reels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
         var AllReels = new List<AllReelsInBrandRes>();
-        foreach (var reel in reels) 
+        foreach (var reel in reels)
         {
             var result = new AllReelsInBrandRes
             {
-                ReelId= reel.Id,
-                ThumbnailUrl= GenerateThumbnailUrl(reel.VideoUrl),
-                NumOfLikes=reel.NumOfLikes,
-                NumOfWatches=reel.NumOfWatches,
-                CreatedAt=reel.CreatedAt,
-                VideoUrl=reel.VideoUrl
+                ReelId = reel.Id,
+                ThumbnailUrl = GenerateThumbnailUrl(reel.VideoUrl),
+                NumOfLikes = reel.NumOfLikes,
+                NumOfWatches = reel.NumOfWatches,
+                CreatedAt = reel.CreatedAt,
+                VideoUrl = reel.VideoUrl
 
             };
             AllReels.Add(result);
-        
+
         }
         return ApiResponse<List<AllReelsInBrandRes>>
             .SuccessResponse
@@ -83,5 +89,42 @@ public class ReelService(IUnitOfWork _unitOfWork) : IReelService
 
         return $"{prefix}/{transform}{suffix}";
     }
+    public async Task<bool> ToggleReelLikeAsync(string userId, int reelId)
+    {
+        var likes = await _unitOfWork.Repository<UserReelLike>().GetAllAsync();
+        var existingLike = likes.FirstOrDefault(x => x.UserId == userId && x.ReelId == reelId);
+        var reel = await _unitOfWork.Repository<Reel>().GetByIdAsync(reelId);
 
+        bool isLiked;
+
+        if (existingLike == null)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            // Add new like
+            var newLike = new UserReelLike
+            {
+                ReelId = reelId,
+                UserId = userId
+            };
+
+            await _unitOfWork.Repository<UserReelLike>().AddAsync(newLike);
+            reel.NumOfLikes += 1;
+            isLiked = true;
+        }
+        else
+        {
+            // Remove like
+            _unitOfWork.Repository<UserReelLike>().Delete(existingLike);
+            reel.NumOfLikes = Math.Max(0, reel.NumOfLikes - 1);
+            isLiked = false;
+        }
+
+        _unitOfWork.Repository<Reel>().Update(reel);
+        await _unitOfWork.SaveChangesAsync();
+
+        return isLiked;
+
+    }
 }
+
+
