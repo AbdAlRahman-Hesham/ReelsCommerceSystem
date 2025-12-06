@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251205213356_AddOfferEntities")]
+    partial class AddOfferEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -927,26 +930,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("BrandId");
 
                     b.ToTable("Offers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BrandId = 1,
-                            CreatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "Sale 30% on all Product",
-                            ImageUrl = "https://drive.google.com/file/d/1oaqNd7ONKCa8AFG6myo22H9FWL6nMMaY/view?usp=drive_link",
-                            UpdatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BrandId = 3,
-                            CreatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Description = "Buy 2 Get 50% Off",
-                            ImageUrl = "https://drive.google.com/file/d/1UsBr52J5CZasFrPUbYhsh1q4q1_8L7Y7/view?usp=drive_link",
-                            UpdatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc)
-                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.OfferProduct", b =>
@@ -962,23 +945,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("OfferProducts");
-
-                    b.HasData(
-                        new
-                        {
-                            OfferId = 1,
-                            ProductId = 1
-                        },
-                        new
-                        {
-                            OfferId = 1,
-                            ProductId = 2
-                        },
-                        new
-                        {
-                            OfferId = 2,
-                            ProductId = 14
-                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>

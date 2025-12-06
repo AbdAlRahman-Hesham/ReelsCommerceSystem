@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251205214841_SeedingOffersAndProductOffers")]
+    partial class SeedingOffersAndProductOffers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -933,19 +936,19 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         {
                             Id = 1,
                             BrandId = 1,
-                            CreatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 5, 21, 48, 39, 147, DateTimeKind.Utc).AddTicks(3279),
                             Description = "Sale 30% on all Product",
                             ImageUrl = "https://drive.google.com/file/d/1oaqNd7ONKCa8AFG6myo22H9FWL6nMMaY/view?usp=drive_link",
-                            UpdatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc)
+                            UpdatedAt = new DateTime(2025, 12, 5, 21, 48, 39, 147, DateTimeKind.Utc).AddTicks(3284)
                         },
                         new
                         {
                             Id = 2,
                             BrandId = 3,
-                            CreatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 5, 21, 48, 39, 147, DateTimeKind.Utc).AddTicks(4662),
                             Description = "Buy 2 Get 50% Off",
                             ImageUrl = "https://drive.google.com/file/d/1UsBr52J5CZasFrPUbYhsh1q4q1_8L7Y7/view?usp=drive_link",
-                            UpdatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc)
+                            UpdatedAt = new DateTime(2025, 12, 5, 21, 48, 39, 147, DateTimeKind.Utc).AddTicks(4662)
                         });
                 });
 
