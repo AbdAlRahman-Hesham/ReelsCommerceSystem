@@ -126,7 +126,7 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
     public async Task<IActionResult> ToggleFollowBrand(int brandId)
     {
 
-        var userId = User.FindFirst("sub")?.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
         if (string.IsNullOrEmpty(userId))
         {

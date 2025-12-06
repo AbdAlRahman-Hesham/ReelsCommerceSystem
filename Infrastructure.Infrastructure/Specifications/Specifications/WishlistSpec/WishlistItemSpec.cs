@@ -11,6 +11,7 @@ public class WishlistItemSpec : Specification<WishlistItem>
         criteria: (item => item.UserId == userId && item.ProductId == productId)
         )
     {
+        AddInclude(w => w.Product);
     }
     public WishlistItemSpec(string userId) : base
         (
@@ -19,8 +20,9 @@ public class WishlistItemSpec : Specification<WishlistItem>
         sortOrder: XmlSortOrder.Descending
         )
     {
-        AddInclude(item => item.Product);
-        AddInclude(item => item.Product.Brand);
+        AddInclude(w => w.Product);
+        AddInclude(w => w.Product.Category);
+        AddInclude(w => w.Product.Brand);
     }
 
 
