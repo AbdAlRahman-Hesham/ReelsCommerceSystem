@@ -125,8 +125,8 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
     [HttpPost("ToggleFollow/{brandId}")]
     public async Task<IActionResult> ToggleFollowBrand(int brandId)
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;  ////
 
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
         if (string.IsNullOrEmpty(userId))
         {
