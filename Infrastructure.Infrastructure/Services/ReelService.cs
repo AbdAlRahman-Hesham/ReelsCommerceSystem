@@ -47,7 +47,8 @@ public class ReelService(IUnitOfWork _unitOfWork) : IReelService
                 NumOfLikes=reel.NumOfLikes,
                 NumOfWatches=reel.NumOfWatches,
                 CreatedAt=reel.CreatedAt,
-                VideoUrl=reel.VideoUrl
+                VideoUrl=reel.VideoUrl,
+                Title=reel.Title//////////
 
             };
             AllReels.Add(result);
