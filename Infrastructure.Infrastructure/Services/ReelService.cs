@@ -7,6 +7,7 @@ using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
@@ -91,9 +92,9 @@ public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager)
     }
     public async Task<bool> ToggleReelLikeAsync(string userId, int reelId)
     {
-        var likes = await _unitOfWork.Repository<UserReelLike>().GetAllAsync();
-        var existingLike = likes.FirstOrDefault(x => x.UserId == userId && x.ReelId == reelId);
-        var reel = await _unitOfWork.Repository<Reel>().GetByIdAsync(reelId);
+        var specs = new Specification<UserReelLike>(criteria: x => x.UserId == userId && x.ReelId == reelId);
+
+        var existingLike = await _unitOfWork.Repository<UserReelLike>().GetWithSpecAsync(specs);
 
         bool isLiked;
 
@@ -108,18 +109,15 @@ public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager)
             };
 
             await _unitOfWork.Repository<UserReelLike>().AddAsync(newLike);
-            reel.NumOfLikes += 1;
             isLiked = true;
         }
         else
         {
             // Remove like
             _unitOfWork.Repository<UserReelLike>().Delete(existingLike);
-            reel.NumOfLikes = Math.Max(0, reel.NumOfLikes - 1);
             isLiked = false;
         }
 
-        _unitOfWork.Repository<Reel>().Update(reel);
         await _unitOfWork.SaveChangesAsync();
 
         return isLiked;

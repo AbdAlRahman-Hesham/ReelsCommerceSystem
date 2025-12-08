@@ -7,8 +7,8 @@ public class Reel:BaseEntity
 {
     public string VideoUrl { get; set; } = null!;
 
-    public int NumOfLikes { get; set; } = 0;
-    public int NumOfWatches { get; set; } = 0;
+    public int NumOfLikes => UserReelLikes?.Count ?? 0;
+    public int NumOfWatches => UserReelViews?.Count ?? 0;
 
     public string Title { get; set; } = string.Empty;
 
