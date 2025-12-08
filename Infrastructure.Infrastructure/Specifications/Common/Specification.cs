@@ -25,6 +25,7 @@ public class Specification<T>(
     public int? PageSize { get; private set; } = pageSize;
     public int? PageIndex { get; private set; } = pageIndex;
     public bool IsPagingEnabled => PageSize.HasValue && PageIndex.HasValue;
+    public List<Func<IQueryable<T>, IQueryable<T>>> IncludeChains { get; } = new();//////////
     #endregion
 
     #region Builder Helpers
@@ -61,6 +62,10 @@ public class Specification<T>(
     {
         QueryModifiers.Add(q => q.AsSplitQuery());
     }
+    protected void AddIncludeChain(Func<IQueryable<T>, IQueryable<T>> includeChain)
+    {
+        IncludeChains.Add(includeChain);
+    }/////////////
 
     #region Pagination Helpers
     public int GetCount(IQueryable<T> query)
