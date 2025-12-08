@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ReelsCommerceSystem.Application.Interfaces.Services
 {
-    public interface IReelService
+    public interface IReelFeedService
     {
-        Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy);
-        Task<bool> ToggleReelLikeAsync(string userId, int reelId);
+        Task<List<ReelFeedRes>> ReelsWithRecommendationSystemAsync(string userId);
+        Task<List<ReelFeedRes>> ReelsForUserFollowingAsync(string userId);
     }
 }

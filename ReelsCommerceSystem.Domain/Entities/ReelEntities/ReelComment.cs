@@ -12,5 +12,4 @@ public class ReelComment : BaseEntity
     public User User { get; set; } = null!;
     public ICollection<ReelCommentLove> Loves { get; set; } = new List<ReelCommentLove>();
 
-
 }
