@@ -10930,8 +10930,55 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                 b.HasIndex("UserId");
 
-                b.ToTable("ReelComment");
-            });
+                    b.ToTable("ReelComment");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "This product looks amazing! 🔥🔥",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 1,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "I love this brand! 😍",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 1,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Content = "Where can I buy this?",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 2,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Content = "Great quality! Highly recommended 💯",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 20,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Content = "Looks nice but is it available in Egypt?",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 8,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        });
+                });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentLove", b =>
             {
@@ -10961,8 +11008,50 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                 b.HasIndex("ReelCommentId", "UserId")
                     .IsUnique();
 
-                b.ToTable("ReelCommentLove");
-            });
+                    b.ToTable("ReelCommentLove");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 1,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 1,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 2,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 3,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 4,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        });
+                });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
             {
