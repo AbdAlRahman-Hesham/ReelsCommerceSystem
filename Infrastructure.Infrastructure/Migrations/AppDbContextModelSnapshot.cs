@@ -10446,458 +10446,458 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                 b.ToTable("Reels");
 
-                b.HasData(
-                    new
-                    {
-                        Id = 1,
-                        BrandId = 1,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 2,
-                        BrandId = 1,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    },
-                    new
-                    {
-                        Id = 3,
-                        BrandId = 1,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
-                    },
-                    new
-                    {
-                        Id = 4,
-                        BrandId = 1,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
-                    },
-                    new
-                    {
-                        Id = 5,
-                        BrandId = 1,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
-                    },
-                    new
-                    {
-                        Id = 6,
-                        BrandId = 2,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
-                    },
-                    new
-                    {
-                        Id = 7,
-                        BrandId = 2,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 8,
-                        BrandId = 2,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    },
-                    new
-                    {
-                        Id = 9,
-                        BrandId = 2,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
-                    },
-                    new
-                    {
-                        Id = 10,
-                        BrandId = 2,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
-                    },
-                    new
-                    {
-                        Id = 11,
-                        BrandId = 3,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
-                    },
-                    new
-                    {
-                        Id = 12,
-                        BrandId = 3,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
-                    },
-                    new
-                    {
-                        Id = 13,
-                        BrandId = 3,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 14,
-                        BrandId = 3,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    },
-                    new
-                    {
-                        Id = 15,
-                        BrandId = 3,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
-                    },
-                    new
-                    {
-                        Id = 16,
-                        BrandId = 4,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
-                    },
-                    new
-                    {
-                        Id = 17,
-                        BrandId = 4,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
-                    },
-                    new
-                    {
-                        Id = 18,
-                        BrandId = 4,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
-                    },
-                    new
-                    {
-                        Id = 19,
-                        BrandId = 4,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 20,
-                        BrandId = 4,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    },
-                    new
-                    {
-                        Id = 21,
-                        BrandId = 5,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
-                    },
-                    new
-                    {
-                        Id = 22,
-                        BrandId = 5,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
-                    },
-                    new
-                    {
-                        Id = 23,
-                        BrandId = 5,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
-                    },
-                    new
-                    {
-                        Id = 24,
-                        BrandId = 5,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
-                    },
-                    new
-                    {
-                        Id = 25,
-                        BrandId = 5,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 26,
-                        BrandId = 6,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    },
-                    new
-                    {
-                        Id = 27,
-                        BrandId = 6,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
-                    },
-                    new
-                    {
-                        Id = 28,
-                        BrandId = 6,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
-                    },
-                    new
-                    {
-                        Id = 29,
-                        BrandId = 6,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
-                    },
-                    new
-                    {
-                        Id = 30,
-                        BrandId = 6,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
-                    },
-                    new
-                    {
-                        Id = 31,
-                        BrandId = 7,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 32,
-                        BrandId = 7,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    },
-                    new
-                    {
-                        Id = 33,
-                        BrandId = 7,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
-                    },
-                    new
-                    {
-                        Id = 34,
-                        BrandId = 7,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
-                    },
-                    new
-                    {
-                        Id = 35,
-                        BrandId = 7,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
-                    },
-                    new
-                    {
-                        Id = 36,
-                        BrandId = 8,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
-                    },
-                    new
-                    {
-                        Id = 37,
-                        BrandId = 8,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 38,
-                        BrandId = 8,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    },
-                    new
-                    {
-                        Id = 39,
-                        BrandId = 8,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
-                    },
-                    new
-                    {
-                        Id = 40,
-                        BrandId = 8,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
-                    },
-                    new
-                    {
-                        Id = 41,
-                        BrandId = 9,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
-                    },
-                    new
-                    {
-                        Id = 42,
-                        BrandId = 9,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
-                    },
-                    new
-                    {
-                        Id = 43,
-                        BrandId = 9,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 44,
-                        BrandId = 9,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    },
-                    new
-                    {
-                        Id = 45,
-                        BrandId = 9,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
-                    },
-                    new
-                    {
-                        Id = 46,
-                        BrandId = 10,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
-                    },
-                    new
-                    {
-                        Id = 47,
-                        BrandId = 10,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
-                    },
-                    new
-                    {
-                        Id = 48,
-                        BrandId = 10,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
-                    },
-                    new
-                    {
-                        Id = 49,
-                        BrandId = 10,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
-                    },
-                    new
-                    {
-                        Id = 50,
-                        BrandId = 10,
-                        CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        Title = "",
-                        UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                        VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
-                    });
-            });
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Sustainable Winter Look",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Eco-Friendly Street Style",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Minimalist Outfit Inspo",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Recycled Fabric Jacket Drop",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Sustainable Fashion Trends",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Smart Watch Unboxing",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Top 5 Tech Accessories 2024",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Wearable Tech Review",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Daily Tech Essentials",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            BrandId = 2,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Smart Gear for Work",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Morning Skincare Routine",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Glow Serum Review",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Natural Skincare Unboxing",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Clean Beauty Explained",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Healthy Skin Tips",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Streetwear Hoodie Drop",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Urban Style Lookbook",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Street Fashion Essentials",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Premium Street Gear",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            BrandId = 4,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Winter Streetwear Outfit",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Morning Wellness Routine",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Relaxing Home Setup",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Self-Care Essentials",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Mindfulness Lifestyle",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            BrandId = 5,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Zen-Inspired Living",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Smart Fitness Tracker",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Workout Gear Review",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Gym Essentials 2024",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Daily Training Motivation",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            BrandId = 6,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Fitness Smartwear Guide",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Eco Home Makeover",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Sustainable Living Tips",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Eco-Friendly Home Decor",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Green Home Essentials",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            BrandId = 7,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Zero Waste Lifestyle",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Gadget of the Week",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Top Travel Tech",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Portable Tech Must-Haves",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Smart Device Showcase",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            BrandId = 8,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Best Tech Accessories",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Hydrating Skincare Routine",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "PureGlow Serum Review",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Night Routine for Glowing Skin",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Daily Clean Beauty Tips",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            BrandId = 9,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Skincare for All Seasons",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Trendy Summer Outfits",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "New Season Fashion Drop",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Style Inspiration Lookbook",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Latest Fashion Trends",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            BrandId = 10,
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Title = "Trendora Outfit Guide",
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
+                        });
+                });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelComment", b =>
             {

@@ -49,12 +49,13 @@ public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager)
         {
             var result = new AllReelsInBrandRes
             {
-                ReelId = reel.Id,
-                ThumbnailUrl = GenerateThumbnailUrl(reel.VideoUrl),
-                NumOfLikes = reel.NumOfLikes,
-                NumOfWatches = reel.NumOfWatches,
-                CreatedAt = reel.CreatedAt,
-                VideoUrl = reel.VideoUrl
+                ReelId= reel.Id,
+                ThumbnailUrl= GenerateThumbnailUrl(reel.VideoUrl),
+                NumOfLikes=reel.NumOfLikes,
+                NumOfWatches=reel.NumOfWatches,
+                CreatedAt=reel.CreatedAt,
+                VideoUrl=reel.VideoUrl,
+                Title=reel.Title//////////
 
             };
             AllReels.Add(result);
