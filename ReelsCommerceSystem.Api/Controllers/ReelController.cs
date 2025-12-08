@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Response.Reel;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Responses;
-using System.Net;
 using System.Security.Claims;
 
 namespace ReelsCommerceSystem.Api.Controllers;
@@ -20,11 +19,12 @@ public class ReelController(IReelService _reelService,IReelFeedService _reelFeed
     [Authorize]
     public async Task<IActionResult> GetForYou()
     {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-            var reels = await _reelFeedService.ReelsWithRecommendationSystemAsync(userId);
+        var reels = await _reelFeedService.ReelsWithRecommendationSystemAsync(userId);
 
-        return Ok(reels);
+        var response = ApiResponse<List<ReelFeedRes>>.SuccessResponse(reels, System.Net.HttpStatusCode.OK);
+        return Ok(response);
         
     }
 
@@ -32,11 +32,13 @@ public class ReelController(IReelService _reelService,IReelFeedService _reelFeed
     [Authorize]
     public async Task<IActionResult> GetFollowing()
     {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-            var reels = await _reelFeedService.ReelsForUserFollowingAsync(userId);
+        var reels = await _reelFeedService.ReelsForUserFollowingAsync(userId);
+        
+        var response = ApiResponse<List<ReelFeedRes>>.SuccessResponse(reels, System.Net.HttpStatusCode.OK);
 
-        return Ok(reels);
+        return Ok(response);
         
     }
 
