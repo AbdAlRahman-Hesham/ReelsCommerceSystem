@@ -1,5 +1,6 @@
 ﻿using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
+using ReelsCommerceSystem.Domain.Entities.OfferEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
@@ -32,11 +33,12 @@ public class Product : BaseEntity
 
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
-    public ICollection<Reel> Reels { get; set; } = new List<Reel>();
+    public ICollection<ProductReels> ProductReels { get; set; } = new List<ProductReels>();
     public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
 
     public ICollection<ProductColorMapping> AvailableColors { get; set; } = new List<ProductColorMapping>();
     public ICollection<ProductInformation> ProductInformations { get; set; } = new List<ProductInformation>();
-
+    public ICollection<UserProductView> UserProductViews { get; set; } = new List<UserProductView>();
+    public ICollection<OfferProduct> OfferProducts { get; set; } = new List<OfferProduct>();
 
 }

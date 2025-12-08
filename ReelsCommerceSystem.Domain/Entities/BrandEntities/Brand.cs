@@ -1,4 +1,5 @@
 ﻿using ReelsCommerceSystem.Domain.Common;
+using ReelsCommerceSystem.Domain.Entities.OfferEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 
@@ -15,5 +16,6 @@ public class Brand:BaseEntity
     public ICollection<UserBrandFollow> UserFollows { get; set; } = new List<UserBrandFollow>();
     public ICollection<BrandReview> Reviews { get; set; } = new List<BrandReview>();
     public ICollection<Reel> Reels { get; set; } = new List<Reel>();
+    public ICollection<Offer> Offers { get; set; } = new List<Offer>();
 
 }

@@ -11,5 +11,6 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
     public interface IReelService
     {
         Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy);
+        Task<bool> ToggleReelLikeAsync(string userId, int reelId);
     }
 }
