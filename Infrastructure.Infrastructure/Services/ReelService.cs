@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Ocsp;
+using ReelsCommerceSystem.Application.DTOs.Request.Reel;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.DTOs.Response.Reel;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -101,7 +102,6 @@ public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager)
 
         if (existingLike == null)
         {
-            var user = await _userManager.FindByIdAsync(userId);
             // Add new like
             var newLike = new UserReelLike
             {
@@ -124,6 +124,50 @@ public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager)
         return isLiked;
 
     }
+    public async Task<ApiResponse<string>> TrackReelViewAsync(string userId, ReelViewReq req)
+    {
+        var reel = await _unitOfWork.Repository<Reel>().GetByIdAsync(req.ReelId);
+        if (reel == null)
+        {
+            return ApiResponse<string>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "Reel Not Found",
+                "الريل غير موجود"
+            );
+        }
+
+        var spec = new Specification<UserReelView>(criteria: view => view.UserId == userId && view.ReelId ==req.ReelId);
+
+        var existingView = await _unitOfWork.Repository<UserReelView>().GetWithSpecAsync(spec);
+
+        if (existingView == null)
+        {
+            var newView = new UserReelView
+            {
+                UserId = userId,
+                ReelId = req.ReelId,
+                WatchedDurationSeconds = req.WatchedDurationSeconds,
+                VideoDurationSeconds = req.VideoDurationSeconds
+            };
+
+            await _unitOfWork.Repository<UserReelView>().AddAsync(newView);
+        }
+        else
+        {
+            existingView.WatchedDurationSeconds = req.WatchedDurationSeconds;
+            existingView.VideoDurationSeconds = req.VideoDurationSeconds;
+
+            _unitOfWork.Repository<UserReelView>().Update(existingView);
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse<string>.SuccessResponse(
+            "View Recorded Successfully",
+            HttpStatusCode.OK
+        );
+    }
+
 }
 
 

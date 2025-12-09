@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Ocsp;
+using ReelsCommerceSystem.Application.DTOs.Request.Reel;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.DTOs.Response.Reel;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -8,8 +9,6 @@ using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Shared.Responses;
 using System.Net;
-using System.Security.Claims;
-using ReelsCommerceSystem.Shared.Responses;
 using System.Security.Claims;
 
 namespace ReelsCommerceSystem.Api.Controllers;
@@ -82,6 +81,16 @@ public class ReelController(IReelService _reelService,IReelFeedService _reelFeed
 
         return Ok(response);
         
+    }
+    [Authorize]
+    [HttpPost("TrackReelView")]
+    public async Task<IActionResult> TrackReelView([FromBody] ReelViewReq req)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+        var result = await _reelService.TrackReelViewAsync(userId, req);
+
+        return StatusCode(result.StatusCode, result);
     }
 
 }
