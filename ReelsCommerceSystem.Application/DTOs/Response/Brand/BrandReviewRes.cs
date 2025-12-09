@@ -11,4 +11,7 @@ public class BrandReviewRes
 
     public string UserDisplayName { get; set; } = null!;
     public string UserImageUrl { get; set; } = null!;
+    public bool IsLike { get; set; }
+    public bool IsDislike { get; set; }
+
 }

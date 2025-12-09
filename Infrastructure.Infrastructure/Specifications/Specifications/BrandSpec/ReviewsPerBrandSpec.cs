@@ -16,5 +16,8 @@ public class ReviewsPerBrandSpec : Specification<BrandReview>
     {
         AddInclude( p => p.Brand );
         AddInclude( p => p.User );
+        AddInclude(p => p.Likes);
+        AddInclude(p => p.Dislikes);
+
     }
 }
