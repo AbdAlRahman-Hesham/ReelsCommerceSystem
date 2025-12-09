@@ -19,6 +19,7 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
         sortOrder: XmlSortOrder.Descending)
         {
             AddInclude(r => r.Brand);
+
             AddInclude(r => r.ReelComments);
 
             AddIncludeChain(q =>
@@ -27,11 +28,11 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                     .ThenInclude(p => p.Reviews)
             );
         }
-        //following
-        public ReelFeedSpec(List<int> followedBrandIds) : base(criteria:
-            r=>followedBrandIds.Contains(r.BrandId))
+        public ReelFeedSpec(int pageIndex, int pageSize) : base(orderBy: r => r.CreatedAt,
+        sortOrder: XmlSortOrder.Descending)
         {
             AddInclude(r => r.Brand);
+
             AddInclude(r => r.ReelComments);
 
             AddIncludeChain(q =>
@@ -39,6 +40,36 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                  .ThenInclude(pr => pr.Product)
                     .ThenInclude(p => p.Reviews)
             );
+            ApplyPaging(pageIndex, pageSize);
+        }
+        //following
+        public ReelFeedSpec(List<int> followedBrandIds) : base(criteria:
+            r => followedBrandIds.Contains(r.BrandId))
+        {
+            AddInclude(r => r.Brand);
+
+            AddInclude(r => r.ReelComments);
+
+            AddIncludeChain(q =>
+                q.Include(r => r.ProductReels)
+                 .ThenInclude(pr => pr.Product)
+                    .ThenInclude(p => p.Reviews)
+            );
+
+        }
+        public ReelFeedSpec(List<int> followedBrandIds, int pageIndex, int pageSize) : base(criteria:
+            r=>followedBrandIds.Contains(r.BrandId))
+        {
+            AddInclude(r => r.Brand);
+
+            AddInclude(r => r.ReelComments);
+
+            AddIncludeChain(q =>
+                q.Include(r => r.ProductReels)
+                 .ThenInclude(pr => pr.Product)
+                    .ThenInclude(p => p.Reviews)
+            );
+            ApplyPaging(pageIndex, pageSize);
 
         }
 

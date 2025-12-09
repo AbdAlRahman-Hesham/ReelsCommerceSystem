@@ -22,8 +22,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             // ----- Reels -----
             var reelSpec = new ReelSearchSpec(text, pageNumber, pageSize);
             var reelsList=await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(reelSpec);
-
-            var totalReels = reelsList.Count();
+            var reelsWithoutPaginationSpec= new ReelSearchSpec(text);
+            var reelsWithoutPaginationList= await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(reelsWithoutPaginationSpec);
+            var totalReels = reelsWithoutPaginationList.Count();
 
             var reelsResult = reelsList.Select(r => new ReelSearchRes
             {
@@ -50,7 +51,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             var productSpec = new ProductSearchSpec(text, pageNumber, pageSize);
             var productsList = await _unitOfWork.Repository<Product>().GetAllWithSpecAsync(productSpec);
 
-            var totalProducts = productsList.Count();
+            var productsWithoutPaginationSpec = new ProductSearchSpec(text);
+            var productsWithoutPaginationList = await _unitOfWork.Repository<Product>().GetAllWithSpecAsync(productsWithoutPaginationSpec);
+            var totalProducts = productsWithoutPaginationList.Count();
 
             var productsResult = productsList.Select(p => new ProductSearchRes
             {
