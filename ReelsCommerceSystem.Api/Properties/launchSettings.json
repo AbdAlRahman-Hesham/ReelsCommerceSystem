@@ -6,7 +6,7 @@
       "launchUrl": "swagger",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development",
-            "DeveloperName": "AbdAlRahman"
+            "DeveloperName": "Esraa"
         },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5260"
@@ -17,7 +17,7 @@
       "launchUrl": "swagger",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development",
-            "DeveloperName": "AbdAlRahman"
+            "DeveloperName": "Esraa"
         },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7146;http://localhost:5260"
@@ -27,7 +27,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DeveloperName": "AbdAlRahman"
+        "DeveloperName": "Esraa"
       }
     }
   },

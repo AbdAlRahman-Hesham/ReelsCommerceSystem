@@ -18,6 +18,10 @@ internal class ReelsByBrandWithSortingSpec : Specification<Reel>
 
         else
             AddOrderByDescending(r => r.CreatedAt); // default: newest first
+
+        AddInclude(r => r.UserReelLikes);
+        AddInclude(r => r.UserReelViews);
+
     }
 }
 
