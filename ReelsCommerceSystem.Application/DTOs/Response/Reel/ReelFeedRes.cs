@@ -1,4 +1,5 @@
 ﻿using ReelsCommerceSystem.Application.DTOs.Response.Product;
+using ReelsCommerceSystem.Application.DTOs.Response.ReelComment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,10 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Reel
         public DateTime CreatedAt { get; set; }
         public int NumOfLikes { get; set; }
         public int NumOfWatches { get; set; }
-        public int NumOfComments { get; set; } 
-
+        public int NumOfComments { get; set; }
+        public bool IsLiked { get; set; }
+        public int BrandId { get; set; }
+        public string BrandImageUrl { get; set; }
         public string BrandName { get; set; }
         public List<ReelProductRes> Products { get; set; }
     }

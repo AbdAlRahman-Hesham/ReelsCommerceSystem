@@ -49,11 +49,11 @@ public class ReelController(IReelService _reelService,IReelFeedService _reelFeed
     }
     [HttpGet("forYou")]
     [Authorize]
-    public async Task<IActionResult> GetForYou()
+    public async Task<IActionResult> GetForYou([FromQuery] int pageIndex=1, int pageSize=10)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-        var reels = await _reelFeedService.ReelsWithRecommendationSystemAsync(userId);
+        var reels = await _reelFeedService.ReelsWithRecommendationSystemAsync(userId,pageIndex,pageSize);
 
         var response = ApiResponse<List<ReelFeedRes>>.SuccessResponse(reels, System.Net.HttpStatusCode.OK);
         return Ok(response);
@@ -62,11 +62,11 @@ public class ReelController(IReelService _reelService,IReelFeedService _reelFeed
 
     [HttpGet("following")]
     [Authorize]
-    public async Task<IActionResult> GetFollowing()
+    public async Task<IActionResult> GetFollowing([FromQuery] int pageIndex=1, int pageSize=10)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
-        var reels = await _reelFeedService.ReelsForUserFollowingAsync(userId);
+        var reels = await _reelFeedService.ReelsForUserFollowingAsync(userId,pageIndex,pageSize);
         
         var response = ApiResponse<List<ReelFeedRes>>.SuccessResponse(reels, System.Net.HttpStatusCode.OK);
 

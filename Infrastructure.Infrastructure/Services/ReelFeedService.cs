@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Response.Product;
 using ReelsCommerceSystem.Application.DTOs.Response.Reel;
+using ReelsCommerceSystem.Application.DTOs.Response.ReelComment;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
@@ -26,14 +27,15 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             _user = user;
         }
 
-        public async Task<List<ReelFeedRes>> ReelsForUserFollowingAsync(string userId)
+        public async Task<List<ReelFeedRes>> ReelsForUserFollowingAsync(string userId, int pageIndex, int pageSize)
         {
             var user = await _user.Users.Include(u=>u.BrandFollows).ThenInclude(bf=>bf.Brand).
                 FirstOrDefaultAsync(u=>u.Id==userId);
             var followedIds =user.BrandFollows.Select(b => b.BrandId).ToList();
-            var spec = new ReelFeedSpec(followedIds);
+            var spec = new ReelFeedSpec(followedIds,pageIndex,pageSize);
 
             var reels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
+            var reelLikes = await _unitOfWork.Repository<UserReelLike>().GetAllAsync();
 
             return reels.Select(r => new ReelFeedRes
             {
@@ -43,6 +45,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 NumOfLikes = r.NumOfLikes,
                 NumOfWatches = r.NumOfWatches,
                 NumOfComments = r.ReelComments.Count,
+                BrandId = r.BrandId,
+                BrandImageUrl = r.Brand.LogoUrl,
                 BrandName = r.Brand.DisplayName,
                 Products = r.ProductReels
                 .Select(pr => pr.Product)
@@ -56,16 +60,19 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     HaveOffer = p.HaveOffer,
                     Rate = p.Reviews.Any() ?
                                     (int)Math.Round(p.Reviews.Average(r => r.Rating)) : 0
-                }).ToList()
+                }).ToList(),
+                IsLiked = reelLikes.Where(like => like.UserId == userId && like.ReelId == r.Id).Any()
             }).ToList();
             }
 
-        public async Task<List<ReelFeedRes>> ReelsWithRecommendationSystemAsync(string userId)
+        public async Task<List<ReelFeedRes>> ReelsWithRecommendationSystemAsync(string userId, int pageIndex, int pageSize)
         {
             // TEMPORARY UNTIL AI INTEGRATION
-            var spec = new ReelFeedSpec();
+            var spec = new ReelFeedSpec(pageIndex,pageSize);
 
             var reels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
+            var reelLikes = await _unitOfWork.Repository<UserReelLike>().GetAllAsync();
+
 
             return reels.Select(r => new ReelFeedRes
             {
@@ -75,6 +82,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 NumOfLikes = r.NumOfLikes,
                 NumOfWatches = r.NumOfWatches,
                 NumOfComments = r.ReelComments.Count,
+                BrandId = r.BrandId,
+                BrandImageUrl = r.Brand.LogoUrl,
                 BrandName = r.Brand.DisplayName,
                 Products = r.ProductReels
                 .Select(pr => pr.Product)
@@ -88,7 +97,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     HaveOffer = p.HaveOffer,
                     Rate = p.Reviews.Any() ?
                                     (int)Math.Round(p.Reviews.Average(r => r.Rating)) : 0
-                }).ToList()
+                }).ToList(),
+                IsLiked = reelLikes.Where(like => like.UserId == userId && like.ReelId == r.Id).Any()
             }).ToList();
         }
     }

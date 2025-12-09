@@ -10,7 +10,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
 {
     public interface IReelFeedService
     {
-        Task<List<ReelFeedRes>> ReelsWithRecommendationSystemAsync(string userId);
-        Task<List<ReelFeedRes>> ReelsForUserFollowingAsync(string userId);
+        Task<List<ReelFeedRes>> ReelsWithRecommendationSystemAsync(string userId, int pageIndex, int pageSize);
+        Task<List<ReelFeedRes>> ReelsForUserFollowingAsync(string userId, int pageIndex, int pageSize);
     }
 }
