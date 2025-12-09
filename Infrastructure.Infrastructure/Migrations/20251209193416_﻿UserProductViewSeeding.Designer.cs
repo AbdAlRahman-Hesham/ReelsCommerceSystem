@@ -12,7 +12,7 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251209192417_﻿UserProductViewSeeding")]
+    [Migration("20251209193416_﻿UserProductViewSeeding")]
     partial class _﻿UserProductViewSeeding
     {
         /// <inheritdoc />
@@ -9006,89 +9006,89 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc),
                             ProductId = 1,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc),
                             UserId = "user1"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 2, 0, 0, DateTimeKind.Utc),
                             ProductId = 2,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 2, 0, 0, DateTimeKind.Utc),
                             UserId = "user1"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 3, 0, 0, DateTimeKind.Utc),
                             ProductId = 3,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 3, 0, 0, DateTimeKind.Utc),
                             UserId = "user1"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 4, 0, 0, DateTimeKind.Utc),
                             ProductId = 2,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 4, 0, 0, DateTimeKind.Utc),
                             UserId = "user2"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 5, 0, 0, DateTimeKind.Utc),
                             ProductId = 4,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 5, 0, 0, DateTimeKind.Utc),
                             UserId = "user2"
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 6, 0, 0, DateTimeKind.Utc),
                             ProductId = 5,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 6, 0, 0, DateTimeKind.Utc),
                             UserId = "user2"
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 7, 0, 0, DateTimeKind.Utc),
                             ProductId = 1,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 7, 0, 0, DateTimeKind.Utc),
                             UserId = "user3"
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 8, 0, 0, DateTimeKind.Utc),
                             ProductId = 6,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 8, 0, 0, DateTimeKind.Utc),
                             UserId = "user3"
                         },
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 9, 0, 0, DateTimeKind.Utc),
                             ProductId = 3,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 9, 0, 0, DateTimeKind.Utc),
                             UserId = "user3"
                         },
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 10, 0, 0, DateTimeKind.Utc),
                             ProductId = 2,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 10, 0, 0, DateTimeKind.Utc),
                             UserId = "user4"
                         },
                         new
                         {
                             Id = 11,
-                            CreatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 12, 9, 12, 11, 0, 0, DateTimeKind.Utc),
                             ProductId = 5,
-                            UpdatedAt = new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UpdatedAt = new DateTime(2025, 12, 9, 12, 11, 0, 0, DateTimeKind.Utc),
                             UserId = "user4"
                         });
                 });

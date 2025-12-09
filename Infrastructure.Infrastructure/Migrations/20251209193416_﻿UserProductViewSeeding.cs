@@ -13,28 +13,30 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+          
             migrationBuilder.InsertData(
                 table: "UserProductView",
                 columns: new[] { "Id", "CreatedAt", "ProductId", "UpdatedAt", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user1" },
-                    { 2, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user1" },
-                    { 3, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user1" },
-                    { 4, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user2" },
-                    { 5, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 4, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user2" },
-                    { 6, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 5, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user2" },
-                    { 7, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user3" },
-                    { 8, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 6, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user3" },
-                    { 9, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user3" },
-                    { 10, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user4" },
-                    { 11, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), 5, new DateTime(2025, 12, 9, 0, 0, 0, 0, DateTimeKind.Utc), "user4" }
+                    { 1, new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc), "user1" },
+                    { 2, new DateTime(2025, 12, 9, 12, 2, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 12, 2, 0, 0, DateTimeKind.Utc), "user1" },
+                    { 3, new DateTime(2025, 12, 9, 12, 3, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 12, 9, 12, 3, 0, 0, DateTimeKind.Utc), "user1" },
+                    { 4, new DateTime(2025, 12, 9, 12, 4, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 12, 4, 0, 0, DateTimeKind.Utc), "user2" },
+                    { 5, new DateTime(2025, 12, 9, 12, 5, 0, 0, DateTimeKind.Utc), 4, new DateTime(2025, 12, 9, 12, 5, 0, 0, DateTimeKind.Utc), "user2" },
+                    { 6, new DateTime(2025, 12, 9, 12, 6, 0, 0, DateTimeKind.Utc), 5, new DateTime(2025, 12, 9, 12, 6, 0, 0, DateTimeKind.Utc), "user2" },
+                    { 7, new DateTime(2025, 12, 9, 12, 7, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 12, 9, 12, 7, 0, 0, DateTimeKind.Utc), "user3" },
+                    { 8, new DateTime(2025, 12, 9, 12, 8, 0, 0, DateTimeKind.Utc), 6, new DateTime(2025, 12, 9, 12, 8, 0, 0, DateTimeKind.Utc), "user3" },
+                    { 9, new DateTime(2025, 12, 9, 12, 9, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 12, 9, 12, 9, 0, 0, DateTimeKind.Utc), "user3" },
+                    { 10, new DateTime(2025, 12, 9, 12, 10, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 12, 10, 0, 0, DateTimeKind.Utc), "user4" },
+                    { 11, new DateTime(2025, 12, 9, 12, 11, 0, 0, DateTimeKind.Utc), 5, new DateTime(2025, 12, 9, 12, 11, 0, 0, DateTimeKind.Utc), "user4" }
                 });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+           
             migrationBuilder.DeleteData(
                 table: "UserProductView",
                 keyColumn: "Id",
