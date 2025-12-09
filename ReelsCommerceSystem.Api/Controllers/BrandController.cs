@@ -46,10 +46,13 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
         var result = await _brandService.GetBrandInfoAsync(brandId);
         return StatusCode(result.StatusCode, result);
     }
-        
+
     [HttpGet("GetReviewsForBrand")]
     public async Task<IActionResult> GetReviewsForBrand(int brandId)
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        Console.WriteLine("UserID = " + userId);
+
         var result = await _brandReviewRepository.GetAllWithSpecAsync(new ReviewsPerBrandSpec(brandId));
 
         var res = result.Select(r => new BrandReviewRes
@@ -61,7 +64,9 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
             NumOfLikes = r.NumOfLikes,
             NumOfDislikes = r.NumOfDislikes,
             UserDisplayName = r.User.DisplayName,
-            UserImageUrl = r.User.ImageURL
+            UserImageUrl = r.User.ImageURL,
+            IsLike = userId != null && r.Likes.Any(l => l.UserId == userId),
+            IsDislike = userId != null && r.Dislikes.Any(d => d.UserId == userId)
         }).ToList();
 
 

@@ -21,5 +21,15 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Searc
             ApplyPaging(pageIndex, pageSize);
             AddInclude(p => p.Brand);
         }
+        public ProductSearchSpec(string searchText)
+        : base(criteria: (p => string.IsNullOrEmpty(searchText) ||
+                    p.Name.Contains(searchText) ||
+                    p.Description.Contains(searchText) ||
+                    p.ArDescription.Contains(searchText)))
+        {
+            AddOrderBy(p => p.Name);
+
+            AddInclude(p => p.Brand);
+        }
     }
 }

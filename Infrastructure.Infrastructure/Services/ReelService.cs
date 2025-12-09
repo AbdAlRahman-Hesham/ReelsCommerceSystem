@@ -93,9 +93,9 @@ public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager)
     }
     public async Task<bool> ToggleReelLikeAsync(string userId, int reelId)
     {
-        var specs = new Specification<UserReelLike>(criteria: x => x.UserId == userId && x.ReelId == reelId);
+        var spec = new Specification<UserReelLike>(criteria: like => like.UserId == userId && like.ReelId == reelId);
 
-        var existingLike = await _unitOfWork.Repository<UserReelLike>().GetWithSpecAsync(specs);
+        var existingLike = await _unitOfWork.Repository<UserReelLike>().GetWithSpecAsync(spec);
 
         bool isLiked;
 
