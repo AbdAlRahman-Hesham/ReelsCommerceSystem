@@ -19,7 +19,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                 columns: new[] { "Id", "CreatedAt", "ProductId", "UpdatedAt", "UserId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc), "user1" },
+                    { 1,  new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc), "user1" },
                     { 2, new DateTime(2025, 12, 9, 12, 2, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 12, 2, 0, 0, DateTimeKind.Utc), "user1" },
                     { 3, new DateTime(2025, 12, 9, 12, 3, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 12, 9, 12, 3, 0, 0, DateTimeKind.Utc), "user1" },
                     { 4, new DateTime(2025, 12, 9, 12, 4, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 12, 4, 0, 0, DateTimeKind.Utc), "user2" },
