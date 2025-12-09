@@ -15,11 +15,22 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Searc
                      r.Title.Contains(searchText)))
         {
             AddInclude(r => r.ProductReels);
+            AddInclude(r => r.UserReelLikes);
             AddInclude("ProductReels.Product");
 
             AddOrderByDescending(r => r.CreatedAt);
 
             ApplyPaging(pageIndex, pageSize);
+        }
+        public ReelSearchSpec(string searchText)
+         : base(criteria: (r => string.IsNullOrEmpty(searchText) ||
+                     r.Title.Contains(searchText)))
+        {
+            AddInclude(r => r.ProductReels);
+            AddInclude(r => r.UserReelLikes);
+            AddInclude("ProductReels.Product");
+
+            AddOrderByDescending(r => r.CreatedAt);
         }
     }
 }
