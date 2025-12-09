@@ -1,9 +1,9 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.InterestEntities;
+using ReelsCommerceSystem.Domain.Entities.OfferEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
@@ -12,6 +12,8 @@ using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
+using ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
+using System.Reflection;
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -23,6 +25,11 @@ public class AppDbContext :IdentityDbContext<User>
        
 
         base.OnModelCreating(modelBuilder);
+
+
+       
+
+
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.Entity<IdentityRole>(b =>
         {
@@ -89,6 +96,37 @@ public class AppDbContext :IdentityDbContext<User>
         modelBuilder.Entity<ReelCommentLove>()
             .HasIndex(rcl => new { rcl.ReelCommentId, rcl.UserId })
             .IsUnique();
+
+
+        #region OfferProduct 
+        // composite key
+        modelBuilder.Entity<OfferProduct>()
+            .HasKey(op => new { op.OfferId, op.ProductId });
+
+
+        // one offer -> many products in mapping
+        modelBuilder.Entity<OfferProduct>()
+            .HasOne(op => op.Offer)
+            .WithMany(o => o.OfferProducts)
+            .HasForeignKey(op => op.OfferId);
+
+
+        // one product -> many offers through mapping
+        modelBuilder.Entity<OfferProduct>()
+       .HasOne(op => op.Product)
+       .WithMany(p => p.OfferProducts)
+       .HasForeignKey(op => op.ProductId);
+
+
+        // Offer -> Brand
+        modelBuilder.Entity<Offer>()
+            .HasOne(o => o.Brand)
+            .WithMany(b => b.Offers)
+            .HasForeignKey(o => o.BrandId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        #endregion
     }
     public DbSet<Product> Products { get; set; }
     public DbSet<Brand> Brands { get; set; }
@@ -101,6 +139,9 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<BrandReviewLike> BrandReviewLikes { get; set; }
     public DbSet<UserBrandFollow> UserBrandFollows { get; set; }
     public DbSet<WishlistItem> WishlistItems { get; set; }
+
+    public DbSet<Offer> Offers { get; set; }
+    public DbSet<OfferProduct> OfferProducts { get; set; }
 
 }
 
