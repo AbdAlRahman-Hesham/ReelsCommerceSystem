@@ -10,7 +10,7 @@ public static class AddApplicationDatabaseConfig
     public static IServiceCollection AddApplicationDBConfig(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         var devName = env.IsDevelopment() ? Environment.GetEnvironmentVariable("DeveloperName") : "OnlineDB";
-       //var connString = configuration.GetConnectionString(devName!);
+       var connString = configuration.GetConnectionString(devName!);
 
         Console.WriteLine(new string('=', 100));
         Console.Write("                    Hi ");
@@ -20,7 +20,7 @@ public static class AddApplicationDatabaseConfig
 
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseSqlServer("Server=.;Database=ReelsCommerceSystemDb;Trusted_Connection=True;TrustServerCertificate=True;");
+            options.UseSqlServer(connString);
         });
 
         services.AddIdentity<User, IdentityRole>(options =>

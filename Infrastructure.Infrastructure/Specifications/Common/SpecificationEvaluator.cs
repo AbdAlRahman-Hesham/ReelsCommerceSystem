@@ -22,10 +22,16 @@ public static class SpecificationEvaluator<T> where T : BaseEntity
         {
             query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
         }
+
         if (specification.IncludeStrings != null && specification.IncludeStrings.Any())
         {
             query = specification.IncludeStrings
                 .Aggregate(query, (current, include) => current.Include(include));
+        }
+        if (specification.IncludeChains.Any())
+        {
+            foreach (var chain in specification.IncludeChains)
+                query = chain(query);
         }
 
         // Apply ordering

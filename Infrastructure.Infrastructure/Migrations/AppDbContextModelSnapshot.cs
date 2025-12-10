@@ -897,6 +897,90 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.Offer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.ToTable("Offers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BrandId = 1,
+                            CreatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Sale 30% on all Product",
+                            ImageUrl = "https://drive.google.com/file/d/1oaqNd7ONKCa8AFG6myo22H9FWL6nMMaY/view?usp=drive_link",
+                            UpdatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BrandId = 3,
+                            CreatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Buy 2 Get 50% Off",
+                            ImageUrl = "https://drive.google.com/file/d/1UsBr52J5CZasFrPUbYhsh1q4q1_8L7Y7/view?usp=drive_link",
+                            UpdatedAt = new DateTime(2025, 12, 6, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.OfferProduct", b =>
+                {
+                    b.Property<int>("OfferId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OfferId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OfferProducts");
+
+                    b.HasData(
+                        new
+                        {
+                            OfferId = 1,
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            OfferId = 1,
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            OfferId = 2,
+                            ProductId = 14
+                        });
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -10458,7 +10542,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 1,
                             BrandId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Sustainable Winter Look",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10467,7 +10551,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 2,
                             BrandId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Eco-Friendly Street Style",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         },
@@ -10476,7 +10560,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 3,
                             BrandId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Minimalist Outfit Inspo",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
                         },
@@ -10485,7 +10569,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 4,
                             BrandId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Recycled Fabric Jacket Drop",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
                         },
@@ -10494,7 +10578,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 5,
                             BrandId = 1,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Sustainable Fashion Trends",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
                         },
@@ -10503,7 +10587,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 6,
                             BrandId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Smart Watch Unboxing",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
                         },
@@ -10512,7 +10596,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 7,
                             BrandId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Top 5 Tech Accessories 2024",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10521,7 +10605,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 8,
                             BrandId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Wearable Tech Review",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         },
@@ -10530,7 +10614,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 9,
                             BrandId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Daily Tech Essentials",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
                         },
@@ -10539,7 +10623,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 10,
                             BrandId = 2,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Smart Gear for Work",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
                         },
@@ -10548,7 +10632,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 11,
                             BrandId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Morning Skincare Routine",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
                         },
@@ -10557,7 +10641,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 12,
                             BrandId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Glow Serum Review",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
                         },
@@ -10566,7 +10650,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 13,
                             BrandId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Natural Skincare Unboxing",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10575,7 +10659,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 14,
                             BrandId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Clean Beauty Explained",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         },
@@ -10584,7 +10668,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 15,
                             BrandId = 3,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Healthy Skin Tips",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
                         },
@@ -10593,7 +10677,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 16,
                             BrandId = 4,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Streetwear Hoodie Drop",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
                         },
@@ -10602,7 +10686,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 17,
                             BrandId = 4,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Urban Style Lookbook",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
                         },
@@ -10611,7 +10695,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 18,
                             BrandId = 4,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Street Fashion Essentials",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
                         },
@@ -10620,7 +10704,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 19,
                             BrandId = 4,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Premium Street Gear",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10629,7 +10713,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 20,
                             BrandId = 4,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Winter Streetwear Outfit",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         },
@@ -10638,7 +10722,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 21,
                             BrandId = 5,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Morning Wellness Routine",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
                         },
@@ -10647,7 +10731,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 22,
                             BrandId = 5,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Relaxing Home Setup",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
                         },
@@ -10656,7 +10740,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 23,
                             BrandId = 5,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Self-Care Essentials",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
                         },
@@ -10665,7 +10749,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 24,
                             BrandId = 5,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Mindfulness Lifestyle",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
                         },
@@ -10674,7 +10758,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 25,
                             BrandId = 5,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Zen-Inspired Living",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10683,7 +10767,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 26,
                             BrandId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Smart Fitness Tracker",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         },
@@ -10692,7 +10776,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 27,
                             BrandId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Workout Gear Review",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
                         },
@@ -10701,7 +10785,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 28,
                             BrandId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Gym Essentials 2024",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
                         },
@@ -10710,7 +10794,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 29,
                             BrandId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Daily Training Motivation",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
                         },
@@ -10719,7 +10803,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 30,
                             BrandId = 6,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Fitness Smartwear Guide",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
                         },
@@ -10728,7 +10812,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 31,
                             BrandId = 7,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Eco Home Makeover",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10737,7 +10821,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 32,
                             BrandId = 7,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Sustainable Living Tips",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         },
@@ -10746,7 +10830,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 33,
                             BrandId = 7,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Eco-Friendly Home Decor",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
                         },
@@ -10755,7 +10839,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 34,
                             BrandId = 7,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Green Home Essentials",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
                         },
@@ -10764,7 +10848,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 35,
                             BrandId = 7,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Zero Waste Lifestyle",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
                         },
@@ -10773,7 +10857,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 36,
                             BrandId = 8,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Gadget of the Week",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
                         },
@@ -10782,7 +10866,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 37,
                             BrandId = 8,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Top Travel Tech",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10791,7 +10875,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 38,
                             BrandId = 8,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Portable Tech Must-Haves",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         },
@@ -10800,7 +10884,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 39,
                             BrandId = 8,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Smart Device Showcase",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
                         },
@@ -10809,7 +10893,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 40,
                             BrandId = 8,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Best Tech Accessories",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
                         },
@@ -10818,7 +10902,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 41,
                             BrandId = 9,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Hydrating Skincare Routine",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
                         },
@@ -10827,7 +10911,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 42,
                             BrandId = 9,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "PureGlow Serum Review",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
                         },
@@ -10836,7 +10920,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 43,
                             BrandId = 9,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Night Routine for Glowing Skin",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10845,7 +10929,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 44,
                             BrandId = 9,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Daily Clean Beauty Tips",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         },
@@ -10854,7 +10938,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 45,
                             BrandId = 9,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Skincare for All Seasons",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716068/%EF%B8%8F__BRANDS_MENTIONED_IN_ORDER_stpsco_-_cielodenim_-_frencheethelabel_......_localbrand_fas_khlqmj.mp4"
                         },
@@ -10863,7 +10947,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 46,
                             BrandId = 10,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Trendy Summer Outfits",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716062/Off-shoulder_sweater_Colors-_white_-_black_-_gray_-_beige_-_red-_brown_-_Olive_-_brgandy_-_Nav_kdiud7.mp4"
                         },
@@ -10872,7 +10956,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 47,
                             BrandId = 10,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "New Season Fashion Drop",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716042/Original_Brand_Vietnam_local_brand_is_open_for_preorder_%E1%9E%94%E1%9E%BE%E1%9E%80%E1%9E%80%E1%9E%98%E1%9F%92%E1%9E%98%E1%9E%84%E1%9F%8B%E1%9E%85%E1%9E%B6%E1%9E%94%E1%9F%8B%E1%9E%96%E1%9E%B8%E1%9E%90%E1%9F%92%E1%9E%84%E1%9F%83_18_22_Ju_tv9j0y.mp4"
                         },
@@ -10881,7 +10965,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 48,
                             BrandId = 10,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Style Inspiration Lookbook",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716010/Pullover_%EF%B8%8FColors-_burgundy_-_navy_-_beigeMaterial-_eajinahSize-_One_size_Price-_explorepage_i_umxux6.mp4"
                         },
@@ -10890,7 +10974,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 49,
                             BrandId = 10,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Latest Fashion Trends",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716212/Work_jacket_gitu_mulu_designnya_thanks_to_rhodes.apparel_kali_ini_level_up_design_Work_Jacke_p1asve.mp4"
                         },
@@ -10899,7 +10983,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 50,
                             BrandId = 10,
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Title = "",
+                            Title = "Trendora Outfit Guide",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             VideoUrl = "https://res.cloudinary.com/dppwxudes/video/upload/v1764716081/Elevated_basic_outfitideas_for_this_summer_All_items_from_Vietnamese_local_brand_laminapparel_nqtgbk.mp4"
                         });
@@ -10937,6 +11021,53 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ReelComment");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "This product looks amazing! 🔥🔥",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 1,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "I love this brand! 😍",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 1,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Content = "Where can I buy this?",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 2,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Content = "Great quality! Highly recommended 💯",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 20,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Content = "Looks nice but is it available in Egypt?",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelId = 8,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentLove", b =>
@@ -10968,6 +11099,151 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("ReelCommentLove");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 1,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 1,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 2,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 3,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ReelCommentId = 4,
+                            UpdatedAt = new DateTime(2025, 1, 3, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        });
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ParentCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ReelCommentReplies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Totally agree with you! 🔥",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ParentCommentId = 1,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "Same question! 😂",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ParentCommentId = 3,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user7"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Content = "Yes available worldwide 🌍",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ParentCommentId = 5,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Content = "High quality indeed 💯",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ParentCommentId = 4,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        });
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReplyLove", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReelCommentReplyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ReelCommentReplyId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("ReelCommentReplyLoves");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
@@ -15448,6 +15724,36 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.Offer", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany("Offers")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.OfferProduct", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.OfferEntities.Offer", "Offer")
+                        .WithMany("OfferProducts")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", "Product")
+                        .WithMany("OfferProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Offer");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
@@ -15658,6 +15964,44 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelComment", "ParentComment")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParentComment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReplyLove", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", "ReelCommentReply")
+                        .WithMany("Loves")
+                        .HasForeignKey("ReelCommentReplyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
+                        .WithMany("reelCommentReplyLoves")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ReelCommentReply");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.Reel", "Reel")
@@ -15772,6 +16116,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", b =>
                 {
+                    b.Navigation("Offers");
+
                     b.Navigation("Products");
 
                     b.Navigation("Reels");
@@ -15793,6 +16139,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("UserInterests");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.Offer", b =>
+                {
+                    b.Navigation("OfferProducts");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
                 {
                     b.Navigation("OrderProducts");
@@ -15801,6 +16152,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", b =>
                 {
                     b.Navigation("AvailableColors");
+
+                    b.Navigation("OfferProducts");
 
                     b.Navigation("OrderProducts");
 
@@ -15849,6 +16202,13 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelComment", b =>
                 {
                     b.Navigation("Loves");
+
+                    b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
+                {
+                    b.Navigation("Loves");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>
@@ -15874,6 +16234,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("UserReelViews");
 
                     b.Navigation("WishlistItems");
+
+                    b.Navigation("reelCommentReplyLoves");
                 });
 #pragma warning restore 612, 618
         }
