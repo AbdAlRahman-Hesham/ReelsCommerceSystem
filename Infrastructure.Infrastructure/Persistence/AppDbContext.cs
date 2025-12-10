@@ -127,6 +127,36 @@ public class AppDbContext :IdentityDbContext<User>
 
 
         #endregion
+
+        modelBuilder.Entity<ReelCommentReply>()
+             .HasOne(r => r.ParentComment)
+              .WithMany(c => c.Replies)
+              .HasForeignKey(r => r.ParentCommentId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+
+          //love--->reply
+        modelBuilder.Entity<ReelCommentReplyLove>()
+           .HasOne(l => l.ReelCommentReply)
+           .WithMany(r => r.Loves)
+           .HasForeignKey(l => l.ReelCommentReplyId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+        //user----->reelcommentreplylove
+        modelBuilder.Entity<ReelCommentReplyLove>()
+            .HasOne(l => l.User)
+            .WithMany(u => u.reelCommentReplyLoves)
+            .HasForeignKey(l => l.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        modelBuilder.Entity<ReelCommentReplyLove>()
+          .HasIndex(l => new { l.ReelCommentReplyId, l.UserId })
+          .IsUnique();
+
+
+
+
     }
     public DbSet<Product> Products { get; set; }
     public DbSet<Brand> Brands { get; set; }
@@ -142,6 +172,10 @@ public class AppDbContext :IdentityDbContext<User>
 
     public DbSet<Offer> Offers { get; set; }
     public DbSet<OfferProduct> OfferProducts { get; set; }
+
+    public DbSet<ReelCommentReply> ReelCommentReplies { get; set; }
+    public DbSet<ReelCommentReplyLove> ReelCommentReplyLoves { get; set; }
+
 
 }
 

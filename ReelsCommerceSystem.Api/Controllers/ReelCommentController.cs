@@ -37,5 +37,23 @@ namespace ReelsCommerceSystem.Api.Controllers
 
 
         }
+
+        [HttpGet("{reelId}")]
+        public async Task<IActionResult> GetReelComments(
+        int reelId,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
+        {
+        
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var response = await _reelCommentService.GetReelCommentsAsync(
+                reelId,
+                pageNumber,
+                pageSize,
+                userId);
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251210104709_AddReplyToCommentEntities")]
+    partial class AddReplyToCommentEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -11175,44 +11178,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ReelCommentReplies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Content = "Totally agree with you! 🔥",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ParentCommentId = 1,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user2"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Content = "Same question! 😂",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ParentCommentId = 3,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user7"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Content = "Yes available worldwide 🌍",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ParentCommentId = 5,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user4"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Content = "High quality indeed 💯",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ParentCommentId = 4,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user6"
-                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReplyLove", b =>
