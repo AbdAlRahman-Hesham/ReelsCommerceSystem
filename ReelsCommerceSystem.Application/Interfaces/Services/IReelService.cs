@@ -1,4 +1,5 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Response.Reel;
+﻿using ReelsCommerceSystem.Application.DTOs.Request.Reel;
+using ReelsCommerceSystem.Application.DTOs.Response.Reel;
 using ReelsCommerceSystem.Shared.Responses;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
     public interface IReelService
     {
         Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy);
+        Task<ApiResponse<string>> TrackReelViewAsync(string userId, ReelViewReq req);
+        Task<bool> ToggleReelLikeAsync(string userId, int reelId);
     }
 }

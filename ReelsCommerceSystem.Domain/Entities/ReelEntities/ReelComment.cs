@@ -11,6 +11,7 @@ public class ReelComment : BaseEntity
     public string UserId { get; set; } = null!;
     public User User { get; set; } = null!;
     public ICollection<ReelCommentLove> Loves { get; set; } = new List<ReelCommentLove>();
+    public ICollection<ReelCommentReply> Replies { get; set; } = new List<ReelCommentReply>();
 
 
 }
