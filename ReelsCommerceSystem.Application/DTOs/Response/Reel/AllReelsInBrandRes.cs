@@ -3,6 +3,8 @@
 public class AllReelsInBrandRes
 {
     public int ReelId { get; set; }
+    public string Title { get; set; } = string.Empty; //////
+
     public string ThumbnailUrl { get; set; } = null!;
     public int NumOfWatches { get; set; }
     public int NumOfLikes { get; set; }

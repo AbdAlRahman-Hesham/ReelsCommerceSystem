@@ -34,6 +34,7 @@ public class User : IdentityUser
     public ICollection<UserReelView> UserReelViews { get; set; } = new List<UserReelView>();
     public ICollection<ReelComment> ReelComments { get; set; } = new List<ReelComment>();
     public ICollection<ReelCommentLove> ReelCommentLoves { get; set; } = new List<ReelCommentLove>();
+    public ICollection<ReelCommentReplyLove> reelCommentReplyLoves { get; set; }
     public ICollection<UserProductView> UserProductViews { get; set; } = new List<UserProductView>();
 
 }

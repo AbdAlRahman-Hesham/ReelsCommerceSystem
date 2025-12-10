@@ -6,10 +6,10 @@ namespace ReelsCommerceSystem.Domain.Entities.ReelEntities;
 public class Reel:BaseEntity
 {
     public string VideoUrl { get; set; } = null!;
-    
+
     public int NumOfLikes => UserReelLikes?.Count ?? 0;
     public int NumOfWatches => UserReelViews?.Count ?? 0;
-    
+
     public string Title { get; set; } = string.Empty;
 
     public int BrandId { get; set; }
