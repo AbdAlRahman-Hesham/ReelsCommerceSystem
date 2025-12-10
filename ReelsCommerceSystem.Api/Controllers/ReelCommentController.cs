@@ -55,5 +55,23 @@ namespace ReelsCommerceSystem.Api.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpPost("toggle-like")]
+        public async Task<IActionResult> ToggleCommentLike([FromBody] ToggleRepyLikeReq dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized(ApiResponse<bool>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized",
+                    "غير مصرح لك"
+                ));
+            }
+
+            var response = await _reelCommentService.ToggleCommentLikeAsync(dto.CommentId, userId);
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }
