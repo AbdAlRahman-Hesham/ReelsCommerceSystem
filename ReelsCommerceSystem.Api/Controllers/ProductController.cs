@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Infrastructure.Services;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
@@ -8,11 +10,13 @@ public class ProductController : AppBaseController
 {
     private readonly IProductService _productService;
     private readonly IRelatedProductService _relatedProductService;
+    private readonly IUserProductViewService _userProductViewService;
 
-    public ProductController(IProductService productService,IRelatedProductService relatedProductService)
+    public ProductController(IProductService productService,IRelatedProductService relatedProductService,IUserProductViewService userProductViewService)
     {
         _productService = productService;
         _relatedProductService = relatedProductService;
+        _userProductViewService = userProductViewService;
     }
 
 
@@ -49,4 +53,22 @@ public class ProductController : AppBaseController
         var response = await _productService.GetProductCategoriesAsync();
         return StatusCode(response.StatusCode, response);
     }
+
+    [Authorize] 
+    [HttpGet("recentviews")]
+    public async Task<IActionResult> GetRecentViews()
+    {
+        
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized(new { message = "User not authenticated" });
+
+       
+        var recentViews = await _userProductViewService.GetRecentViewsAsync(userId, 5);
+
+        return Ok(recentViews);
+    }
+
+
 }
