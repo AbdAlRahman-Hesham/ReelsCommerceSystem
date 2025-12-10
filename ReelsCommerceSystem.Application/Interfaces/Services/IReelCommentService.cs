@@ -12,7 +12,14 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
 {
     public interface IReelCommentService
     {
-        Task<ApiResponse<ReelCommentRes>> AddCommentAsync(AddReelCommentReq dto, string userId);
+        Task<ApiResponse<AddReelCommentRes>> AddCommentAsync(AddReelCommentReq dto, string userId);
+
+        Task<ApiResponse<PaginationResponse<ReelCommentRes>>> GetReelCommentsAsync(
+        int reelId,
+        int pageNumber,
+        int pageSize,
+        string currentUserId);
+
     }
 
 }
