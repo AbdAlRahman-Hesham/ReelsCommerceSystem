@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251210011615_ReelLikesAndViewsSeeding")]
+    partial class ReelLikesAndViewsSeeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -11143,109 +11146,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ParentCommentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentCommentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ReelCommentReplies");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Content = "Totally agree with you! 🔥",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ParentCommentId = 1,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user2"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Content = "Same question! 😂",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ParentCommentId = 3,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user7"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Content = "Yes available worldwide 🌍",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ParentCommentId = 5,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user4"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Content = "High quality indeed 💯",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ParentCommentId = 4,
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user6"
-                        });
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReplyLove", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ReelCommentReplyId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("ReelCommentReplyId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("ReelCommentReplyLoves");
-                });
-
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
                 {
                     b.Property<int>("Id")
@@ -17048,44 +16948,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
-                {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelComment", "ParentComment")
-                        .WithMany("Replies")
-                        .HasForeignKey("ParentCommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ParentComment");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReplyLove", b =>
-                {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", "ReelCommentReply")
-                        .WithMany("Loves")
-                        .HasForeignKey("ReelCommentReplyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
-                        .WithMany("reelCommentReplyLoves")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ReelCommentReply");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.Reel", "Reel")
@@ -17286,13 +17148,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelComment", b =>
                 {
                     b.Navigation("Loves");
-
-                    b.Navigation("Replies");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
-                {
-                    b.Navigation("Loves");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>
@@ -17318,8 +17173,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("UserReelViews");
 
                     b.Navigation("WishlistItems");
-
-                    b.Navigation("reelCommentReplyLoves");
                 });
 #pragma warning restore 612, 618
         }
