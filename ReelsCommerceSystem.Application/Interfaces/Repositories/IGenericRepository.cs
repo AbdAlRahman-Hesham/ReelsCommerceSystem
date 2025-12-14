@@ -1,4 +1,5 @@
 ﻿
+using System.Linq.Expressions;
 using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
@@ -18,5 +19,7 @@ public interface IGenericRepository<T> where T : BaseEntity
 
     public Task<int> SaveChangesAsync();
     public Task<int> CountAsync(ISpecification<T> specification);
+    Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
+
 
 }
