@@ -20,6 +20,10 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
         int pageSize,
         string currentUserId);
 
+
+        Task<ApiResponse<bool>> ToggleCommentLikeAsync(int commentId, string userId);
+
+
     }
 
 }

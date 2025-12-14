@@ -38,7 +38,6 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 var reelRepo = _unitOfWork.Repository<Reel>();
                 var commentRepo = _unitOfWork.Repository<ReelComment>();
 
-                // Basic validation if you don't use FluentValidation
                 if (string.IsNullOrWhiteSpace(dto.Content))
                 {
                     return ApiResponse<AddReelCommentRes>.ErrorResponse(
@@ -99,6 +98,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 );
             }
         }
+
         public async Task<ApiResponse<PaginationResponse<ReelCommentRes>>> GetReelCommentsAsync(
        int reelId,
        int pageNumber,
@@ -134,20 +134,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 CreatedAt = c.CreatedAt,
                 CommentLikeCount = c.Loves.Count,
                 IsLovedByCurrentUser = c.Loves.Any(l => l.UserId == currentUserId),
-
-                Replies = c.Replies
-            .OrderByDescending(r => r.CreatedAt)
-            .Select(r => new ReelCommentReplyRes
-            {
-                Id = r.Id,
-                Content = r.Content,
-                UserName = r.User.UserName,
-                UserImage = r.User.ImageURL,
-                CreatedAt = r.CreatedAt,
-                LikeCount = r.Loves.Count,
-                IsLovedByCurrentUser = r.Loves.Any(l => l.UserId == currentUserId)
-            }).ToList()
+                RepliesCount = c.Replies.Count,
             }).ToList();
+               
 
 
             var meta = new Meta
@@ -165,5 +154,72 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 HttpStatusCode.OK
             );
         }
+        public async Task<ApiResponse<bool>> ToggleCommentLikeAsync(int commentId, string userId)
+        {
+            try
+            {
+                var commentRepo = _unitOfWork.Repository<ReelComment>();
+                var loveRepo = _unitOfWork.Repository<ReelCommentLove>();
+
+                // Check comment exists
+                var comment = await commentRepo.GetByIdAsync(commentId);
+                if (comment == null)
+                {
+                    return ApiResponse<bool>.ErrorResponse(
+                        HttpStatusCode.NotFound,
+                        "Comment not found",
+                        "التعليق غير موجود"
+                    );
+                }
+
+                // Create specification to check existing like
+                var spec = new Specification<ReelCommentLove>(
+                    criteria: like => like.UserId == userId && like.ReelCommentId == commentId
+                );
+
+                var existingLike = await loveRepo.GetWithSpecAsync(spec);
+
+                bool isLiked;
+
+                if (existingLike != null)
+                {
+                    // Already liked → remove like
+                    loveRepo.Delete(existingLike);
+                    isLiked = false;
+                }
+                else
+                {
+                    // Not liked → add like
+                    var newLove = new ReelCommentLove
+                    {
+                        UserId = userId,
+                        ReelCommentId = commentId,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    await loveRepo.AddAsync(newLove);
+                    isLiked = true;
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+
+                return ApiResponse<bool>.SuccessResponse(
+                    isLiked,
+                    HttpStatusCode.OK,
+                    "Toggle successful",
+                    "تم تنفيذ العملية بنجاح"
+                );
+            }
+            catch (Exception)
+            {
+                return ApiResponse<bool>.ErrorResponse(
+                    HttpStatusCode.InternalServerError,
+                    "Something went wrong",
+                    "حدث خطأ ما"
+                );
+            }
+        }
+
+
     }
-    }
+}
