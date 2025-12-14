@@ -10,7 +10,7 @@ public static class AddApplicationDatabaseConfig
     public static IServiceCollection AddApplicationDBConfig(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         var devName = env.IsDevelopment() ? Environment.GetEnvironmentVariable("DeveloperName") : "OnlineDB";
-       var connString = configuration.GetConnectionString(/*devName!*/"Esraa");
+       var connString = configuration.GetConnectionString(devName!);
 
         Console.WriteLine(new string('=', 100));
         Console.Write("                    Hi ");
