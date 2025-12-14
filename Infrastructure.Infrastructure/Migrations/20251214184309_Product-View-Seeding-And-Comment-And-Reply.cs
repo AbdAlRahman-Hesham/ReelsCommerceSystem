@@ -8,11 +8,89 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class ReelLikesAndViewsSeeding : Migration
+    public partial class ProductViewSeedingAndCommentAndReply : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            
+            migrationBuilder.CreateTable(
+                name: "ReelCommentReplies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentCommentId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReelCommentReplies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReelCommentReplies_ReelComment_ParentCommentId",
+                        column: x => x.ParentCommentId,
+                        principalTable: "ReelComment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReelCommentReplies_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+
+            migrationBuilder.CreateTable(
+                name: "ReelCommentReplyLoves",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReelCommentReplyId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReelCommentReplyLoves", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReelCommentReplyLoves_ReelCommentReplies_ReelCommentReplyId",
+                        column: x => x.ReelCommentReplyId,
+                        principalTable: "ReelCommentReplies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReelCommentReplyLoves_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+
+            migrationBuilder.InsertData(
+                table: "UserProductView",
+                columns: new[] { "Id", "CreatedAt", "ProductId", "UpdatedAt", "UserId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 12, 9, 12, 1, 0, 0, DateTimeKind.Utc), "user1" },
+                    { 2, new DateTime(2025, 12, 9, 12, 2, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 12, 2, 0, 0, DateTimeKind.Utc), "user1" },
+                    { 3, new DateTime(2025, 12, 9, 12, 3, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 12, 9, 12, 3, 0, 0, DateTimeKind.Utc), "user1" },
+                    { 4, new DateTime(2025, 12, 9, 12, 4, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 12, 4, 0, 0, DateTimeKind.Utc), "user2" },
+                    { 5, new DateTime(2025, 12, 9, 12, 5, 0, 0, DateTimeKind.Utc), 4, new DateTime(2025, 12, 9, 12, 5, 0, 0, DateTimeKind.Utc), "user2" },
+                    { 6, new DateTime(2025, 12, 9, 12, 6, 0, 0, DateTimeKind.Utc), 5, new DateTime(2025, 12, 9, 12, 6, 0, 0, DateTimeKind.Utc), "user2" },
+                    { 7, new DateTime(2025, 12, 9, 12, 7, 0, 0, DateTimeKind.Utc), 1, new DateTime(2025, 12, 9, 12, 7, 0, 0, DateTimeKind.Utc), "user3" },
+                    { 8, new DateTime(2025, 12, 9, 12, 8, 0, 0, DateTimeKind.Utc), 6, new DateTime(2025, 12, 9, 12, 8, 0, 0, DateTimeKind.Utc), "user3" },
+                    { 9, new DateTime(2025, 12, 9, 12, 9, 0, 0, DateTimeKind.Utc), 3, new DateTime(2025, 12, 9, 12, 9, 0, 0, DateTimeKind.Utc), "user3" },
+                    { 10, new DateTime(2025, 12, 9, 12, 10, 0, 0, DateTimeKind.Utc), 2, new DateTime(2025, 12, 9, 12, 10, 0, 0, DateTimeKind.Utc), "user4" },
+                    { 11, new DateTime(2025, 12, 9, 12, 11, 0, 0, DateTimeKind.Utc), 5, new DateTime(2025, 12, 9, 12, 11, 0, 0, DateTimeKind.Utc), "user4" }
+                });
+
             migrationBuilder.InsertData(
                 table: "UserReelLike",
                 columns: new[] { "Id", "CreatedAt", "ReelId", "UpdatedAt", "UserId" },
@@ -146,11 +224,136 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     { 59, new DateTime(2025, 3, 13, 12, 26, 57, 0, DateTimeKind.Utc), 19, new DateTime(2025, 3, 13, 12, 27, 2, 0, DateTimeKind.Utc), "user9", 90, 55 },
                     { 60, new DateTime(2025, 3, 14, 14, 38, 30, 0, DateTimeKind.Utc), 31, new DateTime(2025, 3, 14, 14, 38, 36, 0, DateTimeKind.Utc), "user4", 80, 35 }
                 });
+
+
+            migrationBuilder.InsertData(
+                table: "ReelCommentReplies",
+                columns: new[] { "Id", "Content", "CreatedAt", "ParentCommentId", "UpdatedAt", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "Totally agree with you! 🔥", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "user2" },
+                    { 2, "Same question! 😂", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 3, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "user7" },
+                    { 3, "Yes available worldwide 🌍", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 5, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "user4" },
+                    { 4, "High quality indeed 💯", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), 4, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "user6" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelCommentReplies_ParentCommentId",
+                table: "ReelCommentReplies",
+                column: "ParentCommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelCommentReplies_UserId",
+                table: "ReelCommentReplies",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelCommentReplyLoves_ReelCommentReplyId_UserId",
+                table: "ReelCommentReplyLoves",
+                columns: new[] { "ReelCommentReplyId", "UserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReelCommentReplyLoves_UserId",
+                table: "ReelCommentReplyLoves",
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+
+            migrationBuilder.DropTable(
+                name: "ReelCommentReplyLoves");
+
+            migrationBuilder.DropTable(
+                name: "ReelCommentReplies");
+
+            migrationBuilder.DeleteData(
+                table: "ReelComment",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "ReelCommentLove",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "ReelCommentLove",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "ReelCommentLove",
+                keyColumn: "Id",
+                keyValue: 3);
+
+            migrationBuilder.DeleteData(
+                table: "ReelCommentLove",
+                keyColumn: "Id",
+                keyValue: 4);
+
+            migrationBuilder.DeleteData(
+                table: "ReelCommentLove",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 3);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 4);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 6);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 7);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 8);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 9);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 10);
+
+            migrationBuilder.DeleteData(
+                table: "UserProductView",
+                keyColumn: "Id",
+                keyValue: 11);
+
             migrationBuilder.DeleteData(
                 table: "UserReelLike",
                 keyColumn: "Id",
@@ -750,6 +953,26 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                 table: "UserReelView",
                 keyColumn: "Id",
                 keyValue: 60);
+
+            migrationBuilder.DeleteData(
+                table: "ReelComment",
+                keyColumn: "Id",
+                keyValue: 1);
+
+            migrationBuilder.DeleteData(
+                table: "ReelComment",
+                keyColumn: "Id",
+                keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "ReelComment",
+                keyColumn: "Id",
+                keyValue: 3);
+
+            migrationBuilder.DeleteData(
+                table: "ReelComment",
+                keyColumn: "Id",
+                keyValue: 4);
         }
     }
 }
