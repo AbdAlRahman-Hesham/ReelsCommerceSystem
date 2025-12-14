@@ -17,8 +17,7 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelC
             AddInclude(c => c.User);
             AddInclude(c => c.Loves);
             AddInclude(c => c.Replies);
-            AddInclude("Replies.User");
-            AddInclude("Replies.Loves");
+
 
             AddOrderByDescending(c => c.CreatedAt);
 

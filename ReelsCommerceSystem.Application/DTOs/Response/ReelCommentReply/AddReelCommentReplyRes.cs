@@ -4,18 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ReelsCommerceSystem.Application.DTOs.Response.ReelComment
+namespace ReelsCommerceSystem.Application.DTOs.Response.ReelCommentReply
 {
-    public class ReelCommentRes
+    public class AddReelCommentReplyRes
     {
         public int Id { get; set; }
         public string Content { get; set; }
+        public string UserId { get; set; }
         public string UserName { get; set; }
-        public string UserImage { get; set; }
-        public int CommentLikeCount { get; set; }
-        public bool IsLovedByCurrentUser { get; set; }
         public DateTime CreatedAt { get; set; }
-
-        public int RepliesCount { get; set; }
     }
 }
