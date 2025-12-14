@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Infrastructure.Services;
 
 namespace ReelsCommerceSystem.Api.Controllers;
@@ -69,6 +71,22 @@ public class ProductController : AppBaseController
 
         return Ok(recentViews);
     }
+
+
+[Authorize]
+[HttpPost("view/{productId}")]
+public async Task<IActionResult> TrackProductView(int productId)
+{
+  
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    if (string.IsNullOrEmpty(userId))
+        return Unauthorized(new { message = "User not authenticated" });
+
+    await _userProductViewService.RecordProductViewAsync(userId, productId);
+
+    return Ok(new { message = "Product view recorded successfully" });
+}
 
 
 }
