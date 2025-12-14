@@ -37,5 +37,41 @@ namespace ReelsCommerceSystem.Api.Controllers
 
 
         }
+
+        [HttpGet("{reelId}")]
+        public async Task<IActionResult> GetReelComments(
+        int reelId,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10)
+        {
+        
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var response = await _reelCommentService.GetReelCommentsAsync(
+                reelId,
+                pageNumber,
+                pageSize,
+                userId);
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("toggle-like")]
+        public async Task<IActionResult> ToggleCommentLike([FromBody] ToggleRepyLikeReq dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized(ApiResponse<bool>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized",
+                    "غير مصرح لك"
+                ));
+            }
+
+            var response = await _reelCommentService.ToggleCommentLikeAsync(dto.CommentId, userId);
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

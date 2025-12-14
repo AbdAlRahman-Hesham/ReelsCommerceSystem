@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Infrastructure.Persistence;
@@ -73,4 +74,13 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
             .CountAsync();
     }
 
+    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.FirstOrDefaultAsync(predicate);
+    }
+
+    public IQueryable<T> GetAllQueryable()
+    {
+        return _context.Set<T>().AsQueryable();
+    }
 }

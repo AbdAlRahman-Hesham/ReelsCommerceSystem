@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace ReelsCommerceSystem.Application.DTOs.Response.ReelComment
 {
-    public class ReelCommentRes
+    public class AddReelCommentRes
     {
         public int Id { get; set; }
         public string Content { get; set; }
-        public string UserName { get; set; }
-        public string UserImage { get; set; }
-        public int CommentLikeCount { get; set; }
-        public bool IsLovedByCurrentUser { get; set; }
+        public string UserId { get; set; }
+        public string UserName { get; set; } 
         public DateTime CreatedAt { get; set; }
-
-        public int RepliesCount { get; set; }
     }
 }

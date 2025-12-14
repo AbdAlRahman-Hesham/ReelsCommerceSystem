@@ -12,8 +12,8 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251209193416_﻿UserProductViewSeeding")]
-    partial class _﻿UserProductViewSeeding
+    [Migration("20251214184309_Product-View-Seeding-And-Comment-And-Reply")]
+    partial class ProductViewSeedingAndCommentAndReply
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -11146,6 +11146,109 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ParentCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ReelCommentReplies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Totally agree with you! 🔥",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ParentCommentId = 1,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "Same question! 😂",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ParentCommentId = 3,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user7"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Content = "Yes available worldwide 🌍",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ParentCommentId = 5,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Content = "High quality indeed 💯",
+                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            ParentCommentId = 4,
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        });
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReplyLove", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReelCommentReplyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ReelCommentReplyId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("ReelCommentReplyLoves");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
                 {
                     b.Property<int>("Id")
@@ -11175,6 +11278,488 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("UserReelLike");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 1, 2, 10, 12, 44, 0, DateTimeKind.Utc),
+                            ReelId = 13,
+                            UpdatedAt = new DateTime(2025, 1, 2, 10, 12, 49, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 1, 6, 9, 11, 18, 0, DateTimeKind.Utc),
+                            ReelId = 5,
+                            UpdatedAt = new DateTime(2025, 1, 6, 9, 11, 24, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 1, 7, 16, 44, 39, 0, DateTimeKind.Utc),
+                            ReelId = 32,
+                            UpdatedAt = new DateTime(2025, 1, 7, 16, 44, 45, 0, DateTimeKind.Utc),
+                            UserId = "user9"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2025, 1, 4, 14, 55, 20, 0, DateTimeKind.Utc),
+                            ReelId = 27,
+                            UpdatedAt = new DateTime(2025, 1, 4, 14, 55, 25, 0, DateTimeKind.Utc),
+                            UserId = "user7"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2025, 1, 8, 7, 32, 51, 0, DateTimeKind.Utc),
+                            ReelId = 48,
+                            UpdatedAt = new DateTime(2025, 1, 8, 7, 32, 57, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2025, 1, 9, 11, 10, 12, 0, DateTimeKind.Utc),
+                            ReelId = 2,
+                            UpdatedAt = new DateTime(2025, 1, 9, 11, 10, 17, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2025, 1, 10, 19, 27, 33, 0, DateTimeKind.Utc),
+                            ReelId = 14,
+                            UpdatedAt = new DateTime(2025, 1, 10, 19, 27, 41, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2025, 1, 12, 6, 55, 21, 0, DateTimeKind.Utc),
+                            ReelId = 45,
+                            UpdatedAt = new DateTime(2025, 1, 12, 6, 55, 28, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedAt = new DateTime(2025, 1, 13, 17, 13, 9, 0, DateTimeKind.Utc),
+                            ReelId = 7,
+                            UpdatedAt = new DateTime(2025, 1, 13, 17, 13, 14, 0, DateTimeKind.Utc),
+                            UserId = "user5"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedAt = new DateTime(2025, 1, 15, 12, 41, 55, 0, DateTimeKind.Utc),
+                            ReelId = 22,
+                            UpdatedAt = new DateTime(2025, 1, 15, 12, 42, 2, 0, DateTimeKind.Utc),
+                            UserId = "user10"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedAt = new DateTime(2025, 1, 16, 8, 11, 17, 0, DateTimeKind.Utc),
+                            ReelId = 49,
+                            UpdatedAt = new DateTime(2025, 1, 16, 8, 11, 23, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedAt = new DateTime(2025, 1, 17, 20, 22, 43, 0, DateTimeKind.Utc),
+                            ReelId = 36,
+                            UpdatedAt = new DateTime(2025, 1, 17, 20, 22, 49, 0, DateTimeKind.Utc),
+                            UserId = "user7"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedAt = new DateTime(2025, 1, 18, 9, 59, 50, 0, DateTimeKind.Utc),
+                            ReelId = 1,
+                            UpdatedAt = new DateTime(2025, 1, 18, 9, 59, 55, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedAt = new DateTime(2025, 1, 19, 15, 33, 14, 0, DateTimeKind.Utc),
+                            ReelId = 28,
+                            UpdatedAt = new DateTime(2025, 1, 19, 15, 33, 19, 0, DateTimeKind.Utc),
+                            UserId = "user9"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedAt = new DateTime(2025, 1, 20, 11, 24, 31, 0, DateTimeKind.Utc),
+                            ReelId = 40,
+                            UpdatedAt = new DateTime(2025, 1, 20, 11, 24, 37, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedAt = new DateTime(2025, 1, 21, 18, 18, 47, 0, DateTimeKind.Utc),
+                            ReelId = 16,
+                            UpdatedAt = new DateTime(2025, 1, 21, 18, 18, 51, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedAt = new DateTime(2025, 1, 22, 7, 25, 58, 0, DateTimeKind.Utc),
+                            ReelId = 26,
+                            UpdatedAt = new DateTime(2025, 1, 22, 7, 26, 4, 0, DateTimeKind.Utc),
+                            UserId = "user5"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedAt = new DateTime(2025, 1, 23, 10, 14, 13, 0, DateTimeKind.Utc),
+                            ReelId = 11,
+                            UpdatedAt = new DateTime(2025, 1, 23, 10, 14, 18, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedAt = new DateTime(2025, 1, 24, 16, 52, 22, 0, DateTimeKind.Utc),
+                            ReelId = 20,
+                            UpdatedAt = new DateTime(2025, 1, 24, 16, 52, 28, 0, DateTimeKind.Utc),
+                            UserId = "user10"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedAt = new DateTime(2025, 1, 25, 12, 8, 43, 0, DateTimeKind.Utc),
+                            ReelId = 33,
+                            UpdatedAt = new DateTime(2025, 1, 25, 12, 8, 50, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedAt = new DateTime(2025, 1, 26, 9, 57, 12, 0, DateTimeKind.Utc),
+                            ReelId = 8,
+                            UpdatedAt = new DateTime(2025, 1, 26, 9, 57, 17, 0, DateTimeKind.Utc),
+                            UserId = "user7"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedAt = new DateTime(2025, 1, 27, 17, 33, 29, 0, DateTimeKind.Utc),
+                            ReelId = 31,
+                            UpdatedAt = new DateTime(2025, 1, 27, 17, 33, 35, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedAt = new DateTime(2025, 1, 28, 14, 19, 56, 0, DateTimeKind.Utc),
+                            ReelId = 19,
+                            UpdatedAt = new DateTime(2025, 1, 28, 14, 20, 1, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedAt = new DateTime(2025, 1, 29, 10, 42, 24, 0, DateTimeKind.Utc),
+                            ReelId = 25,
+                            UpdatedAt = new DateTime(2025, 1, 29, 10, 42, 30, 0, DateTimeKind.Utc),
+                            UserId = "user10"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedAt = new DateTime(2025, 1, 30, 6, 28, 33, 0, DateTimeKind.Utc),
+                            ReelId = 43,
+                            UpdatedAt = new DateTime(2025, 1, 30, 6, 28, 39, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedAt = new DateTime(2025, 1, 31, 20, 51, 45, 0, DateTimeKind.Utc),
+                            ReelId = 9,
+                            UpdatedAt = new DateTime(2025, 1, 31, 20, 51, 51, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CreatedAt = new DateTime(2025, 2, 1, 11, 6, 59, 0, DateTimeKind.Utc),
+                            ReelId = 34,
+                            UpdatedAt = new DateTime(2025, 2, 1, 11, 7, 4, 0, DateTimeKind.Utc),
+                            UserId = "user5"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CreatedAt = new DateTime(2025, 2, 2, 14, 14, 12, 0, DateTimeKind.Utc),
+                            ReelId = 18,
+                            UpdatedAt = new DateTime(2025, 2, 2, 14, 14, 16, 0, DateTimeKind.Utc),
+                            UserId = "user9"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CreatedAt = new DateTime(2025, 2, 3, 9, 25, 41, 0, DateTimeKind.Utc),
+                            ReelId = 4,
+                            UpdatedAt = new DateTime(2025, 2, 3, 9, 25, 46, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CreatedAt = new DateTime(2025, 2, 4, 15, 33, 27, 0, DateTimeKind.Utc),
+                            ReelId = 41,
+                            UpdatedAt = new DateTime(2025, 2, 4, 15, 33, 33, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CreatedAt = new DateTime(2025, 2, 5, 13, 44, 55, 0, DateTimeKind.Utc),
+                            ReelId = 12,
+                            UpdatedAt = new DateTime(2025, 2, 5, 13, 45, 2, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CreatedAt = new DateTime(2025, 2, 6, 7, 29, 42, 0, DateTimeKind.Utc),
+                            ReelId = 30,
+                            UpdatedAt = new DateTime(2025, 2, 6, 7, 29, 49, 0, DateTimeKind.Utc),
+                            UserId = "user7"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CreatedAt = new DateTime(2025, 2, 7, 18, 21, 34, 0, DateTimeKind.Utc),
+                            ReelId = 3,
+                            UpdatedAt = new DateTime(2025, 2, 7, 18, 21, 40, 0, DateTimeKind.Utc),
+                            UserId = "user10"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CreatedAt = new DateTime(2025, 2, 8, 10, 19, 9, 0, DateTimeKind.Utc),
+                            ReelId = 35,
+                            UpdatedAt = new DateTime(2025, 2, 8, 10, 19, 14, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CreatedAt = new DateTime(2025, 2, 9, 20, 58, 11, 0, DateTimeKind.Utc),
+                            ReelId = 21,
+                            UpdatedAt = new DateTime(2025, 2, 9, 20, 58, 18, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CreatedAt = new DateTime(2025, 2, 10, 8, 41, 33, 0, DateTimeKind.Utc),
+                            ReelId = 17,
+                            UpdatedAt = new DateTime(2025, 2, 10, 8, 41, 38, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CreatedAt = new DateTime(2025, 2, 11, 14, 30, 9, 0, DateTimeKind.Utc),
+                            ReelId = 38,
+                            UpdatedAt = new DateTime(2025, 2, 11, 14, 30, 15, 0, DateTimeKind.Utc),
+                            UserId = "user5"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CreatedAt = new DateTime(2025, 2, 12, 9, 55, 58, 0, DateTimeKind.Utc),
+                            ReelId = 42,
+                            UpdatedAt = new DateTime(2025, 2, 12, 9, 56, 4, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CreatedAt = new DateTime(2025, 2, 13, 16, 12, 23, 0, DateTimeKind.Utc),
+                            ReelId = 6,
+                            UpdatedAt = new DateTime(2025, 2, 13, 16, 12, 29, 0, DateTimeKind.Utc),
+                            UserId = "user9"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CreatedAt = new DateTime(2025, 2, 14, 19, 25, 18, 0, DateTimeKind.Utc),
+                            ReelId = 23,
+                            UpdatedAt = new DateTime(2025, 2, 14, 19, 25, 22, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CreatedAt = new DateTime(2025, 2, 15, 11, 48, 47, 0, DateTimeKind.Utc),
+                            ReelId = 47,
+                            UpdatedAt = new DateTime(2025, 2, 15, 11, 48, 53, 0, DateTimeKind.Utc),
+                            UserId = "user7"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CreatedAt = new DateTime(2025, 2, 16, 15, 52, 14, 0, DateTimeKind.Utc),
+                            ReelId = 24,
+                            UpdatedAt = new DateTime(2025, 2, 16, 15, 52, 20, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            CreatedAt = new DateTime(2025, 2, 17, 7, 39, 33, 0, DateTimeKind.Utc),
+                            ReelId = 10,
+                            UpdatedAt = new DateTime(2025, 2, 17, 7, 39, 38, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            CreatedAt = new DateTime(2025, 2, 18, 17, 10, 41, 0, DateTimeKind.Utc),
+                            ReelId = 29,
+                            UpdatedAt = new DateTime(2025, 2, 18, 17, 10, 47, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            CreatedAt = new DateTime(2025, 2, 19, 12, 28, 55, 0, DateTimeKind.Utc),
+                            ReelId = 15,
+                            UpdatedAt = new DateTime(2025, 2, 19, 12, 29, 1, 0, DateTimeKind.Utc),
+                            UserId = "user5"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            CreatedAt = new DateTime(2025, 2, 20, 14, 55, 11, 0, DateTimeKind.Utc),
+                            ReelId = 44,
+                            UpdatedAt = new DateTime(2025, 2, 20, 14, 55, 18, 0, DateTimeKind.Utc),
+                            UserId = "user10"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            CreatedAt = new DateTime(2025, 2, 21, 9, 22, 33, 0, DateTimeKind.Utc),
+                            ReelId = 37,
+                            UpdatedAt = new DateTime(2025, 2, 21, 9, 22, 39, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            CreatedAt = new DateTime(2025, 2, 22, 13, 31, 12, 0, DateTimeKind.Utc),
+                            ReelId = 46,
+                            UpdatedAt = new DateTime(2025, 2, 22, 13, 31, 18, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            CreatedAt = new DateTime(2025, 2, 23, 19, 14, 59, 0, DateTimeKind.Utc),
+                            ReelId = 50,
+                            UpdatedAt = new DateTime(2025, 2, 23, 19, 15, 5, 0, DateTimeKind.Utc),
+                            UserId = "user9"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            CreatedAt = new DateTime(2025, 2, 24, 8, 42, 54, 0, DateTimeKind.Utc),
+                            ReelId = 39,
+                            UpdatedAt = new DateTime(2025, 2, 24, 8, 43, 0, 0, DateTimeKind.Utc),
+                            UserId = "user1"
+                        },
+                        new
+                        {
+                            Id = 51,
+                            CreatedAt = new DateTime(2025, 2, 25, 10, 55, 21, 0, DateTimeKind.Utc),
+                            ReelId = 3,
+                            UpdatedAt = new DateTime(2025, 2, 25, 10, 55, 27, 0, DateTimeKind.Utc),
+                            UserId = "user6"
+                        },
+                        new
+                        {
+                            Id = 52,
+                            CreatedAt = new DateTime(2025, 2, 26, 18, 27, 11, 0, DateTimeKind.Utc),
+                            ReelId = 12,
+                            UpdatedAt = new DateTime(2025, 2, 26, 18, 27, 17, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        },
+                        new
+                        {
+                            Id = 53,
+                            CreatedAt = new DateTime(2025, 2, 27, 7, 17, 45, 0, DateTimeKind.Utc),
+                            ReelId = 5,
+                            UpdatedAt = new DateTime(2025, 2, 27, 7, 17, 50, 0, DateTimeKind.Utc),
+                            UserId = "user7"
+                        },
+                        new
+                        {
+                            Id = 54,
+                            CreatedAt = new DateTime(2025, 2, 28, 13, 31, 59, 0, DateTimeKind.Utc),
+                            ReelId = 18,
+                            UpdatedAt = new DateTime(2025, 2, 28, 13, 32, 5, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 55,
+                            CreatedAt = new DateTime(2025, 3, 1, 16, 40, 28, 0, DateTimeKind.Utc),
+                            ReelId = 41,
+                            UpdatedAt = new DateTime(2025, 3, 1, 16, 40, 34, 0, DateTimeKind.Utc),
+                            UserId = "user5"
+                        },
+                        new
+                        {
+                            Id = 56,
+                            CreatedAt = new DateTime(2025, 3, 2, 9, 23, 44, 0, DateTimeKind.Utc),
+                            ReelId = 7,
+                            UpdatedAt = new DateTime(2025, 3, 2, 9, 23, 50, 0, DateTimeKind.Utc),
+                            UserId = "user10"
+                        },
+                        new
+                        {
+                            Id = 57,
+                            CreatedAt = new DateTime(2025, 3, 3, 14, 14, 58, 0, DateTimeKind.Utc),
+                            ReelId = 26,
+                            UpdatedAt = new DateTime(2025, 3, 3, 14, 15, 3, 0, DateTimeKind.Utc),
+                            UserId = "user8"
+                        },
+                        new
+                        {
+                            Id = 58,
+                            CreatedAt = new DateTime(2025, 3, 4, 18, 33, 18, 0, DateTimeKind.Utc),
+                            ReelId = 9,
+                            UpdatedAt = new DateTime(2025, 3, 4, 18, 33, 24, 0, DateTimeKind.Utc),
+                            UserId = "user3"
+                        },
+                        new
+                        {
+                            Id = 59,
+                            CreatedAt = new DateTime(2025, 3, 5, 8, 56, 29, 0, DateTimeKind.Utc),
+                            ReelId = 22,
+                            UpdatedAt = new DateTime(2025, 3, 5, 8, 56, 35, 0, DateTimeKind.Utc),
+                            UserId = "user4"
+                        },
+                        new
+                        {
+                            Id = 60,
+                            CreatedAt = new DateTime(2025, 3, 6, 12, 51, 28, 0, DateTimeKind.Utc),
+                            ReelId = 9,
+                            UpdatedAt = new DateTime(2025, 3, 6, 12, 51, 34, 0, DateTimeKind.Utc),
+                            UserId = "user2"
+                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelView", b =>
@@ -11211,6 +11796,608 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserReelView");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 1, 3, 9, 14, 22, 0, DateTimeKind.Utc),
+                            ReelId = 12,
+                            UpdatedAt = new DateTime(2025, 1, 3, 9, 14, 31, 0, DateTimeKind.Utc),
+                            UserId = "user4",
+                            VideoDurationSeconds = 80,
+                            WatchedDurationSeconds = 44
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2025, 1, 5, 11, 22, 10, 0, DateTimeKind.Utc),
+                            ReelId = 7,
+                            UpdatedAt = new DateTime(2025, 1, 5, 11, 22, 15, 0, DateTimeKind.Utc),
+                            UserId = "user1",
+                            VideoDurationSeconds = 120,
+                            WatchedDurationSeconds = 61
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 1, 8, 14, 45, 51, 0, DateTimeKind.Utc),
+                            ReelId = 25,
+                            UpdatedAt = new DateTime(2025, 1, 8, 14, 45, 56, 0, DateTimeKind.Utc),
+                            UserId = "user9",
+                            VideoDurationSeconds = 55,
+                            WatchedDurationSeconds = 20
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 1, 11, 16, 20, 12, 0, DateTimeKind.Utc),
+                            ReelId = 3,
+                            UpdatedAt = new DateTime(2025, 1, 11, 16, 20, 19, 0, DateTimeKind.Utc),
+                            UserId = "user3",
+                            VideoDurationSeconds = 130,
+                            WatchedDurationSeconds = 78
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2025, 1, 13, 18, 2, 44, 0, DateTimeKind.Utc),
+                            ReelId = 31,
+                            UpdatedAt = new DateTime(2025, 1, 13, 18, 2, 47, 0, DateTimeKind.Utc),
+                            UserId = "user8",
+                            VideoDurationSeconds = 70,
+                            WatchedDurationSeconds = 16
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2025, 1, 14, 7, 18, 33, 0, DateTimeKind.Utc),
+                            ReelId = 19,
+                            UpdatedAt = new DateTime(2025, 1, 14, 7, 18, 40, 0, DateTimeKind.Utc),
+                            UserId = "user7",
+                            VideoDurationSeconds = 150,
+                            WatchedDurationSeconds = 93
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2025, 1, 15, 9, 59, 28, 0, DateTimeKind.Utc),
+                            ReelId = 8,
+                            UpdatedAt = new DateTime(2025, 1, 15, 9, 59, 33, 0, DateTimeKind.Utc),
+                            UserId = "user2",
+                            VideoDurationSeconds = 44,
+                            WatchedDurationSeconds = 27
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedAt = new DateTime(2025, 1, 17, 11, 44, 51, 0, DateTimeKind.Utc),
+                            ReelId = 44,
+                            UpdatedAt = new DateTime(2025, 1, 17, 11, 44, 57, 0, DateTimeKind.Utc),
+                            UserId = "user6",
+                            VideoDurationSeconds = 90,
+                            WatchedDurationSeconds = 36
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedAt = new DateTime(2025, 1, 18, 13, 26, 11, 0, DateTimeKind.Utc),
+                            ReelId = 15,
+                            UpdatedAt = new DateTime(2025, 1, 18, 13, 26, 18, 0, DateTimeKind.Utc),
+                            UserId = "user5",
+                            VideoDurationSeconds = 100,
+                            WatchedDurationSeconds = 55
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedAt = new DateTime(2025, 1, 20, 15, 10, 5, 0, DateTimeKind.Utc),
+                            ReelId = 50,
+                            UpdatedAt = new DateTime(2025, 1, 20, 15, 10, 8, 0, DateTimeKind.Utc),
+                            UserId = "user10",
+                            VideoDurationSeconds = 140,
+                            WatchedDurationSeconds = 88
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedAt = new DateTime(2025, 1, 22, 9, 41, 39, 0, DateTimeKind.Utc),
+                            ReelId = 18,
+                            UpdatedAt = new DateTime(2025, 1, 22, 9, 41, 44, 0, DateTimeKind.Utc),
+                            UserId = "user3",
+                            VideoDurationSeconds = 90,
+                            WatchedDurationSeconds = 41
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedAt = new DateTime(2025, 1, 23, 12, 27, 17, 0, DateTimeKind.Utc),
+                            ReelId = 4,
+                            UpdatedAt = new DateTime(2025, 1, 23, 12, 27, 19, 0, DateTimeKind.Utc),
+                            UserId = "user2",
+                            VideoDurationSeconds = 110,
+                            WatchedDurationSeconds = 66
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedAt = new DateTime(2025, 1, 24, 14, 55, 9, 0, DateTimeKind.Utc),
+                            ReelId = 36,
+                            UpdatedAt = new DateTime(2025, 1, 24, 14, 55, 16, 0, DateTimeKind.Utc),
+                            UserId = "user4",
+                            VideoDurationSeconds = 60,
+                            WatchedDurationSeconds = 22
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedAt = new DateTime(2025, 1, 25, 16, 33, 44, 0, DateTimeKind.Utc),
+                            ReelId = 10,
+                            UpdatedAt = new DateTime(2025, 1, 25, 16, 33, 50, 0, DateTimeKind.Utc),
+                            UserId = "user7",
+                            VideoDurationSeconds = 120,
+                            WatchedDurationSeconds = 80
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedAt = new DateTime(2025, 1, 27, 18, 14, 29, 0, DateTimeKind.Utc),
+                            ReelId = 27,
+                            UpdatedAt = new DateTime(2025, 1, 27, 18, 14, 32, 0, DateTimeKind.Utc),
+                            UserId = "user1",
+                            VideoDurationSeconds = 40,
+                            WatchedDurationSeconds = 13
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedAt = new DateTime(2025, 1, 28, 7, 21, 58, 0, DateTimeKind.Utc),
+                            ReelId = 5,
+                            UpdatedAt = new DateTime(2025, 1, 28, 7, 22, 4, 0, DateTimeKind.Utc),
+                            UserId = "user6",
+                            VideoDurationSeconds = 77,
+                            WatchedDurationSeconds = 34
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedAt = new DateTime(2025, 1, 29, 10, 49, 41, 0, DateTimeKind.Utc),
+                            ReelId = 48,
+                            UpdatedAt = new DateTime(2025, 1, 29, 10, 49, 45, 0, DateTimeKind.Utc),
+                            UserId = "user9",
+                            VideoDurationSeconds = 117,
+                            WatchedDurationSeconds = 59
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedAt = new DateTime(2025, 1, 30, 11, 56, 12, 0, DateTimeKind.Utc),
+                            ReelId = 23,
+                            UpdatedAt = new DateTime(2025, 1, 30, 11, 56, 19, 0, DateTimeKind.Utc),
+                            UserId = "user10",
+                            VideoDurationSeconds = 130,
+                            WatchedDurationSeconds = 71
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedAt = new DateTime(2025, 2, 1, 8, 15, 55, 0, DateTimeKind.Utc),
+                            ReelId = 1,
+                            UpdatedAt = new DateTime(2025, 2, 1, 8, 16, 1, 0, DateTimeKind.Utc),
+                            UserId = "user8",
+                            VideoDurationSeconds = 80,
+                            WatchedDurationSeconds = 26
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedAt = new DateTime(2025, 2, 2, 9, 37, 26, 0, DateTimeKind.Utc),
+                            ReelId = 22,
+                            UpdatedAt = new DateTime(2025, 2, 2, 9, 37, 32, 0, DateTimeKind.Utc),
+                            UserId = "user5",
+                            VideoDurationSeconds = 104,
+                            WatchedDurationSeconds = 52
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedAt = new DateTime(2025, 2, 3, 12, 58, 51, 0, DateTimeKind.Utc),
+                            ReelId = 17,
+                            UpdatedAt = new DateTime(2025, 2, 3, 12, 58, 55, 0, DateTimeKind.Utc),
+                            UserId = "user1",
+                            VideoDurationSeconds = 90,
+                            WatchedDurationSeconds = 47
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedAt = new DateTime(2025, 2, 4, 15, 19, 33, 0, DateTimeKind.Utc),
+                            ReelId = 29,
+                            UpdatedAt = new DateTime(2025, 2, 4, 15, 19, 37, 0, DateTimeKind.Utc),
+                            UserId = "user3",
+                            VideoDurationSeconds = 95,
+                            WatchedDurationSeconds = 32
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedAt = new DateTime(2025, 2, 5, 17, 40, 28, 0, DateTimeKind.Utc),
+                            ReelId = 49,
+                            UpdatedAt = new DateTime(2025, 2, 5, 17, 40, 33, 0, DateTimeKind.Utc),
+                            UserId = "user5",
+                            VideoDurationSeconds = 150,
+                            WatchedDurationSeconds = 89
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedAt = new DateTime(2025, 2, 6, 9, 22, 14, 0, DateTimeKind.Utc),
+                            ReelId = 11,
+                            UpdatedAt = new DateTime(2025, 2, 6, 9, 22, 20, 0, DateTimeKind.Utc),
+                            UserId = "user10",
+                            VideoDurationSeconds = 70,
+                            WatchedDurationSeconds = 18
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedAt = new DateTime(2025, 2, 7, 11, 34, 59, 0, DateTimeKind.Utc),
+                            ReelId = 32,
+                            UpdatedAt = new DateTime(2025, 2, 7, 11, 35, 6, 0, DateTimeKind.Utc),
+                            UserId = "user4",
+                            VideoDurationSeconds = 130,
+                            WatchedDurationSeconds = 70
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedAt = new DateTime(2025, 2, 8, 13, 46, 42, 0, DateTimeKind.Utc),
+                            ReelId = 45,
+                            UpdatedAt = new DateTime(2025, 2, 8, 13, 46, 49, 0, DateTimeKind.Utc),
+                            UserId = "user6",
+                            VideoDurationSeconds = 75,
+                            WatchedDurationSeconds = 29
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CreatedAt = new DateTime(2025, 2, 9, 15, 58, 30, 0, DateTimeKind.Utc),
+                            ReelId = 9,
+                            UpdatedAt = new DateTime(2025, 2, 9, 15, 58, 37, 0, DateTimeKind.Utc),
+                            UserId = "user7",
+                            VideoDurationSeconds = 110,
+                            WatchedDurationSeconds = 55
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CreatedAt = new DateTime(2025, 2, 10, 18, 10, 25, 0, DateTimeKind.Utc),
+                            ReelId = 6,
+                            UpdatedAt = new DateTime(2025, 2, 10, 18, 10, 30, 0, DateTimeKind.Utc),
+                            UserId = "user2",
+                            VideoDurationSeconds = 60,
+                            WatchedDurationSeconds = 24
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CreatedAt = new DateTime(2025, 2, 11, 8, 21, 44, 0, DateTimeKind.Utc),
+                            ReelId = 40,
+                            UpdatedAt = new DateTime(2025, 2, 11, 8, 21, 50, 0, DateTimeKind.Utc),
+                            UserId = "user8",
+                            VideoDurationSeconds = 100,
+                            WatchedDurationSeconds = 39
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CreatedAt = new DateTime(2025, 2, 12, 10, 33, 19, 0, DateTimeKind.Utc),
+                            ReelId = 28,
+                            UpdatedAt = new DateTime(2025, 2, 12, 10, 33, 26, 0, DateTimeKind.Utc),
+                            UserId = "user9",
+                            VideoDurationSeconds = 140,
+                            WatchedDurationSeconds = 91
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CreatedAt = new DateTime(2025, 2, 13, 12, 44, 55, 0, DateTimeKind.Utc),
+                            ReelId = 16,
+                            UpdatedAt = new DateTime(2025, 2, 13, 12, 45, 1, 0, DateTimeKind.Utc),
+                            UserId = "user3",
+                            VideoDurationSeconds = 66,
+                            WatchedDurationSeconds = 30
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CreatedAt = new DateTime(2025, 2, 14, 14, 56, 37, 0, DateTimeKind.Utc),
+                            ReelId = 34,
+                            UpdatedAt = new DateTime(2025, 2, 14, 14, 56, 43, 0, DateTimeKind.Utc),
+                            UserId = "user2",
+                            VideoDurationSeconds = 120,
+                            WatchedDurationSeconds = 57
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CreatedAt = new DateTime(2025, 2, 15, 9, 11, 23, 0, DateTimeKind.Utc),
+                            ReelId = 14,
+                            UpdatedAt = new DateTime(2025, 2, 15, 9, 11, 28, 0, DateTimeKind.Utc),
+                            UserId = "user1",
+                            VideoDurationSeconds = 40,
+                            WatchedDurationSeconds = 11
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CreatedAt = new DateTime(2025, 2, 16, 11, 23, 46, 0, DateTimeKind.Utc),
+                            ReelId = 39,
+                            UpdatedAt = new DateTime(2025, 2, 16, 11, 23, 52, 0, DateTimeKind.Utc),
+                            UserId = "user6",
+                            VideoDurationSeconds = 130,
+                            WatchedDurationSeconds = 68
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CreatedAt = new DateTime(2025, 2, 17, 13, 35, 9, 0, DateTimeKind.Utc),
+                            ReelId = 20,
+                            UpdatedAt = new DateTime(2025, 2, 17, 13, 35, 14, 0, DateTimeKind.Utc),
+                            UserId = "user4",
+                            VideoDurationSeconds = 70,
+                            WatchedDurationSeconds = 17
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CreatedAt = new DateTime(2025, 2, 18, 16, 47, 50, 0, DateTimeKind.Utc),
+                            ReelId = 2,
+                            UpdatedAt = new DateTime(2025, 2, 18, 16, 47, 56, 0, DateTimeKind.Utc),
+                            UserId = "user9",
+                            VideoDurationSeconds = 90,
+                            WatchedDurationSeconds = 33
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CreatedAt = new DateTime(2025, 2, 19, 18, 59, 33, 0, DateTimeKind.Utc),
+                            ReelId = 21,
+                            UpdatedAt = new DateTime(2025, 2, 19, 18, 59, 38, 0, DateTimeKind.Utc),
+                            UserId = "user4",
+                            VideoDurationSeconds = 135,
+                            WatchedDurationSeconds = 77
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CreatedAt = new DateTime(2025, 2, 20, 8, 14, 11, 0, DateTimeKind.Utc),
+                            ReelId = 47,
+                            UpdatedAt = new DateTime(2025, 2, 20, 8, 14, 18, 0, DateTimeKind.Utc),
+                            UserId = "user10",
+                            VideoDurationSeconds = 90,
+                            WatchedDurationSeconds = 26
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CreatedAt = new DateTime(2025, 2, 21, 10, 26, 44, 0, DateTimeKind.Utc),
+                            ReelId = 30,
+                            UpdatedAt = new DateTime(2025, 2, 21, 10, 26, 48, 0, DateTimeKind.Utc),
+                            UserId = "user7",
+                            VideoDurationSeconds = 100,
+                            WatchedDurationSeconds = 45
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CreatedAt = new DateTime(2025, 2, 22, 12, 38, 52, 0, DateTimeKind.Utc),
+                            ReelId = 35,
+                            UpdatedAt = new DateTime(2025, 2, 22, 12, 38, 59, 0, DateTimeKind.Utc),
+                            UserId = "user5",
+                            VideoDurationSeconds = 150,
+                            WatchedDurationSeconds = 86
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CreatedAt = new DateTime(2025, 2, 23, 14, 50, 41, 0, DateTimeKind.Utc),
+                            ReelId = 26,
+                            UpdatedAt = new DateTime(2025, 2, 23, 14, 50, 47, 0, DateTimeKind.Utc),
+                            UserId = "user3",
+                            VideoDurationSeconds = 75,
+                            WatchedDurationSeconds = 28
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CreatedAt = new DateTime(2025, 2, 24, 9, 1, 33, 0, DateTimeKind.Utc),
+                            ReelId = 38,
+                            UpdatedAt = new DateTime(2025, 2, 24, 9, 1, 37, 0, DateTimeKind.Utc),
+                            UserId = "user8",
+                            VideoDurationSeconds = 90,
+                            WatchedDurationSeconds = 53
+                        },
+                        new
+                        {
+                            Id = 43,
+                            CreatedAt = new DateTime(2025, 2, 25, 11, 13, 20, 0, DateTimeKind.Utc),
+                            ReelId = 46,
+                            UpdatedAt = new DateTime(2025, 2, 25, 11, 13, 26, 0, DateTimeKind.Utc),
+                            UserId = "user2",
+                            VideoDurationSeconds = 140,
+                            WatchedDurationSeconds = 71
+                        },
+                        new
+                        {
+                            Id = 44,
+                            CreatedAt = new DateTime(2025, 2, 26, 13, 25, 12, 0, DateTimeKind.Utc),
+                            ReelId = 41,
+                            UpdatedAt = new DateTime(2025, 2, 26, 13, 25, 16, 0, DateTimeKind.Utc),
+                            UserId = "user6",
+                            VideoDurationSeconds = 70,
+                            WatchedDurationSeconds = 25
+                        },
+                        new
+                        {
+                            Id = 45,
+                            CreatedAt = new DateTime(2025, 2, 27, 15, 37, 5, 0, DateTimeKind.Utc),
+                            ReelId = 24,
+                            UpdatedAt = new DateTime(2025, 2, 27, 15, 37, 9, 0, DateTimeKind.Utc),
+                            UserId = "user1",
+                            VideoDurationSeconds = 95,
+                            WatchedDurationSeconds = 49
+                        },
+                        new
+                        {
+                            Id = 46,
+                            CreatedAt = new DateTime(2025, 2, 28, 17, 49, 52, 0, DateTimeKind.Utc),
+                            ReelId = 43,
+                            UpdatedAt = new DateTime(2025, 2, 28, 17, 49, 58, 0, DateTimeKind.Utc),
+                            UserId = "user7",
+                            VideoDurationSeconds = 145,
+                            WatchedDurationSeconds = 84
+                        },
+                        new
+                        {
+                            Id = 47,
+                            CreatedAt = new DateTime(2025, 3, 1, 8, 4, 18, 0, DateTimeKind.Utc),
+                            ReelId = 33,
+                            UpdatedAt = new DateTime(2025, 3, 1, 8, 4, 24, 0, DateTimeKind.Utc),
+                            UserId = "user9",
+                            VideoDurationSeconds = 50,
+                            WatchedDurationSeconds = 15
+                        },
+                        new
+                        {
+                            Id = 48,
+                            CreatedAt = new DateTime(2025, 3, 2, 10, 16, 47, 0, DateTimeKind.Utc),
+                            ReelId = 42,
+                            UpdatedAt = new DateTime(2025, 3, 2, 10, 16, 52, 0, DateTimeKind.Utc),
+                            UserId = "user10",
+                            VideoDurationSeconds = 120,
+                            WatchedDurationSeconds = 67
+                        },
+                        new
+                        {
+                            Id = 49,
+                            CreatedAt = new DateTime(2025, 3, 3, 12, 28, 39, 0, DateTimeKind.Utc),
+                            ReelId = 37,
+                            UpdatedAt = new DateTime(2025, 3, 3, 12, 28, 45, 0, DateTimeKind.Utc),
+                            UserId = "user4",
+                            VideoDurationSeconds = 60,
+                            WatchedDurationSeconds = 21
+                        },
+                        new
+                        {
+                            Id = 50,
+                            CreatedAt = new DateTime(2025, 3, 4, 14, 40, 22, 0, DateTimeKind.Utc),
+                            ReelId = 13,
+                            UpdatedAt = new DateTime(2025, 3, 4, 14, 40, 27, 0, DateTimeKind.Utc),
+                            UserId = "user5",
+                            VideoDurationSeconds = 130,
+                            WatchedDurationSeconds = 72
+                        },
+                        new
+                        {
+                            Id = 51,
+                            CreatedAt = new DateTime(2025, 3, 5, 16, 52, 11, 0, DateTimeKind.Utc),
+                            ReelId = 6,
+                            UpdatedAt = new DateTime(2025, 3, 5, 16, 52, 14, 0, DateTimeKind.Utc),
+                            UserId = "user7",
+                            VideoDurationSeconds = 90,
+                            WatchedDurationSeconds = 39
+                        },
+                        new
+                        {
+                            Id = 52,
+                            CreatedAt = new DateTime(2025, 3, 6, 9, 3, 44, 0, DateTimeKind.Utc),
+                            ReelId = 4,
+                            UpdatedAt = new DateTime(2025, 3, 6, 9, 3, 49, 0, DateTimeKind.Utc),
+                            UserId = "user6",
+                            VideoDurationSeconds = 140,
+                            WatchedDurationSeconds = 91
+                        },
+                        new
+                        {
+                            Id = 53,
+                            CreatedAt = new DateTime(2025, 3, 7, 11, 15, 26, 0, DateTimeKind.Utc),
+                            ReelId = 7,
+                            UpdatedAt = new DateTime(2025, 3, 7, 11, 15, 32, 0, DateTimeKind.Utc),
+                            UserId = "user1",
+                            VideoDurationSeconds = 100,
+                            WatchedDurationSeconds = 48
+                        },
+                        new
+                        {
+                            Id = 54,
+                            CreatedAt = new DateTime(2025, 3, 8, 13, 27, 9, 0, DateTimeKind.Utc),
+                            ReelId = 27,
+                            UpdatedAt = new DateTime(2025, 3, 8, 13, 27, 14, 0, DateTimeKind.Utc),
+                            UserId = "user3",
+                            VideoDurationSeconds = 120,
+                            WatchedDurationSeconds = 63
+                        },
+                        new
+                        {
+                            Id = 55,
+                            CreatedAt = new DateTime(2025, 3, 9, 15, 39, 52, 0, DateTimeKind.Utc),
+                            ReelId = 12,
+                            UpdatedAt = new DateTime(2025, 3, 9, 15, 39, 57, 0, DateTimeKind.Utc),
+                            UserId = "user2",
+                            VideoDurationSeconds = 160,
+                            WatchedDurationSeconds = 90
+                        },
+                        new
+                        {
+                            Id = 56,
+                            CreatedAt = new DateTime(2025, 3, 10, 17, 51, 44, 0, DateTimeKind.Utc),
+                            ReelId = 8,
+                            UpdatedAt = new DateTime(2025, 3, 10, 17, 51, 49, 0, DateTimeKind.Utc),
+                            UserId = "user10",
+                            VideoDurationSeconds = 50,
+                            WatchedDurationSeconds = 12
+                        },
+                        new
+                        {
+                            Id = 57,
+                            CreatedAt = new DateTime(2025, 3, 11, 8, 2, 33, 0, DateTimeKind.Utc),
+                            ReelId = 17,
+                            UpdatedAt = new DateTime(2025, 3, 11, 8, 2, 39, 0, DateTimeKind.Utc),
+                            UserId = "user8",
+                            VideoDurationSeconds = 70,
+                            WatchedDurationSeconds = 22
+                        },
+                        new
+                        {
+                            Id = 58,
+                            CreatedAt = new DateTime(2025, 3, 12, 10, 14, 19, 0, DateTimeKind.Utc),
+                            ReelId = 50,
+                            UpdatedAt = new DateTime(2025, 3, 12, 10, 14, 26, 0, DateTimeKind.Utc),
+                            UserId = "user5",
+                            VideoDurationSeconds = 130,
+                            WatchedDurationSeconds = 77
+                        },
+                        new
+                        {
+                            Id = 59,
+                            CreatedAt = new DateTime(2025, 3, 13, 12, 26, 57, 0, DateTimeKind.Utc),
+                            ReelId = 19,
+                            UpdatedAt = new DateTime(2025, 3, 13, 12, 27, 2, 0, DateTimeKind.Utc),
+                            UserId = "user9",
+                            VideoDurationSeconds = 90,
+                            WatchedDurationSeconds = 55
+                        },
+                        new
+                        {
+                            Id = 60,
+                            CreatedAt = new DateTime(2025, 3, 14, 14, 38, 30, 0, DateTimeKind.Utc),
+                            ReelId = 31,
+                            UpdatedAt = new DateTime(2025, 3, 14, 14, 38, 36, 0, DateTimeKind.Utc),
+                            UserId = "user4",
+                            VideoDurationSeconds = 80,
+                            WatchedDurationSeconds = 35
+                        });
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Reviews.ProductReview", b =>
@@ -15864,6 +17051,44 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelComment", "ParentComment")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParentComment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReplyLove", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", "ReelCommentReply")
+                        .WithMany("Loves")
+                        .HasForeignKey("ReelCommentReplyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
+                        .WithMany("reelCommentReplyLoves")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ReelCommentReply");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.ReelEntities.Reel", "Reel")
@@ -16064,6 +17289,13 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelComment", b =>
                 {
                     b.Navigation("Loves");
+
+                    b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
+                {
+                    b.Navigation("Loves");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>
@@ -16089,6 +17321,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("UserReelViews");
 
                     b.Navigation("WishlistItems");
+
+                    b.Navigation("reelCommentReplyLoves");
                 });
 #pragma warning restore 612, 618
         }

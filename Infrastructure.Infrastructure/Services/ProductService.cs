@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.DTOs.Response.Product;
@@ -13,7 +15,6 @@ using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
-using System.Net;
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
@@ -22,10 +23,16 @@ public class ProductService(
     IHttpContextAccessor httpContextAccessor,
     IUnitOfWork unitOfWork,
     IRelatedProductService relatedProductService
+   
+
 ) : IProductService
 {
     private readonly IGenericRepository<Product> _productRepository = unitOfWork.Repository<Product>();
     private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(10);
+   
+
+
+
 
     private static readonly Dictionary<int, int> _defaultRatingDistribution = new()
     {
@@ -133,6 +140,7 @@ public class ProductService(
             }
         );
     }
+ 
 
     #region Private Helper Methods
 
