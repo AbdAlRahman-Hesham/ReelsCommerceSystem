@@ -78,4 +78,9 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
     {
         return await _dbSet.FirstOrDefaultAsync(predicate);
     }
+
+    public IQueryable<T> GetAllQueryable()
+    {
+        return _context.Set<T>().AsQueryable();
+    }
 }
