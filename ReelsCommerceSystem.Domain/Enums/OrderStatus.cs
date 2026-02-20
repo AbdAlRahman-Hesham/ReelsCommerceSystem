@@ -10,9 +10,12 @@ namespace ReelsCommerceSystem.Domain.Enums
     {
         Pending,
         Processing,
+        Preparing,
+        Packed,
         Shipped,
         Deliverd,
         Cancelled
+
 
     }
 }

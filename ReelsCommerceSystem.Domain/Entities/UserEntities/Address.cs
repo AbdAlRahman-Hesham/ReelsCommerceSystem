@@ -1,8 +1,9 @@
-﻿namespace ReelsCommerceSystem.Domain.Entities.UserEntities;
+﻿using ReelsCommerceSystem.Domain.Common;
 
-public class Address
+namespace ReelsCommerceSystem.Domain.Entities.UserEntities;
+
+public class Address : BaseEntity
 {
-    public int Id { get; set; }
     public string Name { get; set; } = default!;
     public string Postcode { get; set; } = null!;
     public string Country { get; set; } = default!;
@@ -10,5 +11,6 @@ public class Address
     public string City { get; set; } = default!;
     public User user { get; set; } = default!;
     public string UserId { get; set; } = default!;
+    public string PhoneNumber { get; set; } = default!;
 
 }

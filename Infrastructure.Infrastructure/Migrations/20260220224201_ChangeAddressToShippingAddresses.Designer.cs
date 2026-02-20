@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260220224201_ChangeAddressToShippingAddresses")]
+    partial class ChangeAddressToShippingAddresses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -989,20 +992,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AddressId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeleviredDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("DeliveryMethod")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("OrderStatus")
                         .IsRequired()
@@ -1029,43 +1023,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.OrderTracking", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TrackingNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId")
-                        .IsUnique();
-
-                    b.ToTable("OrderTrackings");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderProductEntities.OrderProduct", b =>
@@ -16356,9 +16316,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -16374,9 +16331,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -16892,30 +16846,13 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
                 {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
-
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Address");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.OrderTracking", b =>
-                {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", "Order")
-                        .WithOne("Tracking")
-                        .HasForeignKey("ReelsCommerceSystem.Domain.Entities.OrderEntities.OrderTracking", "OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderProductEntities.OrderProduct", b =>
@@ -17300,8 +17237,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
                 {
                     b.Navigation("OrderProducts");
-
-                    b.Navigation("Tracking");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", b =>

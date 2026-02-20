@@ -35,7 +35,40 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             return uploadResult?.SecureUrl?.ToString();
         }
+
+        public async Task<bool> DeleteUserImageAsync(string imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl) || imageUrl.Contains("static.vecteezy.com"))
+                return true;
+
+            try
+            {
+                var uri = new Uri(imageUrl);
+                var uploadIndex = imageUrl.IndexOf("/upload/");
+                if (uploadIndex == -1) return false;
+
+                var pathAfterUpload = imageUrl.Substring(uploadIndex + 8);
+                if (pathAfterUpload.StartsWith("v") && char.IsDigit(pathAfterUpload[1]))
+                {
+                    var nextSlash = pathAfterUpload.IndexOf('/');
+                    if (nextSlash != -1)
+                    {
+                        pathAfterUpload = pathAfterUpload.Substring(nextSlash + 1);
+                    }
+                }
+                var publicId = Path.ChangeExtension(pathAfterUpload, null);
+
+                var deletionParams = new DeletionParams(publicId);
+                var result = await _cloudinary.DestroyAsync(deletionParams);
+                return result.Result == "ok";
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
+
 
 
