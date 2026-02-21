@@ -175,8 +175,5 @@ public class AppDbContext :IdentityDbContext<User>
 
     public DbSet<ReelCommentReply> ReelCommentReplies { get; set; }
     public DbSet<ReelCommentReplyLove> ReelCommentReplyLoves { get; set; }
-
-
+    public DbSet<OrderTracking> OrderTrackings { get; set; }
 }
-
-

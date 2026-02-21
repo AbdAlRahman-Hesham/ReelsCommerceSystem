@@ -10,6 +10,9 @@ public class OrderConfig : IEntityTypeConfiguration<Order>
         builder.Property(o => o.TotalAmount)
              .HasColumnType("decimal(18,2)");
 
+        builder.Property(o => o.DiscountAmount)
+             .HasColumnType("decimal(18,2)");
+
         builder.Property(o => o.OrderStatus)
                .HasConversion<string>()
                .HasMaxLength(20);

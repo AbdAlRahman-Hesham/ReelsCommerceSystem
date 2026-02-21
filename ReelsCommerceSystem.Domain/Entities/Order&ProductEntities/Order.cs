@@ -17,5 +17,15 @@ public class Order: BaseEntity
     public string UserId { get; set; }
     public User User { get; set; }
 
+    public int? AddressId { get; set; }
+    public Address? Address { get; set; }
+
+    public DeliveryMethod DeliveryMethod { get; set; }
+    public decimal DiscountAmount { get; set; }
+
+    public OrderTracking? Tracking { get; set; }
+
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 }
+
+
