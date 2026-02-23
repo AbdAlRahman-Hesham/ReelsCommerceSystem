@@ -12,5 +12,6 @@ public class Address : BaseEntity
     public User user { get; set; } = default!;
     public string UserId { get; set; } = default!;
     public string PhoneNumber { get; set; } = default!;
+    public bool IsDefault { get; set; } = false;
 
 }

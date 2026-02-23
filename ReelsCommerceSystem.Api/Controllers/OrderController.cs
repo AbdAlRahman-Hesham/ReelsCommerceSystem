@@ -5,6 +5,7 @@ using ReelsCommerceSystem.Shared.Responses;
 using System.Security.Claims;
 using System.Net;
 using System.Threading.Tasks;
+using ReelsCommerceSystem.Application.DTOs.Request.Order;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
@@ -39,6 +40,17 @@ public class OrderController : AppBaseController
             return NotFound(ApiResponse<object>.ErrorResponse(HttpStatusCode.NotFound, "Order not found.", "الطلب غير موجود."));
 
         return Ok(ApiResponse<object>.SuccessResponse(order, HttpStatusCode.OK, "Order retrieved successfully."));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateOrder(CreateOrderReq request)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var result = await _orderService.CreateOrderAsync(userId, request);
+
+        return Ok(result);
     }
 }
 

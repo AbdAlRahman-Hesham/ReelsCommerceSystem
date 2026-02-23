@@ -4,6 +4,6 @@ public enum DeliveryMethod
 {
     Standard,
     Express,
-    HomeDelivery,
-    StorePickup
+    HomeDelivery
+    //StorePickup
 }
