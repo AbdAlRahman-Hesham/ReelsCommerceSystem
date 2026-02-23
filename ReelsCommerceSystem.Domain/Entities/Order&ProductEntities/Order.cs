@@ -17,8 +17,13 @@ public class Order: BaseEntity
     public string UserId { get; set; }
     public User User { get; set; }
 
-    public int? AddressId { get; set; }
-    public Address? Address { get; set; }
+    public string ShippingName { get; set; }
+    public string ShippingStreet { get; set; }
+    public string ShippingCity { get; set; }
+    public string ShippingCountry { get; set; }
+    public string ShippingPostalCode { get; set; }
+    public string ShippingPhoneNumber { get; set; }
+
 
     public DeliveryMethod DeliveryMethod { get; set; }
     public decimal DiscountAmount { get; set; }

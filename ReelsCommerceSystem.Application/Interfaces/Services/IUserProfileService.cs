@@ -10,7 +10,7 @@ public interface IUserProfileService
 {
     Task<List<Address>> GetShippingAddressesAsync(string userId);
     Task<Address> AddShippingAddressAsync(string userId, ShippingAddressReqDto addressDto);
-    Task<Address> UpdateShippingAddressAsync(string userId, int addressId, ShippingAddressReqDto addressDto);
+    Task<Address> UpdateShippingAddressAsync(string userId, int addressId, UpdateShippingAddressDto addressDto);
     Task<bool> DeleteShippingAddressAsync(string userId, int addressId);
     Task<bool> UpdateProfileAsync(string userId, UpdateProfileReqDto profileDto);
     Task<bool> UpdatePasswordAsync(string userId, UpdatePasswordReqDto passwordDto);

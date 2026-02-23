@@ -45,40 +45,99 @@ public class UserProfileService : IUserProfileService
             Country = addressDto.Country,
             Street = addressDto.Street,
             City = addressDto.City,
-            PhoneNumber = addressDto.PhoneNumber
+            PhoneNumber = addressDto.PhoneNumber,
+            IsDefault = addressDto.IsDefault
         };
+        var existingDefault = await _unitOfWork.Repository<Address>()
+        .FirstOrDefaultAsync(a => a.UserId == userId && a.IsDefault);
+
+        if (existingDefault == null)
+        {
+            address.IsDefault = true;
+        }
+        else if (addressDto.IsDefault)
+        {
+            existingDefault.IsDefault = false;
+        }
 
         await _unitOfWork.Repository<Address>().AddAsync(address);
         await _unitOfWork.SaveChangesAsync();
         return address;
     }
 
-    public async Task<Address> UpdateShippingAddressAsync(string userId, int addressId, ShippingAddressReqDto addressDto)
+    public async Task<Address> UpdateShippingAddressAsync(
+    string userId,
+    int addressId,
+    UpdateShippingAddressDto dto)
     {
-        var address = await _unitOfWork.Repository<Address>().GetByIdAsync(addressId);
+        var address = await _unitOfWork.Repository<Address>()
+            .GetByIdAsync(addressId);
+
         if (address == null || address.UserId != userId)
-            throw new NotFoundException("Address not found or not owned by user.");
+            throw new NotFoundException("Address not found.");
 
-        address.Name = addressDto.Name;
-        address.Postcode = addressDto.Postcode;
-        address.Country = addressDto.Country;
-        address.Street = addressDto.Street;
-        address.City = addressDto.City;
-        address.PhoneNumber = addressDto.PhoneNumber;
+        if (dto.Name != null)
+            address.Name = dto.Name;
 
-        _unitOfWork.Repository<Address>().Update(address);
+        if (dto.Postcode != null)
+            address.Postcode = dto.Postcode;
+
+        if (dto.Country != null)
+            address.Country = dto.Country;
+
+        if (dto.Street != null)
+            address.Street = dto.Street;
+
+        if (dto.City != null)
+            address.City = dto.City;
+
+        if (dto.PhoneNumber != null)
+            address.PhoneNumber = dto.PhoneNumber;
+
+        if (dto.IsDefault.HasValue && dto.IsDefault.Value)
+        {
+            var existingDefault = await _unitOfWork.Repository<Address>()
+                .FirstOrDefaultAsync(a => a.UserId == userId
+                                       && a.IsDefault
+                                       && a.Id != address.Id);
+
+            if (existingDefault != null)
+                existingDefault.IsDefault = false;
+
+            address.IsDefault = true;
+        }
+
         await _unitOfWork.SaveChangesAsync();
+
         return address;
     }
 
     public async Task<bool> DeleteShippingAddressAsync(string userId, int addressId)
     {
-        var address = await _unitOfWork.Repository<Address>().GetByIdAsync(addressId);
+        var address = await _unitOfWork.Repository<Address>()
+            .GetByIdAsync(addressId);
+
         if (address == null || address.UserId != userId)
             return false;
 
+        bool wasDefault = address.IsDefault;
+
         _unitOfWork.Repository<Address>().Delete(address);
-        return await _unitOfWork.SaveChangesAsync() > 0;
+        await _unitOfWork.SaveChangesAsync();
+
+        if (wasDefault)
+        {
+            var anotherAddress = await _unitOfWork.Repository<Address>()
+                .FirstOrDefaultAsync(a => a.UserId == userId);
+
+            if (anotherAddress != null)
+            {
+                anotherAddress.IsDefault = true;
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        return true;
     }
 
     public async Task<bool> UpdateProfileAsync(string userId, UpdateProfileReqDto profileDto)

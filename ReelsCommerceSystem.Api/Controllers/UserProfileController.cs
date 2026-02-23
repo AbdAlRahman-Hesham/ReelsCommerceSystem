@@ -39,8 +39,8 @@ public class UserProfileController : AppBaseController
         return Ok(ApiResponse<object>.SuccessResponse(address, HttpStatusCode.OK, "Shipping address added successfully."));
     }
 
-    [HttpPut("ShippingAddress/{id}")]
-    public async Task<IActionResult> UpdateShippingAddress(int id, [FromBody] ShippingAddressReqDto addressDto)
+    [HttpPatch("ShippingAddress/{id}")]
+    public async Task<IActionResult> UpdateShippingAddress(int id, [FromBody] UpdateShippingAddressDto addressDto)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
