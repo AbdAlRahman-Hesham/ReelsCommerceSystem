@@ -9,14 +9,14 @@ public static class AddApplicationDatabaseConfig
 {
     public static IServiceCollection AddApplicationDBConfig(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
-        var devName = env.IsDevelopment() ? Environment.GetEnvironmentVariable("DeveloperName") : "OnlineDB";
-       var connString = configuration.GetConnectionString(devName!);
-
-        Console.WriteLine(new string('=', 100));
-        Console.Write("                    Hi ");
-        Console.Write(devName);
-        Console.WriteLine(" Welcome to the project!");
-        Console.WriteLine(new string('=', 100));
+        // var devName = env.IsDevelopment() ? Environment.GetEnvironmentVariable("DeveloperName") : "OnlineDB";
+        // var connString = configuration.GetConnectionString(devName!);
+        var connString = configuration.GetConnectionString("OnlineDB");
+        // Console.WriteLine(new string('=', 100));
+        // Console.Write("                    Hi ");
+        // Console.Write(devName);
+        // Console.WriteLine(" Welcome to the project!");
+        // Console.WriteLine(new string('=', 100));
 
         services.AddDbContext<AppDbContext>(options =>
         {
