@@ -19,7 +19,7 @@ builder.Host.AddSerilog(builder.Configuration);
 
 builder.Services.AddApplicationCorsConfig(builder.Configuration);
 
-builder.Services.AddApplicationDBConfig(builder.Configuration, builder.Environment);
+builder.Services.AddApplicationDBConfig(builder.Configuration);
     
 builder.Services.AddRepositoriesAndServices();
 

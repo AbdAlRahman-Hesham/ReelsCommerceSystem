@@ -20,6 +20,14 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence;
 public class AppDbContext :IdentityDbContext<User>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options):base(options){ }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning));
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
        
