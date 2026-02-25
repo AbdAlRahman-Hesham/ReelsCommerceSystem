@@ -8,7 +8,7 @@ public static class AppMiddlewareExtentions
 {
     public static IApplicationBuilder AddAppMiddleware(this WebApplication app)
     {
-        if (true /*app.Environment.IsDevelopment()*/)
+        if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
             app.UseSwaggerUI(op =>
@@ -40,6 +40,21 @@ public static class AppMiddlewareExtentions
         });
 
         app.UseCors("AppCorsPolicy");
+
+        app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = registration => registration.Tags.Contains("live")
+        });
+
+        app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = registration => registration.Tags.Contains("ready")
+        });
+
+        app.MapHealthChecks("/health/details", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            ResponseWriter = HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         app.MapWelcomeEndpoint();
 
