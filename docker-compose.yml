@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: reels_commerce_db
+    environment:
+      SA_PASSWORD: "ReelsCommerce@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "ReelsCommerce@123", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reels_commerce_api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080;https://+:8443
+      ConnectionStrings__DevelopmentDB: "Server=sqlserver;Database=ReelsCommerceSystemDb;User Id=sa;Password=ReelsCommerce@123;Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True;"
+      JWTOptions__SecretKey: "72f0b130d0cf01e0d0bf166109a04a416ddd0c7ea0e16547ad729ba20b71162afaa498aed88021b5d3d781e95fe89902c2062d8c018e1063d657232e543f4cde5c8c31ead6c25891c281de1489a2d2bca46f1b6fbae4b88a5ad73f609635bfa71a332418fb84d020364eee3d3718d3515728ab13aa16ab70386a7d62297669de"
+      JWTOptions__Issuer: "https://localhost:1234/"
+      JWTOptions__Audience: "https://localhost:7146/api"
+      EmailSettings__Server: "smtp.gmail.com"
+      EmailSettings__Port: "587"
+      EmailSettings__UserName: "your-email@gmail.com"
+      EmailSettings__Password: "your-app-password"
+      EmailSettings__Email: "your-email@gmail.com"
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
