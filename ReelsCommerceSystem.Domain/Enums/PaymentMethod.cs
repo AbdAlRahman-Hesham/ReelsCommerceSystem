@@ -3,6 +3,7 @@
 public enum PaymentMethod
 {
     NotSpecified = 0,
-    CardOrWallet = 1,
-    CashOnDelivery = 2,
+    Card = 1,
+    Wallet = 2,
+    CashOnDelivery = 3,
 }

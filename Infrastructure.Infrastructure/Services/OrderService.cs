@@ -4,12 +4,17 @@ using ReelsCommerceSystem.Application.DTOs.Response.Order;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
+using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
+using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Enums;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ProductSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using System.Threading.Tasks;
 
+
 namespace ReelsCommerceSystem.Infrastructure.Services;
+
 
 public class OrderService : IOrderService
 {
@@ -80,12 +85,12 @@ public class OrderService : IOrderService
                 OrderInfo = new OrderInfoResDto
                 {
 
-                    ShippingCity=o.ShippingCity,
-                    ShippingCountry=o.ShippingCountry,
-                    ShippingName=o.ShippingName,
-                    ShippingStreet=o.ShippingStreet,
-                    ShippingPostalCode=o.ShippingPostalCode,
-                    ShippingPhoneNumber=o.ShippingPhoneNumber,
+                    ShippingCity = o.ShippingCity,
+                    ShippingCountry = o.ShippingCountry,
+                    ShippingName = o.ShippingName,
+                    ShippingStreet = o.ShippingStreet,
+                    ShippingPostalCode = o.ShippingPostalCode,
+                    ShippingPhoneNumber = o.ShippingPhoneNumber,
                     PaymentMethod = o.PaymentMethod,
                     DeliveryMethod = o.DeliveryMethod,
                     Discount = o.DiscountAmount,
@@ -112,7 +117,6 @@ public class OrderService : IOrderService
 
         if (request.Address != null)
         {
-            // Use manual address, ignore AddressId
             address = new Address
             {
                 UserId = userId,
@@ -131,6 +135,7 @@ public class OrderService : IOrderService
                 {
                     var oldDefault = await _unitOfWork.Repository<Address>()
                         .FirstOrDefaultAsync(a => a.UserId == userId && a.IsDefault);
+
                     if (oldDefault != null)
                         oldDefault.IsDefault = false;
 
@@ -142,7 +147,9 @@ public class OrderService : IOrderService
         }
         else if (request.AddressId.HasValue)
         {
-            address = await _unitOfWork.Repository<Address>().GetByIdAsync(request.AddressId.Value);
+            address = await _unitOfWork.Repository<Address>()
+                .GetByIdAsync(request.AddressId.Value);
+
             if (address == null || address.UserId != userId)
                 throw new Exception("Invalid address");
         }
@@ -150,12 +157,54 @@ public class OrderService : IOrderService
         {
             throw new Exception("Address is required");
         }
+
         var cart = _cartCache.GetCart(userId);
 
         if (cart == null || cart.ProductCarts == null || !cart.ProductCarts.Any())
             throw new Exception("Cart is empty");
 
-        var subTotal = cart.ProductCarts.Sum(x => x.Price * x.Quantity);
+        // ?? ?????? ??? Specification
+        var productIds = cart.ProductCarts.Select(c => c.ProductId).ToList();
+
+        var spec = new ProductsForOrderSpec(productIds);
+        var products = await _unitOfWork.Repository<Product>()
+            .GetAllWithSpecAsync(spec);
+
+        var orderProducts = new List<OrderProduct>();
+
+        foreach (var cartItem in cart.ProductCarts)
+        {
+            var product = products.FirstOrDefault(p => p.Id == cartItem.ProductId);
+
+            if (product == null)
+                throw new Exception($"Product with id {cartItem.ProductId} not found");
+
+            // ? Stock validation
+            //if (cartItem.Quantity > product.Quantity)
+               // throw new Exception($"Not enough stock for product {product.Name}");
+
+            decimal finalUnitPrice = product.Price;
+
+            // ? ???? ?????
+            if (product.DiscountPercentage.HasValue && product.DiscountPercentage > 0)
+            {
+                var discountAmount = product.Price * (product.DiscountPercentage.Value / 100);
+                finalUnitPrice = product.Price - discountAmount;
+            }
+
+            orderProducts.Add(new OrderProduct
+            {
+                ProductId = product.Id,
+                ProductName = product.Name,
+                BrandId = product.BrandId,
+                Quantity = cartItem.Quantity,
+                FinalPrice = finalUnitPrice,
+                Color = cartItem.Color,
+                Size = cartItem.Size
+            });
+        }
+
+        var subTotal = orderProducts.Sum(op => op.FinalPrice * op.Quantity);
         var shipping = CalculateShipping(request.DeliveryMethod);
         var total = subTotal + shipping;
 
@@ -166,14 +215,20 @@ public class OrderService : IOrderService
             PaymentStatus = PaymentStatus.Pending,
             PaymentMethod = request.PaymentMethod,
             UserId = userId,
-            ShippingCity=address.City,
-            ShippingCountry=address.Country,
-            ShippingName=address.Name,
-            ShippingPhoneNumber=address.PhoneNumber,
-            ShippingPostalCode=address.Postcode,
-            ShippingStreet=address.Street,
+
+            ShippingCity = address.City,
+            ShippingCountry = address.Country,
+            ShippingName = address.Name,
+            ShippingLastName = address.LastName ?? "N/A",  // ????
+            ShippingPhoneNumber = address.PhoneNumber,
+            ShippingPostalCode = address.Postcode,
+            ShippingStreet = address.Street,
+            ShippingBuilding = address.Building ?? "N/A", // ????
+            ShippingFloor = address.Floor ?? "N/A",       // ????
+            ShippingApartment = address.Apartment ?? "N/A", // ????
 
             DeliveryMethod = request.DeliveryMethod,
+            OrderProducts = orderProducts
         };
 
         await _unitOfWork.Repository<Order>().AddAsync(order);
@@ -184,7 +239,7 @@ public class OrderService : IOrderService
             Id = order.Id,
             Status = order.OrderStatus,
             Total = order.TotalAmount,
-            address= address,
+            address = address
         };
     }
 }

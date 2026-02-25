@@ -12,7 +12,7 @@ using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
-using ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ProductSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
 
