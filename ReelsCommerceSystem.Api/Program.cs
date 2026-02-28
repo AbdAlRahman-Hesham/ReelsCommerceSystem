@@ -1,6 +1,8 @@
 ﻿using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Shared.Utilities;
 using Serilog;
 
@@ -13,6 +15,8 @@ builder.Services.AddValidationMiddleware();
 builder.Services.AddOpenApiConfig();
 
 builder.Services.AddCloudinary(builder.Configuration);
+
+builder.Services.AddHttpClient<IPaymobService, PaymobService>();
 
 builder.Host.AddSerilog(builder.Configuration); 
 

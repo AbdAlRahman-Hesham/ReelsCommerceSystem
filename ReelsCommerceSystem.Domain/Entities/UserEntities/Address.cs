@@ -14,4 +14,9 @@ public class Address : BaseEntity
     public string PhoneNumber { get; set; } = default!;
     public bool IsDefault { get; set; } = false;
 
+    public string? LastName { get; set; }
+    public string? Building { get; set; }
+    public string? Floor { get; set; }
+    public string? Apartment { get; set; }
+
 }
