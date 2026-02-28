@@ -27,6 +27,18 @@ builder.Services.AddApplicationDBConfig(builder.Configuration);
     
 builder.Services.AddRepositoriesAndServices();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowDevTunnel", policy =>
+    {
+        policy.WithOrigins("https://6vxv50c7-7146.uks1.devtunnels.ms")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
+
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
@@ -52,6 +64,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCors("AllowDevTunnel");
 
 app.MapControllers();
 

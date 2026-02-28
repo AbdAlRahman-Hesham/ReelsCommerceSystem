@@ -6,7 +6,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services;
 
 public interface IPaymobService
 {
-    Task<ApiResponse<string>> CreatePaymentUrlAsync(Order order, PaymentMethod method);
+    Task<ApiResponse<string>> CreatePaymentUrlAsync(Order order, PaymentMethod method, string walletPhone = null);
     Task<int> GetLastCreatedOrderIdAsync();
 
 }

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace ReelsCommerceSystem.Infrastructure.Services
 {
+    using ReelsCommerceSystem.Application.DTOs.Request.Payment;
     using ReelsCommerceSystem.Shared.Responses;
     using System.Net;
     using System.Net.Http.Headers;
@@ -39,7 +40,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
         }
 
-        public async Task<ApiResponse<string>> CreatePaymentUrlAsync(Order order, PaymentMethod method)
+        public async Task<ApiResponse<string>> CreatePaymentUrlAsync(Order order, PaymentMethod method, string walletPhone = null)
         {
             try
             {
@@ -123,6 +124,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 );
 
                 var paymentKeyRaw = await paymentKeyResponse.Content.ReadAsStringAsync();
+
+                Console.WriteLine("=== Payment Key Response ===");
+                Console.WriteLine(paymentKeyRaw);
+
                 if (!paymentKeyResponse.IsSuccessStatusCode)
                     return ApiResponse<string>.ErrorResponse(HttpStatusCode.InternalServerError, $"Payment key failed: {paymentKeyRaw}", $"فشل إنشاء مفتاح الدفع: {paymentKeyRaw}");
 
@@ -145,7 +150,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                         {
                             source = new
                             {
-                                identifier = phone,
+                                identifier = walletPhone,
                                 subtype = "WALLET"
                             },
                             payment_token = token
@@ -153,6 +158,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     );
 
                     var walletRaw = await walletResponse.Content.ReadAsStringAsync();
+
+                    Console.WriteLine("Wallet Response from Paymob:");
+                    Console.WriteLine(walletRaw);
+
                     if (!walletResponse.IsSuccessStatusCode)
                         return ApiResponse<string>.ErrorResponse(HttpStatusCode.InternalServerError, $"Wallet payment failed: {walletRaw}", $"فشل دفع المحفظة: {walletRaw}");
 
