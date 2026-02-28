@@ -12,4 +12,5 @@ public interface IBrandService
     Task<ToggleDislikeRes> BrandReviewDislikeAsync(string userId, ToggleDislikeReq req);
     Task<ApiResponse<BrandFollowResponse>> ToggleFollowAsync(int brandId, string userId);
     Task<ApiResponse<string>> AddOrUpdateReview(int brandId, string userId, BrandReviewReq dto);
+    Task<ApiResponse<double>> GetAverageRating(int brandId);
 }
