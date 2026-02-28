@@ -164,6 +164,12 @@ public class AppDbContext :IdentityDbContext<User>
 
 
 
+        modelBuilder.Entity<BrandReview>()
+            .HasIndex(r => new { r.BrandId, r.UserId })
+            .IsUnique();
+
+
+
 
     }
     public DbSet<Product> Products { get; set; }
