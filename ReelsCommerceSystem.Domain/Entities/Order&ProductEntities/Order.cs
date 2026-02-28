@@ -34,7 +34,7 @@ public class Order : BaseEntity
 
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
 
-    public string? PaymobOrderId { get; set; }
+    public int? PaymobOrderId { get; set; }
     public string? PaymobTransactionId { get; set; }
     public DateTime? PaidAt { get; set; }
 }

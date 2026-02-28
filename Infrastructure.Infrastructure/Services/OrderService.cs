@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Request.Order;
 using ReelsCommerceSystem.Application.DTOs.Response.Order;
-using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
@@ -10,7 +9,6 @@ using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ProductSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
-using System.Threading.Tasks;
 
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
@@ -185,7 +183,6 @@ public class OrderService : IOrderService
 
             decimal finalUnitPrice = product.Price;
 
-            // ? ???? ?????
             if (product.DiscountPercentage.HasValue && product.DiscountPercentage > 0)
             {
                 var discountAmount = product.Price * (product.DiscountPercentage.Value / 100);
@@ -233,6 +230,8 @@ public class OrderService : IOrderService
 
         await _unitOfWork.Repository<Order>().AddAsync(order);
         await _unitOfWork.SaveChangesAsync();
+
+        // TODO: Clear cart after order creation
 
         return new CreateOrderRes
         {

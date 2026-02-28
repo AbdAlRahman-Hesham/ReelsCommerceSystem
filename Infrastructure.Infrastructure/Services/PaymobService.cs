@@ -25,7 +25,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         private readonly int _walletIntegrationId;
         private readonly string _apiKey;
         private readonly int _merchantId;
-        private string? _lastPaymobOrderId;
+        private int _lastPaymobOrderId;
         private readonly int _iframeId;
 
         public PaymobService(HttpClient httpClient, IConfiguration config)
@@ -33,7 +33,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             _httpClient = httpClient;
             _cardIntegrationId = config.GetValue<int>("PaymobSettings:CardIntegrationId");
             _walletIntegrationId = config.GetValue<int>("PaymobSettings:WalletIntegrationId");
-            _apiKey = config.GetValue<string>("PaymobSettings:ApiKey");
+            _apiKey = config.GetValue<string>("PaymobSettings:ApiKey")!;
             _merchantId = config.GetValue<int>("PaymobSettings:MerchantId");
             _iframeId = config.GetValue<int>("PaymobSettings:IframeId");
 
@@ -164,7 +164,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     return ApiResponse<string>.ErrorResponse(HttpStatusCode.BadRequest, "Unhandled payment method", "طريقة الدفع غير مدعومة");
                 }
 
-                _lastPaymobOrderId = orderData!.Id.ToString();
+                _lastPaymobOrderId = orderData!.Id;
 
                 return ApiResponse<string>.SuccessResponse(paymentUrl, HttpStatusCode.OK);
             }
@@ -174,9 +174,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             }
         }
 
-        public Task<string?> GetLastCreatedOrderIdAsync() => Task.FromResult(_lastPaymobOrderId);
+        public Task<int> GetLastCreatedOrderIdAsync() => Task.FromResult(_lastPaymobOrderId);
 
-        // 💡 الكلاسات المساعدة
         private class PaymobResponse
         {
             [JsonPropertyName("token")]
