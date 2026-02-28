@@ -33,25 +33,23 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             string userMpin = null,
             string userOtp = null)
         {
-           
+            #region Get The Order With Order ID
             var spec = new OrderByIdWithOrderProductSpes(orderId);
             var order = await _unitOfWork.Repository<Order>().GetWithSpecAsync(spec);
 
             if (order == null)
                 return ApiResponse<PaymentResDto>.ErrorResponse(HttpStatusCode.NotFound,
-                    "Order not found", "الأوردر غير موجود");
+                    "Order not found", "الأوردر غير موجود"); 
+            #endregion
 
-            foreach (var p in order.OrderProducts)
-            {
-                Console.WriteLine($"Product: {p.ProductName}, FinalPrice: {p.FinalPrice}, Quantity: {p.Quantity}");
-            }
-
+            #region Check if order payment status not pending or failed
             var paymentSpec = new IsPaymentAllowedSpec();
             if (!paymentSpec.IsSatisfiedBy(order))
                 return ApiResponse<PaymentResDto>.ErrorResponse(HttpStatusCode.BadRequest,
                     "Payment not allowed", "الدفع غير مسموح لهذا الأوردر");
+            #endregion
 
-            
+            #region Check if expectedTotal == TotalAmount
             decimal productsTotal = order.OrderProducts.Sum(p => p.FinalPrice * p.Quantity);
             decimal shipping = order.DeliveryMethod switch
             {
@@ -66,14 +64,32 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             if (order.TotalAmount != expectedTotal)
                 return ApiResponse<PaymentResDto>.ErrorResponse(HttpStatusCode.BadRequest,
                     "Order amount mismatch", "مبلغ الأوردر غير مطابق");
+            #endregion
 
-            
+            #region Create paymentUrl and link 
             var paymentUrl = await _paymobService.CreatePaymentUrlAsync(order, method);
 
-           
-            string paymobOrderId = await _paymobService.GetLastCreatedOrderIdAsync();
 
-            
+            int paymobOrderId = await _paymobService.GetLastCreatedOrderIdAsync();
+
+            if (string.IsNullOrEmpty(paymentUrl.Data))
+                return ApiResponse<PaymentResDto>.ErrorResponse(
+                    HttpStatusCode.BadRequest,
+                    "Failed to generate Paymob payment URL. Please try again later.",
+                    "تعذر إنشاء رابط الدفع عبر باي موب. يرجى المحاولة مرة أخرى."
+                );
+            #endregion
+
+            #region Update order with payment details
+            order.PaymobOrderId = paymobOrderId;
+            order.PaymentMethod = method;
+            _unitOfWork.Repository<Order>().Update(order);
+            var res = await _unitOfWork.SaveChangesAsync();
+
+            if (res <= 0)
+                return ApiResponse<PaymentResDto>.ErrorResponse(HttpStatusCode.InternalServerError,
+                    "Failed to update order with payment details", "فشل تحديث الأوردر بتفاصيل الدفع");
+
             var response = new PaymentResDto
             {
                 OrderId = order.Id,
@@ -81,6 +97,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 PaymentUrl = paymentUrl.Data,
                 PaymobOrderId = paymobOrderId
             };
+            #endregion
+
 
             return ApiResponse<PaymentResDto>.SuccessResponse(response, HttpStatusCode.OK);
         }

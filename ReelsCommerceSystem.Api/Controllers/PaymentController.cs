@@ -23,14 +23,12 @@ namespace ReelsCommerceSystem.Api.Controllers
             try
             {
                
-                var paymentResult = await _paymentService.ProcessPaymentAsync(request.OrderId, request.PaymentMethod);
-
+                var paymentResult = await _paymentService.ProcessPaymentAsync(request.OrderId, PaymentMethod.Card);
 
                 return Ok(paymentResult);
             }
             catch (Exception ex)
             {
-                // لو حصل خطأ
                 return BadRequest(ApiResponse<PaymentResDto>.ErrorResponse(
                     statusCode: HttpStatusCode.BadRequest,
                     en: ex.Message,
@@ -42,7 +40,6 @@ namespace ReelsCommerceSystem.Api.Controllers
         [HttpPost("api/payments/wallet")]
         public async Task<IActionResult> PayWithWallet([FromBody] WalletPaymentReq request)
         {
-            // 1️⃣ استدعاء الخدمة مع بيانات Wallet
             var result = await _paymentService.ProcessPaymentAsync(
                 orderId: request.OrderId,
                 method: PaymentMethod.Wallet,
