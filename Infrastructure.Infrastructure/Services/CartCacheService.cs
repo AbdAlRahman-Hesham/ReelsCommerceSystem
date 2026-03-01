@@ -30,5 +30,6 @@ public class CartCacheService: ICartCacheService
     public void ClearCart(string userId)
     {
         _cache.Remove(GetCacheKey(userId));
+
     }
 }

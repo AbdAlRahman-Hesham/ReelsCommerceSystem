@@ -17,7 +17,7 @@ public class Product : BaseEntity
     public string? ArDescription { get; set; }
 
     public decimal Price { get; set; }
-    public int Quantity => AvailableColors.Sum(c=>c.Quantity);
+    public int Quantity => AvailableColors.Sum(c => c.Quantity);
     public string MediaUrl { get; set; } = null!;
     public bool IsCustomizable { get; set; }
 
