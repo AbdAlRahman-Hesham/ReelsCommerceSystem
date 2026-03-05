@@ -124,7 +124,11 @@ public class OrderService : IOrderService
                 City = request.Address.City,
                 Street = request.Address.Street,
                 PhoneNumber = request.Address.PhoneNumber,
-                IsDefault = request.Address.SetAsDefault
+                IsDefault = request.Address.SetAsDefault,
+                LastName=request.Address.ShippingLastName,
+                Apartment=request.Address.ShippingApartment,
+                Floor=request.Address.ShippingFloor,
+                Building=request.Address.ShippingBuilding,
             };
 
             if (request.Address.SaveAddress)
@@ -161,7 +165,6 @@ public class OrderService : IOrderService
         if (cart == null || cart.ProductCarts == null || !cart.ProductCarts.Any())
             throw new Exception("Cart is empty");
 
-        // ?? ?????? ??? Specification
         var productIds = cart.ProductCarts.Select(c => c.ProductId).ToList();
 
         var spec = new ProductsForOrderSpec(productIds);
@@ -169,23 +172,37 @@ public class OrderService : IOrderService
             .GetAllWithSpecAsync(spec);
 
         var orderProducts = new List<OrderProduct>();
+        var productDictionary = products.ToDictionary(p => p.Id);
 
         foreach (var cartItem in cart.ProductCarts)
         {
-            var product = products.FirstOrDefault(p => p.Id == cartItem.ProductId);
-
-            if (product == null)
+            if (!productDictionary.TryGetValue(cartItem.ProductId, out var product))
                 throw new Exception($"Product with id {cartItem.ProductId} not found");
+            var colorMapping = product.AvailableColors
+                .FirstOrDefault(c =>
+                    string.Equals(
+                        c.ProductColor.Name,
+                        cartItem.Color,
+                        StringComparison.OrdinalIgnoreCase));
+            if (colorMapping == null)
+                throw new Exception($"Color {cartItem.Color} not available");
+            var sizeMapping = colorMapping.AvailableSizes
+                .FirstOrDefault(s => s.ProductSize.Size == cartItem.Size);
+            if (sizeMapping == null)
+                throw new Exception($"Size {cartItem.Size} not available");
 
-            // ? Stock validation
-            //if (cartItem.Quantity > product.Quantity)
-               // throw new Exception($"Not enough stock for product {product.Name}");
+            if (sizeMapping.Quantity < cartItem.Quantity)
+                throw new Exception(
+                    $"Not enough stock for {product.Name} - {cartItem.Color} - {cartItem.Size}");
+
+            sizeMapping.Quantity -= cartItem.Quantity;
+
 
             decimal finalUnitPrice = product.Price;
 
             if (product.DiscountPercentage.HasValue && product.DiscountPercentage > 0)
             {
-                var discountAmount = product.Price * (product.DiscountPercentage.Value / 100);
+                var discountAmount = product.Price * (product.DiscountPercentage.Value / 100m);
                 finalUnitPrice = product.Price - discountAmount;
             }
 
@@ -212,26 +229,25 @@ public class OrderService : IOrderService
             PaymentStatus = PaymentStatus.Pending,
             PaymentMethod = request.PaymentMethod,
             UserId = userId,
-
             ShippingCity = address.City,
             ShippingCountry = address.Country,
             ShippingName = address.Name,
-            ShippingLastName = address.LastName ?? "N/A",  // ????
+            ShippingLastName = address.LastName,
             ShippingPhoneNumber = address.PhoneNumber,
             ShippingPostalCode = address.Postcode,
             ShippingStreet = address.Street,
-            ShippingBuilding = address.Building ?? "N/A", // ????
-            ShippingFloor = address.Floor ?? "N/A",       // ????
-            ShippingApartment = address.Apartment ?? "N/A", // ????
-
+            ShippingBuilding = address.Building,
+            ShippingFloor = address.Floor ,
+            ShippingApartment = address.Apartment ,
             DeliveryMethod = request.DeliveryMethod,
             OrderProducts = orderProducts
         };
 
         await _unitOfWork.Repository<Order>().AddAsync(order);
+        _cartCache.ClearCart(userId);
         await _unitOfWork.SaveChangesAsync();
 
-        // TODO: Clear cart after order creation
+        
 
         return new CreateOrderRes
         {

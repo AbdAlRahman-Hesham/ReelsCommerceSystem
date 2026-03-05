@@ -1,4 +1,5 @@
-﻿using ReelsCommerceSystem.Domain.Entities.ProductEntites;
+﻿using Microsoft.EntityFrameworkCore;
+using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,19 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Produ
         public ProductsForOrderSpec(List<int> ids)
         : base(p => ids.Contains(p.Id))
         {
-            AddInclude(p => p.AvailableColors);
+            AddInclude(p => p.AvailableColors); 
+
+            AddIncludeChain(q => q
+                .Include(p => p.AvailableColors)
+                    .ThenInclude(c => c.ProductColor)
+            );
+
+            AddIncludeChain(q => q
+                .Include(p => p.AvailableColors)
+                    .ThenInclude(c => c.AvailableSizes)
+                        .ThenInclude(s => s.ProductSize)
+            );
+
             AsSplitQuery();
         }
     }
