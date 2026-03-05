@@ -143,6 +143,30 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
 
         return StatusCode(response.StatusCode, response);
     }
+
+    [Authorize]
+    [HttpPost("{brandId}/review")]
+    public async Task<IActionResult> AddOrUpdateReview(
+        int brandId,
+        [FromBody] BrandReviewReq dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
         
+        var result = await _brandService
+           .AddOrUpdateReview(brandId, userId, dto);
+
+        return StatusCode(result.StatusCode, result);
+
+    }
+
 
 }
