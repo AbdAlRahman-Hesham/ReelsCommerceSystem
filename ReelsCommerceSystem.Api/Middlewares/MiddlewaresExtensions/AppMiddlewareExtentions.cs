@@ -8,7 +8,7 @@ public static class AppMiddlewareExtentions
 {
     public static IApplicationBuilder AddAppMiddleware(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        /*if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
             app.UseSwaggerUI(op =>
@@ -19,7 +19,7 @@ public static class AppMiddlewareExtentions
             }
 
             );
-        }
+        }*/
 
 
         // Auto apply migrations on startup
