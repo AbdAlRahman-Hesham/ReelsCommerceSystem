@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 [Authorize]
-public class CartController(ICartService _cartservice) : AppBaseController
+public class CartController(ICartService _cartservice,ICartCacheService _cartCacheService) : AppBaseController
 {
     [HttpGet]
     public IActionResult GetCartByUser()
@@ -41,5 +41,6 @@ public class CartController(ICartService _cartservice) : AppBaseController
 
         return StatusCode(response.StatusCode, response);
     }
+
 
 }

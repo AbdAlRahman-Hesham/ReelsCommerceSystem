@@ -10,6 +10,7 @@ using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
 
 using System.Net;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
 public class BrandService : IBrandService
@@ -204,5 +205,97 @@ public class BrandService : IBrandService
                enMessage,
                arMessage
             );
+    }
+    public async Task<ApiResponse<string>> AddOrUpdateReview(
+                int brandId,
+                string userId,
+                BrandReviewReq dto)
+    {
+        
+        var brandSpec = new BrandByIdSpec(brandId);
+
+        var brand = await _unitOfWork
+            .Repository<Brand>()
+            .GetWithSpecAsync(brandSpec);   
+
+        if (brand == null)
+        {
+            return ApiResponse<string>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "Brand not found.",
+                "البراند غير موجود."
+            );
+        }
+
+        var reviewSpec = new BrandReviewByUserSpec(brandId, userId);
+
+        var existingReview = await _unitOfWork
+            .Repository<BrandReview>()
+            .GetWithSpecAsync(reviewSpec);
+
+        HttpStatusCode statusCode;
+        string enMessage;
+        string arMessage;
+
+        if (existingReview == null)
+        {
+            var review = new BrandReview
+            {
+                BrandId = brandId,
+                UserId = userId,
+                Rating = dto.Rating,
+                Comment = dto.Comment
+            };
+
+            await _unitOfWork
+                .Repository<BrandReview>()
+                .AddAsync(review);
+
+            brand.AverageRating = (brand.AverageRating * brand.NumOfReviews + dto.Rating)
+                              / (brand.NumOfReviews + 1);
+
+            brand.NumOfReviews += 1;
+
+            statusCode = HttpStatusCode.Created;
+            enMessage = "Review added successfully.";
+            arMessage = "تم إضافة التقييم بنجاح.";
+        }
+        else
+        {
+            int oldRating = existingReview.Rating;
+            existingReview.Rating = dto.Rating;
+            existingReview.Comment = dto.Comment;
+
+            _unitOfWork
+                .Repository<BrandReview>()
+                .Update(existingReview);
+
+            brand.AverageRating = (brand.AverageRating * brand.NumOfReviews - oldRating + dto.Rating)
+                             / brand.NumOfReviews;
+
+            statusCode = HttpStatusCode.OK;
+            enMessage = "Review updated successfully.";
+            arMessage = "تم تعديل التقييم بنجاح.";
+        }
+
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse<string>.SuccessResponse(
+            "Success",
+            statusCode,
+            enMessage,
+            arMessage
+        );
+    }
+    public async Task<ApiResponse<double>> GetAverageRating(int brandId)
+    {
+        var spec = new BrandByIdSpec(brandId); 
+        var brand = await _unitOfWork.Repository<Brand>().GetWithSpecAsync(spec);
+        if (brand == null)
+            return ApiResponse<double>.ErrorResponse(HttpStatusCode.NotFound, "Brand not found.", "البراند غير موجود.");
+        double avg = brand.NumOfReviews > 0 ? brand.AverageRating : 0;
+
+        return ApiResponse<double>.SuccessResponse(avg, HttpStatusCode.OK);
     }
 }

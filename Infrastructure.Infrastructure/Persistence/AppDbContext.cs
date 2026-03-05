@@ -20,6 +20,14 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence;
 public class AppDbContext :IdentityDbContext<User>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options):base(options){ }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning));
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
        
@@ -156,6 +164,12 @@ public class AppDbContext :IdentityDbContext<User>
 
 
 
+        modelBuilder.Entity<BrandReview>()
+            .HasIndex(r => new { r.BrandId, r.UserId })
+            .IsUnique();
+
+
+
 
     }
     public DbSet<Product> Products { get; set; }
@@ -175,8 +189,5 @@ public class AppDbContext :IdentityDbContext<User>
 
     public DbSet<ReelCommentReply> ReelCommentReplies { get; set; }
     public DbSet<ReelCommentReplyLove> ReelCommentReplyLoves { get; set; }
-
-
+    public DbSet<OrderTracking> OrderTrackings { get; set; }
 }
-
-

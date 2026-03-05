@@ -2,7 +2,7 @@
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
-namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
+namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ProductSpec;
 
 public class ProductSpec : Specification<Product>
 {

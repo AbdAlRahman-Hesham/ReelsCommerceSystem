@@ -9,7 +9,9 @@ namespace ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
 public class OrderProduct : BaseEntity
 {
     public int? ProductId { get; set; }
+    public string ProductName { get; set; }
     public Product? Product { get; set; }
+
 
 
     public int BrandId { get; set; }

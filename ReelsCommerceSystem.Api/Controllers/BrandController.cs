@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Shared.Responses;
 using System.Net;
 using System.Security.Claims;
@@ -143,6 +144,36 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
 
         return StatusCode(response.StatusCode, response);
     }
+
+    [Authorize]
+    [HttpPost("{brandId}/review")]
+    public async Task<IActionResult> AddOrUpdateReview(
+        int brandId,
+        [FromBody] BrandReviewReq dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
         
+        var result = await _brandService
+           .AddOrUpdateReview(brandId, userId, dto);
+
+        return StatusCode(result.StatusCode, result);
+
+    }
+    [HttpGet("{brandId}/average-rating")]
+    public async Task<IActionResult> GetAverageRating(int brandId)
+    {
+        var result = await _brandService.GetAverageRating(brandId);
+        return StatusCode(result.StatusCode, result);
+    }
+
 
 }
