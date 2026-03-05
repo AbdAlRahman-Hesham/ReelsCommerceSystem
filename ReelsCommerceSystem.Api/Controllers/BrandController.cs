@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Shared.Responses;
 using System.Net;
 using System.Security.Claims;
@@ -166,6 +167,12 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
 
         return StatusCode(result.StatusCode, result);
 
+    }
+    [HttpGet("{brandId}/average-rating")]
+    public async Task<IActionResult> GetAverageRating(int brandId)
+    {
+        var result = await _brandService.GetAverageRating(brandId);
+        return StatusCode(result.StatusCode, result);
     }
 
 

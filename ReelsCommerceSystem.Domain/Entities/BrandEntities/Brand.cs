@@ -18,4 +18,8 @@ public class Brand:BaseEntity
     public ICollection<Reel> Reels { get; set; } = new List<Reel>();
     public ICollection<Offer> Offers { get; set; } = new List<Offer>();
 
+    public double AverageRating { get; set; } = 0;     
+    public int NumOfReviews { get; set; } = 0;
+
+
 }
