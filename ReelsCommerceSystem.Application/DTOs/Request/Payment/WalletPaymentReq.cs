@@ -10,7 +10,5 @@ namespace ReelsCommerceSystem.Application.DTOs.Request.Payment
     {
         public int OrderId { get; set; }        
         public string Phone { get; set; }       
-        public string Mpin { get; set; }        
-        public string Otp { get; set; }
     }
 }

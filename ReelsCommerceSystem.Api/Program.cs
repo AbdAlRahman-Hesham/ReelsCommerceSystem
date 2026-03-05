@@ -27,6 +27,9 @@ builder.Services.AddApplicationDBConfig(builder.Configuration);
     
 builder.Services.AddRepositoriesAndServices();
 
+
+
+
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
@@ -52,6 +55,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCors("AllowDevTunnel");
 
 app.MapControllers();
 

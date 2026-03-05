@@ -43,9 +43,7 @@ namespace ReelsCommerceSystem.Api.Controllers
             var result = await _paymentService.ProcessPaymentAsync(
                 orderId: request.OrderId,
                 method: PaymentMethod.Wallet,
-                userPhone: request.Phone,
-                userMpin: request.Mpin,
-                userOtp: request.Otp
+                userPhone: request.Phone
             );
 
             return Ok(result);

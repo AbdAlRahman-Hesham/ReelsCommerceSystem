@@ -67,7 +67,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             #endregion
 
             #region Create paymentUrl and link 
-            var paymentUrl = await _paymobService.CreatePaymentUrlAsync(order, method);
+            var paymentUrl = await _paymobService.CreatePaymentUrlAsync(order, method, userPhone);
 
 
             int paymobOrderId = await _paymobService.GetLastCreatedOrderIdAsync();
