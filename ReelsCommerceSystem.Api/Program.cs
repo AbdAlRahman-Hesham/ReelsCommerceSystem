@@ -27,15 +27,6 @@ builder.Services.AddApplicationDBConfig(builder.Configuration);
     
 builder.Services.AddRepositoriesAndServices();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowDevTunnel", policy =>
-    {
-        policy.WithOrigins("https://6vxv50c7-7146.uks1.devtunnels.ms")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
 
 
 
