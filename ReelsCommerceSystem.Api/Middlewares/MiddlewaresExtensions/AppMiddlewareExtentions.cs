@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using ReelsCommerceSystem.Api.Endpoints;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,11 +12,23 @@ public static class AppMiddlewareExtentions
         if (/*app.Environment.IsDevelopment()*/ true)
         {
             app.MapOpenApi();
+
+            app.UseSwagger(c =>
+            {
+                c.PreSerializeFilters.Add((swagger, httpReq) =>
+                {
+                    swagger.Servers = new List<OpenApiServer>
+                    {
+                        new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" }
+                    };
+                });
+            });
+
             app.UseSwaggerUI(op =>
             {
 
                 op.DisplayRequestDuration();
-                op.SwaggerEndpoint("/openapi/v1.json", "ReelsCommerceSystem");
+                op.SwaggerEndpoint("/openapi/v1.json", "Reels Commerce System Enviroment " + Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             }
 
             );
