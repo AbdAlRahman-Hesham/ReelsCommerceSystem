@@ -21,18 +21,6 @@ public static class AppMiddlewareExtentions
 
             app.MapOpenApi();
 
-            app.UseSwagger(c =>
-            {
-                c.PreSerializeFilters.Add((swagger, httpReq) =>
-                {
-                    var baseUrl = Environment.GetEnvironmentVariable("BaseUrl");
-                    swagger.Servers = new List<OpenApiServer>
-                                        {
-                                            new OpenApiServer { Url = baseUrl }
-                                        };
-                });
-            });
-
             app.UseSwaggerUI(op =>
             {
 

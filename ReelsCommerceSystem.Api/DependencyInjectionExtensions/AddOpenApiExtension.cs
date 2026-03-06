@@ -8,6 +8,20 @@ public static class AddOpenApiExtension
         {
             options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
+                
+                var baseUrl = Environment.GetEnvironmentVariable("BaseUrl");
+                if (!string.IsNullOrEmpty(baseUrl))
+                {
+                    document.Servers = new List<Microsoft.OpenApi.Models.OpenApiServer>
+                    {
+                        new Microsoft.OpenApi.Models.OpenApiServer { Url = baseUrl },
+                        new Microsoft.OpenApi.Models.OpenApiServer { Url = $"http://localhost:8000" }
+                    };
+                }
+                return Task.CompletedTask;
+            });
+            options.AddDocumentTransformer((document, context, cancellationToken) =>
+            {
                 document.Info = new()
                 {
                     Title = "ReelsCommerceSystem.Api",

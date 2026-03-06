@@ -31,7 +31,6 @@ builder.Services.AddApplicationDBConfig(builder.Configuration);
 builder.Services.AddRepositoriesAndServices();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 
 builder.Services.Configure<EmailSettings>(
