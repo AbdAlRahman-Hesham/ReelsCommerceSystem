@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using ReelsCommerceSystem.Api.Endpoints;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -8,18 +10,26 @@ public static class AppMiddlewareExtentions
 {
     public static IApplicationBuilder AddAppMiddleware(this WebApplication app)
     {
-        /*if (app.Environment.IsDevelopment())
+        if (/*app.Environment.IsDevelopment()*/ true)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                     | ForwardedHeaders.XForwardedProto
+                     | ForwardedHeaders.XForwardedHost
+            });
+
             app.MapOpenApi();
+
             app.UseSwaggerUI(op =>
             {
 
                 op.DisplayRequestDuration();
-                op.SwaggerEndpoint("/openapi/v1.json", "ReelsCommerceSystem");
+                op.SwaggerEndpoint("/openapi/v1.json", "Reels Commerce System Enviroment " + Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
             }
 
             );
-        }*/
+        }
 
 
         // Auto apply migrations on startup
