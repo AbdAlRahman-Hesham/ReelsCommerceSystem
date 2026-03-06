@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using ReelsCommerceSystem.Api.Endpoints;
 using ReelsCommerceSystem.Infrastructure.Persistence;
@@ -11,16 +12,34 @@ public static class AppMiddlewareExtentions
     {
         if (/*app.Environment.IsDevelopment()*/ true)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                     | ForwardedHeaders.XForwardedProto
+                     | ForwardedHeaders.XForwardedHost
+            });
+
             app.MapOpenApi();
 
             app.UseSwagger(c =>
             {
                 c.PreSerializeFilters.Add((swagger, httpReq) =>
                 {
-                    swagger.Servers = new List<OpenApiServer>
+                    var scheme = httpReq.Headers["X-Forwarded-Proto"].FirstOrDefault()
+                                 ?? httpReq.Scheme;
+
+                    var host = httpReq.Headers["X-Forwarded-Host"].FirstOrDefault()
+                               ?? httpReq.Host.Value;
+
+                    if (host.StartsWith("[::]:") || host == "[::]")
                     {
-                        new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" }
-                    };
+                        host = $"localhost:{httpReq.Host.Port}";
+                    }
+
+                    swagger.Servers = new List<OpenApiServer>
+        {
+            new OpenApiServer { Url = $"{scheme}://{host}" }
+        };
                 });
             });
 
