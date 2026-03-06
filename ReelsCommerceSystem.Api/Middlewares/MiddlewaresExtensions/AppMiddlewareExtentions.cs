@@ -25,21 +25,11 @@ public static class AppMiddlewareExtentions
             {
                 c.PreSerializeFilters.Add((swagger, httpReq) =>
                 {
-                    var scheme = httpReq.Headers["X-Forwarded-Proto"].FirstOrDefault()
-                                 ?? httpReq.Scheme;
-
-                    var host = httpReq.Headers["X-Forwarded-Host"].FirstOrDefault()
-                               ?? httpReq.Host.Value;
-
-                    if (host.StartsWith("[::]:") || host == "[::]")
-                    {
-                        host = $"localhost:{httpReq.Host.Port}";
-                    }
-
+                    var baseUrl = Environment.GetEnvironmentVariable("BaseUrl");
                     swagger.Servers = new List<OpenApiServer>
-        {
-            new OpenApiServer { Url = $"{scheme}://{host}" }
-        };
+                                        {
+                                            new OpenApiServer { Url = baseUrl }
+                                        };
                 });
             });
 
