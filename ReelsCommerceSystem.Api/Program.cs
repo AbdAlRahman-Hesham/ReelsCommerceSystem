@@ -71,7 +71,6 @@ await using (var scope = app.Services.CreateAsyncScope())
 {
     var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-    // جلب كل البراندات مع الريفيوز مرة واحدة
     var brands = await unitOfWork.Repository<Brand>()
         .GetAllWithSpecAsync(new BrandWithReviewSpec());
 
@@ -86,7 +85,6 @@ await using (var scope = app.Services.CreateAsyncScope())
     }
 
     await unitOfWork.SaveChangesAsync();
-    Console.WriteLine("✅ AverageRating و NumOfReviews تم حسابهم مرة واحدة فقط");
 }
 
 app.Run();
