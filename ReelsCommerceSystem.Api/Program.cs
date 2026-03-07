@@ -67,24 +67,24 @@ app.AddAppMiddleware();
 
 app.UseStaticFiles();
 
-await using (var scope = app.Services.CreateAsyncScope())
-{
-    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+//await using (var scope = app.Services.CreateAsyncScope())
+//{
+//    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-    var brands = await unitOfWork.Repository<Brand>()
-        .GetAllWithSpecAsync(new BrandWithReviewSpec());
+//    var brands = await unitOfWork.Repository<Brand>()
+//        .GetAllWithSpecAsync(new BrandWithReviewSpec());
 
-    foreach (var brand in brands)
-    {
-        var reviews = brand.Reviews ?? new List<BrandReview>();
+//    foreach (var brand in brands)
+//    {
+//        var reviews = brand.Reviews ?? new List<BrandReview>();
 
-        brand.NumOfReviews = reviews.Count;
-        brand.AverageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
+//        brand.NumOfReviews = reviews.Count;
+//        brand.AverageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
 
-        unitOfWork.Repository<Brand>().Update(brand);
-    }
+//        unitOfWork.Repository<Brand>().Update(brand);
+//    }
 
-    await unitOfWork.SaveChangesAsync();
-}
+//    await unitOfWork.SaveChangesAsync();
+//}
 
 app.Run();
