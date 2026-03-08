@@ -18,4 +18,8 @@ public class ShippingAddressReqDto
     [RegularExpression(@"^\+20(10|11|12|15)\d{8}$", ErrorMessage = "Invalid phone number format.")]
     public string PhoneNumber { get; set; } = default!;
     public bool IsDefault { get; set; } = false;
+    public string? ShippingBuilding { get; set; }
+    public string? ShippingFloor { get; set; }
+    public string? ShippingApartment { get; set; }
+    public string? ShippingLastName { get; set; }
 }

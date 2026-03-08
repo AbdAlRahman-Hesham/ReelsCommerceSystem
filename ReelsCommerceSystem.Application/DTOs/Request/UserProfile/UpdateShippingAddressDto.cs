@@ -19,5 +19,9 @@ namespace ReelsCommerceSystem.Application.DTOs.Request.UserProfile
         public string? PhoneNumber { get; set; }
 
         public bool? IsDefault { get; set; }
+        public string? ShippingBuilding { get; set; }
+        public string? ShippingFloor { get; set; }
+        public string? ShippingApartment { get; set; }
+        public string? ShippingLastName { get; set; }
     }
 }
