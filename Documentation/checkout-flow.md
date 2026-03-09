@@ -130,9 +130,6 @@ Using a new shipping address:
 # 4. Process Payment
 
 ### Endpoint
-POST /api/Payment/api/payments/wallet
-
-### Endpoint
 POST /api/Payment/pay
 
 Creates a **Paymob payment link**.
@@ -165,6 +162,35 @@ Creates a **Paymob payment link**.
 ```
 **redirect the user to `paymentUrl`**.
 User → Paymob Payment Page → Payment Success/Failure
+
+### Endpoint
+POST /api/Payment/api/payments/wallet
+
+## Request
+```json
+{
+  "orderId": 14,
+  "phone": "01010101010"
+}
+```
+## Response
+```json
+{
+  "success": true,
+  "statusCode": 200,
+  "message": {
+    "en": "Request completed successfully.",
+    "ar": "تم تنفيذ الطلب بنجاح."
+  },
+  "data": {
+    "paymentUrl": "https://accept.paymobsolutions.com/api/acceptance/wallet_other_test/wallet_template?token=ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklsUnlZVzV6WVdOMGFXOXVJaXdpZEhKaGJuTmhZM1JwYjI1ZmNHc2lPalF5TkRrNE9EZzRPQ3dpYzNWaVgzUjVjR1VpT2lKM1lXeHNaWFFpZlEuQzhLT3hMa3FSd3hORXltMU4zVUhWRUZTbDl5YVJiS1p2bzJlSGFFaWw4NkZ2OWk5WDRhanJ0ZnJzRUFiWUdWQTlFeTlFeUVPa19GaVBTa0FyLWM3VVE=",
+    "amount": 438,
+    "orderId": 14,
+    "paymobOrderId": 483165414
+  },
+  "errors": null
+}
+```
 
 
 
