@@ -43,7 +43,7 @@ public class OrderController : AppBaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOrder(CreateOrderReq request)
+    public async Task<IActionResult> CreateOrder([FromBody]CreateOrderReq request)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();

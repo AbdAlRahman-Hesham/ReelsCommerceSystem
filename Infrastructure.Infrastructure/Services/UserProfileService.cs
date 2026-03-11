@@ -41,11 +41,15 @@ public class UserProfileService : IUserProfileService
         {
             UserId = userId,
             Name = addressDto.Name,
+            LastName=addressDto.ShippingLastName,
             Postcode = addressDto.Postcode,
             Country = addressDto.Country,
             Street = addressDto.Street,
             City = addressDto.City,
             PhoneNumber = addressDto.PhoneNumber,
+            Apartment=addressDto.ShippingApartment,
+            Floor=addressDto.ShippingFloor,
+            Building=addressDto.ShippingBuilding,
             IsDefault = addressDto.IsDefault
         };
         var existingDefault = await _unitOfWork.Repository<Address>()
@@ -93,6 +97,18 @@ public class UserProfileService : IUserProfileService
 
         if (dto.PhoneNumber != null)
             address.PhoneNumber = dto.PhoneNumber;
+
+        if (dto.ShippingLastName != null)
+            address.LastName = dto.ShippingLastName;
+
+        if (dto.ShippingFloor != null)
+            address.Floor = dto.ShippingFloor;
+
+        if (dto.ShippingBuilding != null)
+            address.Building = dto.ShippingBuilding;
+
+        if (dto.ShippingApartment != null)
+            address.Apartment = dto.ShippingApartment;
 
         if (dto.IsDefault.HasValue && dto.IsDefault.Value)
         {
