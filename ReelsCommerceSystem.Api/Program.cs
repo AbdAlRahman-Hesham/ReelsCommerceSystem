@@ -1,6 +1,9 @@
 ﻿using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
+using ReelsCommerceSystem.Api.SignalR.Hubs;
+using ReelsCommerceSystem.Api.SignalR.Senders;
+using ReelsCommerceSystem.Application.Interfaces.Senders;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Infrastructure.Services;
@@ -32,6 +35,8 @@ builder.Services.AddRepositoriesAndServices();
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddSignalR();
+builder.Services.AddScoped<INotificationRealtimeSender, NotificationRealtimeSender>();
 
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
@@ -62,6 +67,8 @@ app.UseAuthorization();
 app.UseCors("AllowDevTunnel");
 
 app.MapControllers();
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.AddAppMiddleware();
 
