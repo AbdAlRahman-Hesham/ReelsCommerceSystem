@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Cart;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Shared.Responses;
+using System.Net;
 using System.Security.Claims;
 
 namespace ReelsCommerceSystem.Api.Controllers;
@@ -40,6 +42,23 @@ public class CartController(ICartService _cartservice,ICartCacheService _cartCac
         var response = await _cartservice.UpdateCartAsync(userId, request);
 
         return StatusCode(response.StatusCode, response);
+    }
+    [HttpDelete]
+    public IActionResult ClearCart()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        _cartCacheService.ClearCart(userId);
+
+        return Ok(ApiResponse<object>.SuccessResponse(
+            null,
+            HttpStatusCode.OK,
+            "Cart cleared successfully",
+            "تم حذف عربة التسوق بنجاح"
+        ));
     }
 
 

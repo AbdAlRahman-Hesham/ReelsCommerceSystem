@@ -1,6 +1,9 @@
 ﻿using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
+using ReelsCommerceSystem.Api.SignalR.Hubs;
+using ReelsCommerceSystem.Api.SignalR.Senders;
+using ReelsCommerceSystem.Application.Interfaces.Senders;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Infrastructure.Services;
@@ -32,6 +35,8 @@ builder.Services.AddRepositoriesAndServices();
 
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddSignalR();
+builder.Services.AddScoped<INotificationRealtimeSender, NotificationRealtimeSender>();
 
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
@@ -63,28 +68,30 @@ app.UseCors("AllowDevTunnel");
 
 app.MapControllers();
 
+app.MapHub<NotificationHub>("/notificationHub");
+
 app.AddAppMiddleware();
 
 app.UseStaticFiles();
 
-await using (var scope = app.Services.CreateAsyncScope())
-{
-    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+//await using (var scope = app.Services.CreateAsyncScope())
+//{
+//    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-    var brands = await unitOfWork.Repository<Brand>()
-        .GetAllWithSpecAsync(new BrandWithReviewSpec());
+//    var brands = await unitOfWork.Repository<Brand>()
+//        .GetAllWithSpecAsync(new BrandWithReviewSpec());
 
-    foreach (var brand in brands)
-    {
-        var reviews = brand.Reviews ?? new List<BrandReview>();
+//    foreach (var brand in brands)
+//    {
+//        var reviews = brand.Reviews ?? new List<BrandReview>();
 
-        brand.NumOfReviews = reviews.Count;
-        brand.AverageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
+//        brand.NumOfReviews = reviews.Count;
+//        brand.AverageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
 
-        unitOfWork.Repository<Brand>().Update(brand);
-    }
+//        unitOfWork.Repository<Brand>().Update(brand);
+//    }
 
-    await unitOfWork.SaveChangesAsync();
-}
+//    await unitOfWork.SaveChangesAsync();
+//}
 
 app.Run();

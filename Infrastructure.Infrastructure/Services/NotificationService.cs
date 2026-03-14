@@ -1,0 +1,237 @@
+﻿using ReelsCommerceSystem.Application.DTOs.Dto;
+using ReelsCommerceSystem.Application.DTOs.Request.Notification;
+using ReelsCommerceSystem.Application.Interfaces.Repositories;
+using ReelsCommerceSystem.Application.Interfaces.Senders;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.BrandEntities;
+using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Domain.Enums;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.NotificationSpec;
+using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
+using ReelsCommerceSystem.Shared.Exceptions;
+using ReelsCommerceSystem.Shared.Responses;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ReelsCommerceSystem.Infrastructure.Services
+{
+    public  class NotificationService : INotificationService
+    {
+        private readonly INotificationRealtimeSender _realtimeSender;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public NotificationService(INotificationRealtimeSender realtimeSender
+            , IUnitOfWork unitOfWork)
+        {
+            _realtimeSender = realtimeSender;
+            _unitOfWork = unitOfWork;
+        }
+        public async Task<Notification> CreateNotificationAsync(CreateNotificationReq Dto)
+        {
+            var notification = new Notification
+            {
+                UserId = Dto.UserId,
+                Type = Dto.Type,
+                ReferenceId = Dto.ReferenceId,
+                Message = Dto.Message,
+                IsRead = false
+            };
+            await _unitOfWork.Repository<Notification>().AddAsync(notification);
+            await _unitOfWork.Repository<Notification>().SaveChangesAsync();
+
+            return notification;
+        }
+
+        public async Task<ApiResponse<List<Notification>>> GetNotificationsAsync(
+                                string userId,
+                                bool? unreadOnly = null,
+                                DateTime? lastNotificationDate = null,
+                                int take = 20)
+        {
+            var spec = new GetNotificationsCursorSpec(userId, unreadOnly, lastNotificationDate, take);
+            var notifications = await _unitOfWork.Repository<Notification>().GetAllWithSpecAsync(spec);
+            return ApiResponse<List<Notification>>.SuccessResponse
+                                               (
+                                                 notifications.ToList(),
+                                                 HttpStatusCode.OK,
+                                                 "Notifications fetched successfully.",
+                                                 "تم جلب الإشعارات بنجاح."
+                                               );
+
+        }
+        public async Task<ApiResponse<string>> MarkAllAsReadAsync(string userId)
+        {
+            var spec = new GetUnreadNotificationSpec(userId);
+            var notifications = await _unitOfWork.Repository<Notification>().GetAllWithSpecAsync(spec);
+
+            if (!notifications.Any())
+            {
+                return ApiResponse<string>.SuccessResponse(
+                    "No unread notifications",
+                    HttpStatusCode.OK,
+                    "No unread notifications.",
+                    "لا يوجد إشعارات غير مقروءة."
+                );
+            }
+            foreach (var notification in notifications)
+            {
+                notification.IsRead = true;
+                notification.UpdatedAt = DateTime.UtcNow;
+
+                _unitOfWork.Repository<Notification>().Update(notification);
+            }
+            await _unitOfWork.Repository<Notification>().SaveChangesAsync();
+            return ApiResponse<string>.SuccessResponse
+                (
+                     null,
+                     HttpStatusCode.OK,
+                    "All notifications marked as read.",
+                    "تم تعليم كل الإشعارات كمقروءة."
+                 );
+
+        }
+        public async Task<ApiResponse<string>> MarkAsReadAsync(int notificationId, string userId)
+        {
+            var spec = new GetNotificationById(notificationId, userId);
+            var notification = await _unitOfWork.Repository<Notification>().GetWithSpecAsync(spec);
+
+            if (notification == null)
+            {
+                return ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.NotFound,
+                    "Notification not found.",
+                    "الإشعار غير موجود."
+                );
+            }
+            if (notification.IsRead)
+            {
+                return ApiResponse<string>.SuccessResponse(
+                    null,
+                    HttpStatusCode.OK,
+                    "Notification already marked as read.",
+                    "الإشعار مقروء بالفعل."
+                );
+            }
+            notification.IsRead = true;
+            notification.UpdatedAt = DateTime.UtcNow;
+
+            _unitOfWork.Repository<Notification>().Update(notification);
+
+            await _unitOfWork.Repository<Notification>().SaveChangesAsync();
+
+            return ApiResponse<string>.SuccessResponse
+                (
+                      null,
+                      HttpStatusCode.OK,
+                      "Notification marked as read.",
+                      "تم تعليم الإشعار كمقروء."
+                );
+
+        }
+        public async Task<ApiResponse<int>> GetUnreadCountAsync(string userId)
+        {
+            var spec = new GetUnreadNotificationSpec(userId);
+
+            var count = await _unitOfWork.Repository<Notification>().CountAsync(spec);
+            return ApiResponse<int>.SuccessResponse
+                (
+                         count,
+                         HttpStatusCode.OK,
+                         "Unread notifications count fetched successfully.",
+                         "تم جلب عدد الإشعارات غير المقروءة."
+                 );
+        }
+        public async Task<ApiResponse<bool>> DeleteNotificationAsync(int notificationId, string userId)
+        {
+            var notification = await _unitOfWork.Repository<Notification>().GetByIdAsync(notificationId);
+            if (notification == null || notification.UserId != userId)
+            {
+                return ApiResponse<bool>.ErrorResponse(HttpStatusCode.NotFound,
+                    "Notification not found.",
+                    "لم يتم العثور على الإشعار.");
+            }
+            _unitOfWork.Repository<Notification>().Delete(notification);
+            await _unitOfWork.Repository<Notification>().SaveChangesAsync();
+
+            return ApiResponse<bool>.SuccessResponse
+                ( true, 
+                  HttpStatusCode.OK,
+                  "Notification deleted successfully.",
+                  "تم حذف الإشعار بنجاح."
+                );
+        }
+        public async Task<ApiResponse<bool>> ClearAllNotificationsAsync(string userId)
+        {
+            var spec = new GetAllNotificationForUser (userId);
+            var notifications = await _unitOfWork.Repository<Notification>().GetAllWithSpecAsync(spec);
+
+            foreach (var notification in notifications)
+                _unitOfWork.Repository<Notification>().Delete(notification);
+
+            await _unitOfWork.Repository<Notification>().SaveChangesAsync();
+
+            return ApiResponse<bool>.SuccessResponse
+                (
+                   true, 
+                   HttpStatusCode.OK,
+                   "All notifications cleared.",
+                   "تم مسح جميع الإشعارات."
+                );
+
+
+        }
+        public async Task SendNewVideoNotificationAsync(int brandId,int reelId)
+        {
+            var brand = await _unitOfWork.Repository<Brand>().GetByIdAsync(brandId);
+            if (brand == null) throw new NotFoundException("Brand not found");
+
+            var followers = await _unitOfWork.Repository<UserBrandFollow>()
+                        .GetAllWithSpecAsync(new GetFollowersOfBrandSpec(brandId));
+            var followerIds = followers.Select(f => f.UserId).ToList();
+            if (!followerIds.Any()) return;
+
+            var notifications = followerIds.Select(userId => new Notification
+            {
+                UserId = userId,
+                Type = NotificationType.VIDEO,
+                ReferenceId = reelId,
+                Message = $"{brand.DisplayName} just uploaded a new video! Check it out!",
+                IsRead = false
+            }).ToList();
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddRangeAsync(notifications);
+            await notificationRepo.SaveChangesAsync();
+
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.VIDEO,
+                ReferenceId = reelId,
+                Message = $"{brand.DisplayName} just uploaded a new video!"
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(followerIds, realtimeNotification);
+
+    
+
+            var unreadCounts = await notificationRepo
+                                   .GetAllWithSpecAsync(new GetUnreadNotificationsForUsersSpec(followerIds));
+
+            var unreadCountDict = unreadCounts
+                .GroupBy(n => n.UserId)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            var tasks = followerIds.Select(userId =>
+            {
+                unreadCountDict.TryGetValue(userId, out int count);
+                return _realtimeSender.UpdateUnreadCountAsync(userId, count);
+            });
+
+            await Task.WhenAll(tasks);
+        }
+
+
+    }
+}

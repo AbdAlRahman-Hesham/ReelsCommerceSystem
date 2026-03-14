@@ -16,5 +16,6 @@ namespace ReelsCommerceSystem.Shared.Exceptions
         {
             Errors = errors;
         }
+        
     }
 }
