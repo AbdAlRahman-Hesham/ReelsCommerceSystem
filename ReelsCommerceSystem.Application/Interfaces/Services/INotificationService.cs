@@ -25,6 +25,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
         Task<ApiResponse<int>> GetUnreadCountAsync(string userId);
         Task<ApiResponse<bool>> DeleteNotificationAsync(int notificationId, string userId);
         Task<ApiResponse<bool>> ClearAllNotificationsAsync(string userId);
+        Task SendNewVideoNotificationAsync(int brandId, int reelId);
 
     }
 }

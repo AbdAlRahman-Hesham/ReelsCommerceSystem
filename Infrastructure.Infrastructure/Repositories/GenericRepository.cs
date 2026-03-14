@@ -83,4 +83,8 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
     {
         return _context.Set<T>().AsQueryable();
     }
+    public async Task AddRangeAsync(IEnumerable<T> entities)
+    {
+        await _context.Set<T>().AddRangeAsync(entities);
+    }
 }
