@@ -53,6 +53,15 @@ public class ExceptionHandlingMiddleware
                 );
                 break;
 
+            case NotFoundException notFoundEx:
+                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                response = ApiResponse<object>.ErrorResponse(
+                    HttpStatusCode.NotFound,
+                    notFoundEx.Message,
+                    "العنصر غير موجود"
+                );
+                break;
+
             case UnauthorizedException unauthorizedEx:
                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 response = ApiResponse<object>.ErrorResponse(
@@ -69,9 +78,8 @@ public class ExceptionHandlingMiddleware
                     badReqEx.Message,
                     "طلب غير صحيح",
                     badReqEx.Errors
-                ); 
+                );
                 break;
-
 
             default:
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

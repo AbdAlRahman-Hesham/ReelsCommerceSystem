@@ -170,6 +170,12 @@ public class AppDbContext :IdentityDbContext<User>
             .IsUnique();
 
 
+        modelBuilder.Entity<Notification>()
+              .HasOne(n => n.User)
+              .WithMany(u => u.Notifications)  
+              .HasForeignKey(n => n.UserId)
+              .OnDelete(DeleteBehavior.Cascade);
+
 
 
     }
@@ -191,5 +197,7 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<ReelCommentReply> ReelCommentReplies { get; set; }
     public DbSet<ReelCommentReplyLove> ReelCommentReplyLoves { get; set; }
     public DbSet<OrderTracking> OrderTrackings { get; set; }
+
+    public DbSet<Notification> Notifications { get; set; }
     public DbSet<ContactMessage> ContactMessages { get; set; }
 }

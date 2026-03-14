@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Request.Order;
 using ReelsCommerceSystem.Application.DTOs.Response.Order;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.CartEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
@@ -9,6 +10,8 @@ using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ProductSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
+using ReelsCommerceSystem.Shared.Exceptions;
+using ReelsCommerceSystem.Shared.Responses;
 
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
@@ -111,24 +114,56 @@ public class OrderService : IOrderService
     }
     public async Task<CreateOrderRes> CreateOrderAsync(string userId, CreateOrderReq request)
     {
-        Address address;
+        var address = await ResolveAddressAsync(userId, request);
+        var cart = _cartCache.GetCart(userId);
+        if (cart == null || cart.ProductCarts == null || !cart.ProductCarts.Any())
+            throw new BadRequestException(new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Cart",
+                    En = "Cart is empty",
+                    Ar = "عربة التسوق فارغة"
+                }
+            });
+        var orderProducts = await BuildOrderProductsAsync(cart);
+        var subTotal = orderProducts.Sum(p => p.FinalPrice * p.Quantity);
+        var shipping = CalculateShipping(request.DeliveryMethod);
+        var total = subTotal + shipping;
+        var order = CreateOrderEntity(userId, address, request, orderProducts, total);
 
+        await _unitOfWork.Repository<Order>().AddAsync(order);
+
+        _cartCache.ClearCart(userId);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return new CreateOrderRes
+        {
+            Id = order.Id,
+            Status = order.OrderStatus,
+            Total = order.TotalAmount,
+            address = address
+        };
+
+    }
+    private async Task<Address> ResolveAddressAsync(string userId, CreateOrderReq request)
+    {
         if (request.Address != null)
         {
-            address = new Address
+            var address = new Address
             {
                 UserId = userId,
                 Name = request.Address.Name,
+                LastName = request.Address.ShippingLastName,
                 Postcode = request.Address.PostalCode,
                 Country = request.Address.Country,
                 City = request.Address.City,
                 Street = request.Address.Street,
                 PhoneNumber = request.Address.PhoneNumber,
-                IsDefault = request.Address.SetAsDefault,
-                LastName=request.Address.ShippingLastName,
-                Apartment=request.Address.ShippingApartment,
-                Floor=request.Address.ShippingFloor,
-                Building=request.Address.ShippingBuilding,
+                Apartment = request.Address.ShippingApartment,
+                Floor = request.Address.ShippingFloor,
+                Building = request.Address.ShippingBuilding
             };
 
             if (request.Address.SaveAddress)
@@ -146,65 +181,94 @@ public class OrderService : IOrderService
 
                 await _unitOfWork.Repository<Address>().AddAsync(address);
             }
+
+            return address;
         }
-        else if (request.AddressId.HasValue)
+
+        if (request.AddressId.HasValue)
         {
-            address = await _unitOfWork.Repository<Address>()
+            var address = await _unitOfWork.Repository<Address>()
                 .GetByIdAsync(request.AddressId.Value);
 
             if (address == null || address.UserId != userId)
-                throw new Exception("Invalid address");
+                throw new NotFoundException("Address not found");
+
+            return address;
         }
-        else
+
+        throw new BadRequestException(new List<ValidationError>
         {
-            throw new Exception("Address is required");
-        }
-
-        var cart = _cartCache.GetCart(userId);
-
-        if (cart == null || cart.ProductCarts == null || !cart.ProductCarts.Any())
-            throw new Exception("Cart is empty");
-
+            new ValidationError
+            {
+                Field = "Address",
+                En = "Address is required",
+                Ar = "العنوان مطلوب"
+            }
+        });
+    }
+    private async Task<List<OrderProduct>> BuildOrderProductsAsync(Cart cart)
+    {
         var productIds = cart.ProductCarts.Select(c => c.ProductId).ToList();
 
         var spec = new ProductsForOrderSpec(productIds);
+
         var products = await _unitOfWork.Repository<Product>()
             .GetAllWithSpecAsync(spec);
 
-        var orderProducts = new List<OrderProduct>();
         var productDictionary = products.ToDictionary(p => p.Id);
+
+        var orderProducts = new List<OrderProduct>();
 
         foreach (var cartItem in cart.ProductCarts)
         {
             if (!productDictionary.TryGetValue(cartItem.ProductId, out var product))
-                throw new Exception($"Product with id {cartItem.ProductId} not found");
+                throw new NotFoundException($"Product with id {cartItem.ProductId} not found");
+
             var colorMapping = product.AvailableColors
-                .FirstOrDefault(c =>
-                    string.Equals(
-                        c.ProductColor.Name,
-                        cartItem.Color,
-                        StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(c => string.Equals(
+                    c.ProductColor.Name,
+                    cartItem.Color,
+                    StringComparison.OrdinalIgnoreCase));
+
             if (colorMapping == null)
-                throw new Exception($"Color {cartItem.Color} not available");
+                throw new BadRequestException(new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Color",
+                    En = $"Color {cartItem.Color} not available",
+                    Ar = $"اللون {cartItem.Color} غير متوفر"
+                }
+            });
+
             var sizeMapping = colorMapping.AvailableSizes
                 .FirstOrDefault(s => s.ProductSize.Size == cartItem.Size);
+
             if (sizeMapping == null)
-                throw new Exception($"Size {cartItem.Size} not available");
+                throw new BadRequestException(new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Size",
+                    En = $"Size {cartItem.Size} not available",
+                    Ar = $"المقاس {cartItem.Size} غير متوفر"
+                }
+            });
 
             if (sizeMapping.Quantity < cartItem.Quantity)
-                throw new Exception(
-                    $"Not enough stock for {product.Name} - {cartItem.Color} - {cartItem.Size}");
+                throw new BadRequestException(new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Stock",
+                    En = $"Not enough stock for {product.Name}",
+                    Ar = $"الكمية غير متوفرة للمنتج {product.Name}"
+                }
+            });
 
             sizeMapping.Quantity -= cartItem.Quantity;
 
-
-            decimal finalUnitPrice = product.Price;
-
-            if (product.DiscountPercentage.HasValue && product.DiscountPercentage > 0)
-            {
-                var discountAmount = product.Price * (product.DiscountPercentage.Value / 100m);
-                finalUnitPrice = product.Price - discountAmount;
-            }
+            var finalPrice = CalculateFinalPrice(product);
 
             orderProducts.Add(new OrderProduct
             {
@@ -212,49 +276,52 @@ public class OrderService : IOrderService
                 ProductName = product.Name,
                 BrandId = product.BrandId,
                 Quantity = cartItem.Quantity,
-                FinalPrice = finalUnitPrice,
+                FinalPrice = finalPrice,
                 Color = cartItem.Color,
                 Size = cartItem.Size
             });
         }
 
-        var subTotal = orderProducts.Sum(op => op.FinalPrice * op.Quantity);
-        var shipping = CalculateShipping(request.DeliveryMethod);
-        var total = subTotal + shipping;
+        return orderProducts;
+    }
+    private decimal CalculateFinalPrice(Product product)
+    {
+        if (product.DiscountPercentage.HasValue && product.DiscountPercentage > 0)
+        {
+            var discountAmount = product.Price * (product.DiscountPercentage.Value / 100m);
+            return product.Price - discountAmount;
+        }
 
-        var order = new Order
+        return product.Price;
+    }
+    private Order CreateOrderEntity(
+    string userId,
+    Address address,
+    CreateOrderReq request,
+    List<OrderProduct> orderProducts,
+    decimal total)
+    {
+        return new Order
         {
             OrderStatus = OrderStatus.Pending,
-            TotalAmount = total,
             PaymentStatus = PaymentStatus.Pending,
             PaymentMethod = request.PaymentMethod,
+            DeliveryMethod = request.DeliveryMethod,
+            TotalAmount = total,
             UserId = userId,
-            ShippingCity = address.City,
-            ShippingCountry = address.Country,
+
             ShippingName = address.Name,
             ShippingLastName = address.LastName,
-            ShippingPhoneNumber = address.PhoneNumber,
+            ShippingCity = address.City,
+            ShippingCountry = address.Country,
             ShippingPostalCode = address.Postcode,
             ShippingStreet = address.Street,
+            ShippingPhoneNumber = address.PhoneNumber,
             ShippingBuilding = address.Building,
-            ShippingFloor = address.Floor ,
-            ShippingApartment = address.Apartment ,
-            DeliveryMethod = request.DeliveryMethod,
+            ShippingFloor = address.Floor,
+            ShippingApartment = address.Apartment,
+
             OrderProducts = orderProducts
-        };
-
-        await _unitOfWork.Repository<Order>().AddAsync(order);
-        _cartCache.ClearCart(userId);
-        await _unitOfWork.SaveChangesAsync();
-
-        
-
-        return new CreateOrderRes
-        {
-            Id = order.Id,
-            Status = order.OrderStatus,
-            Total = order.TotalAmount,
-            address = address
         };
     }
 }
