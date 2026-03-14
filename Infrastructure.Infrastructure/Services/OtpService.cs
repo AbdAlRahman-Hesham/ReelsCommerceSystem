@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Infrastructure.Persistence;
+using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using System.Security.Cryptography;
 
 namespace ReelsCommerceSystem.Application.Services;
@@ -10,16 +13,22 @@ public class OtpService : IOtpService
     private readonly UserManager<User> _userManager;
     private readonly IEmailService _emailService;
     private readonly IJwtService _jwtService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly AppDbContext _dbContext;
     private const int OTP_LENGTH = 5;
 
     public OtpService(
         UserManager<User> userManager,
         IEmailService emailService,
-        IJwtService jwtService)
+        IJwtService jwtService,
+        IUnitOfWork unitOfWork,
+        AppDbContext dbContext)
     {
         _userManager = userManager;
         _emailService = emailService;
         _jwtService = jwtService;
+        _unitOfWork = unitOfWork;
+        _dbContext = dbContext;
     }
 
     public string GenerateOtp(string email)
@@ -43,16 +52,13 @@ public class OtpService : IOtpService
         // Generate new OTP
         var otpCode = GenerateOtp(email);
 
-        // Update user's OTP
-        user.Otp = new Otp
-        {
-            Code = otpCode,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        var result = await _userManager.UpdateAsync(user);
-        if (!result.Succeeded)
-            throw new InvalidOperationException("Failed to update user with OTP");
+        // Update user's OTP directly via AppDbContext to fix change tracking for owned entity
+        // We bypass UserManager.UpdateAsync which fails to track new Owned Types under NoTracking
+        await _dbContext.Users
+            .Where(u => u.Id == user.Id)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(u => u.Otp.Code, otpCode)
+                .SetProperty(u => u.Otp.CreatedAt, DateTime.UtcNow));
 
         // Send the appropriate email
         bool emailSent = isForResetPassword
@@ -111,10 +117,13 @@ public class OtpService : IOtpService
         }
 
         // OTP is valid - clear it and confirm email
-        user.Otp = null;
-        user.EmailConfirmed = true;
-
-        await _userManager.UpdateAsync(user);
+        // Use ExecuteUpdateAsync to explicitly update the database columns
+        await _dbContext.Users
+            .Where(u => u.Id == user.Id)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(u => u.EmailConfirmed, true)
+                .SetProperty(u => u.Otp.Code, (string)null)
+                .SetProperty(u => u.Otp.CreatedAt, default(DateTime)));
 
         // Generate JWT token for the user
         var token = await _jwtService.CreateTokenAsync(user);
