@@ -4,6 +4,7 @@ using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
@@ -23,6 +24,7 @@ public class BrandService : IBrandService
         _dbContext = dbContext;
         _unitOfWork = unitOfWork;
     }
+
 
     public async Task<ToggleLikeRes> BrandReviewLikeAsync(string userId, ToggleLikeReq req)
     {
@@ -297,5 +299,117 @@ public class BrandService : IBrandService
         double avg = brand.NumOfReviews > 0 ? brand.AverageRating : 0;
 
         return ApiResponse<double>.SuccessResponse(avg, HttpStatusCode.OK);
+    }
+
+    public async Task<ApiResponse<CreateBrandRes>> CreateBrandAsync(string userId, CreateBrandReq dto)
+    {
+        var spec = new GetBrandByUserId(userId);
+        var ExistingBrand = await _unitOfWork.Repository<Brand>().GetWithSpecAsync(spec);
+        if (ExistingBrand != null)
+        {
+            return ApiResponse<CreateBrandRes>.ErrorResponse(
+                HttpStatusCode.BadRequest,
+                "User already has a brand",
+                "المستخدم لديه براند بالفعل"
+            );
+        }
+        var brand = new Brand
+        {
+            DisplayName = dto.DisplayName,
+            Description = dto.Description,
+            LogoUrl = dto.LogoUrl,
+            ReturnPolicyAsHtml = dto.ReturnPolicyAsHtml,
+            Category = dto.Category,
+            Country = dto.Country,
+            Governorate = dto.Governorate,
+            District = dto.District,
+            NumberOfEmployees = dto.NumberOfEmployees,
+            UserId = userId,
+            Status = BrandStatus.IN_PROGRESS,
+            CurrentStep = BrandStep.INFO,
+            AverageRating = 0,
+            NumOfReviews = 0,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+
+
+        };
+        await _unitOfWork.Repository<Brand>().AddAsync(brand);
+        await _unitOfWork.SaveChangesAsync();
+
+        var response = new CreateBrandRes
+        {
+            Id = brand.Id,
+            DisplayName = brand.DisplayName,
+            Description = brand.Description,
+            LogoUrl = brand.LogoUrl,
+            Status = brand.Status.ToString(),
+            CurrentStep = brand.CurrentStep.ToString()
+        };
+        return ApiResponse<CreateBrandRes>.SuccessResponse(
+           response,
+           HttpStatusCode.Created,
+           "Brand created successfully",
+           "تم إنشاء البراند بنجاح"
+       );
+
+    }
+    public async Task<ApiResponse<GetMyBrandRes>> GetMyBrandAsync(string userId)
+    {
+        var spec = new GetBrandByUserId(userId);
+        var brand = await _unitOfWork.Repository<Brand>().GetWithSpecAsync(spec);
+        if (brand == null)
+        {
+            return ApiResponse<GetMyBrandRes>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "Brand not found",
+                "لم يتم العثور على براند"
+            );
+        }
+        var dto = new GetMyBrandRes
+        {
+            Id = brand.Id,
+            DisplayName = brand.DisplayName,
+            Description = brand.Description,
+            LogoUrl = brand.LogoUrl,
+            Category = brand.Category,
+            Country = brand.Country,
+            Governorate = brand.Governorate,
+            District = brand.District,
+            NumberOfEmployees = brand.NumberOfEmployees,
+            Status = brand.Status.ToString(),
+            CurrentStep = brand.CurrentStep.ToString()
+        };
+        return ApiResponse<GetMyBrandRes>.SuccessResponse
+             (
+                  dto,
+                  HttpStatusCode.OK
+             );
+    }
+    public async Task<ApiResponse<BrandRegistrationStatusRes>> GetBrandStatusAsync(string userId)
+    {
+        var spec = new GetBrandByUserId(userId);
+        var brand = await _unitOfWork.Repository<Brand>().GetWithSpecAsync(spec);
+        if (brand == null)
+        {
+            return ApiResponse<BrandRegistrationStatusRes>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "Brand not found",
+                "لم يتم العثور على براند"
+            );
+        }
+        var dto = new BrandRegistrationStatusRes
+        {
+            CurrentStep = (int)brand.CurrentStep,
+            Status = brand.Status.ToString(),
+            RejectionReason = brand.RejectionReason?.Description
+            
+        };
+        return ApiResponse<BrandRegistrationStatusRes>.SuccessResponse
+            (
+                dto,
+                HttpStatusCode.OK
+            );
+
     }
 }

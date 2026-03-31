@@ -176,6 +176,31 @@ public class AppDbContext :IdentityDbContext<User>
               .HasForeignKey(n => n.UserId)
               .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Brand>()
+              .HasOne(b => b.user)
+              .WithOne(u => u.Brand)
+              .HasForeignKey<Brand>(b => b.UserId)
+              .OnDelete(DeleteBehavior.NoAction);
+       
+        modelBuilder.Entity<Brand>()
+            .HasIndex(b => b.UserId)
+            .IsUnique();
+
+
+        modelBuilder.Entity<Brand>()
+                  .HasOne(b => b.BrandVerification)
+                  .WithOne(v => v.Brand)
+                  .HasForeignKey<BrandVerification>(v => v.BrandId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+
+        modelBuilder.Entity<Brand>()
+               .HasOne(b => b.RejectionReason)
+               .WithMany(r => r.Brands)
+               .HasForeignKey(b => b.RejectionReasonId)
+               .OnDelete(DeleteBehavior.SetNull);
+
+
 
 
     }
@@ -199,5 +224,7 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<OrderTracking> OrderTrackings { get; set; }
 
     public DbSet<Notification> Notifications { get; set; }
-    public DbSet<ContactMessage> ContactMessages { get; set; }
+    public DbSet<ContactMessage> ContactMessages { get; set; } 
+    public DbSet<RejectionReason> RejectionReasons { get; set; }
+    public DbSet<BrandVerification> BrandVerification { get; set; }
 }
