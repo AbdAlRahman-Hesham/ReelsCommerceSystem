@@ -174,6 +174,63 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
         var result = await _brandService.GetAverageRating(brandId);
         return StatusCode(result.StatusCode, result);
     }
+    [Authorize]
+    [HttpPost ("BrandInfo")]
+    public async Task<IActionResult> CreateBrand(CreateBrandReq dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
+
+        var result = await _brandService.CreateBrandAsync(userId!, dto);
+
+        return StatusCode(result.StatusCode, result);
+    }
+    [Authorize]
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMyBrand()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
+
+        var result = await _brandService.GetMyBrandAsync(userId);
+
+        return StatusCode(result.StatusCode, result);
+    }
+    [Authorize]
+    [HttpGet("/api/brand-registration/status")]
+    public async Task<IActionResult> GetBrandStatus()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
+
+        var result = await _brandService.GetBrandStatusAsync(userId!);
+
+        return StatusCode(result.StatusCode, result);
+    }
 
 
 }

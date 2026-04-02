@@ -6,6 +6,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services;
 
 public interface IBrandService
 {
+    Task<ApiResponse<CreateBrandRes>> CreateBrandAsync(string userId, CreateBrandReq dto);
     Task<ApiResponse<BrandInfoRes>> GetBrandInfoAsync(int brandId);
     Task<string?> GetBrandPolicyAsync(int brandId);
     Task<ToggleLikeRes> BrandReviewLikeAsync(string userId, ToggleLikeReq req);
@@ -13,4 +14,6 @@ public interface IBrandService
     Task<ApiResponse<BrandFollowResponse>> ToggleFollowAsync(int brandId, string userId);
     Task<ApiResponse<string>> AddOrUpdateReview(int brandId, string userId, BrandReviewReq dto);
     Task<ApiResponse<double>> GetAverageRating(int brandId);
+    Task<ApiResponse<GetMyBrandRes>> GetMyBrandAsync(string userId);
+    Task<ApiResponse<BrandRegistrationStatusRes>> GetBrandStatusAsync(string userId);
 }
