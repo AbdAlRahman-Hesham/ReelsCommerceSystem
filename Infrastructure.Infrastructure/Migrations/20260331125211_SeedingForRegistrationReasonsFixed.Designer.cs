@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260331125211_SeedingForRegistrationReasonsFixed")]
+    partial class SeedingForRegistrationReasonsFixed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,14 +169,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<double>("AverageRating")
                         .HasColumnType("float");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -190,22 +185,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Governorate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("LogoUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumOfReviews")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberOfEmployees")
                         .HasColumnType("int");
 
                     b.Property<int?>("RejectionReasonId")
@@ -225,6 +209,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("VerificationStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RejectionReasonId");
@@ -239,201 +227,161 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         {
                             Id = 1,
                             AverageRating = 0.0,
-                            Category = "Fashion",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "NovaWear creates sustainable fashion for modern lifestyles.",
                             DisplayName = "NovaWear",
-                            District = "Maadi",
-                            Governorate = "Cairo",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 50,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user1"
+                            UserId = "user1",
+                            VerificationStatus = "Verified"
                         },
                         new
                         {
                             Id = 2,
                             AverageRating = 0.0,
-                            Category = "Tech",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "TechEase designs smart accessories for a seamless daily life.",
                             DisplayName = "TechEase",
-                            District = "6th of October",
-                            Governorate = "Giza",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/0/08/Apple_logo_black.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 30,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user2"
+                            UserId = "user2",
+                            VerificationStatus = "Verified"
                         },
                         new
                         {
                             Id = 3,
                             AverageRating = 0.0,
-                            Category = "Beauty",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "Glowify offers natural skincare powered by modern innovation.",
                             DisplayName = "Glowify",
-                            District = "Smouha",
-                            Governorate = "Alexandria",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/f/fa/Google_logo.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 20,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user3"
+                            UserId = "user3",
+                            VerificationStatus = "Pending"
                         },
                         new
                         {
                             Id = 4,
                             AverageRating = 0.0,
-                            Category = "Fashion",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "UrbanFuel brings premium streetwear for active youth.",
                             DisplayName = "UrbanFuel",
-                            District = "Nasr City",
-                            Governorate = "Cairo",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 40,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user4"
+                            UserId = "user4",
+                            VerificationStatus = "Verified"
                         },
                         new
                         {
                             Id = 5,
                             AverageRating = 0.0,
-                            Category = "Lifestyle",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "Zenora promotes wellness with premium lifestyle products.",
                             DisplayName = "Zenora",
-                            District = "Dokki",
-                            Governorate = "Giza",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/5/51/YouTube_logo.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 25,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user5"
+                            UserId = "user5",
+                            VerificationStatus = "Verified"
                         },
                         new
                         {
                             Id = 6,
                             AverageRating = 0.0,
-                            Category = "Sports",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "AeroFit crafts smart fitness gear for peak performance.",
                             DisplayName = "AeroFit",
-                            District = "Sidi Gaber",
-                            Governorate = "Alexandria",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/3/31/Reddit_Logo_Full_2021.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 35,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user6"
+                            UserId = "user6",
+                            VerificationStatus = "Pending"
                         },
                         new
                         {
                             Id = 7,
                             AverageRating = 0.0,
-                            Category = "Home",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "EcoNest builds eco-friendly home solutions for modern living.",
                             DisplayName = "EcoNest",
-                            District = "New Cairo",
-                            Governorate = "Cairo",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/2/2f/Instagram_logo_2016.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 60,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user7"
+                            UserId = "user7",
+                            VerificationStatus = "Verified"
                         },
                         new
                         {
                             Id = 8,
                             AverageRating = 0.0,
-                            Category = "Tech",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "ByteWave delivers tech-driven accessories for everyday needs.",
                             DisplayName = "ByteWave",
-                            District = "6th of October",
-                            Governorate = "Giza",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/6/6f/Spotify_logo_with_text.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 45,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user8"
+                            UserId = "user8",
+                            VerificationStatus = "Verified"
                         },
                         new
                         {
                             Id = 9,
                             AverageRating = 0.0,
-                            Category = "Beauty",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "PureGlow focuses on clean and ethical skincare essentials.",
                             DisplayName = "PureGlow",
-                            District = "Miami",
-                            Governorate = "Alexandria",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/0/09/Twitter_bird_logo_2012.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 20,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user9"
+                            UserId = "user9",
+                            VerificationStatus = "Pending"
                         },
                         new
                         {
                             Id = 10,
                             AverageRating = 0.0,
-                            Category = "Fashion",
-                            Country = "Egypt",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            CurrentStep = 4,
+                            CurrentStep = 0,
                             Description = "Trendora curates unique fashion items for trendsetters worldwide.",
                             DisplayName = "Trendora",
-                            District = "Maadi",
-                            Governorate = "Cairo",
                             LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/0/02/TikTok_logo_text.svg",
                             NumOfReviews = 0,
-                            NumberOfEmployees = 70,
-                            ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            ReturnPolicyAsHtml = "<div style='color: #4B5563;'><h1 style='color: #1B2351; font-size: 2.5em; margin-bottom: 20px;'>Our Policy</h1><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>At Our Brand, our policy is to provide our clients with the best service possible. We are committed to ensuring customer satisfaction through quality, transparency, and continuous support.</p><p style='font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;'>We believe in building trust with our clients by delivering consistent and reliable service at every stage.</p><div style='color: #1B2351; font-size: 1.2em; margin-top: 25px; margin-bottom: 10px;'>Connect with us:</div><ul style='list-style-type: disc; margin-left: 20px; padding-left: 0;'><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Facebook:</span><a href='https://facebook.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>facebook.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>Instagram:</span><a href='https://instagram.com/OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>instagram.com/OurBrandOfficial</a></li><li style='margin-bottom: 5px; font-size: 1.1em;'><span style='color: #4B5563;'>TikTok:</span><a href='https://tiktok.com/@OurBrandOfficial' target='_blank' style='color: #add8e6; text-decoration: underline;'>tiktok.com/@OurBrandOfficial</a></li></ul></div>",
+                            Status = 0,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UserId = "user10"
+                            UserId = "user10",
+                            VerificationStatus = "Verified"
                         });
                 });
 
@@ -17183,19 +17131,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.RejectionReason", "RejectionReason")
-                        .WithMany("Brands")
-                        .HasForeignKey("RejectionReasonId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "user")
-                        .WithOne("Brand")
-                        .HasForeignKey("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("RejectionReasonId");
 
                     b.Navigation("RejectionReason");
-
-                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReview", b =>
@@ -17242,7 +17181,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandVerification", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
-                        .WithOne("BrandVerification")
+                        .WithOne()
                         .HasForeignKey("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandVerification", "BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -17683,9 +17622,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", b =>
                 {
-                    b.Navigation("BrandVerification")
-                        .IsRequired();
-
                     b.Navigation("Offers");
 
                     b.Navigation("Products");
@@ -17702,11 +17638,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("Dislikes");
 
                     b.Navigation("Likes");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.RejectionReason", b =>
-                {
-                    b.Navigation("Brands");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", b =>
@@ -17790,8 +17721,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>
                 {
-                    b.Navigation("Brand");
-
                     b.Navigation("BrandFollows");
 
                     b.Navigation("Interests");

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260331171411_updatedBrandRegistrationTables")]
+    partial class updatedBrandRegistrationTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,7 +254,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 50,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user1"
                         },
@@ -271,7 +274,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 30,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user2"
                         },
@@ -291,7 +294,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 20,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user3"
                         },
@@ -311,7 +314,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 40,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user4"
                         },
@@ -331,7 +334,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 25,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user5"
                         },
@@ -351,7 +354,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 35,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user6"
                         },
@@ -371,7 +374,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 60,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user7"
                         },
@@ -391,7 +394,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 45,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user8"
                         },
@@ -411,7 +414,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 20,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user9"
                         },
@@ -431,7 +434,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             NumberOfEmployees = 70,
                             ReturnPolicyAsHtml = "policy",
-                            Status = 3,
+                            Status = 2,
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             UserId = "user10"
                         });
