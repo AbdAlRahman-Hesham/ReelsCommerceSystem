@@ -1,4 +1,5 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Dto;
+using ReelsCommerceSystem.Domain.Entities.OrderEntities;
+using ReelsCommerceSystem.Application.DTOs.Dto;
 using ReelsCommerceSystem.Application.DTOs.Request.Notification;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Senders;
@@ -232,6 +233,82 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             await Task.WhenAll(tasks);
         }
 
+        public async Task SendOrderStatusNotificationAsync(Order order, OrderStatus newStatus)
+        {
+            string message = newStatus switch
+            {
+                OrderStatus.Pending => "Your order is pending.",
+                OrderStatus.Processing => "Your order is being processed.",
+                OrderStatus.Preparing => "Your order is being prepared.",
+                OrderStatus.Packed => "Your order has been packed and is ready for shipping.",
+                OrderStatus.Shipped => "Your order has been shipped!",
+                OrderStatus.Delivered => "Your order has been delivered! Enjoy!",
+                OrderStatus.Cancelled => "Your order has been cancelled.",
+                _ => $"Your order status has changed to {newStatus}."
+            };
 
+            var notification = new Notification
+            {
+                UserId = order.UserId,
+                Type = NotificationType.ORDER_STATUS,
+                ReferenceId = order.Id,
+                Message = message,
+                IsRead = false
+            };
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Send Realtime Notification
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.ORDER_STATUS,
+                ReferenceId = order.Id,
+                Message = message
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(new List<string> { order.UserId }, realtimeNotification);
+
+            // Update Unread Counter
+            var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(order.UserId));
+            await _realtimeSender.UpdateUnreadCountAsync(order.UserId, unreadCount);
+        }
+        public async Task SendPaymentNotificationAsync(Order order, PaymentStatus status)
+        {
+            string message = status switch
+            {
+                PaymentStatus.Paid => $"Payment successful! Your order #{order.Id} is now being processed.",
+                PaymentStatus.Failed => $"Payment failed for order #{order.Id}. Please try again or use another payment method.",
+                PaymentStatus.Refunded => $"Payment for order #{order.Id} has been refunded.",
+                PaymentStatus.Voided => $"Payment for order #{order.Id} has been voided.",
+                _ => $"Payment status for order #{order.Id} is now {status}."
+            };
+
+            var notification = new Notification
+            {
+                UserId = order.UserId,
+                Type = NotificationType.PAYMENT,
+                ReferenceId = order.Id,
+                Message = message,
+                IsRead = false
+            };
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Send Realtime Notification
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.PAYMENT,
+                ReferenceId = order.Id,
+                Message = message
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(new List<string> { order.UserId }, realtimeNotification);
+
+            // Update Unread Counter
+            var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(order.UserId));
+            await _realtimeSender.UpdateUnreadCountAsync(order.UserId, unreadCount);
+        }
     }
 }

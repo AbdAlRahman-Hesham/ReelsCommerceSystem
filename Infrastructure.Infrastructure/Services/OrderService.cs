@@ -21,6 +21,8 @@ public class OrderService : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICartCacheService _cartCache;
+    private readonly INotificationService _notificationService;
+
     private decimal CalculateShipping(DeliveryMethod method)
     {
         return method switch
@@ -32,10 +34,31 @@ public class OrderService : IOrderService
         };
     }
 
-    public OrderService(IUnitOfWork unitOfWork, ICartCacheService cartCache)
+    public OrderService(IUnitOfWork unitOfWork, ICartCacheService cartCache, INotificationService notificationService)
     {
         _unitOfWork = unitOfWork;
         _cartCache = cartCache;
+        _notificationService = notificationService;
+    }
+
+    public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
+    {
+        var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId);
+        if (order == null) return false;
+
+        if (order.OrderStatus == newStatus) return true; // No change needed
+
+        order.OrderStatus = newStatus;
+        _unitOfWork.Repository<Order>().Update(order);
+        var result = await _unitOfWork.SaveChangesAsync();
+
+        if (result > 0)
+        {
+            await _notificationService.SendOrderStatusNotificationAsync(order, newStatus);
+            return true;
+        }
+
+        return false;
     }
 
     public async Task<UserOrdersResDto> GetUserOrdersAsync(string userId)
@@ -56,7 +79,7 @@ public class OrderService : IOrderService
                 PaymentStatus = order.PaymentStatus
             };
 
-            if (order.OrderStatus == OrderStatus.Deliverd)
+            if (order.OrderStatus == OrderStatus.Delivered)
             {
                 response.Completed.Add(dto);
             }

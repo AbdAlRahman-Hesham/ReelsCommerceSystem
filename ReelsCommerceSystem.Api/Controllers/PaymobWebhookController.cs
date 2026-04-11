@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
@@ -13,13 +14,15 @@ public class PaymobWebhookController : AppBaseController
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<PaymobWebhookController> _logger;
+    private readonly INotificationService _notificationService;
     private readonly string _paymobHmacSecret;
     private readonly string _redirectUrl;
 
-    public PaymobWebhookController(IUnitOfWork unitOfWork, IConfiguration config, ILogger<PaymobWebhookController> logger)
+    public PaymobWebhookController(IUnitOfWork unitOfWork, IConfiguration config, ILogger<PaymobWebhookController> logger, INotificationService notificationService)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _notificationService = notificationService;
         _paymobHmacSecret = config["PaymobSettings:HmacSecret"]!;
         _redirectUrl = config["PaymobSettings:RedirectUrl"]!;
 
@@ -141,6 +144,9 @@ public class PaymobWebhookController : AppBaseController
             _logger.LogError("Failed to update payment status for order ID {OrderId}. Transaction ID: {TransactionId}", orderId, transactionId);
             return StatusCode(500, "Failed to update order payment status.");
         }
+
+        // Send Notification
+        await _notificationService.SendPaymentNotificationAsync(order, order.PaymentStatus);
 
         return Ok();
     }
