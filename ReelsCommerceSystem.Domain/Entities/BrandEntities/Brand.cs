@@ -42,6 +42,6 @@ public class Brand:BaseEntity
     public string District { get; set; } = null!;
     public int NumberOfEmployees { get; set; }
 
-    public BrandVerification BrandVerification { get; set; }
+    public BrandVerification? BrandVerification { get; set; }
 
 }

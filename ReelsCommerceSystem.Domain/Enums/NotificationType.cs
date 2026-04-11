@@ -11,6 +11,7 @@ namespace ReelsCommerceSystem.Domain.Enums
         VIDEO,
         COMMENT,
         CHECKOUT,
+        SYSTEM
         ORDER_STATUS,
         PAYMENT
     }
