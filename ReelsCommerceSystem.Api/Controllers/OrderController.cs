@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Net;
 using System.Threading.Tasks;
 using ReelsCommerceSystem.Application.DTOs.Request.Order;
+using ReelsCommerceSystem.Domain.Enums;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
@@ -51,6 +52,16 @@ public class OrderController : AppBaseController
         var result = await _orderService.CreateOrderAsync(userId, request);
 
         return Ok(result);
+    }
+
+    [HttpPut("{id}/status")]
+    public async Task<IActionResult> UpdateOrderStatus(int id, [FromBody] OrderStatus newStatus)
+    {
+        var success = await _orderService.UpdateOrderStatusAsync(id, newStatus);
+        if (!success)
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to update order status.", "فشل تحديث حالة الطلب."));
+
+        return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, "Order status updated successfully."));
     }
 }
 

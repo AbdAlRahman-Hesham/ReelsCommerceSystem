@@ -1,4 +1,5 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Request.Notification;
+using ReelsCommerceSystem.Application.DTOs.Request.Notification;
+using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Shared.Responses;
@@ -26,6 +27,8 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
         Task<ApiResponse<bool>> DeleteNotificationAsync(int notificationId, string userId);
         Task<ApiResponse<bool>> ClearAllNotificationsAsync(string userId);
         Task SendNewVideoNotificationAsync(int brandId, int reelId);
+        Task SendOrderStatusNotificationAsync(Order order, OrderStatus newStatus);
+        Task SendPaymentNotificationAsync(Order order, PaymentStatus status);
 
     }
 }
