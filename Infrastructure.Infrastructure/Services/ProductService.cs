@@ -398,6 +398,7 @@ public class ProductService(
                $"color={p.Color ?? ""};" +
                $"size={p.Size ?? ""};" +
                $"status={p.StockStatus ?? ""};" +
+               $"brandId={p.BrandId ?? 0};" +   
                $"min={p.MinPrice?.ToString() ?? ""};" +
                $"max={p.MaxPrice?.ToString() ?? ""};" +
                $"haveOffer={p.HaveOffer?.ToString() ?? ""};" +
