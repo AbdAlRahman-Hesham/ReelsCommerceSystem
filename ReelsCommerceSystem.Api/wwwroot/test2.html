@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <title>SignalR Notification Test</title>
@@ -20,7 +20,7 @@
             console.log("Notification:", notification);
 
             const div = document.getElementById("notifications");
-            div.innerHTML += `<p>${notification.message}</p>`;
+            div.innerHTML += `<p>EN: ${notification.message} <br> AR: ${notification.messageAr}</p>`;
         });
 
         connection.on("UpdateUnreadCount", function (count) {

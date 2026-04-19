@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Application.DTOs.Request.Brand;
 using ReelsCommerceSystem.Application.DTOs.Request.Notification;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -125,18 +125,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             await _unitOfWork.SaveChangesAsync();
 
             // Notify Admin(s)
-            var admins = await _userManager.GetUsersInRoleAsync("Admin");
-
-            foreach (var admin in admins)
-            {
-                await _notificationService.CreateNotificationAsync(new CreateNotificationReq
-                {
-                    UserId = admin.Id,
-                    Type = NotificationType.SYSTEM,
-                    ReferenceId = brand.Id,
-                    Message = "New brand request submitted"
-                });
-            }
+            await _notificationService.SendBrandSubmittedNotificationAsync(brand);
 
             return ApiResponse<string>.SuccessResponse(
                 "Brand verification submitted successfully.",

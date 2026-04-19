@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Domain.Enums;
+using ReelsCommerceSystem.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +12,6 @@ namespace ReelsCommerceSystem.Application.DTOs.Dto
         public NotificationType Type { get; set; }
         public int ReferenceId { get; set; }
         public string Message { get; set; }
+        public string MessageAr { get; set; }
     }
 }
