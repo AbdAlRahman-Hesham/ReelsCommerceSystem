@@ -16,6 +16,7 @@ namespace ReelsCommerceSystem.Domain.Enums
         PAYMENT,
         BRAND_SUBMITTED,
         BRAND_APPROVED,
-        BRAND_REJECTED
+        BRAND_REJECTED,
+        CommentReply
     }
 }
