@@ -39,5 +39,5 @@ public class User : IdentityUser
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
     public Brand? Brand { get; set; }
 
-
+    public bool IsBanned { get; set; } = false;
 }
