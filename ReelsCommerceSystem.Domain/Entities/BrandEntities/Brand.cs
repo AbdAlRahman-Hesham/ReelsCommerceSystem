@@ -43,5 +43,6 @@ public class Brand:BaseEntity
     public int NumberOfEmployees { get; set; }
 
     public BrandVerification? BrandVerification { get; set; }
+   
 
 }

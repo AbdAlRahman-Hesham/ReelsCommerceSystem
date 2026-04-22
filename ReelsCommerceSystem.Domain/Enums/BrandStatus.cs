@@ -12,6 +12,7 @@ namespace ReelsCommerceSystem.Domain.Enums
         IN_PROGRESS,
         PENDING_APPROVAL,
         APPROVED,
-        REJECTED
+        REJECTED,
+        BANNED
     }
 }
