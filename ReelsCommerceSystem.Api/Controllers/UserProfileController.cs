@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.UserProfile;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Exceptions;
 using System.Security.Claims;
 using System.Net;
 using System.Threading.Tasks;
@@ -75,11 +76,28 @@ public class UserProfileController : AppBaseController
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var result = await _userProfileService.UpdateProfileAsync(userId, profileDto);
-        if (result)
-            return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, "Profile updated successfully."));
+        try
+        {
+            var result = await _userProfileService.UpdateProfileAsync(userId, profileDto);
+            
+            string message = result.IsEmailChanged 
+                ? "Profile updated. A verification code has been sent to your new email."
+                : "Profile updated successfully.";
+            
+            string messageAr = result.IsEmailChanged
+                ? "تم تحديث الملف الشخصي. تم إرسال رمز التحقق إلى بريدك الإلكتروني الجديد."
+                : "تم تحديث الملف الشخصي بنجاح.";
 
-        return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to update profile.", "فشل في تحديث الملف الشخصي."));
+            return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, message, messageAr));
+        }
+        catch (BadRequestException ex)
+        {
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to update profile.", "فشل في تحديث الملف الشخصي.", ex.Errors));
+        }
+        catch (System.Exception)
+        {
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to update profile.", "فشل في تحديث الملف الشخصي."));
+        }
     }
 
     [HttpPut("UpdatePassword")]

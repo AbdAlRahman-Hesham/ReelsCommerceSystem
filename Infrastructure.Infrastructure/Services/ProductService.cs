@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -41,24 +41,41 @@ public class ProductService(
 
     public async Task<ApiResponse<PaginationResponse<GetAllProductsResponse>>> GetProductsAsync(ProductSpecParams productSpecParams)
     {
-        return await GetOrSetCacheAsync(
-            GenerateCacheKey(productSpecParams),
+        var userId = httpContextAccessor.HttpContext?.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var cacheKey = GenerateCacheKey(productSpecParams);
+
+        var (products, meta) = await GetOrSetCacheAsync(
+            cacheKey,
             async () =>
             {
                 var spec = new ProductSpec(productSpecParams);
                 var products = await _productRepository.GetAllWithSpecAsync(spec);
                 var totalCount = await _productRepository.CountAsync(spec);
-
-                var productDtos = products.Select(MapToGetAllProductsResponse).ToList();
-
                 var meta = CreatePaginationMeta(totalCount, spec);
 
-                return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
-                    data: productDtos,
-                    meta: meta,
-                    statusCode: HttpStatusCode.OK
-                );
+                return (products, meta);
             }
+        );
+
+        var productDtos = products.Select(MapToGetAllProductsResponse).ToList();
+
+        // If user is authenticated, mark wishlist status for each product
+        if (!string.IsNullOrEmpty(userId))
+        {
+            var wishlistSpec = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId);
+            var wishlistItems = await unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem>().GetAllWithSpecAsync(wishlistSpec);
+            var lovedIds = wishlistItems?.Select(w => w.ProductId).ToHashSet() ?? new HashSet<int>();
+
+            foreach (var dto in productDtos)
+            {
+                dto.IsInWishlist = lovedIds.Contains(dto.Id);
+            }
+        }
+
+        return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
+            data: productDtos,
+            meta: meta,
+            statusCode: HttpStatusCode.OK
         );
     }
     public async Task<ApiResponse<PaginationResponse<GetAllProductsForAiResponse>>> GetAllProductsForAiAsync()
@@ -97,30 +114,41 @@ public class ProductService(
 
     public async Task<ApiResponse<GetProductResponse>> GetProductAsync(int productId)
     {
-        return await GetOrSetCacheAsync(
-            $"product:{productId}",
+        var userId = httpContextAccessor.HttpContext?.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var cacheKey = $"product:{productId}";
+
+        var product = await GetOrSetCacheAsync(
+            cacheKey,
             async () =>
             {
                 var spec = new ProductByIdSpec(productId);
-                var product = await _productRepository.GetWithSpecAsync(spec);
-
-                if (product == null)
-                {
-                    return ApiResponse<GetProductResponse>.ErrorResponse(
-                        HttpStatusCode.NotFound,
-                        "Product not found.",
-                        "المنتج غير موجود."
-                    );
-                }
-
-                var relatedProducts = await relatedProductService.GetRelatedProductsAsync(productId);
-                var productDto = MapToGetProductResponse(product, relatedProducts.Data ?? []);
-
-                return ApiResponse<GetProductResponse>.SuccessResponse(
-                    data: productDto,
-                    statusCode: HttpStatusCode.OK
-                );
+                return await _productRepository.GetWithSpecAsync(spec);
             }
+        );
+
+        if (product == null)
+        {
+            return ApiResponse<GetProductResponse>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "Product not found.",
+                "المنتج غير موجود."
+            );
+        }
+
+        var relatedProducts = await relatedProductService.GetRelatedProductsAsync(productId);
+        var productDto = MapToGetProductResponse(product, relatedProducts.Data ?? new List<GetRelatedProductDto>());
+
+        // mark wishlist status
+        if (!string.IsNullOrEmpty(userId))
+        {
+            var specWish = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId, productId);
+            var wishItem = await unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem>().GetWithSpecAsync(specWish);
+            productDto.IsInWishlist = wishItem != null;
+        }
+
+        return ApiResponse<GetProductResponse>.SuccessResponse(
+            data: productDto,
+            statusCode: HttpStatusCode.OK
         );
     }
 
@@ -180,6 +208,7 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrl = BuildMediaUrl(product.MediaUrl),
+            MediaUrls = new List<string> { BuildMediaUrl(product.MediaUrl) },
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -202,6 +231,7 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrl = BuildMediaUrl(product.MediaUrl),
+            MediaUrls = new List<string> { BuildMediaUrl(product.MediaUrl) },
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -227,6 +257,7 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrl = BuildMediaUrl(product.MediaUrl),
+            MediaUrls = new List<string> { BuildMediaUrl(product.MediaUrl) },
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -395,8 +426,9 @@ public class ProductService(
     {
         return $"products:" +
                $"search={p.Search ?? ""};" +
-               $"color={p.Color ?? ""};" +
-               $"size={p.Size ?? ""};" +
+               $"category={p.Category ?? ""};" +
+               $"color={(p.Colors != null ? string.Join(",", p.Colors) : "")};" +
+               $"size={(p.Sizes != null ? string.Join(",", p.Sizes) : "")};" +
                $"status={p.StockStatus ?? ""};" +
                $"brandId={p.BrandId ?? 0};" +   
                $"min={p.MinPrice?.ToString() ?? ""};" +

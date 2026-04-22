@@ -1,4 +1,4 @@
-﻿namespace ReelsCommerceSystem.Application.DTOs.Params;
+namespace ReelsCommerceSystem.Application.DTOs.Params;
 
 using System.ComponentModel.DataAnnotations;
 
@@ -7,13 +7,9 @@ public record ProductSpecParams
     public string? Search { get; set; }
     public string? Category { get; set; }
 
-    public string? Color { get; set; }
-
+    public List<string>? Colors { get; set; }
+    public List<string>? Sizes { get; set; }
     public int? BrandId { get; set; }
-
-    [RegularExpression(@"^(xs|s|m|l|xl|xxl|XS|S|M|L|XL|XXL)$",
-        ErrorMessage = "Size must be: xs|s|m|l|xl|xxl|XS|S|M|L|XL|XXL")]
-    public string? Size { get; set; }
 
     [RegularExpression(@"^(InStock|OutStock|Out Stock|IN Stock)$",
         ErrorMessage = "StockStatus must be: InStock, OutStock, Out Stock, or IN Stock")]

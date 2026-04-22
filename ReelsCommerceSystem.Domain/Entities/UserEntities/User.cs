@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;

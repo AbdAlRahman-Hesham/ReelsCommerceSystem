@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using ReelsCommerceSystem.Application.DTOs.Response.UserProfile;
 using ReelsCommerceSystem.Application.DTOs.Request.UserProfile;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Exceptions;
+using ReelsCommerceSystem.Shared.Responses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,15 +20,18 @@ public class UserProfileService : IUserProfileService
     private readonly UserManager<User> _userManager;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserImageService _userImageService;
+    private readonly IOtpService _otpService;
 
     public UserProfileService(
         UserManager<User> userManager,
         IUnitOfWork unitOfWork,
-        IUserImageService userImageService)
+        IUserImageService userImageService,
+        IOtpService otpService)
     {
         _userManager = userManager;
         _unitOfWork = unitOfWork;
         _userImageService = userImageService;
+        _otpService = otpService;
     }
 
     public async Task<List<Address>> GetShippingAddressesAsync(string userId)
@@ -156,19 +161,51 @@ public class UserProfileService : IUserProfileService
         return true;
     }
 
-    public async Task<bool> UpdateProfileAsync(string userId, UpdateProfileReqDto profileDto)
+    public async Task<UpdateProfileResDto> UpdateProfileAsync(string userId, UpdateProfileReqDto profileDto)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null) throw new UserNotFoundException(userId);
 
+        bool emailChanged = !string.Equals(user.Email, profileDto.Email, System.StringComparison.OrdinalIgnoreCase);
+
+        if (emailChanged)
+        {
+            var existingUser = await _userManager.FindByEmailAsync(profileDto.Email);
+            if (existingUser != null && existingUser.Id != userId)
+            {
+                var errors = new List<ValidationError>
+                {
+                    new ValidationError
+                    {
+                        Field = "Email",
+                        En = "Email is already in use.",
+                        Ar = "البريد الإلكتروني مستخدم بالفعل."
+                    }
+                };
+                throw new BadRequestException(errors);
+            }
+
+            user.Email = profileDto.Email;
+            user.UserName = profileDto.Email;
+            user.EmailConfirmed = false;
+        }
+
         user.FirstName = profileDto.FirstName;
         user.LastName = profileDto.LastName;
-        user.Email = profileDto.Email;
-        user.UserName = profileDto.Email; // Standard practice when email is used as username
+        user.DisplayName = $"{profileDto.FirstName} {profileDto.LastName}";
         user.PhoneNumber = profileDto.PhoneNumber;
 
         var result = await _userManager.UpdateAsync(user);
-        return result.Succeeded;
+
+        if (result.Succeeded && emailChanged)
+        {
+            await _otpService.SendOtpAsync(user.Email!);
+        }
+
+        return new UpdateProfileResDto
+        {
+            IsEmailChanged = emailChanged
+        };
     }
 
     public async Task<bool> UpdatePasswordAsync(string userId, UpdatePasswordReqDto passwordDto)
