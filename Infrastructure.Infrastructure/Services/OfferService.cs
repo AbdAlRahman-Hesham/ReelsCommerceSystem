@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Response.Brand;
+using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.DTOs.Response.Offer;
 using ReelsCommerceSystem.Application.DTOs.Response.Product;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -35,12 +35,17 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
                 if (!offers.Any())
                 {
-                    
+                    // Fallback: Get most recent offers
+                    offers = await _unitOfWork.Repository<Offer>().GetAllWithSpecAsync(new RecentOffersSpecification(5));
+                }
+
+                if (!offers.Any())
+                {
                     return ApiResponse<List<TodayOffersRes>>.SuccessResponse(
                         new List<TodayOffersRes>(),
                         HttpStatusCode.OK,
-                        "No offers found today.",
-                        "لا يوجد عروض اليوم."
+                        "No offers found.",
+                        "لا يوجد عروض."
                     );
                 }
 
