@@ -16,5 +16,6 @@ public interface IUserProfileService
     Task<UpdateProfileResDto> UpdateProfileAsync(string userId, UpdateProfileReqDto profileDto);
     Task<bool> UpdatePasswordAsync(string userId, UpdatePasswordReqDto passwordDto);
     Task<bool> UpdateProfileImageAsync(string userId, IFormFile image);
-    Task<bool> DeleteAccountAsync(string userId);
+    Task RequestDeleteAccountOtpAsync(string userId);
+    Task<bool> DeleteAccountAsync(string userId, DeleteAccountReqDto deleteDto);
 }

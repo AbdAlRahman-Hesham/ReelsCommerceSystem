@@ -236,10 +236,49 @@ public class UserProfileService : IUserProfileService
     }
 
 
-    public async Task<bool> DeleteAccountAsync(string userId)
+    public async Task RequestDeleteAccountOtpAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
         if (user == null) throw new UserNotFoundException(userId);
+
+        await _otpService.SendOtpAsync(user.Email!, isForAccountDeletion: true);
+    }
+
+    public async Task<bool> DeleteAccountAsync(string userId, DeleteAccountReqDto deleteDto)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) throw new UserNotFoundException(userId);
+
+        bool isVerified = false;
+
+        // Verify Password if provided
+        if (!string.IsNullOrEmpty(deleteDto.Password))
+        {
+            isVerified = await _userManager.CheckPasswordAsync(user, deleteDto.Password);
+        }
+
+        // Verify OTP if provided and not already verified by password
+        if (!isVerified && !string.IsNullOrEmpty(deleteDto.Otp))
+        {
+            if (user.Otp != null && user.Otp.Code == deleteDto.Otp && user.Otp.IsValid)
+            {
+                isVerified = true;
+            }
+        }
+
+        if (!isVerified)
+        {
+            var errors = new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Verification",
+                    En = "Invalid password or verification code.",
+                    Ar = "كلمة المرور أو رمز التحقق غير صالح."
+                }
+            };
+            throw new BadRequestException(errors);
+        }
 
         if (!string.IsNullOrEmpty(user.ImageURL))
         {

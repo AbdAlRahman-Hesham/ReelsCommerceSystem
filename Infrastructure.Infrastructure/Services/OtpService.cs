@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
@@ -43,7 +43,7 @@ public class OtpService : IOtpService
     }
 
 
-    public async Task SendOtpAsync(string email, bool isForResetPassword = false)
+    public async Task SendOtpAsync(string email, bool isForResetPassword = false, bool isForAccountDeletion = false)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
@@ -61,9 +61,19 @@ public class OtpService : IOtpService
                 .SetProperty(u => u.Otp.CreatedAt, DateTime.UtcNow));
 
         // Send the appropriate email
-        bool emailSent = isForResetPassword
-            ? _emailService.SendOTPEmailResetPassword(email, otpCode)
-            : _emailService.SendOTPEmail(email, otpCode);
+        bool emailSent = false;
+        if (isForAccountDeletion)
+        {
+            emailSent = _emailService.SendOTPEmailAccountDeletion(email, otpCode);
+        }
+        else if (isForResetPassword)
+        {
+            emailSent = _emailService.SendOTPEmailResetPassword(email, otpCode);
+        }
+        else
+        {
+            emailSent = _emailService.SendOTPEmail(email, otpCode);
+        }
 
         if (!emailSent)
             throw new InvalidOperationException("Failed to send OTP email");

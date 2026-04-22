@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Utilities;
@@ -32,6 +32,18 @@ public class EmailService(IOptions<EmailSettings> options) : IEmailService
             headerTitle: "Password Reset",
             bodyMessage: "We received a request to reset your password for your <strong>ALLUVO</strong> account. Use the following One-Time Password (OTP) to proceed:",
             warningMessage: "⚠️ If you didn’t request a password reset, please ignore this email or contact our support team."
+        );
+    }
+
+    public bool SendOTPEmailAccountDeletion(string toEmail, string otp)
+    {
+        return SendOtpEmailTemplate(
+            toEmail,
+            otp,
+            subject: "Account Deletion OTP",
+            headerTitle: "Account Deletion",
+            bodyMessage: "We received a request to delete your <strong>ALLUVO</strong> account. If you wish to proceed, use the following One-Time Password (OTP) to confirm your identity:",
+            warningMessage: "⚠️ WARNING: Deleting your account is permanent and cannot be undone. If you didn’t request this, please secure your account immediately."
         );
     }
 
