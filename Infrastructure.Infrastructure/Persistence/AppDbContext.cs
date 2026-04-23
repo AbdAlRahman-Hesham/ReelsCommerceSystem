@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities;
@@ -13,6 +13,7 @@ using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
+using ReelsCommerceSystem.Domain.Entities.ChatEntities;
 using ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
 using System.Reflection;
 
@@ -200,9 +201,35 @@ public class AppDbContext :IdentityDbContext<User>
                .HasForeignKey(b => b.RejectionReasonId)
                .OnDelete(DeleteBehavior.SetNull);
 
+        #region Chat
+        modelBuilder.Entity<ChatRoom>(b =>
+        {
+            b.ToTable("ChatRooms");
+            b.HasOne(cr => cr.User1)
+                .WithMany()
+                .HasForeignKey(cr => cr.User1Id)
+                .OnDelete(DeleteBehavior.Restrict);
 
+            b.HasOne(cr => cr.User2)
+                .WithMany()
+                .HasForeignKey(cr => cr.User2Id)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
+        modelBuilder.Entity<Message>(b =>
+        {
+            b.ToTable("Messages");
+            b.HasOne(m => m.Room)
+                .WithMany(r => r.Messages)
+                .HasForeignKey(m => m.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            b.HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        #endregion
     }
     public DbSet<Product> Products { get; set; }
     public DbSet<Brand> Brands { get; set; }
@@ -227,4 +254,6 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<ContactMessage> ContactMessages { get; set; } 
     public DbSet<RejectionReason> RejectionReasons { get; set; }
     public DbSet<BrandVerification> BrandVerification { get; set; }
+    public DbSet<ChatRoom> ChatRooms { get; set; }
+    public DbSet<Message> Messages { get; set; }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Persistence;
+using ReelsCommerceSystem.Shared.Utilities;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
@@ -183,5 +184,18 @@ public class TemporaryController(AppDbContext _db) : AppBaseController
             .ToListAsync();
 
         return Ok(users);
+    }
+
+    [HttpGet("encrypt")]
+    public async Task<IActionResult> Encrypt(string text)
+    {
+        return Ok(EncryptionHelper.Encrypt(text));
+
+    }
+    [HttpGet("decrypt")]
+    public async Task<IActionResult> Decrypt(string encText)
+    {
+        return Ok(EncryptionHelper.Decrypt(encText));
+
     }
 }
