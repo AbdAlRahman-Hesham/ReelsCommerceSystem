@@ -15,12 +15,19 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageProvider>();
+builder.Services.AddScoped<IPhotoServive, PhotoService>();
+builder.Services.AddScoped<IChatSender, ChatSender>();  
 
 builder.Services.AddValidationMiddleware();
 
 builder.Services.AddOpenApiConfig();
 
 builder.Services.AddCloudinary(builder.Configuration);
+var test = builder.Configuration
+    .GetSection("CloudinarySettings")
+    .Get<CloudinarySettings>();
+
+Console.WriteLine("CONFIG TEST = " + test?.CloudName);
 
 builder.Services.AddHttpClient<IPaymobService, PaymobService>();
 
