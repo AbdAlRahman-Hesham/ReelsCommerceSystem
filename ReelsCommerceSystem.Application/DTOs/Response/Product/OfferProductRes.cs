@@ -14,6 +14,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Product
 
         public decimal Price { get; set; }
 
-        public string ImageUrl { get; set; } = null!;
+        //public string ImageUrl { get; set; } = null!;
+        public List<string>? ProductMediaUrls { get; set; } = new();
     }
 }

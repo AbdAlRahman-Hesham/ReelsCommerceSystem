@@ -20,6 +20,7 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Searc
 
             ApplyPaging(pageIndex, pageSize);
             AddInclude(p => p.Brand);
+            AddInclude(p => p.Images);
         }
         public ProductSearchSpec(string searchText)
         : base(criteria: (p => string.IsNullOrEmpty(searchText) ||
@@ -30,6 +31,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Searc
             AddOrderBy(p => p.Name);
 
             AddInclude(p => p.Brand);
+            AddInclude(p => p.Images);
+
         }
     }
 }

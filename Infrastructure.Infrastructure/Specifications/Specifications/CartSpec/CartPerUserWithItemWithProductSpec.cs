@@ -1,4 +1,5 @@
-﻿using ReelsCommerceSystem.Domain.Entities.CartEntities;
+﻿using Microsoft.EntityFrameworkCore;
+using ReelsCommerceSystem.Domain.Entities.CartEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
 

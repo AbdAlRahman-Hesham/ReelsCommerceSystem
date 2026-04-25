@@ -64,7 +64,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                         Id = op.Product.Id,
                         Name = op.Product.Name,
                         Price = op.Product.Price,
-                        ImageUrl = op.Product.MediaUrl,
+                        ProductMediaUrls = op.Product.Images?
+                                           .Select(x => x.Url)
+                                           .ToList() ?? new List<string>()
                     }).ToList()
 
                 }).ToList();

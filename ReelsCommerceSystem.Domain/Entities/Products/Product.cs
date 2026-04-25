@@ -3,6 +3,7 @@ using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.OfferEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
+using ReelsCommerceSystem.Domain.Entities.Products;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Enums;
@@ -18,7 +19,9 @@ public class Product : BaseEntity
 
     public decimal Price { get; set; }
     public int Quantity => AvailableColors.Sum(c => c.Quantity);
-    public string MediaUrl { get; set; } = null!;
+    //public string MediaUrl { get; set; } = null!;
+    public ICollection<ProductImage>? Images { get; set; }
+    = new List<ProductImage>();
     public bool IsCustomizable { get; set; }
 
     public decimal? DiscountPercentage { get; set; }

@@ -30,7 +30,8 @@ public class OrderProduct : BaseEntity
     public string? MoreDetails { get; set; }
 
     public bool IsCustomized { get; set; }
-    public string? MediaUrl { get; set; }
+    //public string? MediaUrl { get; set; }
+    public List<string>? ProductMediaUrls { get; set; } = new();
 
 
 }
