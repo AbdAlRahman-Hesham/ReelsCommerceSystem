@@ -31,14 +31,28 @@ public class ChatController : AppBaseController
     // GET /api/chat/rooms/{roomIdEncr}/messages?page=1&pageSize=20&unreadonly=false&afterMessageId=XXX
     [HttpGet("rooms/{roomIdEncr}/messages")]
     [Authorize]
-    public IActionResult GetMessages(
-        string roomIdEncr,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        [FromQuery] bool unreadonly = false,
-        [FromQuery] string afterMessageId = null)
+    public async Task<IActionResult> GetMessages
+        (
+            string roomIdEncr,
+            [FromQuery] int? page,
+            [FromQuery] int? pageSize,
+            [FromQuery] bool? unreadOnly,
+            [FromQuery] string? afterMessageId
+        )
     {
-        throw new NotImplementedException();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _chatService.GetMessagesAsync(
+            userId,
+            roomIdEncr,
+            page,
+            pageSize,
+            unreadOnly,
+            afterMessageId);
+
+        return Ok(result);
     }
 
     // GET /api/chat/rooms/unreadCount/{roomIdEncr}
