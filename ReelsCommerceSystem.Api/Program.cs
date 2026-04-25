@@ -51,6 +51,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy(), ["live"])
     .AddDbContextCheck<ReelsCommerceSystem.Infrastructure.Persistence.AppDbContext>(name: "database", tags: ["ready"]);
+builder.Services.AddScoped<TestRoomService>();
 
 var app = builder.Build();
 
