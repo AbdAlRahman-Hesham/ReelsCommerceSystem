@@ -21,5 +21,11 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
                      bool? unreadOnly,
                      string? afterMessageId
             );
+        Task<ApiResponse<string>> DeleteMessageAsync(
+                     string userId,
+                     string messageIdEnc);
+        Task<ApiResponse<string>> DeleteAllMessagesAsync(
+    string userId,
+    string roomIdEnc);
     }
 }
