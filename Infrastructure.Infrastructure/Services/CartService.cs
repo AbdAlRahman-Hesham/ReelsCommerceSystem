@@ -38,7 +38,7 @@ public class CartService : ICartService
         {
             var productSpc = new Specification<Product>(criteria: p=>p.Id == item.ProductId)
             {
-                Includes = [p=>p.Category]
+                Includes = [p => p.Category, p => p.Images]
             };
 
             var product = await _productRepo.GetWithSpecAsync(productSpc);
@@ -142,7 +142,7 @@ public class CartService : ICartService
             {
                 var productSpc = new Specification<Product>(criteria: p => p.Id == update.ProductId)
                 {
-                    Includes = [p => p.Category]
+                    Includes = [p => p.Category, p => p.Images]
                 };
 
                 var product = await _productRepo.GetWithSpecAsync(productSpc);
