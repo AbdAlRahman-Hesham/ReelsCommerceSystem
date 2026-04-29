@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat System Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+    <h1>Chat System Test Page</h1>
+
+    <!-- 1. Authentication -->
+    <section id="auth-section">
+        <h2>1. Authentication</h2>
+        <div>
+            <input type="email" id="login-email" placeholder="Email" value="test@example.com">
+            <input type="password" id="login-password" placeholder="Password" value="password123">
+            <button onclick="login()">Login</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <label>Current Token:</label><br>
+            <textarea id="token-display" style="width: 100%; height: 60px;" placeholder="JWT Token will appear here..."></textarea>
+            <button onclick="saveToken()">Save/Update Token Manually</button>
+            <button onclick="logout()">Logout (Clear)</button>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- 2. Media Upload -->
+    <section id="media-section">
+        <h2>2. Media Upload</h2>
+        <input type="file" id="media-file">
+        <button onclick="uploadMedia()">Upload Media</button>
+        <div id="media-result"></div>
+    </section>
+
+    <hr>
+
+    <!-- 3. Rooms -->
+    <section id="rooms-section">
+        <h2>3. Chat Rooms</h2>
+        <div>
+            <button onclick="getRooms()">List My Rooms (GET /api/Chat/rooms)</button>
+            <div id="rooms-list"></div>
+        </div>
+        <div style="margin-top: 10px;">
+            <input type="text" id="create-room-brand-id" placeholder="Brand ID (Int)">
+            <button onclick="createRoomByBrand()">Create Room by Brand (POST /api/Chat/room)</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <input type="text" id="create-room-user-id" placeholder="User ID (String)">
+            <button onclick="createRoomTest()">Create Test Room (POST /api/Chat/room/test)</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <input type="text" id="delete-room-id" placeholder="Encrypted Room ID">
+            <button onclick="deleteRoom()">Delete Room (DELETE /api/Chat/room/{id})</button>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- 4. Messages -->
+    <section id="messages-section">
+        <h2>4. Messages & Chat</h2>
+        <div>
+            <input type="text" id="active-room-id" placeholder="Encrypted Room ID">
+            <button onclick="getMessages()">Get Messages (GET /api/Chat/rooms/{id}/messages)</button>
+            <button onclick="getUnreadCount()">Get Unread Count (GET /api/Chat/rooms/unreadCount/{id})</button>
+            <button onclick="deleteAllMessages()">Delete All Messages (DELETE /api/Chat/room/{id}/messages)</button>
+        </div>
+        
+        <div id="messages-display" style="border: 1px solid #ccc; height: 300px; overflow-y: scroll; margin-top: 10px; padding: 10px;"></div>
+
+        <div style="margin-top: 10px;">
+            <textarea id="msg-text" placeholder="Type message..."></textarea>
+            <input type="text" id="msg-image-url" placeholder="Optional Image URL">
+            <button onclick="sendMessage()">Send Message (POST /api/Chat/message)</button>
+        </div>
+
+        <div style="margin-top: 10px;">
+            <input type="text" id="delete-message-id" placeholder="Encrypted Message ID">
+            <button onclick="deleteMessage()">Delete Single Message (DELETE /api/Chat/message/{id})</button>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- 5. Status & SignalR -->
+    <section id="signalr-section">
+        <h2>5. SignalR & Status</h2>
+        <div>
+            <button onclick="connectSignalR()">Connect to SignalR Hub (/chatHub)</button>
+            <span id="signalr-status">Status: Disconnected</span>
+        </div>
+        <div style="margin-top: 10px;">
+            <input type="text" id="status-room-id" placeholder="Encrypted Room ID">
+            <input type="text" id="status-msg-ids" placeholder="Encrypted Msg IDs (comma separated)">
+            <select id="status-value">
+                <option value="Delivered">Delivered</option>
+                <option value="Seen">Seen</option>
+            </select>
+            <button onclick="changeStatus()">Change Status (POST /api/Chat/status)</button>
+        </div>
+        <h3>Live Events Log:</h3>
+        <div id="signalr-log" style="background: #f0f0f0; padding: 10px; font-family: monospace;"></div>
+    </section>
+
+    <script>
+        // --- CONFIGURATION ---
+        const API_BASE = '/api';
+        const ENCRYPTION_KEY = 'rkejwhiuh@CsZbdfjs78fu!qw8uiqehfuih5'; // Truncated to 32 chars to match C#
+
+        // --- UTILITIES: ENCRYPTION ---
+        function encrypt(plainText) {
+            if (!plainText) return plainText;
+            const key = CryptoJS.enc.Utf8.parse(ENCRYPTION_KEY);
+            const iv = CryptoJS.lib.WordArray.random(16);
+            const encrypted = CryptoJS.AES.encrypt(plainText, key, {
+                iv: iv,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            const combined = iv.concat(encrypted.ciphertext);
+            return CryptoJS.enc.Base64.stringify(combined);
+        }
+
+        function decrypt(cipherText) {
+            if (!cipherText) return cipherText;
+            try {
+                const combined = CryptoJS.enc.Base64.parse(cipherText);
+                const iv = CryptoJS.lib.WordArray.create(combined.words.slice(0, 4));
+                const ciphertext = CryptoJS.lib.WordArray.create(combined.words.slice(4));
+                const key = CryptoJS.enc.Utf8.parse(ENCRYPTION_KEY);
+                const decrypted = CryptoJS.AES.decrypt({ ciphertext: ciphertext }, key, {
+                    iv: iv,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7
+                });
+                return decrypted.toString(CryptoJS.enc.Utf8);
+            } catch (e) {
+                console.error("Decryption failed", e);
+                return cipherText;
+            }
+        }
+
+        // --- STATE ---
+        let token = localStorage.getItem('chat_test_token') || '';
+        document.getElementById('token-display').value = token;
+        let connection = null;
+
+        // --- API CALLS ---
+        async function apiCall(endpoint, method = 'GET', body = null, isMultipart = false) {
+            // Always get latest token from UI/State
+            token = document.getElementById('token-display').value;
+            const headers = {};
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            if (!isMultipart) headers['Content-Type'] = 'application/json';
+
+            const options = { method, headers };
+            if (body) {
+                options.body = isMultipart ? body : JSON.stringify(body);
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                if (response.status === 204) return { success: true };
+                const data = await response.json();
+                console.log(`API ${method} ${endpoint}:`, data);
+                return data;
+            } catch (err) {
+                console.error(`API Error ${method} ${endpoint}:`, err);
+                alert(`Error: ${err.message}`);
+            }
+        }
+
+        // --- 1. AUTH ---
+        async function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const result = await apiCall('/Auth/Login', 'POST', { email, password });
+            
+            // Check for both 'Success' and 'success' due to inconsistent serialization
+            const isSuccess = result && (result.Success === true || result.success === true);
+            const data = result?.Data || result?.data;
+
+            if (isSuccess && data && data.token) {
+                token = data.token;
+                localStorage.setItem('chat_test_token', token);
+                document.getElementById('token-display').value = token;
+                alert("Login Successful!");
+            } else {
+                alert("Login Failed: " + (result?.Message?.En || result?.message?.en || "Unknown error"));
+            }
+        }
+
+        function saveToken() {
+            token = document.getElementById('token-display').value;
+            localStorage.setItem('chat_test_token', token);
+            alert("Token Saved!");
+        }
+
+        function logout() {
+            token = '';
+            localStorage.removeItem('chat_test_token');
+            document.getElementById('token-display').value = '';
+            alert("Logged Out!");
+        }
+
+        // --- 2. MEDIA ---
+        async function uploadMedia() {
+            const fileInput = document.getElementById('media-file');
+            if (fileInput.files.length === 0) return alert("Select a file");
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            const result = await apiCall('/Media/upload', 'POST', formData, true);
+            if (result && result.imageUrl) {
+                document.getElementById('media-result').innerText = "Uploaded: " + result.imageUrl;
+                document.getElementById('msg-image-url').value = result.imageUrl;
+            }
+        }
+
+        // --- 3. ROOMS ---
+        async function getRooms() {
+            const result = await apiCall('/Chat/rooms');
+            const listDiv = document.getElementById('rooms-list');
+            
+            // Handle both direct array and ApiResponse wrapped array
+            const rooms = result?.Data || result?.data || (Array.isArray(result) ? result : null);
+
+            if (!rooms || !Array.isArray(rooms)) {
+                listDiv.innerHTML = '<p style="color:red">Failed to load rooms or no rooms found.</p>';
+                return;
+            }
+
+            listDiv.innerHTML = '<ul>' + rooms.map(r => `
+                <li>
+                    ID: ${r.roomId} (Name: ${r.otherUserName}) 
+                    <button onclick="setActiveRoom('${r.roomId}')">Use This Room</button>
+                </li>
+            `).join('') + '</ul>';
+        }
+
+        function setActiveRoom(id) {
+            document.getElementById('active-room-id').value = id;
+            document.getElementById('status-room-id').value = id;
+            document.getElementById('delete-room-id').value = id;
+        }
+
+        async function createRoomByBrand() {
+            const brandId = document.getElementById('create-room-brand-id').value;
+            const roomId = await apiCall(`/Chat/room?brandId=${brandId}`, 'POST');
+            alert("Created Room: " + roomId);
+            getRooms();
+        }
+
+        async function createRoomTest() {
+            const userId = document.getElementById('create-room-user-id').value;
+            const roomId = await apiCall(`/Chat/room/test?userId=${userId}`, 'POST');
+            alert("Created Room: " + roomId);
+            getRooms();
+        }
+
+        async function deleteRoom() {
+            const id = document.getElementById('delete-room-id').value;
+            await apiCall(`/Chat/room/${encodeURIComponent(id)}`, 'DELETE');
+            alert("Room Deleted");
+            getRooms();
+        }
+
+        // --- 4. MESSAGES ---
+        async function getMessages() {
+            const roomId = document.getElementById('active-room-id').value;
+            const result = await apiCall(`/Chat/rooms/${encodeURIComponent(roomId)}/messages`);
+            const display = document.getElementById('messages-display');
+            
+            // Handle both direct array and ApiResponse wrapped array
+            const messages = result?.Data || result?.data || (Array.isArray(result) ? result : null);
+
+            if (!messages || !Array.isArray(messages)) {
+                display.innerHTML = '<p style="color:red">Failed to load messages.</p>';
+                return;
+            }
+            
+            display.innerHTML = messages.map(m => `
+                <div style="margin-bottom: 8px; border-bottom: 1px dashed #eee;">
+                    <b>ID:</b> ${m.messageId} | <b>Status:</b> ${m.status}<br>
+                    <b>Text:</b> ${decrypt(m.text)}<br>
+                    ${m.imageUrl ? `<img src="${m.imageUrl}" style="max-width: 100px;"><br>` : ''}
+                    <small>${new Date(m.createdAt).toLocaleString()}</small>
+                </div>
+            `).join('');
+            display.scrollTop = display.scrollHeight;
+        }
+
+        async function getUnreadCount() {
+            const roomId = document.getElementById('active-room-id').value;
+            const count = await apiCall(`/Chat/rooms/unreadCount/${encodeURIComponent(roomId)}`);
+            alert("Unread Count: " + count);
+        }
+
+        async function sendMessage() {
+            const roomId = document.getElementById('active-room-id').value;
+            const text = document.getElementById('msg-text').value;
+            const imageUrl = document.getElementById('msg-image-url').value;
+
+            const dto = {
+                roomId: roomId,
+                text: encrypt(text),
+                imageUrl: imageUrl
+            };
+
+            const result = await apiCall('/Chat/message', 'POST', dto);
+            const isSuccess = result && (result.Success === true || result.success === true);
+
+            if (isSuccess) {
+                document.getElementById('msg-text').value = '';
+                getMessages();
+            }
+        }
+
+        async function deleteMessage() {
+            const id = document.getElementById('delete-message-id').value;
+            await apiCall(`/Chat/message/${encodeURIComponent(id)}`, 'DELETE');
+            alert("Message Deleted");
+            getMessages();
+        }
+
+        async function deleteAllMessages() {
+            const roomId = document.getElementById('active-room-id').value;
+            await apiCall(`/Chat/room/${encodeURIComponent(roomId)}/messages`, 'DELETE');
+            alert("All Messages Deleted");
+            getMessages();
+        }
+
+        // --- 5. STATUS & SIGNALR ---
+        async function changeStatus() {
+            const roomId = document.getElementById('status-room-id').value;
+            const ids = document.getElementById('status-msg-ids').value.split(',').map(s => s.trim()).filter(s => s);
+            const status = document.getElementById('status-value').value;
+
+            const body = {
+                roomId: roomId,
+                status: status,
+                messageIdsEncrypted: ids
+            };
+
+            await apiCall('/Chat/status', 'POST', body);
+            alert("Status Updated");
+            getMessages();
+        }
+
+        function logSignalR(msg, data) {
+            const log = document.getElementById('signalr-log');
+            const item = document.createElement('div');
+            item.innerHTML = `[${new Date().toLocaleTimeString()}] <b>${msg}</b>: ${JSON.stringify(data)}`;
+            log.prepend(item);
+        }
+
+        async function connectSignalR() {
+            if (connection) {
+                await connection.stop();
+            }
+
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub", {
+                    accessTokenFactory: () => document.getElementById('token-display').value
+                })
+                .withAutomaticReconnect()
+                .build();
+
+            connection.on("OnReceiveMessage", (data) => {
+                logSignalR("OnReceiveMessage", data);
+                // Data is MessageRes
+                if (data.text) data.text = decrypt(data.text);
+                getMessages(); // Refresh UI
+            });
+
+            connection.on("OnMessageSeen", (data) => {
+                logSignalR("OnMessageSeen", data);
+                getMessages();
+            });
+
+            connection.on("OnMessageDelivered", (data) => {
+                logSignalR("OnMessageDelivered", data);
+                getMessages();
+            });
+
+            try {
+                await connection.start();
+                document.getElementById('signalr-status').innerText = "Status: Connected";
+                document.getElementById('signalr-status').style.color = "green";
+                
+                // Automatically join active room if set
+                const roomId = document.getElementById('active-room-id').value;
+                if (roomId) {
+                    await connection.invoke("JoinRoom", roomId);
+                    logSignalR("Joined Room", roomId);
+                }
+            } catch (err) {
+                console.error("SignalR Connection Error: ", err);
+                document.getElementById('signalr-status').innerText = "Status: Error";
+                document.getElementById('signalr-status').style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>

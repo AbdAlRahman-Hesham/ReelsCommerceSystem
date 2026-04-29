@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.ChatRoom;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.ChatEntities;
@@ -89,8 +89,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             foreach (var room in rooms)
             {
-                var user = await _userManager.FindByIdAsync(userId);
                 var otherUserId = room.User1Id == userId ? room.User2Id : room.User1Id;
+                var otherUser = await _userManager.FindByIdAsync(otherUserId);
 
                 var unread = room.Messages.Count(m =>
                     m.SenderId != userId &&
@@ -99,13 +99,30 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 result.Add(new ChatRoomRes
                 {
                     RoomIdEnc = EncryptionHelper.Encrypt(room.Id.ToString()),
-                    UserName = $"{user?.FirstName} {user?.LastName}",
-                    UserImageUrl = user?.ImageURL ?? string.Empty,
+                    UserName = $"{otherUser?.FirstName} {otherUser?.LastName}",
+                    UserImageUrl = otherUser?.ImageURL ?? string.Empty,
                     UnreadCount = unread
                 });
             }
 
             return result;
+        }
+
+        public async Task<ChatRoomRes> GetRoomRes(int roomId, string userId)
+        {
+            var room = await _unitOfWork.Repository<ChatRoom>().GetByIdAsync(roomId);
+            if (room == null) return null;
+
+            var otherUserId = room.User1Id == userId ? room.User2Id : room.User1Id;
+            var otherUser = await _userManager.FindByIdAsync(otherUserId);
+
+            return new ChatRoomRes
+            {
+                RoomIdEnc = EncryptionHelper.Encrypt(room.Id.ToString()),
+                UserName = $"{otherUser?.FirstName} {otherUser?.LastName}",
+                UserImageUrl = otherUser?.ImageURL ?? string.Empty,
+                UnreadCount = 0
+            };
         }
     }
 }

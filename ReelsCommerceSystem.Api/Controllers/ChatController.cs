@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Message;
 using ReelsCommerceSystem.Application.DTOs.Response.Chat;
+using ReelsCommerceSystem.Application.DTOs.Response.ChatRoom;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
@@ -16,7 +17,8 @@ public class ChatController(
     IChatRoomService _chatRoomService,
     IUnitOfWork _unitOfWork,
     IChatService _chatService,
-    IChangeMessageStatusService _changeMessageStatusService
+    IChangeMessageStatusService _changeMessageStatusService,
+    ReelsCommerceSystem.Application.Interfaces.Senders.IChatSender _chatSender
 ) : AppBaseController
 {
     // GET /api/chat/rooms
@@ -28,7 +30,12 @@ public class ChatController(
 
         var rooms = await _chatRoomService.GetUserRooms(userId);
 
-        return Ok(rooms);
+        return Ok(ApiResponse<IEnumerable<ChatRoomRes>>.SuccessResponse(
+            rooms,
+            HttpStatusCode.OK,
+            "Rooms retrieved successfully",
+            "تم جلب الغرف بنجاح"
+        ));
     }
 
     // GET /api/chat/rooms/{roomIdEncr}/messages?page=1&pageSize=20&unreadOnly=false&afterMessageId=XXX
@@ -69,7 +76,12 @@ public class ChatController(
 
         var count = await _chatRoomService.GetUnreadCount(roomId, userId);
 
-        return Ok(count);
+        return Ok(ApiResponse<int>.SuccessResponse(
+            count,
+            HttpStatusCode.OK,
+            "Unread count retrieved successfully",
+            "تم جلب عدد الرسائل غير المقروءة بنجاح"
+        ));
     }
 
     // POST /api/chat/message
@@ -124,8 +136,21 @@ public class ChatController(
         var currentUser = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 
         var roomId = await _chatRoomService.CreateRoom(currentUser, userId);
+        
+        // Notify the other user (recipient)
+        var roomForOther = await _chatRoomService.GetRoomRes(roomId, userId); 
+        await _chatSender.RoomCreated(userId, roomForOther);
 
-        return Ok(EncryptionHelper.Encrypt(roomId.ToString()));
+        // Notify myself (sender)
+        var roomForMe = await _chatRoomService.GetRoomRes(roomId, currentUser); 
+        await _chatSender.RoomCreated(currentUser, roomForMe);
+
+        return Ok(ApiResponse<string>.SuccessResponse(
+            EncryptionHelper.Encrypt(roomId.ToString()),
+            HttpStatusCode.OK,
+            "Room created successfully",
+            "تم إنشاء الغرفة بنجاح"
+        ));
     }
 
     // POST /api/chat/room?brandId=1
@@ -135,10 +160,25 @@ public class ChatController(
     {
         var currentUser = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 
-        var brand = await _unitOfWork.Repository<Brand>().GetByIdAsync(brandId);
+        var brand = await _unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand>().GetByIdAsync(brandId);
+        if (brand == null) return NotFound("Brand not found");
+
         var roomId = await _chatRoomService.CreateRoom(currentUser, brand.UserId);
 
-        return Ok(EncryptionHelper.Encrypt(roomId.ToString()));
+        // Notify the other user (recipient)
+        var roomForOther = await _chatRoomService.GetRoomRes(roomId, brand.UserId); 
+        await _chatSender.RoomCreated(brand.UserId, roomForOther);
+
+        // Notify myself (sender)
+        var roomForMe = await _chatRoomService.GetRoomRes(roomId, currentUser);
+        await _chatSender.RoomCreated(currentUser, roomForMe);
+
+        return Ok(ApiResponse<string>.SuccessResponse(
+            EncryptionHelper.Encrypt(roomId.ToString()),
+            HttpStatusCode.OK,
+            "Room created successfully",
+            "تم إنشاء الغرفة بنجاح"
+        ));
     }
 
     // POST /api/chat/status
@@ -151,10 +191,19 @@ public class ChatController(
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
+        if (!Enum.TryParse<ReelsCommerceSystem.Domain.Enums.MessageStatus>(request.Status, true, out var parsedStatus))
+        {
+            return BadRequest(ApiResponse<string>.ErrorResponse(
+                HttpStatusCode.BadRequest,
+                "Invalid status value. Use 'Delivered' or 'Seen'.",
+                "قيمة الحالة غير صحيحة"
+            ));
+        }
+
         var result = await _changeMessageStatusService.ChangeStatusAsync(
             userId,
             request.RoomId,
-            request.Status,
+            parsedStatus,
             request.MessageIdsEncrypted
         );
 
@@ -194,9 +243,20 @@ public class ChatController(
     public async Task<IActionResult> Delete(string roomIdEncr)
     {
         var roomId = int.Parse(EncryptionHelper.Decrypt(roomIdEncr));
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var room = await _unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.ChatEntities.ChatRoom>().GetByIdAsync(roomId);
+        var otherUserId = room.User1Id == userId ? room.User2Id : room.User1Id;
 
         await _chatRoomService.DeleteRoom(roomId);
+        
+        // Notify clients to refresh room list
+        await _chatSender.RoomDeleted(roomId.ToString(), otherUserId);
 
-        return NoContent();
+        return Ok(ApiResponse<string>.SuccessResponse(
+            "Room deleted successfully",
+            HttpStatusCode.OK,
+            "تم حذف الغرفة بنجاح",
+            "Room deleted successfully"
+        ));
     }
 }

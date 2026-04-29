@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.ChatEntities;
 using ReelsCommerceSystem.Domain.Enums;
@@ -18,112 +18,99 @@ namespace ReelsCommerceSystem.Infrastructure.Services
     public class ChangeMessageStatusService : IChangeMessageStatusService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ReelsCommerceSystem.Application.Interfaces.Senders.IChatSender _chatSender;
 
-        public ChangeMessageStatusService(IUnitOfWork unitOfWork)
+        public ChangeMessageStatusService(IUnitOfWork unitOfWork, ReelsCommerceSystem.Application.Interfaces.Senders.IChatSender chatSender)
         {
             _unitOfWork = unitOfWork;
+            _chatSender = chatSender;
         }
 
         public async Task<ApiResponse<string>> ChangeStatusAsync(
             string userId,
             string roomIdEnc,
-            string status,
+            MessageStatus status,
             List<string> messageIdsEncrypted)
         {
             //  decrypt roomId
-            var roomId = int.Parse(
-                EncryptionHelper.Decrypt(Uri.UnescapeDataString(roomIdEnc)));
-
-            //  validate + parse status
-            if (!Enum.TryParse<MessageStatus>(status, true, out var parsedStatus))
-                throw new Exception("Invalid status");
+            var roomIdStr = EncryptionHelper.Decrypt(roomIdEnc);
+            if (!int.TryParse(roomIdStr, out var roomId))
+                throw new Exception("Invalid roomId");
 
             //  decrypt messageIds
             var ids = messageIdsEncrypted
                 .Select(id =>
                 {
-                    var cleaned = Uri.UnescapeDataString(id);
-                    var decrypted = EncryptionHelper.Decrypt(cleaned);
-
+                    var decrypted = EncryptionHelper.Decrypt(id);
                     if (!int.TryParse(decrypted, out var parsedId))
                         throw new Exception("Invalid messageId");
-
                     return parsedId;
                 })
                 .ToList();
 
-            if (!ids.Any())
-            {
-                return ApiResponse<string>.SuccessResponse(
-                    "No message ids provided",
-                    HttpStatusCode.OK,
-                    "لم يتم إرسال رسائل",
-                    "No messages sent"
-                );
-            }
-
-
             // get messages
-            var spec = new MessagesByIdsSpec(ids, roomId);
+            IEnumerable<Domain.Entities.ChatEntities.Message> messages;
 
-            var messages = await _unitOfWork.Repository<Domain.Entities.ChatEntities.Message>()
-                .GetAllWithSpecAsync(spec);
-
-            if (!messages.Any())
+            if (ids.Any())
             {
-                return ApiResponse<string>.SuccessResponse(
-                    "No messages found",
-                    HttpStatusCode.OK,
-                    "لا توجد رسائل",
-                    "No messages found"
-                );
+                var spec = new MessagesByIdsSpec(ids, roomId);
+                // We need tracking here because we are updating them
+                messages = await _unitOfWork.Repository<Domain.Entities.ChatEntities.Message>()
+                    .GetAllWithSpecAsync(spec);
             }
+            else
+            {
+                // Optimize: only fetch messages that actually need updating
+                // Create a dynamic query or a more specific spec
+                messages = await _unitOfWork.Repository<Domain.Entities.ChatEntities.Message>()
+                    .GetAllWithSpecAsync(new UnreadMessagesByRoomSpec(roomId, userId, status));
+            }
+
+            if (messages == null || !messages.Any())
+            {
+                return ApiResponse<string>.SuccessResponse("No messages to update", HttpStatusCode.OK);
+            }
+
             int updatedCount = 0;
-            int skippedCount = 0;
+
+            var updatedPlainIds = new List<string>();
 
             // update status
             foreach (var message in messages)
             {
-                Console.WriteLine($"Before: {message.Status}");
+                // Cannot mark your own message as seen/delivered by you
+                if (message.SenderId == userId) continue;
 
-                if (message.SenderId == userId)
+                // Only upgrade status (Pending -> Delivered -> Seen)
+                if (message.Status < status)
                 {
-                    skippedCount++;
-                    continue;
+                    message.Status = status;
+                    _unitOfWork.Repository<Domain.Entities.ChatEntities.Message>().Update(message);
+                    updatedCount++;
+                    updatedPlainIds.Add(message.Id.ToString());
                 }
-                if (message.Status >= parsedStatus)
-                {
-                    skippedCount++;
-                    continue;
-                }
-                    message.Status = parsedStatus;
-                Console.WriteLine($"After: {message.Status}");
-                _unitOfWork.Repository<Domain.Entities.ChatEntities.Message>().Update(message);
-                updatedCount++;
-
-
             }
-            if (updatedCount == 0)
+
+            if (updatedCount > 0)
             {
-                return ApiResponse<string>.SuccessResponse(
-                    $"No messages were updated (already in {parsedStatus})",
-                    HttpStatusCode.OK,
-                    "لا يوجد تحديثات",
-                    "Nothing changed"
-                );
+                await _unitOfWork.SaveChangesAsync();
+                
+                // Notify the sender of these messages
+                var room = await _unitOfWork.Repository<ChatRoom>().GetByIdAsync(roomId);
+                var recipientId = room.User1Id == userId ? room.User2Id : room.User1Id;
+
+                if (status == MessageStatus.Seen)
+                    await _chatSender.MessageSeen(roomId.ToString(), recipientId, updatedPlainIds);
+                else if (status == MessageStatus.Delivered)
+                    await _chatSender.MessageDelivered(roomId.ToString(), recipientId, updatedPlainIds);
             }
 
-            //  save
-            await _unitOfWork.SaveChangesAsync();
             return ApiResponse<string>.SuccessResponse(
-               $"{updatedCount} messages updated, {skippedCount} skipped",
+               $"{updatedCount} messages updated",
                HttpStatusCode.OK,
                "تم التحديث بنجاح",
                "Messages updated successfully"
              );
-
-            //  event hook 
-            // TODO: invoke event
         }
     }
 }

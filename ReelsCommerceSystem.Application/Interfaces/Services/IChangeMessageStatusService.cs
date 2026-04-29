@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
             (
                      string userId,
                      string roomIdEnc,
-                     string status,
+                     ReelsCommerceSystem.Domain.Enums.MessageStatus status,
                      List<string> messageIdsEncrypted
             );
     }

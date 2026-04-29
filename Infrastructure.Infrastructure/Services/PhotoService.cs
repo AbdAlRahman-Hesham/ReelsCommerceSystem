@@ -19,8 +19,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         public PhotoService(IOptions<CloudinarySettings> config)
         {
             var settings = config.Value;
-            Console.WriteLine("PHOTO SERVICE CALLED");
-            Console.WriteLine("CloudName = " + settings.CloudName);
+            //Console.WriteLine("PHOTO SERVICE CALLED");
+            //Console.WriteLine("CloudName = " + settings.CloudName);
 
             var account = new Account(
                 settings.CloudName,

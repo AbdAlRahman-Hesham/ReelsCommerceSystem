@@ -88,7 +88,7 @@ public class JsonValidationMessageProvider : IValidationMessageProvider
         catch (Exception ex)
         {
             _messages = new List<ValidationMessageEntry>();
-            Console.WriteLine($"Error reading validation messages: {ex.Message}");
+            //Console.WriteLine($"Error reading validation messages: {ex.Message}");
         }
     }
 

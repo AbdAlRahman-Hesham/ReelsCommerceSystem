@@ -9,8 +9,8 @@ namespace ReelsCommerceSystem.Application.DTOs.Request.Message
 {
     public class SendMessageReq
     {
-        public string RoomId { get; set; }     // encrypted
-        public string? Text { get; set; }      // encrypted
+        public string RoomIdEncr { get; set; }     // encrypted
+        public string? TextEncr { get; set; }      // encrypted
         public string? ImageUrl { get; set; }  
     }
 }

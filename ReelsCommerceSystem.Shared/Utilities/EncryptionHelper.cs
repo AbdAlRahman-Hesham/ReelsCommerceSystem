@@ -28,6 +28,10 @@ public static class EncryptionHelper
     {
         if (string.IsNullOrEmpty(cipherText)) return cipherText;
 
+        // Base64 strings in URLs often have '+' converted to ' ' or '/' converted to '%2F'.
+        // We decode it here to ensure a valid Base64 string.
+        cipherText = System.Net.WebUtility.UrlDecode(cipherText).Replace(" ", "+");
+
         try
         {
             var full = Convert.FromBase64String(cipherText);

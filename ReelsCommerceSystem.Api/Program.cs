@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
+using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
 using ReelsCommerceSystem.Api.SignalR.Hubs;
@@ -27,7 +27,7 @@ var test = builder.Configuration
     .GetSection("CloudinarySettings")
     .Get<CloudinarySettings>();
 
-Console.WriteLine("CONFIG TEST = " + test?.CloudName);
+//Console.WriteLine("CONFIG TEST = " + test?.CloudName);
 
 builder.Services.AddHttpClient<IPaymobService, PaymobService>();
 
@@ -77,6 +77,7 @@ app.UseCors("AllowDevTunnel");
 app.MapControllers();
 
 app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<ChatHub>("/chatHub");
 
 app.AddAppMiddleware();
 

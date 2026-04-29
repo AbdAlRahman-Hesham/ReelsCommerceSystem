@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual User Chat Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; height: 100vh; margin: 0; }
+        .container { display: flex; flex: 1; overflow: hidden; }
+        .user-pane { flex: 1; display: flex; flex-direction: column; border: 1px solid #ccc; padding: 10px; overflow-y: auto; }
+        .section { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .msg-list { flex: 1; border: 1px solid #ddd; overflow-y: scroll; padding: 5px; background: #fafafa; min-height: 200px; }
+        .log-list { height: 100px; overflow-y: scroll; font-size: 0.8em; background: #333; color: #0f0; padding: 5px; }
+        input, button, textarea { width: 100%; margin-bottom: 5px; box-sizing: border-box; }
+        .row { display: flex; gap: 5px; }
+        .row input { flex: 1; }
+        .received { color: blue; }
+        .sent { color: green; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; margin: 10px;">Dual User Chat Simulation</h1>
+    
+    <div class="container">
+        <!-- USER A -->
+        <div class="user-pane" id="pane-A">
+            <h2>User A</h2>
+            
+            <div class="section">
+                <h3>1. Register / Login</h3>
+                <input type="text" id="reg-A-name" placeholder="First Name" value="User">
+                <input type="text" id="reg-A-email" placeholder="Email" value="usera@test.com">
+                <input type="password" id="reg-A-pass" placeholder="Password" value="Password123!">
+                <input type="text" id="reg-A-phone" placeholder="Phone (+20...)" value="+201012345678">
+                <button onclick="register('A')">Register User A</button>
+                <button onclick="login('A')">Login User A</button>
+                <div style="font-size: 0.8em;">User ID: <span id="id-A">None</span></div>
+                <textarea id="token-A" style="height: 40px;" placeholder="JWT Token"></textarea>
+            </div>
+
+            <div class="section">
+                <h3>2. SignalR</h3>
+                <button onclick="connectSignalR('A')">Connect User A</button>
+                <div id="status-A">Status: Disconnected</div>
+                <div class="log-list" id="log-A"></div>
+            </div>
+
+            <div class="section">
+                <h3>3. Chat</h3>
+                <div class="row">
+                    <input type="text" id="target-id-A" placeholder="Target User ID">
+                    <button onclick="createRoom('A')" style="width: auto;">Start Room</button>
+                </div>
+                <input type="text" id="room-id-A" placeholder="Encrypted Room ID">
+                <div class="msg-list" id="msgs-A"></div>
+                <div class="row">
+                    <textarea id="input-A" placeholder="Message..."></textarea>
+                    <button onclick="sendMessage('A')" style="width: 80px;">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- USER B -->
+        <div class="user-pane" id="pane-B">
+            <h2>User B</h2>
+            
+            <div class="section">
+                <h3>1. Register / Login</h3>
+                <input type="text" id="reg-B-name" placeholder="First Name" value="User">
+                <input type="text" id="reg-B-email" placeholder="Email" value="userb@test.com">
+                <input type="password" id="reg-B-pass" placeholder="Password" value="Password123!">
+                <input type="text" id="reg-B-phone" placeholder="Phone (+20...)" value="+201112345678">
+                <button onclick="register('B')">Register User B</button>
+                <button onclick="login('B')">Login User B</button>
+                <div style="font-size: 0.8em;">User ID: <span id="id-B">None</span></div>
+                <textarea id="token-B" style="height: 40px;" placeholder="JWT Token"></textarea>
+            </div>
+
+            <div class="section">
+                <h3>2. SignalR</h3>
+                <button onclick="connectSignalR('B')">Connect User B</button>
+                <div id="status-B">Status: Disconnected</div>
+                <div class="log-list" id="log-B"></div>
+            </div>
+
+            <div class="section">
+                <h3>3. Chat</h3>
+                <div class="row">
+                    <input type="text" id="target-id-B" placeholder="Target User ID">
+                    <button onclick="createRoom('B')" style="width: auto;">Start Room</button>
+                </div>
+                <input type="text" id="room-id-B" placeholder="Encrypted Room ID">
+                <div class="msg-list" id="msgs-B"></div>
+                <div class="row">
+                    <textarea id="input-B" placeholder="Message..."></textarea>
+                    <button onclick="sendMessage('B')" style="width: 80px;">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+        const ENCRYPTION_KEY = 'rkejwhiuh@CsZbdfjs78fu!qw8uiqehfuih5'.substring(0, 32);
+
+        // --- ENCRYPTION ---
+        function encrypt(text) {
+            if (!text) return text;
+            const key = CryptoJS.enc.Utf8.parse(ENCRYPTION_KEY);
+            const iv = CryptoJS.lib.WordArray.random(16);
+            const enc = CryptoJS.AES.encrypt(text, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            return CryptoJS.enc.Base64.stringify(iv.concat(enc.ciphertext));
+        }
+
+        function decrypt(cipher) {
+            if (!cipher) return cipher;
+            try {
+                const combined = CryptoJS.enc.Base64.parse(cipher);
+                const iv = CryptoJS.lib.WordArray.create(combined.words.slice(0, 4));
+                const text = CryptoJS.lib.WordArray.create(combined.words.slice(4));
+                const key = CryptoJS.enc.Utf8.parse(ENCRYPTION_KEY);
+                const dec = CryptoJS.AES.decrypt({ ciphertext: text }, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+                return dec.toString(CryptoJS.enc.Utf8);
+            } catch (e) { return cipher; }
+        }
+
+        // --- AUTH ---
+        function decodeToken(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                const payload = JSON.parse(jsonPayload);
+                return payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] || payload.sub;
+            } catch (e) { return null; }
+        }
+
+        async function apiCall(side, endpoint, method = 'GET', body = null, isMultipart = false) {
+            const token = document.getElementById(`token-${side}`).value;
+            const headers = {};
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            if (!isMultipart) headers['Content-Type'] = 'application/json';
+
+            const options = { method, headers };
+            if (body) options.body = isMultipart ? body : JSON.stringify(body);
+
+            const res = await fetch(`${API_BASE}${endpoint}`, options);
+            if (res.status === 204) return { success: true };
+            return await res.json();
+        }
+
+        async function register(side) {
+            const formData = new FormData();
+            formData.append('FirstName', document.getElementById(`reg-${side}-name`).value);
+            formData.append('LastName', 'Test');
+            formData.append('Email', document.getElementById(`reg-${side}-email`).value);
+            formData.append('Password', document.getElementById(`reg-${side}-pass`).value);
+            formData.append('PhoneNumber', document.getElementById(`reg-${side}-phone`).value);
+
+            const result = await apiCall(side, '/Auth/Register', 'POST', formData, true);
+            alert(result.success || result.Success ? "Registered!" : "Error: " + JSON.stringify(result));
+        }
+
+        async function login(side) {
+            const email = document.getElementById(`reg-${side}-email`).value;
+            const pass = document.getElementById(`reg-${side}-pass`).value;
+            const result = await apiCall(side, '/Auth/Login', 'POST', { Email: email, Password: pass });
+            const data = result.data || result.Data;
+            if (data && data.token) {
+                document.getElementById(`token-${side}`).value = data.token;
+                document.getElementById(`id-${side}`).innerText = decodeToken(data.token);
+                alert(`${side} Logged in!`);
+            } else {
+                alert(`${side} Login Failed!`);
+            }
+        }
+
+        // --- SIGNALR ---
+        let connections = { A: null, B: null };
+
+        async function connectSignalR(side) {
+            const token = document.getElementById(`token-${side}`).value;
+            const conn = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub", { accessTokenFactory: () => token })
+                .withAutomaticReconnect()
+                .build();
+
+            conn.on("OnReceiveMessage", (msg) => {
+                log(side, "RECV", msg);
+                addMsg(side, decrypt(msg.text || msg.Text), "received", msg);
+                // Auto mark as delivered if it's for us
+                if (msg.messageId || msg.MessageId) {
+                    apiCall(side, '/Chat/status', 'POST', {
+                        roomId: document.getElementById(`room-id-${side}`).value,
+                        status: "Seen",
+                        messageIdsEncrypted: [msg.messageId || msg.MessageId]
+                    });
+                }
+            });
+
+            conn.on("OnMessageSeen", (data) => log(side, "SEEN", data));
+            conn.on("OnMessageDelivered", (data) => log(side, "DELV", data));
+
+            await conn.start();
+            connections[side] = conn;
+            document.getElementById(`status-${side}`).innerText = "Status: Connected";
+            
+            const roomId = document.getElementById(`room-id-${side}`).value;
+            if (roomId) {
+                await conn.invoke("JoinRoom", roomId);
+                log(side, "Joined Group", roomId);
+            }
+        }
+
+        function log(side, ev, data) {
+            const el = document.getElementById(`log-${side}`);
+            el.innerHTML += `<div>[${ev}] ${JSON.stringify(data)}</div>`;
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function addMsg(side, text, cls, full) {
+            const el = document.getElementById(`msgs-${side}`);
+            el.innerHTML += `<div class="${cls}"><b>${text}</b> <small>(${full?.status || ''})</small></div>`;
+            el.scrollTop = el.scrollHeight;
+        }
+
+        // --- CHAT ACTIONS ---
+        async function createRoom(side) {
+            const target = document.getElementById(`target-id-${side}`).value;
+            const res = await apiCall(side, `/Chat/room/test?userId=${target}`, 'POST');
+            // Result is encrypted roomId string
+            const roomId = typeof res === 'string' ? res : (res.data || res.Data);
+            document.getElementById(`room-id-${side}`).value = roomId;
+            // Also set for other side if it's the target
+            const otherSide = side === 'A' ? 'B' : 'A';
+            document.getElementById(`room-id-${otherSide}`).value = roomId;
+            alert("Room Ready: " + roomId);
+        }
+
+        async function sendMessage(side) {
+            const roomId = document.getElementById(`room-id-${side}`).value;
+            const text = document.getElementById(`input-${side}`).value;
+            const res = await apiCall(side, '/Chat/message', 'POST', {
+                roomId: roomId,
+                text: encrypt(text)
+            });
+            const data = res.data || res.Data;
+            if (data) {
+                addMsg(side, text, "sent", data);
+                document.getElementById(`input-${side}`).value = '';
+            }
+        }
+    </script>
+</body>
+</html>

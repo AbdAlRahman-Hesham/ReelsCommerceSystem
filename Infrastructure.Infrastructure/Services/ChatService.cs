@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using ReelsCommerceSystem.Application.DTOs.Request.Message;
 using ReelsCommerceSystem.Application.DTOs.Response.Chat;
 using ReelsCommerceSystem.Application.Interfaces.Senders;
@@ -39,11 +39,11 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         public async Task<MessageRes> SendMessageAsync(string userId, SendMessageReq dto)
         {
             // Decrypt RoomId
-            var roomId = int.Parse(EncryptionHelper.Decrypt(dto.RoomId));
+            var roomId = int.Parse(EncryptionHelper.Decrypt(dto.RoomIdEncr));
 
-            var text = string.IsNullOrEmpty(dto.Text)
+            var text = string.IsNullOrEmpty(dto.TextEncr)
            ? null
-           : EncryptionHelper.Decrypt(dto.Text);
+           : EncryptionHelper.Decrypt(dto.TextEncr);
 
             //Validate room
             var room = await _unitOfWork.Repository<ChatRoom>().GetByIdAsync(roomId);
@@ -97,27 +97,30 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             // response (encrypted)
             var response = new MessageRes
             {
-                MessageId = EncryptionHelper.Encrypt(message.Id.ToString()),
-                RoomId = dto.RoomId,
-                Text = message.Text != null ? EncryptionHelper.Encrypt(message.Text) : null,
-                ImageUrl = message.ImageUrl != null ? EncryptionHelper.Encrypt(message.ImageUrl) : null,
+                MessageIdEncr = EncryptionHelper.Encrypt(message.Id.ToString()),
+                RoomIdEncr = dto.RoomIdEncr,
+                SenderIdEncr = EncryptionHelper.Encrypt(message.SenderId),
+                TextEncr = message.Text != null ? EncryptionHelper.Encrypt(message.Text) : null,
+                ImageUrlEncr = message.ImageUrl != null ? EncryptionHelper.Encrypt(message.ImageUrl) : null,
                 Status = message.Status.ToString(),
                 CreatedAt = message.CreatedAt
             };
 
+            var recipientId = room.User1Id == userId ? room.User2Id : room.User1Id;
+
             // send real-time
-            await _chatSender.SendMessage(roomId.ToString(), response);
+            await _chatSender.SendMessage(roomId.ToString(), recipientId, response);
 
             return response;
 
         }
         public async Task<ApiResponse<PaginationResponse<MessageRes>>> GetMessagesAsync(
-     string userId,
-     string roomIdEncr,
-     int? page,
-     int? pageSize,
-     bool? unreadOnly,
-     string? afterMessageId)
+             string userId,
+             string roomIdEncr,
+             int? page,
+             int? pageSize,
+             bool? unreadOnly,
+             string? afterMessageId)
         {
             var roomId = int.Parse(SafeDecrypt(roomIdEncr));
 
@@ -161,10 +164,11 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             var data = messages.Select(m => new MessageRes
             {
-                MessageId = EncryptionHelper.Encrypt(m.Id.ToString()),
-                RoomId = roomIdEncr,
-                Text = m.Text != null ? EncryptionHelper.Encrypt(m.Text) : null,
-                ImageUrl = m.ImageUrl != null ? EncryptionHelper.Encrypt(m.ImageUrl) : null,
+                MessageIdEncr = EncryptionHelper.Encrypt(m.Id.ToString()),
+                RoomIdEncr = roomIdEncr,
+                SenderIdEncr = EncryptionHelper.Encrypt(m.SenderId),
+                TextEncr = m.Text != null ? EncryptionHelper.Encrypt(m.Text) : null,
+                ImageUrlEncr = m.ImageUrl != null ? EncryptionHelper.Encrypt(m.ImageUrl) : null,
                 Status = m.Status.ToString(),
                 CreatedAt = m.CreatedAt
             }).ToList();
@@ -234,6 +238,12 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
                 await _unitOfWork.SaveChangesAsync();
 
+                var room = await _unitOfWork.Repository<ChatRoom>().GetByIdAsync(message.RoomId);
+                var recipientId = room.User1Id == userId ? room.User2Id : room.User1Id;
+
+                // trigger real-time delete
+                await _chatSender.MessageDeleted(message.RoomId.ToString(), recipientId, message.Id.ToString());
+
                 return ApiResponse<string>.SuccessResponse(
                     "Message deleted successfully",
                     HttpStatusCode.OK,
@@ -251,8 +261,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             }
         }
         public async Task<ApiResponse<string>> DeleteAllMessagesAsync(
-    string userId,
-    string roomIdEnc)
+        string userId,
+        string roomIdEnc)
         {
             try
             {
@@ -288,6 +298,12 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
                 await _unitOfWork.SaveChangesAsync();
 
+                var room = await _unitOfWork.Repository<ChatRoom>().GetByIdAsync(roomId);
+                var recipientId = room.User1Id == userId ? room.User2Id : room.User1Id;
+
+                // trigger real-time delete for the whole room (we use roomIdEnc as a marker or trigger a room refresh)
+                await _chatSender.MessageDeleted(roomId.ToString(), recipientId, "ALL");
+
                 return ApiResponse<string>.SuccessResponse(
                     "All messages deleted successfully",
                     HttpStatusCode.OK,
@@ -306,14 +322,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         }
         private string SafeDecrypt(string input)
         {
-            if (string.IsNullOrEmpty(input))
-                return input;
-
-            // 1. remove URL encoding if موجود
-            var cleaned = Uri.UnescapeDataString(input);
-
-            // 2. decrypt
-            return EncryptionHelper.Decrypt(cleaned);
+            return EncryptionHelper.Decrypt(input);
         }
     }
 
