@@ -1,12 +1,11 @@
+using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Enums;
 
 namespace ReelsCommerceSystem.Domain.Entities.ChatEntities;
 
-public class Message
-{
-    public int Id { get; set; }
-    
+public class Message :BaseEntity
+{    
     public int RoomId { get; set; }
     public virtual ChatRoom Room { get; set; } = default!;
     
@@ -17,5 +16,4 @@ public class Message
     public string? ImageUrl { get; set; }
     
     public MessageStatus Status { get; set; } = MessageStatus.Pending;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

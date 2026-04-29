@@ -1,11 +1,25 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ReelsCommerceSystem.Application.DTOs.Request.Message;
+using ReelsCommerceSystem.Application.DTOs.Response.Chat;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Shared.Responses;
+using System.Net;
+using System.Security.Claims;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
 
 public class ChatController : AppBaseController
 {
+
+    private readonly IChatService _chatService;
+
+    public ChatController(IChatService chatService)
+    {
+        _chatService = chatService;
+    }
+
     // GET /api/chat/rooms
     [HttpGet("rooms")]
     [Authorize]
@@ -35,18 +49,57 @@ public class ChatController : AppBaseController
         throw new NotImplementedException();
     }
 
-    
+
 
     // POST /api/chat/message
     [HttpPost("message")]
     [Authorize]
-    public IActionResult SendMessage(/*[FromBody] SendMessageReq request*/)
+    public async Task<IActionResult> SendMessage([FromBody] SendMessageReq dto)
     {
-        throw new NotImplementedException();
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                var result = await _chatService.SendMessageAsync(userId, dto);
+
+                return Ok(ApiResponse<MessageRes>.SuccessResponse(
+                    result,
+                    HttpStatusCode.OK,
+                    "Message sent successfully",
+                    "?? ????? ??????? ?????"
+                ));
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    ex.Message,
+                    "??? ???? ?? ?????? ???????"
+                ));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.BadRequest,
+                    "Something went wrong",
+                    "??? ??? ??",
+                    new List<ValidationError>
+                    {
+                    new ValidationError
+                    {
+                        Field = "Server",
+                        En = ex.Message,
+                        Ar = "??? ????? ?? ???????"
+                    }
+                    }
+                ));
+            }
+        }
     }
 
-    // POST /api/chat/room?brandId=1
-    [HttpPost("room")]
+            // POST /api/chat/room?brandId=1
+            [HttpPost("room")]
     [Authorize]
     public IActionResult CreateRoom([FromQuery] int brandId)
     {
