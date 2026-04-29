@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using ReelsCommerceSystem.Application.DTOs.Response.Search;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
@@ -61,7 +62,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 Name = p.Name,
                 Description = p.Description,
                 ArDescription = p.ArDescription,
-                MainImageUrl = p.MediaUrl,
+                MainImageUrl = p.Images?
+                              .Select(i => i.Url)
+                              .FirstOrDefault(),
                 Price = p.Price,
 
             }).ToList();

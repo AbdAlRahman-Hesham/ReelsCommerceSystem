@@ -17,7 +17,8 @@ public class CartProduct : BaseEntity
 
     public bool IsCustomized { get; set; } = false;
     public string? MoreDetails { get; set; }
-    public string? MediaUrl { get; set; }
+    //public string? MediaUrl { get; set; }
+    public List<string>? MediaUrls { get; set; } = new();
 
     public decimal FinalPrice { get; set; }
 }

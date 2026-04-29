@@ -18,6 +18,7 @@ public class RelatedProductsSpec:Specification<Product>
         }
         AddInclude(p => p.Brand);
         AddInclude(p => p.Category);
+        AddInclude(p => p.Images);
         AddOrderByDescending(p => p.CreatedAt);
         ApplyPaging(1, take);
     }

@@ -21,7 +21,8 @@ public class OrderItemResDto
     public string? Name { get; set; }
     public string? Color { get; set; }
     public string? Description { get; set; }
-    public string? ImageUrl { get; set; }
+    //public string? ImageUrl { get; set; }
+    public List<string>? ProductMediaUrls { get; set; } = new();
     public Size Size { get; set; }
     public int Quantity { get; set; }
     public decimal Price { get; set; }

@@ -38,7 +38,7 @@ public class CartService : ICartService
         {
             var productSpc = new Specification<Product>(criteria: p=>p.Id == item.ProductId)
             {
-                Includes = [p=>p.Category]
+                Includes = [p => p.Category, p => p.Images]
             };
 
             var product = await _productRepo.GetWithSpecAsync(productSpc);
@@ -60,7 +60,9 @@ public class CartService : ICartService
                     Description = product.Description,
                     Price = product.Price * (1 - ((product.DiscountPercentage ?? 0) / 100m)),
                     Category = product.Category.Name,
-                    MediaUrl = product.MediaUrl,
+                    MediaUrls = product.Images?
+                                .Select(x => x.Url)
+                                .ToList() ?? new List<string>(),
                     Quantity = item.Quantity,
                     Size = Enum.Parse<Domain.Enums.Size>(item.Size, true),
                     Color = item.Color
@@ -79,7 +81,7 @@ public class CartService : ICartService
             {
                 ProductId = ci.ProductId,
                 ProductName = ci.Name,
-                ProductMediaUrl = ci.MediaUrl,
+                ProductMediaUrls = ci.MediaUrls.ToList(),
                 ProductPrice = ci.Price,
                 Quantity = ci.Quantity,
                 Color = ci.Color ?? string.Empty,
@@ -108,7 +110,7 @@ public class CartService : ICartService
             {
                 ProductId = ci.ProductId,
                 ProductName = ci.Name,
-                ProductMediaUrl = ci.MediaUrl,
+                ProductMediaUrls = ci.MediaUrls.ToList(),
                 ProductPrice = ci.Price,
                 Quantity = ci.Quantity,
                 Color = ci.Color ?? string.Empty,
@@ -140,7 +142,7 @@ public class CartService : ICartService
             {
                 var productSpc = new Specification<Product>(criteria: p => p.Id == update.ProductId)
                 {
-                    Includes = [p => p.Category]
+                    Includes = [p => p.Category, p => p.Images]
                 };
 
                 var product = await _productRepo.GetWithSpecAsync(productSpc);
@@ -165,7 +167,9 @@ public class CartService : ICartService
                     Description = product.Description,
                     Price = product.Price * (1 - ((product.DiscountPercentage ?? 0) / 100m)),
                     Category = product.Category.Name,
-                    MediaUrl = product.MediaUrl,
+                    MediaUrls = product.Images?
+                                .Select(x => x.Url)
+                                .ToList() ?? new List<string>(),
                     Quantity = initialQuantity,
                     Color = update.Color,
                     Size = Enum.Parse<Domain.Enums.Size>(update.Size, true),
@@ -197,7 +201,7 @@ public class CartService : ICartService
             {
                 ProductId = ci.ProductId,
                 ProductName = ci.Name,
-                ProductMediaUrl = ci.MediaUrl,
+                ProductMediaUrls = ci.MediaUrls?.ToList() ?? new List<string>(),
                 ProductPrice = ci.Price,
                 Quantity = ci.Quantity,
                 Color = ci.Color,

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260425153149_CreateMessageAndChatRoom")]
+    partial class CreateMessageAndChatRoom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1487,6 +1490,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<bool>("IsCustomized")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MediaUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MoreDetails")
                         .HasColumnType("nvarchar(max)");
 
@@ -1495,9 +1501,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
-
-                    b.PrimitiveCollection<string>("ProductMediaUrls")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
@@ -1586,6 +1589,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<bool>("IsCustomizable")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MediaUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1611,760 +1618,820 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 1,
                             BrandId = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 4, 12, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Breathable organic cotton tee for everyday comfort.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand1/EcoFlexT-Shirt.png",
                             Name = "EcoFlex T-Shirt",
                             Price = 180.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 2,
                             BrandId = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 2, 5, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Stylish recycled denim jacket for a sustainable look.",
                             DiscountPercentage = 20m,
                             IsCustomizable = true,
+                            MediaUrl = "Products/Brand1/ReVibe Denim Jacket.jfif",
                             Name = "ReVibe Denim Jacket",
                             Price = 420.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 3,
                             BrandId = 1,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 8, 19, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Lightweight sneakers made from recycled fibers.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand1/EcoStride Sneakers.jfif",
                             Name = "EcoStride Sneakers",
                             Price = 360.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 4,
                             BrandId = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 5, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Soft hoodie crafted from sustainable bamboo fabric.",
                             DiscountPercentage = 40m,
                             IsCustomizable = true,
+                            MediaUrl = "Products/Brand1/Bamboo Breeze Hoodie.png",
                             Name = "Bamboo Breeze Hoodie",
                             Price = 280.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 5,
                             BrandId = 1,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 9, 28, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Eco-friendly tote bag with minimalist design.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand1/ReLeaf Tote Bag.jfif",
                             Name = "ReLeaf Tote Bag",
                             Price = 150.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 6,
                             BrandId = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Comfortable pants made from recycled polyester.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand1/NatureFlow Pants.webp",
                             Name = "NatureFlow Pants",
                             Price = 310.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 7,
                             BrandId = 2,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 8, 22, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Fast-charging braided USB-C cable with smart chip.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand2/SyncCharge Cable.jfif",
                             Name = "SyncCharge Cable",
                             Price = 180.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 8,
                             BrandId = 2,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 12, 3, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Multi-device charging dock with wireless pad.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand2/SmartDock Pro.jfif",
                             Name = "SmartDock Pro",
                             Price = 420.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 9,
                             BrandId = 2,
                             CategoryId = 5,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 6, 9, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Noise-cancelling Bluetooth earbuds with 24h battery.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand2/AirPulse Earbuds.jfif",
                             Name = "AirPulse Earbuds",
                             Price = 540.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 10,
                             BrandId = 2,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 11, 18, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Smart magnetic car mount with auto-lock system.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand2/MagGrip Phone Mount.jfif",
                             Name = "MagGrip Phone Mount",
                             Price = 190.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 11,
                             BrandId = 2,
                             CategoryId = 6,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 5, 13, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Fitness smartwatch with heart-rate and sleep tracking.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand2/PulseTrack Watch.jfif",
                             Name = "PulseTrack Watch",
                             Price = 690.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 12,
                             BrandId = 2,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 1, 4, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "MagSafe-compatible slim phone case.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand2/GlideCase.jfif",
                             Name = "GlideCase",
                             Price = 160.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 13,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 2, 25, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Vitamin C serum that brightens and smooths skin.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand3/HydraBloom Serum.jpg",
                             Name = "HydraBloom Serum",
                             Price = 250.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 14,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 7, 14, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Gentle cleanser with aloe and green tea.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand3/PureDew Cleanser.png",
                             Name = "PureDew Cleanser",
                             Price = 180.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 15,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 10, 9, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Hydrating toner that refines pores naturally.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand3/LumiMist Toner.webp",
                             Name = "LumiMist Toner",
                             Price = 210.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 16,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 3, 27, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Rich moisturizer for overnight skin repair.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand3/Radiant Night Cream.webp",
                             Name = "Radiant Night Cream",
                             Price = 330.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 17,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 9, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "SPF 50 mineral sunscreen with lightweight feel.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand3/GlowShield Sunscreen.jpg",
                             Name = "GlowShield Sunscreen",
                             Price = 290.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 18,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 4, 2, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "All-day hydration for sensitive skin.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand3/SilkTouch Moisturizer.png",
                             Name = "SilkTouch Moisturizer",
                             Price = 270.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 19,
                             BrandId = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 12, 16, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Oversized hoodie with minimalist street-style logo.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand4/StreetCore Hoodie.png",
                             Name = "StreetCore Hoodie",
                             Price = 320.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 20,
                             BrandId = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 8, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Slim-fit joggers for comfort and performance.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand4/UrbanFlex Joggers.png",
                             Name = "UrbanFlex Joggers",
                             Price = 270.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 21,
                             BrandId = 4,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 3, 2, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Modern street sneakers with breathable mesh upper.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand4/FuelRunner Sneakers.png",
                             Name = "FuelRunner Sneakers",
                             Price = 540.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 22,
                             BrandId = 4,
                             CategoryId = 8,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 10, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Lightweight windbreaker with waterproof coating.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand4/CityWave Jacket.png",
                             Name = "CityWave Jacket",
                             Price = 620.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 23,
                             BrandId = 4,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 5, 29, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Classic snapback cap with embroidered logo.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand4/SnapEdge Cap.webp",
                             Name = "SnapEdge Cap",
                             Price = 180.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 24,
                             BrandId = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 2, 11, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Soft cotton tee with subtle reflective branding.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand4/MetroLayer Tee.jpg",
                             Name = "MetroLayer Tee",
                             Price = 190.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 25,
                             BrandId = 5,
                             CategoryId = 9,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 6, 19, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Premium non-slip yoga mat made with eco rubber.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand5/ZenMat.webp",
                             Name = "ZenMat Pro",
                             Price = 350.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 26,
                             BrandId = 5,
                             CategoryId = 10,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 11, 12, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Ultrasonic diffuser with ambient lighting.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand5/AromaBliss Diffuser.webp",
                             Name = "AromaBliss Diffuser",
                             Price = 290.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 27,
                             BrandId = 5,
                             CategoryId = 11,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 9, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Soy candle infused with lavender and chamomile.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand5/CalmWave Candle.webp",
                             Name = "CalmWave Candle",
                             Price = 170.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 28,
                             BrandId = 5,
                             CategoryId = 10,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 1, 6, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Glass water bottle with bamboo lid and sleeve.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand5/Balance Bottle.webp",
                             Name = "Balance Bottle",
                             Price = 210.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 29,
                             BrandId = 5,
                             CategoryId = 12,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 3, 25, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Guided journal for mindfulness and productivity.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand5/Focus Journal.webp",
                             Name = "Focus Journal",
                             Price = 150.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 30,
                             BrandId = 5,
                             CategoryId = 10,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 4, 17, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Natural lavender mist for better sleep.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand5/Serenity Pillow Spray.jpg",
                             Name = "Serenity Pillow Spray",
                             Price = 180.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 31,
                             BrandId = 6,
                             CategoryId = 6,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 10, 3, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Fitness tracker with pulse and oxygen monitoring.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand6/AeroTrack Smart Band.png",
                             Name = "AeroTrack Smart Band",
                             Price = 540.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 32,
                             BrandId = 6,
                             CategoryId = 13,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 1, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Adjustable dumbbells for home strength training.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand6/bowflex-dumbbells.jpg",
                             Name = "FlexCore Dumbbells",
                             Price = 720.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 33,
                             BrandId = 6,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 2, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Heart-rate strap compatible with popular apps.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand6/PulsePro Chest Strap.webp",
                             Name = "PulsePro Chest Strap",
                             Price = 210.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 34,
                             BrandId = 6,
                             CategoryId = 9,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 11, 22, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "High-density mat ideal for HIIT and yoga.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand6/AeroMat Trainer.webp",
                             Name = "AeroMat Trainer",
                             Price = 250.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 35,
                             BrandId = 6,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 6, 11, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Smart bottle that tracks hydration levels.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand6/HydraFuel Bottle.jfif",
                             Name = "HydraFuel Bottle",
                             Price = 170.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 36,
                             BrandId = 6,
                             CategoryId = 14,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Lightweight shorts with moisture-wicking tech.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand6/TrainLite Shorts.jpg",
                             Name = "TrainLite Shorts",
                             Price = 260.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 37,
                             BrandId = 7,
                             CategoryId = 15,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 5, 12, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Bamboo desk lamp with rechargeable LED bulb.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand7/EcoGlow Lamp.webp",
                             Name = "EcoGlow Lamp",
                             Price = 250.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 38,
                             BrandId = 7,
                             CategoryId = 11,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 8, 9, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Soft throw blanket made from recycled cotton.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand7/GreenWave Blanket.jfif",
                             Name = "GreenWave Blanket",
                             Price = 320.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 39,
                             BrandId = 7,
                             CategoryId = 16,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Biodegradable planters perfect for indoor herbs.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand7/PlantPure Planter Set.jpg",
                             Name = "PlantPure Planter Set",
                             Price = 180.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 40,
                             BrandId = 7,
                             CategoryId = 17,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 2, 27, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Natural reed diffuser with citrus essential oils.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand7/EcoFresh Diffuser.webp",
                             Name = "EcoFresh Diffuser",
                             Price = 210.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 41,
                             BrandId = 7,
                             CategoryId = 18,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 6, 22, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Reusable air filter system for cleaner home air.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand7/PureBreeze Air Filter.webp",
                             Name = "PureBreeze Air Filter",
                             Price = 640.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 42,
                             BrandId = 7,
                             CategoryId = 16,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 1, 19, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cork coasters made from renewable materials.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand7/Harmony Coasters.jfif",
                             Name = "Harmony Coasters",
                             Price = 160.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 43,
                             BrandId = 8,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 9, 23, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "High-speed GaN charger with dual USB-C output.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand8/VoltSync Charger.webp",
                             Name = "VoltSync Charger",
                             Price = 280.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 44,
                             BrandId = 8,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 11, 5, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Ergonomic wireless mouse with silent clicks.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand8/StreamPad Mouse.jpg",
                             Name = "StreamPad Mouse",
                             Price = 240.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 45,
                             BrandId = 8,
                             CategoryId = 18,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 4, 17, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Shockproof case for portable SSDs.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand8/DataShell SSD Case.jpg",
                             Name = "DataShell SSD Case",
                             Price = 190.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 46,
                             BrandId = 8,
                             CategoryId = 5,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 9, 30, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Compact true wireless earbuds with clear audio.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand8/WavePods Mini.jpg",
                             Name = "WavePods Mini",
                             Price = 420.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 47,
                             BrandId = 8,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Color-coded USB-C and Lightning cable pack.",
+                            CreatedAt = new DateTime(2020, 3, 14, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "AvailableColors-coded USB-C and Lightning cable pack.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand8/NeonLink Cable Set.webp",
                             Name = "NeonLink Cable Set",
                             Price = 160.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 48,
                             BrandId = 8,
                             CategoryId = 19,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 7, 26, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Foldable aluminum laptop stand with cooling vents.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand8/GlideStand Laptop Dock.jpg",
                             Name = "GlideStand Laptop Dock",
                             Price = 360.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 49,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2023, 8, 3, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Refreshing foaming cleanser for daily use.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand9/AquaRenew Cleanser.png",
                             Name = "AquaRenew Cleanser",
                             Price = 180.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 50,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 10, 29, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Lightweight daily cream with niacinamide for radiant skin.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand9/BrightVeil Moisturizer.png",
                             Name = "BrightVeil Moisturizer",
                             Price = 220.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 51,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 7, 21, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Detoxifying clay mask that purifies pores naturally.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand9/PureCure Mask.jpg",
                             Name = "PureCure Mask",
                             Price = 240.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 52,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 3, 11, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Deep hydration serum enriched with hyaluronic acid.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand9/GlowHydra Serum.webp",
                             Name = "GlowHydra Serum",
                             Price = 390.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 53,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 12, 16, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Nourishing night cream with plant-based peptides.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand9/VitaLush Night Cream.webp",
                             Name = "VitaLush Night Cream",
                             Price = 260.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 54,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 5, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Balancing toner that smooths skin and reduces shine.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand9/FreshTone Toner.webp",
                             Name = "FreshTone Toner",
                             Price = 210.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 55,
                             BrandId = 10,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2020, 10, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Chic velvet dress perfect for evening occasions.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand10/VelvetEdge Dress.webp",
                             Name = "VelvetEdge Dress",
                             Price = 780.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 56,
                             BrandId = 10,
                             CategoryId = 8,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2022, 2, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Metallic cropped jacket for a bold statement look.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand10/UrbanGleam Jacket.jfif",
                             Name = "UrbanGleam Jacket",
                             Price = 650.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 57,
                             BrandId = 10,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Color-shifting sneakers that stand out everywhere.",
+                            CreatedAt = new DateTime(2023, 12, 23, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "AvailableColors-shifting sneakers that stand out everywhere.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand10/ChromaSneak Shoes.webp",
                             Name = "ChromaSneak Shoes",
                             Price = 540.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 58,
                             BrandId = 10,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2025, 1, 2, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Elegant faux-leather handbag with gold accents.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand10/LuxeLine Handbag.jfif",
                             Name = "LuxeLine Handbag",
                             Price = 720.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 59,
                             BrandId = 10,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2024, 6, 28, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Trendy cropped top for modern streetwear style.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand10/PulseFit Crop Top.webp",
                             Name = "PulseFit Crop Top",
                             Price = 190.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
                         new
                         {
                             Id = 60,
                             BrandId = 10,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedAt = new DateTime(2021, 4, 6, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Retro-futuristic shades with UV400 protection.",
                             IsCustomizable = false,
+                            MediaUrl = "Products/Brand10/NeoAura Sunglasses.jfif",
                             Name = "NeoAura Sunglasses",
                             Price = 350.00m,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
                 });
 
@@ -9465,516 +9532,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             ProductId = 5,
                             UpdatedAt = new DateTime(2025, 12, 9, 12, 11, 0, 0, DateTimeKind.Utc),
                             UserId = "user4"
-                        });
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Products.ProductImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductImage");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 1,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand1/EcoFlex T-Shirt.png"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 2,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand1/ReVibe Denim Jacket.jfif"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 3,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand1/EcoStride Sneakers.jfif"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 4,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand1/Bamboo Breeze Hoodie.png"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 5,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand1/ReLeaf Tote Bag.jfif"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 6,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand1/NatureFlow Pants.webp"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 7,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand2/SyncCharge Cable.jfif"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 8,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand2/SmartDock Pro.jfif"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 9,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand2/AirPulse Earbuds.jfif"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 10,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand2/MagGrip Phone Mount.jfif"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 11,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand2/PulseTrack Watch.jfif"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 12,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand2/GlideCase.jfif"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 13,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand3/HydraBloom Serum.jpg"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 14,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand3/PureDew Cleanser.png"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 15,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand3/LumiMist Toner.webp"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 16,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand3/Radiant Night Cream.webp"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 17,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand3/GlowShield Sunscreen.jpg"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 18,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand3/SilkTouch Moisturizer.png"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 19,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand4/StreetCore Hoodie.png"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 20,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand4/UrbanFlex Joggers.png"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 21,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand4/FuelRunner Sneakers.png"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 22,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand4/CityWave Jacket.png"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 23,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand4/SnapEdge Cap.webp"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 24,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand4/MetroLayer Tee.jpg"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 25,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand5/ZenMat.webp"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 26,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand5/AromaBliss Diffuser.webp"
-                        },
-                        new
-                        {
-                            Id = 27,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 27,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand5/CalmWave Candle.webp"
-                        },
-                        new
-                        {
-                            Id = 28,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 28,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand5/Balance Bottle.webp"
-                        },
-                        new
-                        {
-                            Id = 29,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 29,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand5/Focus Journal.webp"
-                        },
-                        new
-                        {
-                            Id = 30,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 30,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand5/Serenity Pillow Spray.jpg"
-                        },
-                        new
-                        {
-                            Id = 31,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 31,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand6/AeroTrack Smart Band.png"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 32,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand6/bowflex-dumbbells.jpg"
-                        },
-                        new
-                        {
-                            Id = 33,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 33,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand6/PulsePro Chest Strap.webp"
-                        },
-                        new
-                        {
-                            Id = 34,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 34,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand6/AeroMat Trainer.webp"
-                        },
-                        new
-                        {
-                            Id = 35,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 35,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand6/HydraFuel Bottle.jfif"
-                        },
-                        new
-                        {
-                            Id = 36,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 36,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand6/TrainLite Shorts.jpg"
-                        },
-                        new
-                        {
-                            Id = 37,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 37,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand7/EcoGlow Lamp.webp"
-                        },
-                        new
-                        {
-                            Id = 38,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 38,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand7/GreenWave Blanket.jfif"
-                        },
-                        new
-                        {
-                            Id = 39,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 39,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand7/PlantPure Planter Set.jpg"
-                        },
-                        new
-                        {
-                            Id = 40,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 40,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand7/EcoFresh Diffuser.webp"
-                        },
-                        new
-                        {
-                            Id = 41,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 41,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand7/PureBreeze Air Filter.webp"
-                        },
-                        new
-                        {
-                            Id = 42,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 42,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand7/Harmony Coasters.jfif"
-                        },
-                        new
-                        {
-                            Id = 43,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 43,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand8/VoltSync Charger.webp"
-                        },
-                        new
-                        {
-                            Id = 44,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 44,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand8/StreamPad Mouse.jpg"
-                        },
-                        new
-                        {
-                            Id = 45,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 45,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand8/DataShell SSD Case.jpg"
-                        },
-                        new
-                        {
-                            Id = 46,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 46,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand8/WavePods Mini.jpg"
-                        },
-                        new
-                        {
-                            Id = 47,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 47,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand8/NeonLink Cable Set.webp"
-                        },
-                        new
-                        {
-                            Id = 48,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 48,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand8/GlideStand Laptop Dock.jpg"
-                        },
-                        new
-                        {
-                            Id = 49,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 49,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand9/AquaRenew Cleanser.png"
-                        },
-                        new
-                        {
-                            Id = 50,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 50,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand9/BrightVeil Moisturizer.png"
-                        },
-                        new
-                        {
-                            Id = 51,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 51,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand9/PureCure Mask.jpg"
-                        },
-                        new
-                        {
-                            Id = 52,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 52,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand9/GlowHydra Serum.webp"
-                        },
-                        new
-                        {
-                            Id = 53,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 53,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand9/VitaLush Night Cream.webp"
-                        },
-                        new
-                        {
-                            Id = 54,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 54,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand9/FreshTone Toner.webp"
-                        },
-                        new
-                        {
-                            Id = 55,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 55,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand10/VelvetEdge Dress.webp"
-                        },
-                        new
-                        {
-                            Id = 56,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 56,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand10/UrbanGleam Jacket.jfif"
-                        },
-                        new
-                        {
-                            Id = 57,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 57,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand10/ChromaSneak Shoes.webp"
-                        },
-                        new
-                        {
-                            Id = 58,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 58,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand10/LuxeLine Handbag.jfif"
-                        },
-                        new
-                        {
-                            Id = 59,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 59,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand10/PulseFit Crop Top.webp"
-                        },
-                        new
-                        {
-                            Id = 60,
-                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ProductId = 60,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Url = "Products/Brand10/NeoAura Sunglasses.jfif"
                         });
                 });
 
@@ -18027,17 +17584,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Products.ProductImage", b =>
-                {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", "Product")
-                        .WithMany("Images")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ProductReels", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", "Product")
@@ -18319,8 +17865,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ProductEntites.Product", b =>
                 {
                     b.Navigation("AvailableColors");
-
-                    b.Navigation("Images");
 
                     b.Navigation("OfferProducts");
 

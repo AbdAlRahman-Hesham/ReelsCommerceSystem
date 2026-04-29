@@ -22,6 +22,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _user;
 
+
         public ReelFeedService(IUnitOfWork unitOfWork,UserManager<User> user)
         {
             _unitOfWork = unitOfWork;
@@ -63,7 +64,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     ProductId = p.Id,
                     ProductName = p.Name,
                     Price = p.Price,
-                    MediaUrl = p.MediaUrl,
+                    ProductMediaUrls = p.Images?
+                                       .Where(x => x.Url != null)
+                                       .Select(x => x.Url)
+                                       .ToList() ?? new List<string>(),
                     DiscountPercentage = p.DiscountPercentage,
                     HaveOffer = p.HaveOffer,
                     Rate = p.Reviews.Any() ? (int)Math.Round(p.Reviews.Average(rv => rv.Rating)) : 0
@@ -114,7 +118,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     ProductId = p.Id,
                     ProductName = p.Name,
                     Price = p.Price,
-                    MediaUrl = p.MediaUrl,
+                    ProductMediaUrls = p.Images?
+                                       .Where(x => x.Url != null)
+                                       .Select(x => x.Url)
+                                       .ToList() ?? new List<string>(),
                     DiscountPercentage = p.DiscountPercentage,
                     HaveOffer = p.HaveOffer,
                     Rate = p.Reviews.Any() ? (int)Math.Round(p.Reviews.Average(rv => rv.Rating)) : 0

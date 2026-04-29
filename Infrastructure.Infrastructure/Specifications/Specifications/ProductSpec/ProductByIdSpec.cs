@@ -29,6 +29,7 @@ public class ProductByIdSpec : Specification<Product>
 
         // Product Informations
         AddInclude(p => p.ProductInformations);
+        AddInclude(p => p.Images);
        
         AddOrderByDescending(p => p.Id);
 
