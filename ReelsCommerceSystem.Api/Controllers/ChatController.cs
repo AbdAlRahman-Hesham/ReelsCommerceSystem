@@ -13,15 +13,9 @@ using System.Security.Claims;
 namespace ReelsCommerceSystem.Api.Controllers;
 
 
-public class ChatController(IChatRoomService _chatRoomService,IUnitOfWork _unitOfWork) : AppBaseController
+public class ChatController(IChatRoomService _chatRoomService,IUnitOfWork _unitOfWork, IChatService _chatService) : AppBaseController
 {
 
-    private readonly IChatService _chatService;
-
-    public ChatController(IChatService chatService)
-    {
-        _chatService = chatService;
-    }
 
     // GET /api/chat/rooms
     [HttpGet("rooms")]
