@@ -23,6 +23,7 @@ public class WishlistItemSpec : Specification<WishlistItem>
         AddInclude(w => w.Product);
         AddInclude(w => w.Product.Category);
         AddInclude(w => w.Product.Brand);
+        AddInclude(w => w.Product.Images);
     }
 
 

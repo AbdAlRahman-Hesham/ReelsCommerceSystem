@@ -201,6 +201,7 @@ public class ProductSpec : Specification<Product>
 
         // Product Informations
         AddInclude(p => p.ProductInformations);
+        AddInclude(p => p.Images);
 
     }
 

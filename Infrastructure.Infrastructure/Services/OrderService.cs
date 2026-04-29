@@ -126,7 +126,7 @@ public class OrderService : IOrderService
                     Name = op.Product.Name,
                     Color = op.Color,
                     Description = op.Product.Description,
-                    ImageUrl = op.Product.MediaUrl,
+                    ProductMediaUrls = op.ProductMediaUrls.ToList(),
                     Size = op.Size,
                     Quantity = op.Quantity,
                     Price = op.FinalPrice

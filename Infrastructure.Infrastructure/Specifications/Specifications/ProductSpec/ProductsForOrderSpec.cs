@@ -14,7 +14,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Produ
         public ProductsForOrderSpec(List<int> ids)
         : base(p => ids.Contains(p.Id))
         {
-            AddInclude(p => p.AvailableColors); 
+            AddInclude(p => p.AvailableColors);
+            AddInclude(p => p.Images);
 
             AddIncludeChain(q => q
                 .Include(p => p.AvailableColors)

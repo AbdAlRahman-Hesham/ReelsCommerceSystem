@@ -47,8 +47,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 Price = item.Product.Price,
                 DiscountPercentage = item.Product.DiscountPercentage,
                 BrandName = item.Product.Brand.DisplayName,
-                ImageUrl = item.Product.MediaUrl
-            }).ToList();
+                ImageUrl = item.Product.Images?
+                           .Select(i => i.Url)
+                           .FirstOrDefault(),
+                                   }).ToList();
 
             return response;
         }

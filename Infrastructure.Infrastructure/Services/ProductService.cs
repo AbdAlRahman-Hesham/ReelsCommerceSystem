@@ -207,8 +207,9 @@ public class ProductService(
             ArDescription = product.ArDescription,
             Price = product.Price,
             Quantity = product.Quantity,
-            MediaUrl = BuildMediaUrl(product.MediaUrl),
-            MediaUrls = new List<string> { BuildMediaUrl(product.MediaUrl) },
+            MediaUrls = product.Images?
+                        .Select(x => BuildMediaUrl(x.Url))
+                        .ToList() ?? new List<string>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -230,8 +231,9 @@ public class ProductService(
             ArDescription = product.ArDescription,
             Price = product.Price,
             Quantity = product.Quantity,
-            MediaUrl = BuildMediaUrl(product.MediaUrl),
-            MediaUrls = new List<string> { BuildMediaUrl(product.MediaUrl) },
+            MediaUrls = product.Images?
+                        .Select(x => BuildMediaUrl(x.Url))
+                        .ToList() ?? new List<string>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -256,8 +258,9 @@ public class ProductService(
             ArDescription = product.ArDescription,
             Price = product.Price,
             Quantity = product.Quantity,
-            MediaUrl = BuildMediaUrl(product.MediaUrl),
-            MediaUrls = new List<string> { BuildMediaUrl(product.MediaUrl) },
+            MediaUrls = product.Images?
+                        .Select(x => BuildMediaUrl(x.Url))
+                        .ToList() ?? new List<string>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,

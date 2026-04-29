@@ -11,7 +11,8 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Product
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; }
-        public string MediaUrl { get; set; } = null!;
+        //public string MediaUrl { get; set; } = null!;
+        public List<string>? ProductMediaUrls { get; set; } = new();
         public decimal? DiscountPercentage { get; set; }
         public bool HaveOffer { get; set; }
         public int Rate { get; set; }
