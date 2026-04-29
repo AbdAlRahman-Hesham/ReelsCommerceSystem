@@ -68,6 +68,8 @@ app.UseExceptionHandlingMiddleware();
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 app.UseAuthentication();
 
 app.UseAuthorization();
@@ -81,7 +83,6 @@ app.MapHub<ChatHub>("/chatHub");
 
 app.AddAppMiddleware();
 
-app.UseStaticFiles();
 
 //await using (var scope = app.Services.CreateAsyncScope())
 //{
