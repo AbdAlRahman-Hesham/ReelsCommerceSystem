@@ -22,6 +22,7 @@ public interface IGenericRepository<T> where T : BaseEntity
     Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
     IQueryable<T> GetAllQueryable();
     Task AddRangeAsync(IEnumerable<T> entities);
+    Task DeleteRangeAsync(IEnumerable<T> entities);
 
 
 
