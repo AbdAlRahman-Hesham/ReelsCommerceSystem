@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Message;
 using ReelsCommerceSystem.Application.DTOs.Response.Chat;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Shared.Responses;
 using System.Net;
 using System.Security.Claims;
@@ -14,10 +15,14 @@ public class ChatController : AppBaseController
 {
 
     private readonly IChatService _chatService;
+    private readonly IChangeMessageStatusService _changeMessageStatusService;
 
-    public ChatController(IChatService chatService)
+
+
+    public ChatController(IChatService chatService, IChangeMessageStatusService changeMessageStatusService)
     {
         _chatService = chatService;
+        _changeMessageStatusService = changeMessageStatusService;
     }
 
     // GET /api/chat/rooms
@@ -31,14 +36,28 @@ public class ChatController : AppBaseController
     // GET /api/chat/rooms/{roomIdEncr}/messages?page=1&pageSize=20&unreadonly=false&afterMessageId=XXX
     [HttpGet("rooms/{roomIdEncr}/messages")]
     [Authorize]
-    public IActionResult GetMessages(
-        string roomIdEncr,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        [FromQuery] bool unreadonly = false,
-        [FromQuery] string afterMessageId = null)
+    public async Task<IActionResult> GetMessages
+        (
+            string roomIdEncr,
+            [FromQuery] int? page,
+            [FromQuery] int? pageSize,
+            [FromQuery] bool? unreadOnly,
+            [FromQuery] string? afterMessageId
+        )
     {
-        throw new NotImplementedException();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _chatService.GetMessagesAsync(
+            userId,
+            roomIdEncr,
+            page,
+            pageSize,
+            unreadOnly,
+            afterMessageId);
+
+        return Ok(result);
     }
 
     // GET /api/chat/rooms/unreadCount/{roomIdEncr}
@@ -67,7 +86,7 @@ public class ChatController : AppBaseController
                     result,
                     HttpStatusCode.OK,
                     "Message sent successfully",
-                    "?? ????? ??????? ?????"
+                    "تم ارسال الرساله بنجاح"
                 ));
             }
             catch (UnauthorizedAccessException ex)
@@ -75,7 +94,7 @@ public class ChatController : AppBaseController
                 return Unauthorized(ApiResponse<string>.ErrorResponse(
                     HttpStatusCode.Unauthorized,
                     ex.Message,
-                    "??? ???? ?? ?????? ???????"
+                   "غير مصرح لك بالدخول يرجي تسجيل الدخول"
                 ));
             }
             catch (Exception ex)
@@ -83,14 +102,14 @@ public class ChatController : AppBaseController
                 return BadRequest(ApiResponse<string>.ErrorResponse(
                     HttpStatusCode.BadRequest,
                     "Something went wrong",
-                    "??? ??? ??",
+                    "حدث خطأ ما",
                     new List<ValidationError>
                     {
                     new ValidationError
                     {
                         Field = "Server",
                         En = ex.Message,
-                        Ar = "??? ????? ?? ???????"
+                       Ar = "حدث خطا"
                     }
                     }
                 ));
@@ -99,7 +118,7 @@ public class ChatController : AppBaseController
     }
 
             // POST /api/chat/room?brandId=1
-            [HttpPost("room")]
+    [HttpPost("room")]
     [Authorize]
     public IActionResult CreateRoom([FromQuery] int brandId)
     {
@@ -110,8 +129,47 @@ public class ChatController : AppBaseController
     // POST /api/chat/status
     [HttpPost("status")]
     [Authorize]
-    public IActionResult UpdateStatus(/*[FromBody] StatusReq request*/)
+    public async Task<IActionResult> ChangeMessageStatus(
+    [FromBody] ChangeMessageStatusReq request)
     {
-        throw new NotImplementedException();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+       var Result= await _changeMessageStatusService.ChangeStatusAsync(
+            userId,
+            request.RoomId,
+            request.Status,
+            request.MessageIdsEncrypted);
+
+        return StatusCode(Result.StatusCode, Result);
+    }
+
+    [HttpDelete("message/{messageIdEnc}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteMessage(string messageIdEnc)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _chatService.DeleteMessageAsync(userId, messageIdEnc);
+
+        return Ok(result);
+    }
+    [HttpDelete("room/{roomIdEnc}/messages")]
+    [Authorize]
+    public async Task<IActionResult> DeleteAllMessages(string roomIdEnc)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _chatService.DeleteAllMessagesAsync(userId, roomIdEnc);
+
+        return Ok(result);
     }
 }

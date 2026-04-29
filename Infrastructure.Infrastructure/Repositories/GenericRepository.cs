@@ -87,4 +87,8 @@ public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> 
     {
         await _context.Set<T>().AddRangeAsync(entities);
     }
+    public  void DeleteRange(IEnumerable<T> entities)
+    {
+        _dbSet.RemoveRange(entities);
+    }
 }
