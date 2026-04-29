@@ -284,7 +284,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
                 
                 //  HARD DELETE ALL
-                _unitOfWork.Repository<Message>().DeleteRange(messages);
+                await _unitOfWork.Repository<Message>().DeleteRangeAsync(messages);
 
                 await _unitOfWork.SaveChangesAsync();
 
