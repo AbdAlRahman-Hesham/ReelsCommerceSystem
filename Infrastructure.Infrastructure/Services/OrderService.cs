@@ -63,20 +63,34 @@ public class OrderService : IOrderService
 
     public async Task<UserOrdersResDto> GetUserOrdersAsync(string userId)
     {
-        var orders = await _unitOfWork.Repository<Order>().GetAllAsync();
-        var userOrders = orders.Where(o => o.UserId == userId).ToList();
+        var orders = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => o.UserId == userId)
+            .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                    .ThenInclude(p => p.Images)
+            .ToListAsync();
 
         var response = new UserOrdersResDto();
 
-        foreach (var order in userOrders)
+        foreach (var order in orders)
         {
+            var items = order.OrderProducts.Select(op => new OrderItemImageDto
+            {
+                ProductName = op.Product.Name,
+                ProductId = op.ProductId,
+                ProductImage = op.Product.Images?.FirstOrDefault()?.Url,
+                Price = op.FinalPrice,
+                Quantity = op.Quantity
+            }).ToList();
+
             var dto = new OrderResDto
             {
                 Id = order.Id,
                 CreatedAt = order.CreatedAt,
                 TotalAmount = order.TotalAmount,
                 OrderStatus = order.OrderStatus,
-                PaymentStatus = order.PaymentStatus
+                PaymentStatus = order.PaymentStatus,
+                Items = items
             };
 
             if (order.OrderStatus == OrderStatus.Delivered)
@@ -100,6 +114,9 @@ public class OrderService : IOrderService
     {
         var order = await _unitOfWork.Repository<Order>().GetAllQueryable()
             .Where(o => o.Id == orderId && o.UserId == userId)
+            .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                    .ThenInclude(p => p.Images)
             .Select(o => new OrderDetailResDto
             {
                 Id = o.Id,
@@ -301,7 +318,8 @@ public class OrderService : IOrderService
                 Quantity = cartItem.Quantity,
                 FinalPrice = finalPrice,
                 Color = cartItem.Color,
-                Size = cartItem.Size
+                Size = cartItem.Size,
+                ProductMediaUrls = product.Images?.Select(i => i.Url).ToList() ?? new List<string>()
             });
         }
 
@@ -347,4 +365,73 @@ public class OrderService : IOrderService
             OrderProducts = orderProducts
         };
     }
+
+    public async Task<OrderSummaryResDto> GetOrderSummaryAsync(string userId, CreateOrderReq request)
+    {
+        var address = await ResolveAddressAsync(userId, request);
+        var cart = _cartCache.GetCart(userId);
+
+        if (cart == null || cart.ProductCarts == null || !cart.ProductCarts.Any())
+            throw new BadRequestException(new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Cart",
+                    En = "Cart is empty",
+                    Ar = "عربة التسوق فارغة"
+                }
+            });
+
+        var orderProducts = await BuildOrderProductsAsync(cart);
+        var subTotal = orderProducts.Sum(p => p.FinalPrice * p.Quantity);
+        var shipping = CalculateShipping(request.DeliveryMethod);
+        var discountAmount = request.DiscountAmount ?? 0;
+        var total = subTotal + shipping - discountAmount;
+
+        // Build items with pricing details
+        var items = orderProducts.Select(op => new OrderSummaryItemResDto
+        {
+            ProductId = op.ProductId.Value,
+            ProductName = op.ProductName,
+            Color = op.Color,
+            Size = op.Size,
+            Quantity = op.Quantity,
+            UnitPrice = op.FinalPrice,
+            DiscountPercentage = null, // Will be calculated based on product if needed
+            PriceAfterDiscount = op.FinalPrice,
+            TotalItemPrice = op.FinalPrice * op.Quantity,
+            ProductImages = op.ProductMediaUrls ?? new List<string>()
+        }).ToList();
+
+        // Build summary
+        var summary = new OrderSummarySummaryResDto
+        {
+            ShippingAddress = new OrderAddressSummaryResDto
+            {
+                Name = address.Name,
+                LastName = address.LastName,
+                Street = address.Street,
+                Building = address.Building,
+                Floor = address.Floor,
+                Apartment = address.Apartment,
+                City = address.City,
+                Country = address.Country,
+                PostalCode = address.Postcode,
+                PhoneNumber = address.PhoneNumber
+            },
+            SubTotal = subTotal,
+            DiscountAmount = discountAmount,
+            ShippingPrice = shipping,
+            DeliveryMethod = request.DeliveryMethod.ToString(),
+            PaymentMethod = request.PaymentMethod.ToString(),
+            Total = total
+        };
+
+        return new OrderSummaryResDto
+        {
+            Items = items,
+            Summary = summary
+        };
+    }
 }
+

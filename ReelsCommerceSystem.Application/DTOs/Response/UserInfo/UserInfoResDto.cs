@@ -16,5 +16,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.UserInfo
         public string Gender { get; set; } = default!;
         public DateTime DateOfBirth { get; set; } 
         public string ProfileImageUrl { get; set; } = default!;
+        public int NumberOfFollowing { get; set; } = 0;
+        public int NumberOfOrders { get; set; } = 0;
     }
 }
