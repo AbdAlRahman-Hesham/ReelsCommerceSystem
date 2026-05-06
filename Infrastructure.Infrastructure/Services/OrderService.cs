@@ -133,6 +133,7 @@ public class OrderService : IOrderService
                     ShippingPostalCode = o.ShippingPostalCode,
                     ShippingPhoneNumber = o.ShippingPhoneNumber,
                     PaymentMethod = o.PaymentMethod,
+                    PaymentStatus = o.PaymentStatus,
                     DeliveryMethod = o.DeliveryMethod,
                     Discount = o.DiscountAmount,
                     TotalAmount = o.TotalAmount
@@ -166,13 +167,21 @@ public class OrderService : IOrderService
                     Ar = "عربة التسوق فارغة"
                 }
             });
-        var orderProducts = await BuildOrderProductsAsync(cart);
+        var discountCode = await ResolveDiscountCodeAsync(request.DiscountCode);
+        var orderProducts = await BuildOrderProductsAsync(cart, discountCode?.DiscountValue);
         var subTotal = orderProducts.Sum(p => p.FinalPrice * p.Quantity);
         var shipping = CalculateShipping(request.DeliveryMethod);
+        var discountAmount = subTotal > 0 ? orderProducts.Sum(p => p.AppliedDiscountCodeAmount * p.Quantity) : 0;
         var total = subTotal + shipping;
-        var order = CreateOrderEntity(userId, address, request, orderProducts, total);
+        var order = CreateOrderEntity(userId, address, request, orderProducts, total, discountAmount, discountCode?.Id);
 
         await _unitOfWork.Repository<Order>().AddAsync(order);
+        
+        if (discountCode != null)
+        {
+            discountCode.UsageCount++;
+            _unitOfWork.Repository<DiscountCode>().Update(discountCode);
+        }
 
         _cartCache.ClearCart(userId);
 
@@ -246,7 +255,7 @@ public class OrderService : IOrderService
             }
         });
     }
-    private async Task<List<OrderProduct>> BuildOrderProductsAsync(Cart cart)
+    private async Task<List<OrderProduct>> BuildOrderProductsAsync(Cart cart, decimal? discountCodePercentage = null)
     {
         var productIds = cart.ProductCarts.Select(c => c.ProductId).ToList();
 
@@ -308,7 +317,7 @@ public class OrderService : IOrderService
 
             sizeMapping.Quantity -= cartItem.Quantity;
 
-            var finalPrice = CalculateFinalPrice(product);
+            var (finalPrice, appliedDiscountAmount) = CalculateFinalPrice(product, discountCodePercentage);
 
             orderProducts.Add(new OrderProduct
             {
@@ -317,6 +326,7 @@ public class OrderService : IOrderService
                 BrandId = product.BrandId,
                 Quantity = cartItem.Quantity,
                 FinalPrice = finalPrice,
+                AppliedDiscountCodeAmount = appliedDiscountAmount,
                 Color = cartItem.Color,
                 Size = cartItem.Size,
                 ProductMediaUrls = product.Images?.Select(i => i.Url).ToList() ?? new List<string>()
@@ -325,22 +335,32 @@ public class OrderService : IOrderService
 
         return orderProducts;
     }
-    private decimal CalculateFinalPrice(Product product)
+    private (decimal FinalPrice, decimal AppliedDiscountCodeAmount) CalculateFinalPrice(Product product, decimal? discountCodePercentage)
     {
+        decimal finalPrice = product.Price;
+        decimal appliedDiscountCodeAmount = 0;
+
         if (product.DiscountPercentage.HasValue && product.DiscountPercentage > 0)
         {
             var discountAmount = product.Price * (product.DiscountPercentage.Value / 100m);
-            return product.Price - discountAmount;
+            finalPrice = product.Price - discountAmount;
+        }
+        else if (discountCodePercentage.HasValue && discountCodePercentage > 0)
+        {
+            appliedDiscountCodeAmount = product.Price * (discountCodePercentage.Value / 100m);
+            finalPrice = product.Price - appliedDiscountCodeAmount;
         }
 
-        return product.Price;
+        return (finalPrice, appliedDiscountCodeAmount);
     }
     private Order CreateOrderEntity(
     string userId,
     Address address,
     CreateOrderReq request,
     List<OrderProduct> orderProducts,
-    decimal total)
+    decimal total,
+    decimal discountAmount,
+    int? discountCodeId)
     {
         return new Order
         {
@@ -361,6 +381,8 @@ public class OrderService : IOrderService
             ShippingBuilding = address.Building,
             ShippingFloor = address.Floor,
             ShippingApartment = address.Apartment,
+            DiscountAmount = discountAmount,
+            DiscountCodeId = discountCodeId,
 
             OrderProducts = orderProducts
         };
@@ -382,11 +404,12 @@ public class OrderService : IOrderService
                 }
             });
 
-        var orderProducts = await BuildOrderProductsAsync(cart);
+        var discountCode = await ResolveDiscountCodeAsync(request.DiscountCode);
+        var orderProducts = await BuildOrderProductsAsync(cart, discountCode?.DiscountValue);
         var subTotal = orderProducts.Sum(p => p.FinalPrice * p.Quantity);
         var shipping = CalculateShipping(request.DeliveryMethod);
-        var discountAmount = request.DiscountAmount ?? 0;
-        var total = subTotal + shipping - discountAmount;
+        var discountAmount = subTotal > 0 ? orderProducts.Sum(p => p.AppliedDiscountCodeAmount * p.Quantity) : 0;
+        var total = subTotal + shipping;
 
         // Build items with pricing details
         var items = orderProducts.Select(op => new OrderSummaryItemResDto
@@ -432,6 +455,22 @@ public class OrderService : IOrderService
             Items = items,
             Summary = summary
         };
+    }
+
+    private async Task<DiscountCode?> ResolveDiscountCodeAsync(string? code)
+    {
+        if (string.IsNullOrWhiteSpace(code)) return null;
+
+        var discountCode = await _unitOfWork.Repository<DiscountCode>()
+            .FirstOrDefaultAsync(d => d.Code == code);
+
+        if (discountCode == null)
+            throw new BadRequestException("Invalid discount code");
+
+        if (discountCode.ExpirationDate < DateTime.UtcNow)
+            throw new BadRequestException("Discount code has expired");
+
+        return discountCode;
     }
 }
 

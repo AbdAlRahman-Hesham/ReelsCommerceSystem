@@ -63,5 +63,15 @@ public class OrderController : AppBaseController
 
         return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, "Order status updated successfully."));
     }
+
+    [HttpPost("Summary")]
+    public async Task<IActionResult> GetOrderSummary([FromBody] CreateOrderReq request)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var summary = await _orderService.GetOrderSummaryAsync(userId, request);
+        return Ok(ApiResponse<object>.SuccessResponse(summary, HttpStatusCode.OK, "Order summary retrieved successfully."));
+    }
 }
 
