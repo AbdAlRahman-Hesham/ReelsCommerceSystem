@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260430124919_AddImageUrlForCategory")]
+    partial class AddImageUrlForCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1332,42 +1335,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.DiscountCode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("DiscountValue")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UsageCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("DiscountCodes");
-                });
-
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -1387,9 +1354,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.Property<decimal>("DiscountAmount")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("DiscountCodeId")
-                        .HasColumnType("int");
 
                     b.Property<string>("OrderStatus")
                         .IsRequired()
@@ -1465,8 +1429,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DiscountCodeId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
@@ -1511,10 +1473,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("AppliedDiscountCodeAmount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
@@ -17945,17 +17903,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
                 {
-                    b.HasOne("ReelsCommerceSystem.Domain.Entities.OrderEntities.DiscountCode", "DiscountCode")
-                        .WithMany("Orders")
-                        .HasForeignKey("DiscountCodeId");
-
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.UserEntities.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("DiscountCode");
 
                     b.Navigation("User");
                 });
@@ -18382,11 +18334,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.Offer", b =>
                 {
                     b.Navigation("OfferProducts");
-                });
-
-            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.DiscountCode", b =>
-                {
-                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>

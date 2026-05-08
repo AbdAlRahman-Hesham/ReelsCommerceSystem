@@ -308,7 +308,8 @@ public class ProductService(
         {
             Id = category.Id,
             Name = category.Name,
-            ArName = category.ArName
+            ArName = category.ArName,
+            ImageUrl = category.ImageUrl
         };
     }
 
