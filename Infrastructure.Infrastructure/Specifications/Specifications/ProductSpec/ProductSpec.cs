@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Params;
+using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
@@ -8,32 +8,67 @@ public class ProductSpec : Specification<Product>
 {
     public ProductSpec(ProductSpecParams productSpecParams) : this()
     {
+        // Prepare parsed values for more complex checks (handled outside the expression tree)
+        string[]? colors = null;
+        if (productSpecParams.Colors != null && productSpecParams.Colors.Any())
+        {
+            colors = productSpecParams.Colors
+                .Select(s => s.Trim().ToLower())
+                .ToArray();
+        }
+
+        string[]? sizes = null;
+        if (productSpecParams.Sizes != null && productSpecParams.Sizes.Any())
+        {
+            sizes = productSpecParams.Sizes
+                .Select(s => s.Trim().ToLower())
+                .ToArray();
+        }
+
+        // Normalize stock status
+        var stockStatusNormalized = string.IsNullOrWhiteSpace(productSpecParams.StockStatus)
+            ? null
+            : productSpecParams.StockStatus.Replace(" ", "").ToLower();
+
+        // Try parse category as id
+        int? categoryId = null;
+        if (!string.IsNullOrWhiteSpace(productSpecParams.Category) && int.TryParse(productSpecParams.Category, out var parsedCat))
+            categoryId = parsedCat;
+
+        string? searchLower = productSpecParams.Search?.ToLower();
+        string? categoryLower = productSpecParams.Category?.ToLower();
+
         AddCriteria(p =>
             (string.IsNullOrEmpty(productSpecParams.Search) ||
-             p.Name.ToLower().Contains(productSpecParams.Search.ToLower()) ||
-             p.Description.ToLower().Contains(productSpecParams.Search.ToLower()) ||
-             p.Brand.DisplayName.ToLower().Contains(productSpecParams.Search.ToLower())) &&
+             p.Name.ToLower().Contains(searchLower!) ||
+             p.Description.ToLower().Contains(searchLower!) ||
+             p.Brand.DisplayName.ToLower().Contains(searchLower!)) &&
 
-            (string.IsNullOrEmpty(productSpecParams.Color) ||
-             p.AvailableColors.Any(ac =>
-                 ac.ProductColor.Name.ToLower() == productSpecParams.Color.ToLower() ||
-                 ac.ProductColor.ArName.ToLower() == productSpecParams.Color.ToLower())) &&
+            (colors == null || p.AvailableColors.Any(ac =>
+                 colors.Contains(ac.ProductColor.Name.ToLower()) ||
+                 colors.Contains(ac.ProductColor.ArName.ToLower()))) &&
 
-            (string.IsNullOrEmpty(productSpecParams.Size) || p.AvailableColors.SelectMany(c => c.AvailableSizes)
-                                                                               .Any(s => s.ProductSize.Size.ToString().ToLower() 
-                                                                                         == productSpecParams.Size.ToLower())) &&
+            (sizes == null || p.AvailableColors.SelectMany(c => c.AvailableSizes)
+                                               .Any(s => sizes.Contains(s.ProductSize.Size.ToString().ToLower()))) &&
 
             (!productSpecParams.MinPrice.HasValue || p.Price >= productSpecParams.MinPrice.Value) &&
             (!productSpecParams.MaxPrice.HasValue || p.Price <= productSpecParams.MaxPrice.Value) &&
 
-            (!productSpecParams.HaveOffer.HasValue || p.HaveOffer == productSpecParams.HaveOffer.Value) &&
+            (!productSpecParams.HaveOffer.HasValue || 
+                (productSpecParams.HaveOffer.Value 
+                    ? (p.DiscountPercentage != null && p.DiscountPercentage > 0) 
+                    : (p.DiscountPercentage == null || p.DiscountPercentage <= 0))) &&
 
-            (string.IsNullOrEmpty(productSpecParams.StockStatus) ||
-             p.Status.ToString().ToLower() == productSpecParams.StockStatus.ToLower()) && 
+            (stockStatusNormalized == null ||
+                (stockStatusNormalized == "instock" && p.AvailableColors.Any(ac => ac.AvailableSizes.Any(s => s.Quantity > 0))) ||
+                (stockStatusNormalized == "outstock" && !p.AvailableColors.Any(ac => ac.AvailableSizes.Any(s => s.Quantity > 0)))) &&
 
-            (string.IsNullOrEmpty(productSpecParams.Category) || p.Category.Name == productSpecParams.Category) &&
+            (string.IsNullOrEmpty(productSpecParams.Category) ||
+                (categoryId.HasValue && p.CategoryId == categoryId.Value) ||
+                p.Category.Name.ToLower() == categoryLower ||
+                p.Category.ArName.ToLower() == categoryLower) &&
 
-            (productSpecParams.BrandId == null || p.BrandId == productSpecParams.BrandId)
+            (productSpecParams.BrandId == null || productSpecParams.BrandId <= 0 || p.BrandId == productSpecParams.BrandId)
         );
 
         AddIncludes();
@@ -166,6 +201,7 @@ public class ProductSpec : Specification<Product>
 
         // Product Informations
         AddInclude(p => p.ProductInformations);
+        AddInclude(p => p.Images);
 
     }
 

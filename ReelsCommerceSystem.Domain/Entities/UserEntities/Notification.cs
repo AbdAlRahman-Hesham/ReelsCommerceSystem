@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Domain.Common;
+using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -27,6 +27,10 @@ namespace ReelsCommerceSystem.Domain.Entities.UserEntities
         [Required]
         [MaxLength(500)]
         public string Message { get; set; }
+
+        [Required]
+        [MaxLength(500)]
+        public string MessageAr { get; set; }
 
         public bool IsRead { get; set; } = false;
 

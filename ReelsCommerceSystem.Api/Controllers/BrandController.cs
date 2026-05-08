@@ -52,7 +52,7 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
     public async Task<IActionResult> GetReviewsForBrand(int brandId)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        Console.WriteLine("UserID = " + userId);
+        //Console.WriteLine("UserID = " + userId);
 
         var result = await _brandReviewRepository.GetAllWithSpecAsync(new ReviewsPerBrandSpec(brandId));
 

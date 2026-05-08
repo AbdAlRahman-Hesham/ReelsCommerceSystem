@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Application.DTOs.Request.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.Identity;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -18,7 +18,7 @@ public class AuthenticationService(UserManager<User> _userManager,
         var User = await _userManager.FindByEmailAsync(loginReqDto.Email) ?? throw new UserNotFoundException(loginReqDto.Email);
 
         if (!User.EmailConfirmed)
-            throw new UnauthorizedException();
+             throw new UnauthorizedException();
 
         var IsPasswordValid = await _userManager.CheckPasswordAsync(User, loginReqDto.Password);
         if (IsPasswordValid)

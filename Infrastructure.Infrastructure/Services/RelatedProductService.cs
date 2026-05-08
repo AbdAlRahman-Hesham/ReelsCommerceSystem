@@ -67,7 +67,9 @@ public class RelatedProductService : IRelatedProductService
         var relatedDtos = relatedProducts.Select(p => new GetRelatedProductDto
         {
             Id = p.Id,
-            PictureUrl = string.IsNullOrEmpty(p.MediaUrl) ? null : $"{host}/{p.MediaUrl.TrimStart('/')}",
+            PictureUrl = p.Images?
+                        .Select(i => $"{host.TrimEnd('/')}/{i.Url.TrimStart('/')}")
+                        .FirstOrDefault(),
             Name = p.Name,
             Price = p.Price,
             HaveOffer = p.HaveOffer,

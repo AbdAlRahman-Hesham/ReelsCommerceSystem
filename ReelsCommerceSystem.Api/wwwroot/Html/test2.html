@@ -13,14 +13,14 @@
     <script>
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/notificationHub?userId=bf5400b3-f6ec-403c-b9a7-f8b26835b767")
+            .withUrl("/notificationHub?userId=2da288b9-6513-49ea-aa75-2aaa7bd97029")
             .build();
 
         connection.on("ReceiveNotification", function (notification) {
             console.log("Notification:", notification);
 
             const div = document.getElementById("notifications");
-            div.innerHTML += `<p>${notification.message}</p>`;
+            div.innerHTML += `<p>EN: ${notification.message} <br> AR: ${notification.messageAr}</p>`;
         });
 
         connection.on("UpdateUnreadCount", function (count) {

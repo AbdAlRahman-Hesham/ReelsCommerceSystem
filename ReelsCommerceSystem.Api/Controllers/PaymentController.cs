@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Payment;
 using ReelsCommerceSystem.Application.DTOs.Response.Payment;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -37,7 +37,7 @@ namespace ReelsCommerceSystem.Api.Controllers
             }
         }
 
-        [HttpPost("api/payments/wallet")]
+        [HttpPost("wallet")]
         public async Task<IActionResult> PayWithWallet([FromBody] WalletPaymentReq request)
         {
             var result = await _paymentService.ProcessPaymentAsync(
@@ -46,6 +46,13 @@ namespace ReelsCommerceSystem.Api.Controllers
                 userPhone: request.Phone
             );
 
+            return Ok(result);
+        }
+
+        [HttpPost("pay-on-delivery/{orderId}")]
+        public async Task<IActionResult> PayOnDelivery(int orderId)
+        {
+            var result = await _paymentService.SetPayOnDeliveryAsync(orderId);
             return Ok(result);
         }
     }

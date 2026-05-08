@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.UserProfile;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Exceptions;
 using System.Security.Claims;
 using System.Net;
 using System.Threading.Tasks;
@@ -75,11 +76,28 @@ public class UserProfileController : AppBaseController
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var result = await _userProfileService.UpdateProfileAsync(userId, profileDto);
-        if (result)
-            return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, "Profile updated successfully."));
+        try
+        {
+            var result = await _userProfileService.UpdateProfileAsync(userId, profileDto);
+            
+            string message = result.IsEmailChanged 
+                ? "Profile updated. A verification code has been sent to your new email."
+                : "Profile updated successfully.";
+            
+            string messageAr = result.IsEmailChanged
+                ? "تم تحديث الملف الشخصي. تم إرسال رمز التحقق إلى بريدك الإلكتروني الجديد."
+                : "تم تحديث الملف الشخصي بنجاح.";
 
-        return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to update profile.", "فشل في تحديث الملف الشخصي."));
+            return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, message, messageAr));
+        }
+        catch (BadRequestException ex)
+        {
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to update profile.", "فشل في تحديث الملف الشخصي.", ex.Errors));
+        }
+        catch (System.Exception)
+        {
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to update profile.", "فشل في تحديث الملف الشخصي."));
+        }
     }
 
     [HttpPut("UpdatePassword")]
@@ -109,16 +127,44 @@ public class UserProfileController : AppBaseController
         return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to update profile image.", "فشل في تحديث صورة الملف الشخصي."));
     }
 
-    [HttpDelete("DeleteAccount")]
-    public async Task<IActionResult> DeleteAccount()
+    [HttpPost("RequestDeleteAccountOtp")]
+    public async Task<IActionResult> RequestDeleteAccountOtp()
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var result = await _userProfileService.DeleteAccountAsync(userId);
-        if (result)
-            return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, "Account deleted successfully."));
+        try
+        {
+            await _userProfileService.RequestDeleteAccountOtpAsync(userId);
+            return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, "Verification code sent to your email.", "تم إرسال رمز التحقق إلى بريدك الإلكتروني."));
+        }
+        catch (System.Exception ex)
+        {
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, ex.Message, "فشل في إرسال رمز التحقق."));
+        }
+    }
 
-        return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to delete account.", "فشل في حذف الحساب."));
+    [HttpDelete("DeleteAccount")]
+    public async Task<IActionResult> DeleteAccount([FromBody] DeleteAccountReqDto deleteDto)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        try
+        {
+            var result = await _userProfileService.DeleteAccountAsync(userId, deleteDto);
+            if (result)
+                return Ok(ApiResponse<object>.SuccessResponse(null, HttpStatusCode.OK, "Account deleted successfully.", "تم حذف الحساب بنجاح."));
+            
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Failed to delete account.", "فشل في حذف الحساب."));
+        }
+        catch (BadRequestException ex)
+        {
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, "Verification failed.", "فشل التحقق.", ex.Errors));
+        }
+        catch (System.Exception ex)
+        {
+            return BadRequest(ApiResponse<object>.ErrorResponse(HttpStatusCode.BadRequest, ex.Message, "فشل في حذف الحساب."));
+        }
     }
 }

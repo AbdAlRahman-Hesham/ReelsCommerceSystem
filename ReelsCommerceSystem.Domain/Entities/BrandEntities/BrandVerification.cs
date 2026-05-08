@@ -10,16 +10,16 @@ namespace ReelsCommerceSystem.Domain.Entities.BrandEntities
     public class BrandVerification : BaseEntity
     {
         public int BrandId { get; set; }
-        public Brand Brand { get; set; }
+        public Brand Brand { get; set; } = null!;
 
-        public string FullName { get; set; }
-        public string NationalId { get; set; }
-        public string TaxNumber { get; set; }
+        public string FullName { get; set; } = null!;
+        public string NationalId { get; set; } = null!;
+        public string? TaxNumber { get; set; }
 
-        public string IdFrontImage { get; set; }
-        public string IdBackImage { get; set; }
-        public string SelfieImage { get; set; }
+        public string IdFrontImage { get; set; } = null!;
+        public string IdBackImage { get; set; } = null!;
+        public string SelfieImage { get; set; } = null!;
 
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = null!;
     }
 }

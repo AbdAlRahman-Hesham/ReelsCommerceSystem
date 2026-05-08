@@ -125,8 +125,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
                 var paymentKeyRaw = await paymentKeyResponse.Content.ReadAsStringAsync();
 
-                Console.WriteLine("=== Payment Key Response ===");
-                Console.WriteLine(paymentKeyRaw);
+                //Console.WriteLine("=== Payment Key Response ===");
+                //Console.WriteLine(paymentKeyRaw);
 
                 if (!paymentKeyResponse.IsSuccessStatusCode)
                     return ApiResponse<string>.ErrorResponse(HttpStatusCode.InternalServerError, $"Payment key failed: {paymentKeyRaw}", $"فشل إنشاء مفتاح الدفع: {paymentKeyRaw}");
@@ -159,8 +159,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
                     var walletRaw = await walletResponse.Content.ReadAsStringAsync();
 
-                    Console.WriteLine("Wallet Response from Paymob:");
-                    Console.WriteLine(walletRaw);
+                    //Console.WriteLine("Wallet Response from Paymob:");
+                    //Console.WriteLine(walletRaw);
 
                     if (!walletResponse.IsSuccessStatusCode)
                         return ApiResponse<string>.ErrorResponse(HttpStatusCode.InternalServerError, $"Wallet payment failed: {walletRaw}", $"فشل دفع المحفظة: {walletRaw}");

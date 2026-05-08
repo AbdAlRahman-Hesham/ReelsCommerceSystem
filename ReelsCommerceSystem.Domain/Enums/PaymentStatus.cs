@@ -1,4 +1,4 @@
-﻿namespace ReelsCommerceSystem.Domain.Enums;
+namespace ReelsCommerceSystem.Domain.Enums;
 
 public enum PaymentStatus
 {
@@ -6,6 +6,7 @@ public enum PaymentStatus
     Paid,
     Failed,
     Refunded,
-    Voided
+    Voided,
+    PayOnDelivery
 
 }

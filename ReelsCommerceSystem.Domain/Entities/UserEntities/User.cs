@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
@@ -14,6 +14,7 @@ public class User : IdentityUser
 {
     public string DisplayName { get; set; } = default!;
     public string ImageURL { get; set; } = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg";
+    public bool IsBrandOwner => Brand != null;
     public ICollection<Address> ShippingAddresses { get; set; } = new List<Address>();
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
@@ -39,5 +40,5 @@ public class User : IdentityUser
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
     public Brand? Brand { get; set; }
 
-
+    public bool IsBanned { get; set; } = false;
 }

@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Domain.Common;
+using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
@@ -21,6 +21,7 @@ public class OrderProduct : BaseEntity
     public Order Order { get; set; }
 
     public decimal FinalPrice { get; set; }
+    public decimal AppliedDiscountCodeAmount { get; set; }
     public int Quantity { get; set; }
 
     public string Color { get; set; }
@@ -30,7 +31,8 @@ public class OrderProduct : BaseEntity
     public string? MoreDetails { get; set; }
 
     public bool IsCustomized { get; set; }
-    public string? MediaUrl { get; set; }
+    //public string? MediaUrl { get; set; }
+    public List<string>? ProductMediaUrls { get; set; } = new();
 
 
 }

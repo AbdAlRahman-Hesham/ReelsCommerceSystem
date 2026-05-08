@@ -21,6 +21,8 @@ public class OrderService : IOrderService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICartCacheService _cartCache;
+    private readonly INotificationService _notificationService;
+
     private decimal CalculateShipping(DeliveryMethod method)
     {
         return method switch
@@ -32,31 +34,66 @@ public class OrderService : IOrderService
         };
     }
 
-    public OrderService(IUnitOfWork unitOfWork, ICartCacheService cartCache)
+    public OrderService(IUnitOfWork unitOfWork, ICartCacheService cartCache, INotificationService notificationService)
     {
         _unitOfWork = unitOfWork;
         _cartCache = cartCache;
+        _notificationService = notificationService;
+    }
+
+    public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
+    {
+        var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId);
+        if (order == null) return false;
+
+        if (order.OrderStatus == newStatus) return true; // No change needed
+
+        order.OrderStatus = newStatus;
+        _unitOfWork.Repository<Order>().Update(order);
+        var result = await _unitOfWork.SaveChangesAsync();
+
+        if (result > 0)
+        {
+            await _notificationService.SendOrderStatusNotificationAsync(order, newStatus);
+            return true;
+        }
+
+        return false;
     }
 
     public async Task<UserOrdersResDto> GetUserOrdersAsync(string userId)
     {
-        var orders = await _unitOfWork.Repository<Order>().GetAllAsync();
-        var userOrders = orders.Where(o => o.UserId == userId).ToList();
+        var orders = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => o.UserId == userId)
+            .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                    .ThenInclude(p => p.Images)
+            .ToListAsync();
 
         var response = new UserOrdersResDto();
 
-        foreach (var order in userOrders)
+        foreach (var order in orders)
         {
+            var items = order.OrderProducts.Select(op => new OrderItemImageDto
+            {
+                ProductName = op.Product.Name,
+                ProductId = op.ProductId,
+                ProductImage = op.Product.Images?.FirstOrDefault()?.Url,
+                Price = op.FinalPrice,
+                Quantity = op.Quantity
+            }).ToList();
+
             var dto = new OrderResDto
             {
                 Id = order.Id,
                 CreatedAt = order.CreatedAt,
                 TotalAmount = order.TotalAmount,
                 OrderStatus = order.OrderStatus,
-                PaymentStatus = order.PaymentStatus
+                PaymentStatus = order.PaymentStatus,
+                Items = items
             };
 
-            if (order.OrderStatus == OrderStatus.Deliverd)
+            if (order.OrderStatus == OrderStatus.Delivered)
             {
                 response.Completed.Add(dto);
             }
@@ -77,6 +114,9 @@ public class OrderService : IOrderService
     {
         var order = await _unitOfWork.Repository<Order>().GetAllQueryable()
             .Where(o => o.Id == orderId && o.UserId == userId)
+            .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                    .ThenInclude(p => p.Images)
             .Select(o => new OrderDetailResDto
             {
                 Id = o.Id,
@@ -93,6 +133,7 @@ public class OrderService : IOrderService
                     ShippingPostalCode = o.ShippingPostalCode,
                     ShippingPhoneNumber = o.ShippingPhoneNumber,
                     PaymentMethod = o.PaymentMethod,
+                    PaymentStatus = o.PaymentStatus,
                     DeliveryMethod = o.DeliveryMethod,
                     Discount = o.DiscountAmount,
                     TotalAmount = o.TotalAmount
@@ -103,7 +144,7 @@ public class OrderService : IOrderService
                     Name = op.Product.Name,
                     Color = op.Color,
                     Description = op.Product.Description,
-                    ImageUrl = op.Product.MediaUrl,
+                    ProductMediaUrls = op.ProductMediaUrls.ToList(),
                     Size = op.Size,
                     Quantity = op.Quantity,
                     Price = op.FinalPrice
@@ -126,13 +167,21 @@ public class OrderService : IOrderService
                     Ar = "عربة التسوق فارغة"
                 }
             });
-        var orderProducts = await BuildOrderProductsAsync(cart);
+        var discountCode = await ResolveDiscountCodeAsync(request.DiscountCode);
+        var orderProducts = await BuildOrderProductsAsync(cart, discountCode?.DiscountValue);
         var subTotal = orderProducts.Sum(p => p.FinalPrice * p.Quantity);
         var shipping = CalculateShipping(request.DeliveryMethod);
+        var discountAmount = subTotal > 0 ? orderProducts.Sum(p => p.AppliedDiscountCodeAmount * p.Quantity) : 0;
         var total = subTotal + shipping;
-        var order = CreateOrderEntity(userId, address, request, orderProducts, total);
+        var order = CreateOrderEntity(userId, address, request, orderProducts, total, discountAmount, discountCode?.Id);
 
         await _unitOfWork.Repository<Order>().AddAsync(order);
+        
+        if (discountCode != null)
+        {
+            discountCode.UsageCount++;
+            _unitOfWork.Repository<DiscountCode>().Update(discountCode);
+        }
 
         _cartCache.ClearCart(userId);
 
@@ -206,7 +255,7 @@ public class OrderService : IOrderService
             }
         });
     }
-    private async Task<List<OrderProduct>> BuildOrderProductsAsync(Cart cart)
+    private async Task<List<OrderProduct>> BuildOrderProductsAsync(Cart cart, decimal? discountCodePercentage = null)
     {
         var productIds = cart.ProductCarts.Select(c => c.ProductId).ToList();
 
@@ -268,7 +317,7 @@ public class OrderService : IOrderService
 
             sizeMapping.Quantity -= cartItem.Quantity;
 
-            var finalPrice = CalculateFinalPrice(product);
+            var (finalPrice, appliedDiscountAmount) = CalculateFinalPrice(product, discountCodePercentage);
 
             orderProducts.Add(new OrderProduct
             {
@@ -277,29 +326,41 @@ public class OrderService : IOrderService
                 BrandId = product.BrandId,
                 Quantity = cartItem.Quantity,
                 FinalPrice = finalPrice,
+                AppliedDiscountCodeAmount = appliedDiscountAmount,
                 Color = cartItem.Color,
-                Size = cartItem.Size
+                Size = cartItem.Size,
+                ProductMediaUrls = product.Images?.Select(i => i.Url).ToList() ?? new List<string>()
             });
         }
 
         return orderProducts;
     }
-    private decimal CalculateFinalPrice(Product product)
+    private (decimal FinalPrice, decimal AppliedDiscountCodeAmount) CalculateFinalPrice(Product product, decimal? discountCodePercentage)
     {
+        decimal finalPrice = product.Price;
+        decimal appliedDiscountCodeAmount = 0;
+
         if (product.DiscountPercentage.HasValue && product.DiscountPercentage > 0)
         {
             var discountAmount = product.Price * (product.DiscountPercentage.Value / 100m);
-            return product.Price - discountAmount;
+            finalPrice = product.Price - discountAmount;
+        }
+        else if (discountCodePercentage.HasValue && discountCodePercentage > 0)
+        {
+            appliedDiscountCodeAmount = product.Price * (discountCodePercentage.Value / 100m);
+            finalPrice = product.Price - appliedDiscountCodeAmount;
         }
 
-        return product.Price;
+        return (finalPrice, appliedDiscountCodeAmount);
     }
     private Order CreateOrderEntity(
     string userId,
     Address address,
     CreateOrderReq request,
     List<OrderProduct> orderProducts,
-    decimal total)
+    decimal total,
+    decimal discountAmount,
+    int? discountCodeId)
     {
         return new Order
         {
@@ -320,8 +381,96 @@ public class OrderService : IOrderService
             ShippingBuilding = address.Building,
             ShippingFloor = address.Floor,
             ShippingApartment = address.Apartment,
+            DiscountAmount = discountAmount,
+            DiscountCodeId = discountCodeId,
 
             OrderProducts = orderProducts
         };
     }
+
+    public async Task<OrderSummaryResDto> GetOrderSummaryAsync(string userId, CreateOrderReq request)
+    {
+        var address = await ResolveAddressAsync(userId, request);
+        var cart = _cartCache.GetCart(userId);
+
+        if (cart == null || cart.ProductCarts == null || !cart.ProductCarts.Any())
+            throw new BadRequestException(new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Cart",
+                    En = "Cart is empty",
+                    Ar = "عربة التسوق فارغة"
+                }
+            });
+
+        var discountCode = await ResolveDiscountCodeAsync(request.DiscountCode);
+        var orderProducts = await BuildOrderProductsAsync(cart, discountCode?.DiscountValue);
+        var subTotal = orderProducts.Sum(p => p.FinalPrice * p.Quantity);
+        var shipping = CalculateShipping(request.DeliveryMethod);
+        var discountAmount = subTotal > 0 ? orderProducts.Sum(p => p.AppliedDiscountCodeAmount * p.Quantity) : 0;
+        var total = subTotal + shipping;
+
+        // Build items with pricing details
+        var items = orderProducts.Select(op => new OrderSummaryItemResDto
+        {
+            ProductId = op.ProductId.Value,
+            ProductName = op.ProductName,
+            Color = op.Color,
+            Size = op.Size,
+            Quantity = op.Quantity,
+            UnitPrice = op.FinalPrice,
+            DiscountPercentage = null, // Will be calculated based on product if needed
+            PriceAfterDiscount = op.FinalPrice,
+            TotalItemPrice = op.FinalPrice * op.Quantity,
+            ProductImages = op.ProductMediaUrls ?? new List<string>()
+        }).ToList();
+
+        // Build summary
+        var summary = new OrderSummarySummaryResDto
+        {
+            ShippingAddress = new OrderAddressSummaryResDto
+            {
+                Name = address.Name,
+                LastName = address.LastName,
+                Street = address.Street,
+                Building = address.Building,
+                Floor = address.Floor,
+                Apartment = address.Apartment,
+                City = address.City,
+                Country = address.Country,
+                PostalCode = address.Postcode,
+                PhoneNumber = address.PhoneNumber
+            },
+            SubTotal = subTotal,
+            DiscountAmount = discountAmount,
+            ShippingPrice = shipping,
+            DeliveryMethod = request.DeliveryMethod.ToString(),
+            PaymentMethod = request.PaymentMethod.ToString(),
+            Total = total
+        };
+
+        return new OrderSummaryResDto
+        {
+            Items = items,
+            Summary = summary
+        };
+    }
+
+    private async Task<DiscountCode?> ResolveDiscountCodeAsync(string? code)
+    {
+        if (string.IsNullOrWhiteSpace(code)) return null;
+
+        var discountCode = await _unitOfWork.Repository<DiscountCode>()
+            .FirstOrDefaultAsync(d => d.Code == code);
+
+        if (discountCode == null)
+            throw new BadRequestException("Invalid discount code");
+
+        if (discountCode.ExpirationDate < DateTime.UtcNow)
+            throw new BadRequestException("Discount code has expired");
+
+        return discountCode;
+    }
 }
+

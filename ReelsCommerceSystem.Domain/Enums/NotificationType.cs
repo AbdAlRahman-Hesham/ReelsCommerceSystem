@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +10,13 @@ namespace ReelsCommerceSystem.Domain.Enums
     {
         VIDEO,
         COMMENT,
-        CHECKOUT
+        CHECKOUT,
+        SYSTEM,
+        ORDER_STATUS,
+        PAYMENT,
+        BRAND_SUBMITTED,
+        BRAND_APPROVED,
+        BRAND_REJECTED,
+        CommentReply
     }
 }

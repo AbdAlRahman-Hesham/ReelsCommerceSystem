@@ -1,21 +1,24 @@
-﻿using Microsoft.AspNetCore.Identity;
-using ReelsCommerceSystem.Application.DTOs.Request.Reply;
-using ReelsCommerceSystem.Application.DTOs.Response.ReelComment;
-using ReelsCommerceSystem.Application.DTOs.Response.ReelCommentReply;
-using ReelsCommerceSystem.Application.Interfaces.Services;
-using ReelsCommerceSystem.Domain.Entities.ReelEntities;
-using ReelsCommerceSystem.Domain.Entities.UserEntities;
-using ReelsCommerceSystem.Infrastructure.Specifications.Common;
-using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelCommentReplySpec;
-using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
-using ReelsCommerceSystem.Shared.Responses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Identity;
+using ReelsCommerceSystem.Application.DTOs.Request.Reply;
+using ReelsCommerceSystem.Application.DTOs.Response.ReelComment;
+using ReelsCommerceSystem.Application.DTOs.Response.ReelCommentReply;
+using ReelsCommerceSystem.Application.Interfaces.Senders;
+using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Domain.Enums;
+using ReelsCommerceSystem.Infrastructure.Specifications.Common;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.NotificationSpec;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelCommentReplySpec;
+using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
+using ReelsCommerceSystem.Shared.Responses;
 
 namespace ReelsCommerceSystem.Infrastructure.Services
 {
@@ -23,11 +26,13 @@ namespace ReelsCommerceSystem.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
+        private readonly INotificationRealtimeSender _realtimeSender;
 
-        public ReplyService(IUnitOfWork unitOfWork, UserManager<User> userManager)
+        public ReplyService(IUnitOfWork unitOfWork, UserManager<User> userManager, INotificationRealtimeSender realtimeSender)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _realtimeSender = realtimeSender;
         }
 
         public async Task<ApiResponse<PaginationResponse<Application.DTOs.Response.ReelComment.ReelCommentReplyRes>>> GetRepliesAsync(int parentCommentId, int pageNumber, int pageSize, string currentUserId)
@@ -130,6 +135,45 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
                 await replyRepo.AddAsync(reply);
                 await _unitOfWork.SaveChangesAsync();
+
+
+                var commentOwnerId = comment.UserId;
+
+               
+                if (commentOwnerId != userId)
+                {
+                    var notification = new Notification
+                    {
+                        UserId = commentOwnerId,
+                        Type = NotificationType.CommentReply,
+                        ReferenceId = comment.Id,
+                        Message = $"{user.UserName} replied to your comment",
+                        MessageAr = $"{user.UserName} رد على تعليقك",
+                        IsRead = false
+                    };
+
+                    await _unitOfWork.Repository<Notification>().AddAsync(notification);
+                    await _unitOfWork.SaveChangesAsync();
+
+                   
+                    await _realtimeSender.SendNotificationToUsersAsync(
+                        new List<string> { commentOwnerId },
+                        new
+                        {
+                            notification.Id,
+                            notification.Message,
+                            notification.Type
+                        }
+                    );
+
+
+                    var spec = new GetUnreadNotificationSpec(commentOwnerId);
+
+                    var unreadCount = await _unitOfWork.Repository<Notification>()
+                        .CountAsync(spec);
+
+                    await _realtimeSender.UpdateUnreadCountAsync(commentOwnerId, unreadCount);
+                }
 
                 var response = new AddReelCommentReplyRes
                 {

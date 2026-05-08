@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +40,24 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 .OrderByDescending(b => b.TotalViews)
                 .Take(topN)
                 .ToListAsync();
+
+            if (!topBrands.Any())
+            {
+                // Fallback: Get overall top brands
+                topBrands = await _userReelViewRepo.GetAllQueryable()
+                    .Include(v => v.Reel)
+                    .ThenInclude(r => r.Brand)
+                    .GroupBy(v => new { v.Reel.BrandId, v.Reel.Brand.DisplayName })
+                    .Select(g => new TopBrandDto
+                    {
+                        BrandId = g.Key.BrandId,
+                        BrandName = g.Key.DisplayName,
+                        TotalViews = g.Count()
+                    })
+                    .OrderByDescending(b => b.TotalViews)
+                    .Take(topN)
+                    .ToListAsync();
+            }
 
             return topBrands;
 

@@ -26,7 +26,12 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                 q.Include(r => r.ProductReels)
                  .ThenInclude(pr => pr.Product)
                     .ThenInclude(p => p.Reviews)
+
             );
+            AddIncludeChain(q =>
+                q.Include(r => r.ProductReels)
+                 .ThenInclude(pr => pr.Product)
+                    .ThenInclude(p => p.Images));
         }
         public ReelFeedSpec(int pageIndex, int pageSize) : base(orderBy: r => r.CreatedAt,
         sortOrder: XmlSortOrder.Descending)
@@ -40,6 +45,10 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                  .ThenInclude(pr => pr.Product)
                     .ThenInclude(p => p.Reviews)
             );
+            AddIncludeChain(q =>
+                q.Include(r => r.ProductReels)
+                 .ThenInclude(pr => pr.Product)
+                    .ThenInclude(p => p.Images));
             ApplyPaging(pageIndex, pageSize);
         }
         //following
@@ -55,6 +64,10 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                  .ThenInclude(pr => pr.Product)
                     .ThenInclude(p => p.Reviews)
             );
+            AddIncludeChain(q =>
+                q.Include(r => r.ProductReels)
+                 .ThenInclude(pr => pr.Product)
+                    .ThenInclude(p => p.Images));
 
         }
         public ReelFeedSpec(List<int> followedBrandIds, int pageIndex, int pageSize) : base(criteria:
@@ -69,6 +82,10 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                  .ThenInclude(pr => pr.Product)
                     .ThenInclude(p => p.Reviews)
             );
+            AddIncludeChain(q =>
+                q.Include(r => r.ProductReels)
+                 .ThenInclude(pr => pr.Product)
+                    .ThenInclude(p => p.Images));
             ApplyPaging(pageIndex, pageSize);
 
         }

@@ -1,4 +1,6 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Dto;
+using Microsoft.AspNetCore.Identity;
+using ReelsCommerceSystem.Domain.Entities.OrderEntities;
+using ReelsCommerceSystem.Application.DTOs.Dto;
 using ReelsCommerceSystem.Application.DTOs.Request.Notification;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Senders;
@@ -22,12 +24,15 @@ namespace ReelsCommerceSystem.Infrastructure.Services
     {
         private readonly INotificationRealtimeSender _realtimeSender;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<User> _userManager;
 
         public NotificationService(INotificationRealtimeSender realtimeSender
-            , IUnitOfWork unitOfWork)
+            , IUnitOfWork unitOfWork
+            , UserManager<User> userManager)
         {
             _realtimeSender = realtimeSender;
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
         public async Task<Notification> CreateNotificationAsync(CreateNotificationReq Dto)
         {
@@ -37,6 +42,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 Type = Dto.Type,
                 ReferenceId = Dto.ReferenceId,
                 Message = Dto.Message,
+                MessageAr = Dto.MessageAr,
                 IsRead = false
             };
             await _unitOfWork.Repository<Notification>().AddAsync(notification);
@@ -199,6 +205,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 Type = NotificationType.VIDEO,
                 ReferenceId = reelId,
                 Message = $"{brand.DisplayName} just uploaded a new video! Check it out!",
+                MessageAr = $"{brand.DisplayName} قام للتو برفع فيديو جديد! شاهد الآن!",
                 IsRead = false
             }).ToList();
 
@@ -210,7 +217,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             {
                 Type = NotificationType.VIDEO,
                 ReferenceId = reelId,
-                Message = $"{brand.DisplayName} just uploaded a new video!"
+                Message = $"{brand.DisplayName} just uploaded a new video!",
+                MessageAr = $"{brand.DisplayName} قام للتو برفع فيديو جديد!"
             };
             await _realtimeSender.SendNotificationToUsersAsync(followerIds, realtimeNotification);
 
@@ -232,6 +240,211 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             await Task.WhenAll(tasks);
         }
 
+        public async Task SendOrderStatusNotificationAsync(Order order, OrderStatus newStatus)
+        {
+            string message = newStatus switch
+            {
+                OrderStatus.Pending => "Your order is pending.",
+                OrderStatus.Processing => "Your order is being processed.",
+                OrderStatus.Preparing => "Your order is being prepared.",
+                OrderStatus.Packed => "Your order has been packed and is ready for shipping.",
+                OrderStatus.Shipped => "Your order has been shipped!",
+                OrderStatus.Delivered => "Your order has been delivered! Enjoy!",
+                OrderStatus.Cancelled => "Your order has been cancelled.",
+                _ => $"Your order status has changed to {newStatus}."
+            };
 
+            string messageAr = newStatus switch
+            {
+                OrderStatus.Pending => "طلبك قيد الانتظار.",
+                OrderStatus.Processing => "طلبك قيد التنفيذ.",
+                OrderStatus.Preparing => "طلبك قيد التحضير.",
+                OrderStatus.Packed => "تم تغليف طلبك وهو جاهز للشحن.",
+                OrderStatus.Shipped => "تم شحن طلبك!",
+                OrderStatus.Delivered => "تم توصيل طلبك! استمتع به!",
+                OrderStatus.Cancelled => "تم إلغاء طلبك.",
+                _ => $"تغيرت حالة طلبك إلى {newStatus}."
+            };
+
+            var notification = new Notification
+            {
+                UserId = order.UserId,
+                Type = NotificationType.ORDER_STATUS,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            };
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Send Realtime Notification
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.ORDER_STATUS,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(new List<string> { order.UserId }, realtimeNotification);
+
+            // Update Unread Counter
+            var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(order.UserId));
+            await _realtimeSender.UpdateUnreadCountAsync(order.UserId, unreadCount);
+        }
+        public async Task SendPaymentNotificationAsync(Order order, PaymentStatus status)
+        {
+            string message = status switch
+            {
+                PaymentStatus.Paid => $"Payment successful! Your order #{order.Id} is now being processed.",
+                PaymentStatus.Failed => $"Payment failed for order #{order.Id}. Please try again or use another payment method.",
+                PaymentStatus.Refunded => $"Payment for order #{order.Id} has been refunded.",
+                PaymentStatus.Voided => $"Payment for order #{order.Id} has been voided.",
+                _ => $"Payment status for order #{order.Id} is now {status}."
+            };
+
+            string messageAr = status switch
+            {
+                PaymentStatus.Paid => $"نجحت عملية الدفع! طلبك #{order.Id} قيد التنفيذ الآن.",
+                PaymentStatus.Failed => $"فشلت عملية الدفع للطلب #{order.Id}. يرجى المحاولة مرة أخرى أو استخدام وسيلة دفع أخرى.",
+                PaymentStatus.Refunded => $"تم استرداد مبلغ الدفع للطلب #{order.Id}.",
+                PaymentStatus.Voided => $"تم إبطال عملية الدفع للطلب #{order.Id}.",
+                _ => $"حالة الدفع للطلب #{order.Id} هي الآن {status}."
+            };
+
+            var notification = new Notification
+            {
+                UserId = order.UserId,
+                Type = NotificationType.PAYMENT,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            };
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Send Realtime Notification
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.PAYMENT,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(new List<string> { order.UserId }, realtimeNotification);
+
+            // Update Unread Counter
+            var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(order.UserId));
+            await _realtimeSender.UpdateUnreadCountAsync(order.UserId, unreadCount);
+        }
+
+        public async Task SendBrandSubmittedNotificationAsync(Brand brand)
+        {
+            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+            var adminIds = admins.Select(a => a.Id).ToList();
+            if (!adminIds.Any()) return;
+
+            string message = "New brand request submitted";
+            string messageAr = "تم إرسال طلب براند جديد";
+
+            var notifications = adminIds.Select(adminId => new Notification
+            {
+                UserId = adminId,
+                Type = NotificationType.BRAND_SUBMITTED,
+                ReferenceId = brand.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            }).ToList();
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddRangeAsync(notifications);
+            await _unitOfWork.SaveChangesAsync();
+
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.BRAND_SUBMITTED,
+                ReferenceId = brand.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(adminIds, realtimeNotification);
+
+            // Update unread counts for admins
+            foreach (var adminId in adminIds)
+            {
+                var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(adminId));
+                await _realtimeSender.UpdateUnreadCountAsync(adminId, unreadCount);
+            }
+        }
+
+        public async Task SendBrandApprovedNotificationAsync(Brand brand)
+        {
+            string message = "Your brand has been approved";
+            string messageAr = "تمت الموافقة على البراند الخاص بك";
+
+            var notification = new Notification
+            {
+                UserId = brand.UserId,
+                Type = NotificationType.BRAND_APPROVED,
+                ReferenceId = brand.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            };
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.BRAND_APPROVED,
+                ReferenceId = brand.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(new List<string> { brand.UserId }, realtimeNotification);
+
+            var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(brand.UserId));
+            await _realtimeSender.UpdateUnreadCountAsync(brand.UserId, unreadCount);
+        }
+
+        public async Task SendBrandRejectedNotificationAsync(Brand brand, string reason)
+        {
+            string message = $"Your request was rejected: {reason}";
+            string messageAr = $"تم رفض طلبك: {reason}";
+
+            var notification = new Notification
+            {
+                UserId = brand.UserId,
+                Type = NotificationType.BRAND_REJECTED,
+                ReferenceId = brand.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            };
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.BRAND_REJECTED,
+                ReferenceId = brand.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(new List<string> { brand.UserId }, realtimeNotification);
+
+            var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(brand.UserId));
+            await _realtimeSender.UpdateUnreadCountAsync(brand.UserId, unreadCount);
+        }
     }
 }
