@@ -17,7 +17,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ViewS
             ApplyPaging(1, limit);
             AddInclude(x => x.User);
             AddInclude(x => x.Product);
-           
+            AddInclude("Product.Images");
+
         }
     }
 }

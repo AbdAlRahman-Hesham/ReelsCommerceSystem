@@ -12,6 +12,8 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Product
         public string Username { get; set; } = null!;
         public int ProductId { get; set; }
         public string ProductName { get; set; } = null!;
+        public decimal Price { get; set; }
+        public List<string> ImageUrls { get; set; } = new List<string>();
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

@@ -124,8 +124,42 @@ public class LookupService(HttpClient _httpClient, IMemoryCache _cache, AppDbCon
     public Task<ApiResponse<List<LookupResDto>>> GetDisputeStatusesAsync() => 
         GetCachedEnumLookup<DisputeStatus>("lookup_dispute_statuses", "Dispute statuses fetched successfully", "تم جلب حالات النزاع بنجاح");
 
-    public Task<ApiResponse<List<LookupResDto>>> GetDeliveryMethodsAsync() => 
-        GetCachedEnumLookup<DeliveryMethod>("lookup_delivery_methods", "Delivery methods fetched successfully", "تم جلب طرق التوصيل بنجاح");
+    public async Task<ApiResponse<List<DeliveryMethodLookupResDto>>> GetDeliveryMethodsAsync()
+    {
+        const string cacheKey = "lookup_delivery_methods";
+        if (_cache.TryGetValue(cacheKey, out List<DeliveryMethodLookupResDto>? deliveryMethods))
+        {
+            return ApiResponse<List<DeliveryMethodLookupResDto>>.SuccessResponse(deliveryMethods!, HttpStatusCode.OK, "Delivery methods fetched successfully (cached)", "تم جلب طرق التوصيل بنجاح (من الكاش)");
+        }
+
+        deliveryMethods = new List<DeliveryMethodLookupResDto>
+        {
+            new DeliveryMethodLookupResDto
+            {
+                Id = (int)DeliveryMethod.Standard,
+                Name = DeliveryMethod.Standard.ToString(),
+                ArName = "توصيل عادي",
+                Price = 60
+            },
+            new DeliveryMethodLookupResDto
+            {
+                Id = (int)DeliveryMethod.Express,
+                Name = DeliveryMethod.Express.ToString(),
+                ArName = "توصيل سريع",
+                Price = 120
+            },
+            new DeliveryMethodLookupResDto
+            {
+                Id = (int)DeliveryMethod.HomeDelivery,
+                Name = DeliveryMethod.HomeDelivery.ToString(),
+                ArName = "توصيل منزلي",
+                Price = 80
+            }
+        };
+
+        _cache.Set(cacheKey, deliveryMethods, CacheDuration);
+        return ApiResponse<List<DeliveryMethodLookupResDto>>.SuccessResponse(deliveryMethods, HttpStatusCode.OK, "Delivery methods fetched successfully", "تم جلب طرق التوصيل بنجاح");
+    }
 
     private async Task<ApiResponse<List<LookupResDto>>> GetCachedEnumLookup<TEnum>(string cacheKey, string enMessage, string arMessage) where TEnum : struct, Enum
     {
