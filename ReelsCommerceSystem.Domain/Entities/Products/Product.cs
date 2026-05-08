@@ -13,6 +13,7 @@ namespace ReelsCommerceSystem.Domain.Entities.ProductEntites;
 public class Product : BaseEntity
 {
     public string Name { get; set; } = null!;
+    public int Rating { get; set; } = 0;
 
     public string Description { get; set; } = null!;
     public string? ArDescription { get; set; }
