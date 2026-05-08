@@ -11,7 +11,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            /*migrationBuilder.CreateTable(
                 name: "ChatRooms",
                 columns: table => new
                 {
@@ -88,17 +88,17 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_SenderId",
                 table: "Messages",
-                column: "SenderId");
+                column: "SenderId");*/
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            /*migrationBuilder.DropTable(
                 name: "Messages");
 
             migrationBuilder.DropTable(
-                name: "ChatRooms");
+                name: "ChatRooms");*/
         }
     }
 }
