@@ -87,8 +87,8 @@ public class GoogleAuthController : AppBaseController
             // Store cookies for web usage
             Response.Cookies.Append("auth_token", jwt, new CookieOptions
             {
-                HttpOnly = true,
-                Secure = true,
+                HttpOnly = false,
+                Secure = false,
                 SameSite = SameSiteMode.None,
                 Expires = expiresAt
             });
@@ -96,7 +96,7 @@ public class GoogleAuthController : AppBaseController
             Response.Cookies.Append("auth_expiry", expiresAt.ToString("o"), new CookieOptions
             {
                 HttpOnly = false,
-                Secure = true,
+                Secure = false,
                 SameSite = SameSiteMode.None,
                 Expires = expiresAt
             });
