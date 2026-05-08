@@ -1,8 +1,10 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
+using ReelsCommerceSystem.Domain.Entities.ChatEntities;
 using ReelsCommerceSystem.Domain.Entities.InterestEntities;
 using ReelsCommerceSystem.Domain.Entities.OfferEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
@@ -13,9 +15,7 @@ using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
-using ReelsCommerceSystem.Domain.Entities.ChatEntities;
 using ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
-using System.Reflection;
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -268,4 +268,5 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<ChatRoom> ChatRooms { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<DiscountCode> DiscountCodes { get; set; }
+  
 }
