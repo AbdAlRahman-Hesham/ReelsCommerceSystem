@@ -230,6 +230,17 @@ public class AppDbContext :IdentityDbContext<User>
                 .OnDelete(DeleteBehavior.Restrict);
         });
         #endregion
+        
+        modelBuilder.Entity<DiscountCode>(b =>
+        {
+            b.HasIndex(d => d.Code).IsUnique();
+            b.Property(d => d.DiscountValue).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<OrderProduct>(b =>
+        {
+            b.Property(op => op.AppliedDiscountCodeAmount).HasPrecision(18, 2);
+        });
     }
     public DbSet<Product> Products { get; set; }
     public DbSet<Brand> Brands { get; set; }
@@ -256,4 +267,5 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<BrandVerification> BrandVerification { get; set; }
     public DbSet<ChatRoom> ChatRooms { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<DiscountCode> DiscountCodes { get; set; }
 }

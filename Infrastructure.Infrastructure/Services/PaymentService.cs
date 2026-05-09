@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Response.Payment;
+using ReelsCommerceSystem.Application.DTOs.Response.Payment;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Enums;
@@ -101,6 +101,25 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
 
             return ApiResponse<PaymentResDto>.SuccessResponse(response, HttpStatusCode.OK);
+        }
+
+        public async Task<ApiResponse<bool>> SetPayOnDeliveryAsync(int orderId)
+        {
+            var order = await _unitOfWork.Repository<Order>().GetByIdAsync(orderId);
+
+            if (order == null)
+                return ApiResponse<bool>.ErrorResponse(HttpStatusCode.NotFound, "Order not found", "الطلب غير موجود");
+
+            order.PaymentStatus = PaymentStatus.PayOnDelivery;
+            order.PaymentMethod = PaymentMethod.CashOnDelivery;
+
+            _unitOfWork.Repository<Order>().Update(order);
+            var res = await _unitOfWork.SaveChangesAsync();
+
+            if (res <= 0)
+                return ApiResponse<bool>.ErrorResponse(HttpStatusCode.InternalServerError, "Failed to update order", "فشل تحديث الطلب");
+
+            return ApiResponse<bool>.SuccessResponse(true, HttpStatusCode.OK, "Payment status updated to Pay on Delivery", "تم تحديث حالة الدفع إلى الدفع عند الاستلام");
         }
     }
 

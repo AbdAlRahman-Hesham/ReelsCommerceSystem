@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Domain.Common;
+using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Enums;
@@ -29,6 +29,8 @@ public class Order : BaseEntity
 
     public DeliveryMethod DeliveryMethod { get; set; }
     public decimal DiscountAmount { get; set; }
+    public int? DiscountCodeId { get; set; }
+    public DiscountCode? DiscountCode { get; set; }
 
     public OrderTracking? Tracking { get; set; }
 

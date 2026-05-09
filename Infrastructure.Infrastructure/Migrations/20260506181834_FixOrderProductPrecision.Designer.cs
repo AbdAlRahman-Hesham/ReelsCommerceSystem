@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260506181834_FixOrderProductPrecision")]
+    partial class FixOrderProductPrecision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1266,13 +1269,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("DiscountPercentage")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PublicId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -2433,10 +2431,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2454,7 +2448,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 1,
                             ArName = "ملابس",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Clothing",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2463,7 +2456,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 2,
                             ArName = "أحذية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Footwear",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2472,7 +2464,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 3,
                             ArName = "إكسسوارات",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Accessories",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2481,7 +2472,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 4,
                             ArName = "إلكترونيات",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Electronics",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2490,7 +2480,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 5,
                             ArName = "سماعات",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Audio",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2499,7 +2488,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 6,
                             ArName = "أجهزة قابلة للارتداء",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Wearables",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2508,7 +2496,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 7,
                             ArName = "العناية بالبشرة",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Skincare",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2517,7 +2504,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 8,
                             ArName = "الملابس الخارجية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Outerwear",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2526,7 +2512,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 9,
                             ArName = "لياقة بدنية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Fitness",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2535,7 +2520,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 10,
                             ArName = "العافية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Wellness",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2544,7 +2528,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 11,
                             ArName = "منزل",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Home",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2553,7 +2536,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 12,
                             ArName = "قرطاسية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Stationery",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2562,7 +2544,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 13,
                             ArName = "معدات",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Equipment",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2571,7 +2552,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 14,
                             ArName = "ديكور منزلي",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Home Decor",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2580,7 +2560,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 15,
                             ArName = "بستنة",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Gardening",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2589,7 +2568,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 16,
                             ArName = "عبير المنزل",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Home Fragrance",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2598,7 +2576,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 17,
                             ArName = "أجهزة منزلية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Appliances",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2607,7 +2584,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 18,
                             ArName = "تخزين",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Storage",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2616,7 +2592,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 19,
                             ArName = "مكتب",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Office",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2625,7 +2600,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 20,
                             ArName = "ملابس رياضية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Apparel",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
@@ -9555,9 +9529,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    b.Property<string>("PublicId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");

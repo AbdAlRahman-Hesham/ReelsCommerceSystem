@@ -59,7 +59,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 UserId = v.UserId,
                 Username = v.User.UserName,   
                 ProductId = v.ProductId,
-                ProductName = v.Product.Name, 
+                ProductName = v.Product.Name,
+                Price = v.Product.Price,
+                ImageUrls = v.Product.Images?.Select(img => img.Url).ToList() ?? new List<string>(),
+                CreatedAt = v.CreatedAt,
                 UpdatedAt = v.UpdatedAt
             }).ToList();
         }

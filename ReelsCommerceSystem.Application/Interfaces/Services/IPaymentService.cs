@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Application.DTOs.Response.Payment;
+using ReelsCommerceSystem.Application.DTOs.Response.Payment;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Shared.Responses;
 using System;
@@ -17,4 +17,6 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services;
            string userPhone = null,
            string userMpin = null,
            string userOtp = null);
+
+         Task<ApiResponse<bool>> SetPayOnDeliveryAsync(int orderId);
     }

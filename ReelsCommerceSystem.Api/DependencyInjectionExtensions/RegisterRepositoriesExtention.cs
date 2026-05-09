@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Application.Interfaces.Repositories;
+using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Infrastructure.Repositories;
 using ReelsCommerceSystem.Infrastructure.Services;
@@ -15,6 +15,7 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IDiscountCodeRepository, DiscountCodeRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

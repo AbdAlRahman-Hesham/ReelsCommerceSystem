@@ -27,7 +27,9 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Produ
                     .ThenInclude(c => c.AvailableSizes)
                         .ThenInclude(s => s.ProductSize)
             );
-
+            AddIncludeChain(q => q
+                .Include(p => p.Images)
+            );
             AsSplitQuery();
         }
     }
