@@ -11,8 +11,11 @@ namespace ReelsCommerceSystem.Domain.Entities.OfferEntities
 {
     public class Offer : BaseEntity
     {
-        public string Description { get; set; } = null!;  
-        public string ImageUrl { get; set; } = null!;     
+        public string Description { get; set; } = null!;
+        public decimal? DiscountPercentage { get; set; }
+        public string ? ImageUrl { get; set; } = null!;
+
+        public string? PublicId { get; set; }
         public int BrandId { get; set; }                  
         public Brand Brand { get; set; } = null!;          
 

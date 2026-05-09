@@ -3,6 +3,7 @@ using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Options;
+using ReelsCommerceSystem.Application.DTOs.Dto;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Utilities;
 using System;
@@ -45,6 +46,53 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             return result.SecureUrl.ToString();
 
+        }
+        public async Task<PhotoUploadResult> UploadImageForProductAsync(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return null;
+
+            using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Folder = "product-images"
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            return new PhotoUploadResult
+            {
+                Url = result.SecureUrl.ToString(),
+                PublicId = result.PublicId
+            };
+        }
+        public async Task DeleteImageAsync(string publicId)
+        {
+            var deletionParams = new DeletionParams(publicId);
+            await _cloudinary.DestroyAsync(deletionParams);
+        }
+        public async Task<PhotoUploadResult> UploadImageForOfferAsync(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return null;
+
+            using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Folder = "offer-images"
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            return new PhotoUploadResult
+            {
+                Url = result.SecureUrl.ToString(),
+                PublicId = result.PublicId
+            };
         }
 
     }
