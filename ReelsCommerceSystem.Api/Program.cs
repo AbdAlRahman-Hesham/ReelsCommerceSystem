@@ -23,6 +23,7 @@ builder.WebHost.ConfigureKestrel(options =>
 
 builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageProvider>();
 builder.Services.AddScoped<IPhotoServive, PhotoService>();
+builder.Services.AddHttpClient<ITranslationService, GeminiTranslationService>();
 builder.Services.AddScoped<IChatSender, ChatSender>();  
 
 builder.Services.AddValidationMiddleware();
