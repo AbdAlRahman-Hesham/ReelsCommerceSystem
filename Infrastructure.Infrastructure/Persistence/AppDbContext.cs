@@ -27,7 +27,8 @@ public class AppDbContext :IdentityDbContext<User>
     {
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-        optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning));
+        optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning)
+            .Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -240,6 +241,11 @@ public class AppDbContext :IdentityDbContext<User>
         modelBuilder.Entity<OrderProduct>(b =>
         {
             b.Property(op => op.AppliedDiscountCodeAmount).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<Offer>(b =>
+        {
+            b.Property(o => o.DiscountPercentage).HasPrecision(18, 2);
         });
     }
     public DbSet<Product> Products { get; set; }

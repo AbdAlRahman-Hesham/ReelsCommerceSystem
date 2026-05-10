@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +19,7 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding
 
         private const string SecurityStamp = "STATIC-SECURITY-STAMP";
         private const string ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP";
+        private static readonly DateTime _staticSeedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public void Configure(EntityTypeBuilder<User> builder)
         {
@@ -55,6 +56,7 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding
                 LastName = "Admin",
 
                 Role = Role.Admin,
+                CreatedAt = _staticSeedDate,
 
                 PasswordHash = AdminPasswordHash,
                 SecurityStamp = SecurityStamp,
