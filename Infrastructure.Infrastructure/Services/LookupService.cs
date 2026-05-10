@@ -124,6 +124,9 @@ public class LookupService(HttpClient _httpClient, IMemoryCache _cache, AppDbCon
     public Task<ApiResponse<List<LookupResDto>>> GetDisputeStatusesAsync() => 
         GetCachedEnumLookup<DisputeStatus>("lookup_dispute_statuses", "Dispute statuses fetched successfully", "تم جلب حالات النزاع بنجاح");
 
+    public Task<ApiResponse<List<LookupResDto>>> GetReelStatusesAsync() => 
+        GetCachedEnumLookup<ReelStatus>("lookup_reel_statuses", "Reel statuses fetched successfully", "تم جلب حالات الفيديو بنجاح");
+
     public async Task<ApiResponse<List<DeliveryMethodLookupResDto>>> GetDeliveryMethodsAsync()
     {
         const string cacheKey = "lookup_delivery_methods";

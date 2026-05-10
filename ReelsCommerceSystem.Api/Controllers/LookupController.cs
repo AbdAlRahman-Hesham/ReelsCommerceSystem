@@ -76,6 +76,13 @@ namespace ReelsCommerceSystem.Api.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("reel-statuses")]
+        public async Task<IActionResult> GetReelStatuses()
+        {
+            var result = await _lookupService.GetReelStatusesAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpGet("delivery-methods")]
         public async Task<IActionResult> GetDeliveryMethods()
         {
@@ -84,3 +91,4 @@ namespace ReelsCommerceSystem.Api.Controllers
         }
     }
 }
+

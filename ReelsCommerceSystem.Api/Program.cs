@@ -15,6 +15,12 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel to allow larger request bodies for video uploads
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 209715200; // 200MB
+});
+
 builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageProvider>();
 builder.Services.AddScoped<IPhotoServive, PhotoService>();
 builder.Services.AddScoped<IChatSender, ChatSender>();  
