@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
 using ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
@@ -14,6 +15,12 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel to allow larger request bodies for video uploads
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 209715200; // 200MB
+});
+
 builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageProvider>();
 builder.Services.AddScoped<IPhotoServive, PhotoService>();
 builder.Services.AddScoped<IChatSender, ChatSender>();  
@@ -26,6 +33,8 @@ builder.Services.AddCloudinary(builder.Configuration);
 var test = builder.Configuration
     .GetSection("CloudinarySettings")
     .Get<CloudinarySettings>();
+
+builder.Services.AddScoped<IFileService, CloudinaryService>();
 
 //Console.WriteLine("CONFIG TEST = " + test?.CloudName);
 
@@ -59,6 +68,14 @@ builder.Services.AddHealthChecks()
     .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy(), ["live"])
     .AddDbContextCheck<ReelsCommerceSystem.Infrastructure.Persistence.AppDbContext>(name: "database", tags: ["ready"]);
 builder.Services.AddScoped<TestRoomService>();
+builder.Services.Configure<FormOptions>(options =>
+{
+    // Raise this to stop the "1024 exceeded" error
+    options.ValueCountLimit = 4096;
+
+    // Crucial for Videos: allow large files (e.g., 200MB)
+    options.MultipartBodyLengthLimit = 209715200;
+});
 
 var app = builder.Build();
 

@@ -58,6 +58,29 @@ public static class AddOpenApiExtension
 
                 return Task.CompletedTask;
             });
+            options.AddSchemaTransformer((schema, context, cancellationToken) =>
+            {
+                const string annoyingRegex = "^(desc|asc)$";
+
+                if (schema.Properties != null)
+                {
+                    foreach (var property in schema.Properties.Values)
+                    {
+                        if (property.Pattern == annoyingRegex)
+                        {
+                            property.Pattern = null;
+                            property.MinLength = 0;
+                        }
+                    }
+                }
+                if (schema.Pattern == annoyingRegex)
+                {
+                    schema.Pattern = null;
+                    schema.MinLength = 0;
+                }
+
+                return Task.CompletedTask;
+            });
         }); 
     }
 }
