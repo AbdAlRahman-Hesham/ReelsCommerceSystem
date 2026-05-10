@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -15,7 +15,7 @@ using ReelsCommerceSystem.Application.DTOs.Request.Admin;
 using ReelsCommerceSystem.Application.DTOs.Response.Admin;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
-using ReelsCommerceSystem.Domain.Enums;
+
 using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
@@ -63,7 +63,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             }
 
            
-            if (user.Role != Role.Admin)
+
+            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (!isAdmin)
             {
                 return ApiResponse<AdminLoginResDto>.ErrorResponse(
                     HttpStatusCode.Forbidden,
@@ -74,10 +76,13 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
         
             var token = await _jwtService.CreateTokenAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
             var result = new AdminLoginResDto
             {
-                Token = token
+                Token = token,
+                Email = user.Email!,
+                Roles = roles.ToList()
             };
 
             return ApiResponse<AdminLoginResDto>.SuccessResponse(

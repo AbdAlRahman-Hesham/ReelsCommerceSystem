@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
-using ReelsCommerceSystem.Domain.Enums;
+
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding
 {
@@ -55,7 +55,6 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding
                 FirstName = name,
                 LastName = "Admin",
 
-                Role = Role.Admin,
                 CreatedAt = _staticSeedDate,
 
                 PasswordHash = AdminPasswordHash,

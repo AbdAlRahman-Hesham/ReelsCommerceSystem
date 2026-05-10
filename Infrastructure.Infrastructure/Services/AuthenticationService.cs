@@ -68,13 +68,13 @@ public class AuthenticationService(UserManager<User> _userManager,
             PhoneNumber = registerReqDto.PhoneNumber,
             UserName = registerReqDto.Email,
             ImageURL = imagePath?? string.Empty,
-            Role = Domain.Enums.Role.Customer
         };
 
         var result = await _userManager.CreateAsync(user, registerReqDto.Password);
 
         if (result.Succeeded)
         {
+            await _userManager.AddToRoleAsync(user, "User");
             await _otpService.SendOtpAsync(user.Email!);
 
             return new RegisterResDto();

@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
-using ReelsCommerceSystem.Domain.Enums;
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
 
@@ -29,7 +28,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1990, 5, 15),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate,
-                Role = Role.Customer,
                 SecurityStamp = "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
                 ConcurrencyStamp = "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
                 PasswordHash = _staticPasswordHash
@@ -49,7 +47,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1992, 8, 22),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(1),
-                Role = Role.Customer,
                 SecurityStamp = "B2C3D4E5-F6A7-8901-BCDE-F12345678901",
                 ConcurrencyStamp = "B2C3D4E5-F6A7-8901-BCDE-F12345678901",
                 PasswordHash = _staticPasswordHash
@@ -69,7 +66,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1988, 3, 10),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(2),
-                Role = Role.Customer,
                 SecurityStamp = "C3D4E5F6-A7B8-9012-CDEF-123456789012",
                 ConcurrencyStamp = "C3D4E5F6-A7B8-9012-CDEF-123456789012",
                 PasswordHash = _staticPasswordHash
@@ -89,7 +85,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1995, 11, 5),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(3),
-                Role = Role.Customer,
                 SecurityStamp = "D4E5F6A7-B8C9-0123-DEF1-234567890123",
                 ConcurrencyStamp = "D4E5F6A7-B8C9-0123-DEF1-234567890123",
                 PasswordHash = _staticPasswordHash
@@ -109,7 +104,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1991, 7, 18),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(4),
-                Role = Role.Customer,
                 SecurityStamp = "E5F6A7B8-C9D0-1234-EF12-345678901234",
                 ConcurrencyStamp = "E5F6A7B8-C9D0-1234-EF12-345678901234",
                 PasswordHash = _staticPasswordHash
@@ -129,7 +123,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1993, 4, 25),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(5),
-                Role = Role.Customer,
                 SecurityStamp = "F6A7B8C9-D0E1-2345-F123-456789012345",
                 ConcurrencyStamp = "F6A7B8C9-D0E1-2345-F123-456789012345",
                 PasswordHash = _staticPasswordHash
@@ -149,7 +142,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1989, 12, 8),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(6),
-                Role = Role.Customer,
                 SecurityStamp = "A7B8C9D0-E1F2-3456-1234-567890123456",
                 ConcurrencyStamp = "A7B8C9D0-E1F2-3456-1234-567890123456",
                 PasswordHash = _staticPasswordHash
@@ -169,7 +161,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1994, 9, 14),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(7),
-                Role = Role.Customer,
                 SecurityStamp = "B8C9D0E1-F2A3-4567-2345-678901234567",
                 ConcurrencyStamp = "B8C9D0E1-F2A3-4567-2345-678901234567",
                 PasswordHash = _staticPasswordHash
@@ -189,7 +180,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1987, 6, 30),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(8),
-                Role = Role.Customer,
                 SecurityStamp = "C9D0E1F2-A3B4-5678-3456-789012345678",
                 ConcurrencyStamp = "C9D0E1F2-A3B4-5678-3456-789012345678",
                 PasswordHash = _staticPasswordHash
@@ -209,7 +199,6 @@ public class UserSeeding : IEntityTypeConfiguration<User>
                 DateOfBirth = new DateTime(1996, 2, 20),
                 ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
                 CreatedAt = _staticSeedDate.AddDays(9),
-                Role = Role.Customer,
                 SecurityStamp = "D0E1F2A3-B4C5-6789-4567-890123456789",
                 ConcurrencyStamp = "D0E1F2A3-B4C5-6789-4567-890123456789",
                 PasswordHash = _staticPasswordHash

@@ -233,7 +233,6 @@ private async Task<(User user, string jwt, DateTime expiresAt)> ExchangeTikTokCo
             user = new User
             {
                 EmailConfirmed = true,
-                Role = Domain.Enums.Role.Customer,
                 UserName = $"tiktok_{openId}",
                 Email = $"{openId}@tiktok.local",
                 DisplayName = displayName ?? "TikTok User",
@@ -245,6 +244,7 @@ private async Task<(User user, string jwt, DateTime expiresAt)> ExchangeTikTokCo
                 throw new Exception("User creation failed");
 
             await _userManager.AddLoginAsync(user, new UserLoginInfo("TikTok", openId!, "TikTok"));
+            await _userManager.AddToRoleAsync(user, "User");
         }
         else
         {

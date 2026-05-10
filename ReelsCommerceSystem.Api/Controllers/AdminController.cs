@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,13 +27,7 @@ namespace ReelsCommerceSystem.Api.Controllers
         public async Task<ActionResult<ApiResponse<AdminLoginResDto>>> Login([FromBody] AdminLoginReqDto dto)
         {
             var result = await _adminService.LoginAsync(dto);
-
-            return Ok(ApiResponse<AdminLoginResDto>.SuccessResponse(
-                result.Data,
-                HttpStatusCode.OK,
-                "Login successful",
-                "تم تسجيل الدخول بنجاح"
-            ));
+            return StatusCode(result.StatusCode, result);
         }
     }
 }

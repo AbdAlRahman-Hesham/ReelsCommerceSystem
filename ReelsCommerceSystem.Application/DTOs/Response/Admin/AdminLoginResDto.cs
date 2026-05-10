@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +8,8 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Admin
 {
     public class AdminLoginResDto
     {
-        public string Token { get; set; }
+        public string Token { get; set; } = default!;
+        public string Email { get; set; } = default!;
+        public List<string> Roles { get; set; } = new();
     }
 }

@@ -228,7 +228,6 @@ public class GoogleAuthController : AppBaseController
                 DisplayName = name ?? "Google User",
                 ImageURL = picture ?? string.Empty,
                 EmailConfirmed = true,
-                Role = Domain.Enums.Role.Customer
             };
 
             var createResult = await _userManager.CreateAsync(user);
@@ -236,6 +235,7 @@ public class GoogleAuthController : AppBaseController
                 throw new Exception("User creation failed.");
 
             await _userManager.AddLoginAsync(user, new UserLoginInfo("Google", googleId!, "Google"));
+            await _userManager.AddToRoleAsync(user, "User");
         }
         else
         {

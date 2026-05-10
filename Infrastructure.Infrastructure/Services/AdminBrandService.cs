@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +45,17 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             _unitOfWork.Repository<Brand>().Update(brand);
             await _unitOfWork.SaveChangesAsync();
+
+            // Assign "Brand Owner" + "User" roles to the brand owner
+            var owner = await _userManager.FindByIdAsync(brand.UserId);
+            if (owner != null)
+            {
+                if (!await _userManager.IsInRoleAsync(owner, "Brand Owner"))
+                    await _userManager.AddToRoleAsync(owner, "Brand Owner");
+
+                if (!await _userManager.IsInRoleAsync(owner, "User"))
+                    await _userManager.AddToRoleAsync(owner, "User");
+            }
 
             await _notificationService.SendBrandApprovedNotificationAsync(brand);
         }

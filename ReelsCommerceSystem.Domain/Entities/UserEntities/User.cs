@@ -6,7 +6,6 @@ using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
-using ReelsCommerceSystem.Domain.Enums;
 
 namespace ReelsCommerceSystem.Domain.Entities.UserEntities;
 
@@ -20,7 +19,6 @@ public class User : IdentityUser
 
     public Otp? Otp { get; set; }
 
-    public Role Role { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Gender { get; set; } = string.Empty; 
