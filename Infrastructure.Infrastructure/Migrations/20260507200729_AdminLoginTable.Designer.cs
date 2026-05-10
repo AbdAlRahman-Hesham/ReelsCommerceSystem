@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507200729_AdminLoginTable")]
+    partial class AdminLoginTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,7 +186,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Admins", (string)null);
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", b =>
@@ -263,7 +266,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
 
                     b.HasData(
                         new
@@ -509,7 +512,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("BrandId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("BrandReview", (string)null);
+                    b.ToTable("BrandReview");
 
                     b.HasData(
                         new
@@ -899,7 +902,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ReviewId");
 
-                    b.ToTable("BrandReviewDislikes", (string)null);
+                    b.ToTable("BrandReviewDislikes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReviewLike", b =>
@@ -927,7 +930,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ReviewId");
 
-                    b.ToTable("BrandReviewLikes", (string)null);
+                    b.ToTable("BrandReviewLikes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandVerification", b =>
@@ -983,7 +986,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("BrandId")
                         .IsUnique();
 
-                    b.ToTable("BrandVerification", (string)null);
+                    b.ToTable("BrandVerification");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.RejectionReason", b =>
@@ -1010,7 +1013,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RejectionReasons", (string)null);
+                    b.ToTable("RejectionReasons");
 
                     b.HasData(
                         new
@@ -1077,7 +1080,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserBrandFollows", (string)null);
+                    b.ToTable("UserBrandFollows");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ChatEntities.ChatRoom", b =>
@@ -1181,7 +1184,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactMessages", (string)null);
+                    b.ToTable("ContactMessages");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", b =>
@@ -1204,7 +1207,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Interests", (string)null);
+                    b.ToTable("Interests");
 
                     b.HasData(
                         new
@@ -1308,7 +1311,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
 
                     b.HasData(
                         new
@@ -1343,7 +1346,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OfferProducts", (string)null);
+                    b.ToTable("OfferProducts");
 
                     b.HasData(
                         new
@@ -1396,7 +1399,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("DiscountCodes", (string)null);
+                    b.ToTable("DiscountCodes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
@@ -1500,7 +1503,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.OrderTracking", b =>
@@ -1532,7 +1535,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("OrderTrackings", (string)null);
+                    b.ToTable("OrderTrackings");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderProductEntities.OrderProduct", b =>
@@ -1597,7 +1600,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderProducts", (string)null);
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem", b =>
@@ -1679,7 +1682,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -2459,10 +2462,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -2472,7 +2471,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategory", (string)null);
+                    b.ToTable("ProductCategory");
 
                     b.HasData(
                         new
@@ -2480,7 +2479,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 1,
                             ArName = "ملابس",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Clothing",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2489,7 +2487,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 2,
                             ArName = "أحذية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Footwear",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2498,7 +2495,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 3,
                             ArName = "إكسسوارات",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Accessories",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2507,7 +2503,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 4,
                             ArName = "إلكترونيات",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Electronics",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2516,7 +2511,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 5,
                             ArName = "سماعات",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Audio",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2525,7 +2519,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 6,
                             ArName = "أجهزة قابلة للارتداء",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Wearables",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2534,7 +2527,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 7,
                             ArName = "العناية بالبشرة",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Skincare",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2543,7 +2535,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 8,
                             ArName = "الملابس الخارجية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Outerwear",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2552,7 +2543,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 9,
                             ArName = "لياقة بدنية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Fitness",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2561,7 +2551,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 10,
                             ArName = "العافية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Wellness",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2570,7 +2559,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 11,
                             ArName = "منزل",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Home",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2579,7 +2567,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 12,
                             ArName = "قرطاسية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Stationery",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2588,7 +2575,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 13,
                             ArName = "معدات",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Equipment",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2597,7 +2583,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 14,
                             ArName = "ديكور منزلي",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Home Decor",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2606,7 +2591,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 15,
                             ArName = "بستنة",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Gardening",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2615,7 +2599,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 16,
                             ArName = "عبير المنزل",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Home Fragrance",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2624,7 +2607,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 17,
                             ArName = "أجهزة منزلية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Appliances",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2633,7 +2615,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 18,
                             ArName = "تخزين",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Storage",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2642,7 +2623,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 19,
                             ArName = "مكتب",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Office",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         },
@@ -2651,7 +2631,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             Id = 20,
                             ArName = "ملابس رياضية",
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            ImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
                             Name = "Apparel",
                             UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
                         });
@@ -2682,7 +2661,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductColor", (string)null);
+                    b.ToTable("ProductColor");
 
                     b.HasData(
                         new
@@ -2787,7 +2766,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductColorMapping", (string)null);
+                    b.ToTable("ProductColorMapping");
 
                     b.HasData(
                         new
@@ -3931,7 +3910,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductInformation", (string)null);
+                    b.ToTable("ProductInformation");
 
                     b.HasData(
                         new
@@ -4940,7 +4919,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductSize", (string)null);
+                    b.ToTable("ProductSize");
 
                     b.HasData(
                         new
@@ -4998,7 +4977,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductSizeId");
 
-                    b.ToTable("ProductSizeMapping", (string)null);
+                    b.ToTable("ProductSizeMapping");
 
                     b.HasData(
                         new
@@ -9475,7 +9454,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserProductView", (string)null);
+                    b.ToTable("UserProductView");
 
                     b.HasData(
                         new
@@ -9593,7 +9572,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage", (string)null);
+                    b.ToTable("ProductImage");
 
                     b.HasData(
                         new
@@ -10104,7 +10083,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ReelId");
 
-                    b.ToTable("ProductReels", (string)null);
+                    b.ToTable("ProductReels");
 
                     b.HasData(
                         new
@@ -11522,7 +11501,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.ToTable("Reels", (string)null);
+                    b.ToTable("Reels");
 
                     b.HasData(
                         new
@@ -12008,7 +11987,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReelComment", (string)null);
+                    b.ToTable("ReelComment");
 
                     b.HasData(
                         new
@@ -12086,7 +12065,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("ReelCommentId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("ReelCommentLove", (string)null);
+                    b.ToTable("ReelCommentLove");
 
                     b.HasData(
                         new
@@ -12162,7 +12141,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReelCommentReplies", (string)null);
+                    b.ToTable("ReelCommentReplies");
 
                     b.HasData(
                         new
@@ -12231,7 +12210,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("ReelCommentReplyId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("ReelCommentReplyLoves", (string)null);
+                    b.ToTable("ReelCommentReplyLoves");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
@@ -12262,7 +12241,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("UserId", "ReelId")
                         .IsUnique();
 
-                    b.ToTable("UserReelLike", (string)null);
+                    b.ToTable("UserReelLike");
 
                     b.HasData(
                         new
@@ -12780,7 +12759,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserReelView", (string)null);
+                    b.ToTable("UserReelView");
 
                     b.HasData(
                         new
@@ -13420,7 +13399,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
 
                     b.HasData(
                         new
@@ -17390,7 +17369,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>
@@ -17763,7 +17742,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("InterestId");
 
-                    b.ToTable("UserInterests", (string)null);
+                    b.ToTable("UserInterests");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -18345,7 +18324,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users", (string)null);
+                            b1.ToTable("Users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
