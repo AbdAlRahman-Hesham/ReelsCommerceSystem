@@ -35,7 +35,7 @@ var test = builder.Configuration
     .GetSection("CloudinarySettings")
     .Get<CloudinarySettings>();
 
-builder.Services.AddScoped<IFileService, CloudinaryService>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 //Console.WriteLine("CONFIG TEST = " + test?.CloudName);
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260509211157_EditCommunityEntities")]
+    partial class EditCommunityEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,36 +50,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "role-admin-0000-0000-000000000001",
-                            ConcurrencyStamp = "role-cs-admin",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "role-user-0000-0000-000000000002",
-                            ConcurrencyStamp = "role-cs-user",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "role-brandowner-000-000000000003",
-                            ConcurrencyStamp = "role-cs-brandowner",
-                            Name = "Brand Owner",
-                            NormalizedName = "BRAND OWNER"
-                        },
-                        new
-                        {
-                            Id = "role-brandemployee-0-000000000004",
-                            ConcurrencyStamp = "role-cs-brandemployee",
-                            Name = "Brand Employee",
-                            NormalizedName = "BRAND EMPLOYEE"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -164,158 +137,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "1",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "1",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "2",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "2",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "3",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "3",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "4",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "4",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "5",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "5",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "6",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "6",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "7",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "7",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "8",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "8",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "9",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "9",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "10",
-                            RoleId = "role-admin-0000-0000-000000000001"
-                        },
-                        new
-                        {
-                            UserId = "10",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user1",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user2",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user3",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user4",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user5",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user6",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user7",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user8",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user9",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        },
-                        new
-                        {
-                            UserId = "user10",
-                            RoleId = "role-user-0000-0000-000000000002"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -414,7 +235,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
 
                     b.HasData(
                         new
@@ -660,7 +481,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("BrandId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("BrandReview", (string)null);
+                    b.ToTable("BrandReview");
 
                     b.HasData(
                         new
@@ -1050,7 +871,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ReviewId");
 
-                    b.ToTable("BrandReviewDislikes", (string)null);
+                    b.ToTable("BrandReviewDislikes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandReviewLike", b =>
@@ -1078,7 +899,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ReviewId");
 
-                    b.ToTable("BrandReviewLikes", (string)null);
+                    b.ToTable("BrandReviewLikes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.BrandVerification", b =>
@@ -1134,7 +955,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("BrandId")
                         .IsUnique();
 
-                    b.ToTable("BrandVerification", (string)null);
+                    b.ToTable("BrandVerification");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.BrandEntities.RejectionReason", b =>
@@ -1161,7 +982,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RejectionReasons", (string)null);
+                    b.ToTable("RejectionReasons");
 
                     b.HasData(
                         new
@@ -1228,7 +1049,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserBrandFollows", (string)null);
+                    b.ToTable("UserBrandFollows");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ChatEntities.ChatRoom", b =>
@@ -1301,6 +1122,153 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.ToTable("Messages", (string)null);
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.CommunityPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("CommentsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CoverImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("CommunityPost");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostComment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("ParentCommentId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("PostComment");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostCommentLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PostCommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostCommentId");
+
+                    b.HasIndex("BrandId", "PostCommentId")
+                        .IsUnique();
+
+                    b.ToTable("PostCommentLike");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("BrandId", "PostId")
+                        .IsUnique();
+
+                    b.ToTable("PostLike");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ContactMessage", b =>
                 {
                     b.Property<int>("Id")
@@ -1332,7 +1300,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactMessages", (string)null);
+                    b.ToTable("ContactMessages");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", b =>
@@ -1355,7 +1323,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Interests", (string)null);
+                    b.ToTable("Interests");
 
                     b.HasData(
                         new
@@ -1448,14 +1416,8 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("DiscountPercentage")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PublicId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -1465,7 +1427,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
 
                     b.HasData(
                         new
@@ -1500,7 +1462,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OfferProducts", (string)null);
+                    b.ToTable("OfferProducts");
 
                     b.HasData(
                         new
@@ -1553,7 +1515,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.ToTable("DiscountCodes", (string)null);
+                    b.ToTable("DiscountCodes");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", b =>
@@ -1657,7 +1619,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderEntities.OrderTracking", b =>
@@ -1689,7 +1651,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("OrderTrackings", (string)null);
+                    b.ToTable("OrderTrackings");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OrderProductEntities.OrderProduct", b =>
@@ -1754,7 +1716,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderProducts", (string)null);
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem", b =>
@@ -1839,7 +1801,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -2692,7 +2654,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategory", (string)null);
+                    b.ToTable("ProductCategory");
 
                     b.HasData(
                         new
@@ -2902,7 +2864,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductColor", (string)null);
+                    b.ToTable("ProductColor");
 
                     b.HasData(
                         new
@@ -3007,7 +2969,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductColorMapping", (string)null);
+                    b.ToTable("ProductColorMapping");
 
                     b.HasData(
                         new
@@ -4151,7 +4113,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductInformation", (string)null);
+                    b.ToTable("ProductInformation");
 
                     b.HasData(
                         new
@@ -5160,7 +5122,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductSize", (string)null);
+                    b.ToTable("ProductSize");
 
                     b.HasData(
                         new
@@ -5218,7 +5180,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductSizeId");
 
-                    b.ToTable("ProductSizeMapping", (string)null);
+                    b.ToTable("ProductSizeMapping");
 
                     b.HasData(
                         new
@@ -9695,7 +9657,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserProductView", (string)null);
+                    b.ToTable("UserProductView");
 
                     b.HasData(
                         new
@@ -9802,9 +9764,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PublicId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -9816,7 +9775,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage", (string)null);
+                    b.ToTable("ProductImage");
 
                     b.HasData(
                         new
@@ -10327,7 +10286,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("ReelId");
 
-                    b.ToTable("ProductReels", (string)null);
+                    b.ToTable("ProductReels");
 
                     b.HasData(
                         new
@@ -11751,7 +11710,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.ToTable("Reels", (string)null);
+                    b.ToTable("Reels");
 
                     b.HasData(
                         new
@@ -12287,7 +12246,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReelComment", (string)null);
+                    b.ToTable("ReelComment");
 
                     b.HasData(
                         new
@@ -12365,7 +12324,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("ReelCommentId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("ReelCommentLove", (string)null);
+                    b.ToTable("ReelCommentLove");
 
                     b.HasData(
                         new
@@ -12441,7 +12400,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReelCommentReplies", (string)null);
+                    b.ToTable("ReelCommentReplies");
 
                     b.HasData(
                         new
@@ -12510,7 +12469,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("ReelCommentReplyId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("ReelCommentReplyLoves", (string)null);
+                    b.ToTable("ReelCommentReplyLoves");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.UserReelLike", b =>
@@ -12541,7 +12500,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasIndex("UserId", "ReelId")
                         .IsUnique();
 
-                    b.ToTable("UserReelLike", (string)null);
+                    b.ToTable("UserReelLike");
 
                     b.HasData(
                         new
@@ -13059,7 +13018,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserReelView", (string)null);
+                    b.ToTable("UserReelView");
 
                     b.HasData(
                         new
@@ -14099,7 +14058,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
 
                     b.HasData(
                         new
@@ -18069,7 +18028,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>
@@ -18143,6 +18102,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -18168,236 +18130,6 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Abdalrahman",
-                            Email = "Abdalrahman@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Abdalrahman",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ABDALRAHMAN@ALLUVO.LIFE",
-                            NormalizedUserName = "ABDALRAHMAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Abdalrahman"
-                        },
-                        new
-                        {
-                            Id = "2",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Abdallah",
-                            Email = "Abdallah@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Abdallah",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ABDALLAH@ALLUVO.LIFE",
-                            NormalizedUserName = "ABDALLAH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Abdallah"
-                        },
-                        new
-                        {
-                            Id = "3",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Esraa",
-                            Email = "Esraa@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Esraa",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ESRAA@ALLUVO.LIFE",
-                            NormalizedUserName = "ESRAA",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Esraa"
-                        },
-                        new
-                        {
-                            Id = "4",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Ashrakat",
-                            Email = "Ashrakat@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Ashrakat",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ASHRAKAT@ALLUVO.LIFE",
-                            NormalizedUserName = "ASHRAKAT",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Ashrakat"
-                        },
-                        new
-                        {
-                            Id = "5",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Mariam",
-                            Email = "Mariam@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Mariam",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "MARIAM@ALLUVO.LIFE",
-                            NormalizedUserName = "MARIAM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Mariam"
-                        },
-                        new
-                        {
-                            Id = "6",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Nada",
-                            Email = "Nada@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Nada",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "NADA@ALLUVO.LIFE",
-                            NormalizedUserName = "NADA",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Nada"
-                        },
-                        new
-                        {
-                            Id = "7",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Tasneem",
-                            Email = "Tasneem@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Tasneem",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "TASNEEM@ALLUVO.LIFE",
-                            NormalizedUserName = "TASNEEM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Tasneem"
-                        },
-                        new
-                        {
-                            Id = "8",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Abdaljawad",
-                            Email = "Abdaljawad@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Abdaljawad",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "ABDALJAWAD@ALLUVO.LIFE",
-                            NormalizedUserName = "ABDALJAWAD",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Abdaljawad"
-                        },
-                        new
-                        {
-                            Id = "9",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Suzan",
-                            Email = "Suzan@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Suzan",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "SUZAN@ALLUVO.LIFE",
-                            NormalizedUserName = "SUZAN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Suzan"
-                        },
-                        new
-                        {
-                            Id = "10",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP",
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DisplayName = "Aya",
-                            Email = "Aya@alluvo.life",
-                            EmailConfirmed = true,
-                            FirstName = "Aya",
-                            Gender = "",
-                            ImageURL = "https://static.vecteezy.com/system/resources/previews/026/196/789/large_2x/profile-icon-symbol-design-illustration-vector.jpg",
-                            IsBanned = false,
-                            LastName = "Admin",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "AYA@ALLUVO.LIFE",
-                            NormalizedUserName = "AYA",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "STATIC-SECURITY-STAMP",
-                            TwoFactorEnabled = false,
-                            UserName = "Aya"
-                        },
-                        new
-                        {
                             Id = "user1",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
@@ -18416,6 +18148,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "JOHN.DOE@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "A1B2C3D4-E5F6-7890-ABCD-EF1234567890",
                             TwoFactorEnabled = false,
                             UserName = "john.doe@example.com"
@@ -18440,6 +18173,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "SARAH.SMITH@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "B2C3D4E5-F6A7-8901-BCDE-F12345678901",
                             TwoFactorEnabled = false,
                             UserName = "sarah.smith@example.com"
@@ -18464,6 +18198,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "MIKE.JOHNSON@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "C3D4E5F6-A7B8-9012-CDEF-123456789012",
                             TwoFactorEnabled = false,
                             UserName = "mike.johnson@example.com"
@@ -18488,6 +18223,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "EMILY.DAVIS@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "D4E5F6A7-B8C9-0123-DEF1-234567890123",
                             TwoFactorEnabled = false,
                             UserName = "emily.davis@example.com"
@@ -18512,6 +18248,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "DAVID.WILSON@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "E5F6A7B8-C9D0-1234-EF12-345678901234",
                             TwoFactorEnabled = false,
                             UserName = "david.wilson@example.com"
@@ -18536,6 +18273,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "LISA.BROWN@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "F6A7B8C9-D0E1-2345-F123-456789012345",
                             TwoFactorEnabled = false,
                             UserName = "lisa.brown@example.com"
@@ -18560,6 +18298,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "JAMES.TAYLOR@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "A7B8C9D0-E1F2-3456-1234-567890123456",
                             TwoFactorEnabled = false,
                             UserName = "james.taylor@example.com"
@@ -18584,6 +18323,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "ANNA.MARTINEZ@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "B8C9D0E1-F2A3-4567-2345-678901234567",
                             TwoFactorEnabled = false,
                             UserName = "anna.martinez@example.com"
@@ -18608,6 +18348,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "ROBERT.LEE@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "C9D0E1F2-A3B4-5678-3456-789012345678",
                             TwoFactorEnabled = false,
                             UserName = "robert.lee@example.com"
@@ -18632,6 +18373,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NormalizedUserName = "JESSICA.WHITE@EXAMPLE.COM",
                             PasswordHash = "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             SecurityStamp = "D0E1F2A3-B4C5-6789-4567-890123456789",
                             TwoFactorEnabled = false,
                             UserName = "jessica.white@example.com"
@@ -18659,7 +18401,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.HasIndex("InterestId");
 
-                    b.ToTable("UserInterests", (string)null);
+                    b.ToTable("UserInterests");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -18838,6 +18580,81 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("Room");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.CommunityPost", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany("Posts")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostComment", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany("PostComments")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostComment", "ParentComment")
+                        .WithMany("Replies")
+                        .HasForeignKey("ParentCommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.CommunityEntities.CommunityPost", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("ParentComment");
+
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostCommentLike", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany("PostCommentLikes")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostComment", "PostComment")
+                        .WithMany("CommentLikes")
+                        .HasForeignKey("PostCommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("PostComment");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostLike", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany("PostLikes")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.CommunityEntities.CommunityPost", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.Offer", b =>
@@ -19241,7 +19058,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users", (string)null);
+                            b1.ToTable("Users");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
@@ -19275,6 +19092,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.Navigation("Offers");
 
+                    b.Navigation("PostCommentLikes");
+
+                    b.Navigation("PostComments");
+
+                    b.Navigation("PostLikes");
+
+                    b.Navigation("Posts");
+
                     b.Navigation("Products");
 
                     b.Navigation("Reels");
@@ -19299,6 +19124,20 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ChatEntities.ChatRoom", b =>
                 {
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.CommunityPost", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Likes");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.CommunityEntities.PostComment", b =>
+                {
+                    b.Navigation("CommentLikes");
+
+                    b.Navigation("Replies");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", b =>

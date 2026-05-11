@@ -27,7 +27,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 {
     public class ReelManagementService(IUnitOfWork _unitOfWork, 
         UserManager<User> _userManager,
-        IFileService _fileService) : IReelManagementService
+        ICloudinaryService _cloudinaryService) : IReelManagementService
     {
         public async Task<CreateReelRes> CreateReelAsync(CreateReelReq req, string userId)
         {
@@ -69,7 +69,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             }
             
 
-            var videoUrl = await _fileService.UploadAsync(req.Video);
+            var videoUrl = await _cloudinaryService.UploadVideoAsync(req.Video);
 
             ReelStatus reelStatus = ReelStatus.Draft;
 
@@ -81,7 +81,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             {
                 Title = req.Title,
                 VideoUrl = videoUrl,
-                ThumbnailUrl=ReelHelper.GenerateThumbnailUrl(videoUrl),
+                ThumbnailUrl=FileHelper.GenerateThumbnailUrl(videoUrl),
                 Status = reelStatus,
                 BrandId = brand.Id,
 
@@ -157,7 +157,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     Price = p.Product.Price
                 }).ToList(),
                 CreatedAt = r.CreatedAt,
-                Thumbnail = r.ThumbnailUrl ?? ReelHelper.GenerateThumbnailUrl(r.VideoUrl)
+                Thumbnail = r.ThumbnailUrl ?? FileHelper.GenerateThumbnailUrl(r.VideoUrl)
             }).ToList();
 
             return new GetBrandReelsRes
@@ -284,10 +284,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             if (req.Video is not null)
             {
-                var videoUrl = await _fileService.UploadAsync(req.Video);
+                var videoUrl = await _cloudinaryService.UploadVideoAsync(req.Video);
 
                 reel.VideoUrl = videoUrl;
-                reel.ThumbnailUrl = ReelHelper.GenerateThumbnailUrl(videoUrl);
+                reel.ThumbnailUrl = FileHelper.GenerateThumbnailUrl(videoUrl);
             }
 
             // Products
