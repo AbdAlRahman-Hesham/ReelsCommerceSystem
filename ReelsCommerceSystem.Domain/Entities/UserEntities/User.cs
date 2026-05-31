@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
+using ReelsCommerceSystem.Domain.Entities.CommunityEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
@@ -36,6 +37,8 @@ public class User : IdentityUser
     public ICollection<ReelCommentReplyLove> reelCommentReplyLoves { get; set; }
     public ICollection<UserProductView> UserProductViews { get; set; } = new List<UserProductView>();
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+   
     public Brand? Brand { get; set; }
 
     public bool IsBanned { get; set; } = false;
