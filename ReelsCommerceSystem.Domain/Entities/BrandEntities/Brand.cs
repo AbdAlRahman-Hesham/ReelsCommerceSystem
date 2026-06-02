@@ -1,4 +1,5 @@
 ﻿using ReelsCommerceSystem.Domain.Common;
+using ReelsCommerceSystem.Domain.Entities.CommunityEntities;
 using ReelsCommerceSystem.Domain.Entities.OfferEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
@@ -19,6 +20,11 @@ public class Brand:BaseEntity
     public ICollection<BrandReview> Reviews { get; set; } = new List<BrandReview>();
     public ICollection<Reel> Reels { get; set; } = new List<Reel>();
     public ICollection<Offer> Offers { get; set; } = new List<Offer>();
+
+    public ICollection<PostComment> PostComments { get; set; } = new HashSet<PostComment>();
+    public ICollection<PostCommentLike> PostCommentLikes { get; set; } = new HashSet<PostCommentLike>();
+    public ICollection<CommunityPost> Posts { get; set; } = new HashSet<CommunityPost>();
+    public ICollection<PostLike> PostLikes { get; set; } = new HashSet<PostLike>();
 
     public double AverageRating { get; set; } = 0;     
     public int NumOfReviews { get; set; } = 0;
