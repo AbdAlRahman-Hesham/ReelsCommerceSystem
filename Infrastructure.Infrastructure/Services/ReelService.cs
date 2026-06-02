@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Ocsp;
 using ReelsCommerceSystem.Application.DTOs.Request.Reel;
@@ -17,7 +17,7 @@ using System.Net;
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
-public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager) : IReelService
+public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager, IRecommendationService _recommendationService) : IReelService
 
 {
     public async Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy)
@@ -121,6 +121,17 @@ public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager)
 
         await _unitOfWork.SaveChangesAsync();
 
+        // Update recommendation engine with new counts
+        var reelWithCounts = await _unitOfWork.Repository<Reel>().GetByIdAsync(reelId);
+        if (reelWithCounts != null)
+        {
+            var likesCount = await _unitOfWork.Repository<UserReelLike>()
+                .CountAsync(new Specification<UserReelLike>(l => l.ReelId == reelId));
+            var viewsCount = await _unitOfWork.Repository<UserReelView>()
+                .CountAsync(new Specification<UserReelView>(v => v.ReelId == reelId));
+            _ = _recommendationService.UpdateReelMetadataAsync(reelId, likesCount, viewsCount);
+        }
+
         return isLiked;
 
     }
@@ -161,6 +172,13 @@ public class ReelService(IUnitOfWork _unitOfWork,UserManager<User> _userManager)
         }
 
         await _unitOfWork.SaveChangesAsync();
+
+        // Update recommendation engine with new counts
+        var likesCount = await _unitOfWork.Repository<UserReelLike>()
+            .CountAsync(new Specification<UserReelLike>(l => l.ReelId == req.ReelId));
+        var viewsCount = await _unitOfWork.Repository<UserReelView>()
+            .CountAsync(new Specification<UserReelView>(v => v.ReelId == req.ReelId));
+        _ = _recommendationService.UpdateReelMetadataAsync(req.ReelId, likesCount, viewsCount);
 
         return ApiResponse<string>.SuccessResponse(
             "View Recorded Successfully",

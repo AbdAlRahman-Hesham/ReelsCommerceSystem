@@ -41,6 +41,13 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
                 .Where(a => a.FullName != null && a.FullName.StartsWith("ReelsCommerceSystem"))
                 .ToList();
 
+            var excludedServices = new HashSet<string>
+            {
+                "RecommendationService",
+                "PaymobService",
+                "GeminiTranslationService"
+            };
+
             foreach (var assembly in assemblies)
             {
                 var serviceTypes = assembly.GetTypes()
@@ -54,6 +61,9 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
 
                 foreach (var implType in serviceTypes)
                 {
+                    if (excludedServices.Contains(implType.Name))
+                        continue;
+
                     var interfaceType = implType.GetInterface("I" + implType.Name);
                     if (interfaceType != null)
                         services.AddScoped(interfaceType, implType);

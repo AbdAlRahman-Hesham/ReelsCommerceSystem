@@ -1,4 +1,4 @@
-﻿using MailKit.Search;
+using MailKit.Search;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
@@ -90,6 +90,26 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
 
         }
 
+        // filterByReelId parameter disambiguates from the followedBrandIds constructor
+        public ReelFeedSpec(List<int> reelIds, bool filterByReelId) : base(criteria:
+            r => reelIds.Contains(r.Id))
+        {
+            AddInclude(r => r.Brand);
+
+            AddInclude(r => r.ReelComments);
+
+            AddIncludeChain(q =>
+                q.Include(r => r.ProductReels)
+                 .ThenInclude(pr => pr.Product)
+                    .ThenInclude(p => p.Reviews)
+            );
+            AddIncludeChain(q =>
+                q.Include(r => r.ProductReels)
+                 .ThenInclude(pr => pr.Product)
+                    .ThenInclude(p => p.Images));
+        }
+
 
     }
 }
+

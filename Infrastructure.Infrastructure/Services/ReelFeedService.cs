@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Response.Product;
 using ReelsCommerceSystem.Application.DTOs.Response.Reel;
@@ -8,6 +8,7 @@ using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
+using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using ReelsCommerceSystem.Shared.Responses;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,14 @@ namespace ReelsCommerceSystem.Infrastructure.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _user;
+        private readonly IRecommendationService _recommendationService;
 
 
-        public ReelFeedService(IUnitOfWork unitOfWork,UserManager<User> user)
+        public ReelFeedService(IUnitOfWork unitOfWork, UserManager<User> user, IRecommendationService recommendationService)
         {
             _unitOfWork = unitOfWork;
             _user = user;
+            _recommendationService = recommendationService;
         }
         public async Task<PaginationResponse<ReelFeedRes>> ReelsForUserFollowingAsync(string userId, int pageIndex, int pageSize)
         {
@@ -91,16 +94,39 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         }
         public async Task<PaginationResponse<ReelFeedRes>> ReelsWithRecommendationSystemAsync(string userId, int pageIndex, int pageSize)
         {
-            // Paginated reels
-            var spec = new ReelFeedSpec(pageIndex, pageSize);
-            var reels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
+            var recommendedIds = await _recommendationService.GetRecommendedReelIdsAsync(userId, topK: 100);
 
-            // Total reels without pagination
-            var totalReels = await _unitOfWork.Repository<Reel>()
-                .CountAsync(new ReelFeedSpec());
+            List<Reel> reels;
+            int totalReels;
+            List<int> paginatedIds = new();
 
-            // Likes
-            var reelLikes = await _unitOfWork.Repository<UserReelLike>().GetAllAsync();
+            if (recommendedIds != null && recommendedIds.Count > 0)
+            {
+                totalReels = recommendedIds.Count;
+                paginatedIds = recommendedIds.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+
+                if (paginatedIds.Count > 0)
+                {
+                    var spec = new ReelFeedSpec(paginatedIds, filterByReelId: true);
+                    var dbReels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
+
+                    reels = dbReels.OrderBy(r => paginatedIds.IndexOf(r.Id)).ToList();
+                }
+                else
+                {
+                    reels = new List<Reel>();
+                }
+            }
+            else
+            {
+                var spec = new ReelFeedSpec(pageIndex, pageSize);
+                var dbReels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
+                reels = dbReels.ToList();
+                totalReels = await _unitOfWork.Repository<Reel>().CountAsync(new ReelFeedSpec());
+            }
+
+            var likesSpec = new Specification<UserReelLike>(l => l.UserId == userId);
+            var userLikes = await _unitOfWork.Repository<UserReelLike>().GetAllWithSpecAsync(likesSpec);
 
             var reelsResult = reels.Select(r => new ReelFeedRes
             {
@@ -126,7 +152,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     HaveOffer = p.HaveOffer,
                     Rate = p.Reviews.Any() ? (int)Math.Round(p.Reviews.Average(rv => rv.Rating)) : 0
                 }).ToList(),
-                IsLiked = reelLikes.Any(like => like.UserId == userId && like.ReelId == r.Id)
+                IsLiked = userLikes.Any(like => like.ReelId == r.Id)
             }).ToList();
 
             return new PaginationResponse<ReelFeedRes>

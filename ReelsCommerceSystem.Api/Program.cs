@@ -6,10 +6,7 @@ using ReelsCommerceSystem.Api.SignalR.Hubs;
 using ReelsCommerceSystem.Api.SignalR.Senders;
 using ReelsCommerceSystem.Application.Interfaces.Senders;
 using ReelsCommerceSystem.Application.Interfaces.Services;
-using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Infrastructure.Services;
-using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
-using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Utilities;
 using Serilog;
 
@@ -40,6 +37,17 @@ builder.Services.AddScoped<IFileService, CloudinaryService>();
 //Console.WriteLine("CONFIG TEST = " + test?.CloudName);
 
 builder.Services.AddHttpClient<IPaymobService, PaymobService>();
+
+builder.Services.AddHttpClient<IRecommendationService, RecommendationService>(
+    (sp, client) =>
+    {
+        var config = sp.GetRequiredService<IConfiguration>();
+
+        var baseUrl = config["RecommendationSettings:BaseUrl"];
+
+        client.BaseAddress = new Uri(baseUrl!);
+        client.Timeout = TimeSpan.FromSeconds(10);
+    });
 
 builder.Host.AddSerilog(builder.Configuration); 
 

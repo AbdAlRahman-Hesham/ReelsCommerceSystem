@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using ReelsCommerceSystem.Application.DTOs.Request.ReelManagement;
@@ -27,7 +27,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 {
     public class ReelManagementService(IUnitOfWork _unitOfWork, 
         UserManager<User> _userManager,
-        IFileService _fileService) : IReelManagementService
+        IFileService _fileService,
+        IRecommendationService _recommendationService) : IReelManagementService
     {
         public async Task<CreateReelRes> CreateReelAsync(CreateReelReq req, string userId)
         {
@@ -93,7 +94,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             };
 
             await _unitOfWork.Repository<Reel>().AddAsync(reel);
+            reel.Brand = brand;
             await _unitOfWork.SaveChangesAsync();
+
+            _ = _recommendationService.ProcessReelAsync(reel);
 
             return new CreateReelRes
             {
@@ -334,6 +338,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             await _unitOfWork.SaveChangesAsync();
 
+            _ = _recommendationService.ProcessReelAsync(reel);
+
             return new EditReelRes
             {
                 Id = reel.Id,
@@ -508,6 +514,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             _unitOfWork.Repository<Reel>().Delete(reel);
             await _unitOfWork.SaveChangesAsync();
+
+            _ = _recommendationService.DeleteReelAsync(reelId);
 
             return true;
         }
