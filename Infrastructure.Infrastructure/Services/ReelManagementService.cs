@@ -15,19 +15,13 @@ using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelManag
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
+
 
 namespace ReelsCommerceSystem.Infrastructure.Services
 {
     public class ReelManagementService(IUnitOfWork _unitOfWork, 
         UserManager<User> _userManager,
-        IFileService _fileService,
         IRecommendationService _recommendationService,
         ICloudinaryService _cloudinaryService) : IReelManagementService
     {
