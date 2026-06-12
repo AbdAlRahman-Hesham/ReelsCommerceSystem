@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 public record ProductSpecParams
 {
     public string? Search { get; set; }
-    public string? Category { get; set; }
+    public List<int>? CategoryIds { get; set; }
 
     public List<string>? Colors { get; set; }
     public List<string>? Sizes { get; set; }

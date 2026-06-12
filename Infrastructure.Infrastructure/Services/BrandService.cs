@@ -386,6 +386,29 @@ public class BrandService : IBrandService
                   HttpStatusCode.OK
              );
     }
+    public async Task<ApiResponse<BrandOwnerRes>> GetBrandOwnerAsync(int brandId)
+    {
+        var brand = await _dbContext.Brands.AsNoTracking()
+            .FirstOrDefaultAsync(b => b.Id == brandId);
+
+        if (brand == null)
+        {
+            return ApiResponse<BrandOwnerRes>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "Brand not found",
+                "العلامة التجارية غير موجودة."
+            );
+        }
+
+        var result = new BrandOwnerRes
+        {
+            BrandId = brand.Id,
+            OwnerId = brand.UserId
+        };
+
+        return ApiResponse<BrandOwnerRes>.SuccessResponse(result, HttpStatusCode.OK);
+    }
+
     public async Task<ApiResponse<BrandRegistrationStatusRes>> GetBrandStatusAsync(string userId)
     {
         var spec = new GetBrandByUserId(userId);

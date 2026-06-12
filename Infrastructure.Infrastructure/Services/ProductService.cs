@@ -430,7 +430,7 @@ public class ProductService(
     {
         return $"products:" +
                $"search={p.Search ?? ""};" +
-               $"category={p.Category ?? ""};" +
+               $"categoryIds={(p.CategoryIds != null ? string.Join(",", p.CategoryIds) : "")};" +
                $"color={(p.Colors != null ? string.Join(",", p.Colors) : "")};" +
                $"size={(p.Sizes != null ? string.Join(",", p.Sizes) : "")};" +
                $"status={p.StockStatus ?? ""};" +

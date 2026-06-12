@@ -15,5 +15,6 @@ public interface IBrandService
     Task<ApiResponse<string>> AddOrUpdateReview(int brandId, string userId, BrandReviewReq dto);
     Task<ApiResponse<double>> GetAverageRating(int brandId);
     Task<ApiResponse<GetMyBrandRes>> GetMyBrandAsync(string userId);
+    Task<ApiResponse<BrandOwnerRes>> GetBrandOwnerAsync(int brandId);
     Task<ApiResponse<BrandRegistrationStatusRes>> GetBrandStatusAsync(string userId);
 }
