@@ -30,13 +30,9 @@ public class ProductSpec : Specification<Product>
             ? null
             : productSpecParams.StockStatus.Replace(" ", "").ToLower();
 
-        // Try parse category as id
-        int? categoryId = null;
-        if (!string.IsNullOrWhiteSpace(productSpecParams.Category) && int.TryParse(productSpecParams.Category, out var parsedCat))
-            categoryId = parsedCat;
+        int[]? categoryIds = productSpecParams.CategoryIds?.ToArray();
 
         string? searchLower = productSpecParams.Search?.ToLower();
-        string? categoryLower = productSpecParams.Category?.ToLower();
 
         AddCriteria(p =>
             (string.IsNullOrEmpty(productSpecParams.Search) ||
@@ -63,10 +59,7 @@ public class ProductSpec : Specification<Product>
                 (stockStatusNormalized == "instock" && p.AvailableColors.Any(ac => ac.AvailableSizes.Any(s => s.Quantity > 0))) ||
                 (stockStatusNormalized == "outstock" && !p.AvailableColors.Any(ac => ac.AvailableSizes.Any(s => s.Quantity > 0)))) &&
 
-            (string.IsNullOrEmpty(productSpecParams.Category) ||
-                (categoryId.HasValue && p.CategoryId == categoryId.Value) ||
-                p.Category.Name.ToLower() == categoryLower ||
-                p.Category.ArName.ToLower() == categoryLower) &&
+            (categoryIds == null || categoryIds.Contains(p.CategoryId)) &&
 
             (productSpecParams.BrandId == null || productSpecParams.BrandId <= 0 || p.BrandId == productSpecParams.BrandId)
         );
