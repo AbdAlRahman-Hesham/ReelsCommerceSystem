@@ -14,13 +14,12 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
 {
     public class ReelFeedSpec : Specification<Reel>
     {
-        //fyp
-        public ReelFeedSpec() : base(orderBy: r => r.CreatedAt,
-        sortOrder: XmlSortOrder.Descending)
+        private void AddCommonIncludes()
         {
             AddInclude(r => r.Brand);
-
             AddInclude(r => r.ReelComments);
+            AddInclude(r => r.UserReelLikes);
+            AddInclude(r => r.UserReelViews);
 
             AddIncludeChain(q =>
                 q.Include(r => r.ProductReels)
@@ -32,81 +31,36 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                 q.Include(r => r.ProductReels)
                  .ThenInclude(pr => pr.Product)
                     .ThenInclude(p => p.Images));
+        }
+
+        public ReelFeedSpec() : base(orderBy: r => r.CreatedAt,
+        sortOrder: XmlSortOrder.Descending)
+        {
+            AddCommonIncludes();
         }
         public ReelFeedSpec(int pageIndex, int pageSize) : base(orderBy: r => r.CreatedAt,
         sortOrder: XmlSortOrder.Descending)
         {
-            AddInclude(r => r.Brand);
-
-            AddInclude(r => r.ReelComments);
-
-            AddIncludeChain(q =>
-                q.Include(r => r.ProductReels)
-                 .ThenInclude(pr => pr.Product)
-                    .ThenInclude(p => p.Reviews)
-            );
-            AddIncludeChain(q =>
-                q.Include(r => r.ProductReels)
-                 .ThenInclude(pr => pr.Product)
-                    .ThenInclude(p => p.Images));
+            AddCommonIncludes();
             ApplyPaging(pageIndex, pageSize);
         }
-        //following
+
         public ReelFeedSpec(List<int> followedBrandIds) : base(criteria:
             r => followedBrandIds.Contains(r.BrandId))
         {
-            AddInclude(r => r.Brand);
-
-            AddInclude(r => r.ReelComments);
-
-            AddIncludeChain(q =>
-                q.Include(r => r.ProductReels)
-                 .ThenInclude(pr => pr.Product)
-                    .ThenInclude(p => p.Reviews)
-            );
-            AddIncludeChain(q =>
-                q.Include(r => r.ProductReels)
-                 .ThenInclude(pr => pr.Product)
-                    .ThenInclude(p => p.Images));
-
+            AddCommonIncludes();
         }
         public ReelFeedSpec(List<int> followedBrandIds, int pageIndex, int pageSize) : base(criteria:
             r=>followedBrandIds.Contains(r.BrandId))
         {
-            AddInclude(r => r.Brand);
-
-            AddInclude(r => r.ReelComments);
-
-            AddIncludeChain(q =>
-                q.Include(r => r.ProductReels)
-                 .ThenInclude(pr => pr.Product)
-                    .ThenInclude(p => p.Reviews)
-            );
-            AddIncludeChain(q =>
-                q.Include(r => r.ProductReels)
-                 .ThenInclude(pr => pr.Product)
-                    .ThenInclude(p => p.Images));
+            AddCommonIncludes();
             ApplyPaging(pageIndex, pageSize);
-
         }
 
-        // filterByReelId parameter disambiguates from the followedBrandIds constructor
         public ReelFeedSpec(List<int> reelIds, bool filterByReelId) : base(criteria:
             r => reelIds.Contains(r.Id))
         {
-            AddInclude(r => r.Brand);
-
-            AddInclude(r => r.ReelComments);
-
-            AddIncludeChain(q =>
-                q.Include(r => r.ProductReels)
-                 .ThenInclude(pr => pr.Product)
-                    .ThenInclude(p => p.Reviews)
-            );
-            AddIncludeChain(q =>
-                q.Include(r => r.ProductReels)
-                 .ThenInclude(pr => pr.Product)
-                    .ThenInclude(p => p.Images));
+            AddCommonIncludes();
         }
 
 
