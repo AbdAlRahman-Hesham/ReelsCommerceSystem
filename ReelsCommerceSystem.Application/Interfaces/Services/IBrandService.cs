@@ -17,4 +17,5 @@ public interface IBrandService
     Task<ApiResponse<GetMyBrandRes>> GetMyBrandAsync(string userId);
     Task<ApiResponse<BrandOwnerRes>> GetBrandOwnerAsync(int brandId);
     Task<ApiResponse<BrandRegistrationStatusRes>> GetBrandStatusAsync(string userId);
+    Task<ApiResponse<List<BrandFollowResponse>>> GetFollowedBrandsAsync(string userId);
 }

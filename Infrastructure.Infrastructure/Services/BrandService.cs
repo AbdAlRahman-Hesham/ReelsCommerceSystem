@@ -409,6 +409,35 @@ public class BrandService : IBrandService
         return ApiResponse<BrandOwnerRes>.SuccessResponse(result, HttpStatusCode.OK);
     }
 
+    public async Task<ApiResponse<List<BrandFollowResponse>>> GetFollowedBrandsAsync(string userId)
+    {
+        var follows = await _dbContext.UserBrandFollows
+            .AsNoTracking()
+            .Where(f => f.UserId == userId)
+            .Include(f => f.Brand)
+            .ToListAsync();
+
+        var brandIds = follows.Select(f => f.BrandId).ToList();
+
+        var followerCounts = await _dbContext.UserBrandFollows
+            .Where(f => brandIds.Contains(f.BrandId))
+            .GroupBy(f => f.BrandId)
+            .Select(g => new { BrandId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(g => g.BrandId, g => g.Count);
+
+        var brands = follows.Select(f => new BrandFollowResponse
+        {
+            BrandId = f.Brand.Id,
+            BrandDisplayName = f.Brand.DisplayName,
+            BrandLogoUrl = f.Brand.LogoUrl,
+            IsFollowed = true,
+            TotalFollowers = followerCounts.GetValueOrDefault(f.BrandId, 0),
+            Message = string.Empty
+        }).ToList();
+
+        return ApiResponse<List<BrandFollowResponse>>.SuccessResponse(brands, HttpStatusCode.OK);
+    }
+
     public async Task<ApiResponse<BrandRegistrationStatusRes>> GetBrandStatusAsync(string userId)
     {
         var spec = new GetBrandByUserId(userId);

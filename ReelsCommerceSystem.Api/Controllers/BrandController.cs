@@ -213,6 +213,25 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
         return StatusCode(result.StatusCode, result);
     }
     [Authorize]
+    [HttpGet("FollowedBrands")]
+    public async Task<IActionResult> GetFollowedBrands()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
+
+        var result = await _brandService.GetFollowedBrandsAsync(userId);
+        return Ok(result);
+    }
+
+    [Authorize]
     [HttpGet("/api/brand-registration/status")]
     public async Task<IActionResult> GetBrandStatus()
     {
