@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using ReelsCommerceSystem.Application.DTOs.Request.Identity;
 using ReelsCommerceSystem.Application.DTOs.Response.Identity;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -9,13 +10,23 @@ using ReelsCommerceSystem.Shared.Responses;
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
 public class AuthenticationService(UserManager<User> _userManager, 
-    IJwtService _jwtService, IOtpService _otpService, IUserImageService _userImageService,ITokenBlacklistService _tokenBlacklist) : IAuthenticationService
+    IJwtService _jwtService, IOtpService _otpService, IUserImageService _userImageService,ITokenBlacklistService _tokenBlacklist, ILogger<AuthenticationService> _logger) : IAuthenticationService
 {
 
 
     public async Task<LoginResDto> LoginAsync(LoginReqDto loginReqDto)
     {
-        var User = await _userManager.FindByEmailAsync(loginReqDto.Email) ?? throw new UserNotFoundException(loginReqDto.Email);
+        User? User = null;
+        try
+        {
+
+            User = await _userManager.FindByEmailAsync(loginReqDto.Email) ?? throw new UserNotFoundException(loginReqDto.Email);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while trying to find user with email {Email}", loginReqDto.Email);
+            throw ex;
+        }
 
         if (!User.EmailConfirmed)
              throw new UnauthorizedException();

@@ -221,21 +221,32 @@ public class GoogleAuthController : AppBaseController
 
         if (existingUser == null)
         {
-            user = new User
+            // Check if a user with this email already exists (from normal registration)
+            var emailUser = await _userManager.FindByEmailAsync(email!);
+            if (emailUser != null)
             {
-                Email = email,
-                UserName = $"google_{googleId}",
-                DisplayName = name ?? "Google User",
-                ImageURL = picture ?? string.Empty,
-                EmailConfirmed = true,
-            };
+                // Link Google login to the existing account
+                await _userManager.AddLoginAsync(emailUser, new UserLoginInfo("Google", googleId!, "Google"));
+                user = emailUser;
+            }
+            else
+            {
+                user = new User
+                {
+                    Email = email,
+                    UserName = $"google_{googleId}",
+                    DisplayName = name ?? "Google User",
+                    ImageURL = picture ?? string.Empty,
+                    EmailConfirmed = true,
+                };
 
-            var createResult = await _userManager.CreateAsync(user);
-            if (!createResult.Succeeded)
-                throw new Exception("User creation failed.");
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
+                    throw new Exception("User creation failed.");
 
-            await _userManager.AddLoginAsync(user, new UserLoginInfo("Google", googleId!, "Google"));
-            await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.AddLoginAsync(user, new UserLoginInfo("Google", googleId!, "Google"));
+                await _userManager.AddToRoleAsync(user, "User");
+            }
         }
         else
         {
