@@ -47,19 +47,9 @@ public class ReelController(
         if (string.IsNullOrEmpty(userId))
             return Unauthorized("User not authenticated");
 
-        var result = await _reelService.ToggleReelLikeAsync(userId, reelId);
+        var response = await _reelService.ToggleReelLikeAsync(userId, reelId);
 
-        var messageEn = result ? "Like added successfully." : "Like removed successfully.";
-        var messageAr = result ? "تم إضافة الإعجاب بنجاح." : "تم إزالة الإعجاب بنجاح.";
-
-        var response = ApiResponse<bool>.SuccessResponse(
-            result,
-            HttpStatusCode.OK,
-            messageEn,
-            messageAr
-        );
-
-        return Ok(response);
+        return StatusCode(response.StatusCode, response);
     }
 
     [Authorize]

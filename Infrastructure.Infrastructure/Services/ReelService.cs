@@ -92,8 +92,27 @@ public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager
 
         return $"{prefix}/{transform}{suffix}";
     }
-    public async Task<bool> ToggleReelLikeAsync(string userId, int reelId)
+    public async Task<ApiResponse<bool>> ToggleReelLikeAsync(string userId, int reelId)
     {
+        var reel = await _unitOfWork.Repository<Reel>().GetByIdAsync(reelId);
+        if (reel is null)
+        {
+            return ApiResponse<bool>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "Reel not found.",
+                "الريل غير موجود",
+                errors:
+                [
+                    new ValidationError
+                    {
+                        Field = "reelId",
+                        En = "The provided reel ID does not exist.",
+                        Ar = "معرف الريل غير موجود."
+                    }
+                ]
+            );
+        }
+
         var spec = new Specification<UserReelLike>(criteria: like => like.UserId == userId && like.ReelId == reelId);
 
         var existingLike = await _unitOfWork.Repository<UserReelLike>().GetWithSpecAsync(spec);
@@ -102,7 +121,6 @@ public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager
 
         if (existingLike == null)
         {
-            // Add new like
             var newLike = new UserReelLike
             {
                 ReelId = reelId,
@@ -114,7 +132,6 @@ public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager
         }
         else
         {
-            // Remove like
             _unitOfWork.Repository<UserReelLike>().Delete(existingLike);
             isLiked = false;
         }
@@ -132,7 +149,12 @@ public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager
             _ = _recommendationService.UpdateReelMetadataAsync(reelId, likesCount, viewsCount);
         }
 
-        return isLiked;
+        return ApiResponse<bool>.SuccessResponse(
+            isLiked,
+            HttpStatusCode.OK,
+            en: isLiked ? "Like added successfully." : "Like removed successfully.",
+            ar: isLiked ? "تم إضافة الإعجاب بنجاح." : "تم إزالة الإعجاب بنجاح."
+        );
 
     }
     public async Task<ApiResponse<string>> TrackReelViewAsync(string userId, ReelViewReq req)

@@ -13,6 +13,6 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
     {
         Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy);
         Task<ApiResponse<string>> TrackReelViewAsync(string userId, ReelViewReq req);
-        Task<bool> ToggleReelLikeAsync(string userId, int reelId);
+        Task<ApiResponse<bool>> ToggleReelLikeAsync(string userId, int reelId);
     }
 }
