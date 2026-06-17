@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Request.Order;
 using ReelsCommerceSystem.Application.DTOs.Response.Order;
@@ -22,6 +23,7 @@ public class OrderService : IOrderService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICartCacheService _cartCache;
     private readonly INotificationService _notificationService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     private decimal CalculateShipping(DeliveryMethod method)
     {
@@ -34,11 +36,26 @@ public class OrderService : IOrderService
         };
     }
 
-    public OrderService(IUnitOfWork unitOfWork, ICartCacheService cartCache, INotificationService notificationService)
+    public OrderService(IUnitOfWork unitOfWork, ICartCacheService cartCache, INotificationService notificationService, IHttpContextAccessor httpContextAccessor)
     {
         _unitOfWork = unitOfWork;
         _cartCache = cartCache;
         _notificationService = notificationService;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    private string? ResolveImageUrl(string? url)
+    {
+        if (string.IsNullOrEmpty(url)) return url;
+        if (url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return url;
+
+        var request = _httpContextAccessor.HttpContext?.Request;
+        if (request == null) return url;
+
+        var baseUrl = $"{request.Scheme}://{request.Host}";
+        return $"{baseUrl}/{url.TrimStart('/')}";
     }
 
     public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus)
@@ -78,7 +95,7 @@ public class OrderService : IOrderService
             {
                 ProductName = op.Product.Name,
                 ProductId = op.ProductId,
-                ProductImage = op.Product.Images?.FirstOrDefault()?.Url,
+                ProductImage = ResolveImageUrl(op.Product.Images?.FirstOrDefault()?.Url),
                 Price = op.FinalPrice,
                 Quantity = op.Quantity
             }).ToList();
@@ -117,41 +134,44 @@ public class OrderService : IOrderService
             .Include(o => o.OrderProducts)
                 .ThenInclude(op => op.Product)
                     .ThenInclude(p => p.Images)
-            .Select(o => new OrderDetailResDto
+            .FirstOrDefaultAsync();
+
+        if (order == null) return null;
+
+        return new OrderDetailResDto
+        {
+            Id = order.Id,
+            CreatedAt = order.CreatedAt,
+            OrderStatus = order.OrderStatus,
+            TrackingNumber = order.Tracking?.TrackingNumber,
+            OrderInfo = new OrderInfoResDto
             {
-                Id = o.Id,
-                CreatedAt = o.CreatedAt,
-                OrderStatus = o.OrderStatus,
-                TrackingNumber = o.Tracking != null ? o.Tracking.TrackingNumber : null,
-                OrderInfo = new OrderInfoResDto
-                {
-
-                    ShippingCity = o.ShippingCity,
-                    ShippingCountry = o.ShippingCountry,
-                    ShippingName = o.ShippingName,
-                    ShippingStreet = o.ShippingStreet,
-                    ShippingPostalCode = o.ShippingPostalCode,
-                    ShippingPhoneNumber = o.ShippingPhoneNumber,
-                    PaymentMethod = o.PaymentMethod,
-                    PaymentStatus = o.PaymentStatus,
-                    DeliveryMethod = o.DeliveryMethod,
-                    Discount = o.DiscountAmount,
-                    TotalAmount = o.TotalAmount
-                },
-
-                Items = o.OrderProducts.Select(op => new OrderItemResDto
-                {
-                    Name = op.Product.Name,
-                    Color = op.Color,
-                    Description = op.Product.Description,
-                    ProductMediaUrls = op.ProductMediaUrls.ToList(),
-                    Size = op.Size,
-                    Quantity = op.Quantity,
-                    Price = op.FinalPrice
-                }).ToList()
-            }).FirstOrDefaultAsync();
-
-        return order;
+                ShippingCity = order.ShippingCity,
+                ShippingCountry = order.ShippingCountry,
+                ShippingName = order.ShippingName,
+                ShippingStreet = order.ShippingStreet,
+                ShippingPostalCode = order.ShippingPostalCode,
+                ShippingPhoneNumber = order.ShippingPhoneNumber,
+                PaymentMethod = order.PaymentMethod,
+                PaymentStatus = order.PaymentStatus,
+                DeliveryMethod = order.DeliveryMethod,
+                Discount = order.DiscountAmount,
+                TotalAmount = order.TotalAmount
+            },
+            Items = order.OrderProducts.Select(op => new OrderItemResDto
+            {
+                Name = op.Product.Name,
+                Color = op.Color,
+                Description = op.Product.Description,
+                ProductMediaUrls = (op.ProductMediaUrls?.Any() == true
+                    ? op.ProductMediaUrls
+                    : op.Product.Images?.Select(i => i.Url).ToList()
+                )?.Select(u => ResolveImageUrl(u)).ToList() ?? new List<string>(),
+                Size = op.Size,
+                Quantity = op.Quantity,
+                Price = op.FinalPrice
+            }).ToList()
+        };
     }
     public async Task<CreateOrderRes> CreateOrderAsync(string userId, CreateOrderReq request)
     {
