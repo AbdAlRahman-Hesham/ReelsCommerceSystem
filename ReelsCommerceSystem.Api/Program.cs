@@ -49,9 +49,10 @@ builder.Services.AddHttpClient<IRecommendationService, RecommendationService>(
         var config = sp.GetRequiredService<IConfiguration>();
 
         var baseUrl = config["RecommendationSettings:BaseUrl"];
+        var timeoutSeconds = config.GetValue<int>("RecommendationSettings:TimeoutSeconds", 30);
 
         client.BaseAddress = new Uri(baseUrl!);
-        client.Timeout = TimeSpan.FromSeconds(10);
+        client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
     });
 
 builder.Host.AddSerilog(builder.Configuration); 
