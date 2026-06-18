@@ -1,15 +1,11 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Ocsp;
+using Microsoft.Extensions.Logging;
 using ReelsCommerceSystem.Application.DTOs.Request.Reel;
-using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.DTOs.Response.Reel;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
-using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
-using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
@@ -17,7 +13,7 @@ using System.Net;
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
-public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager, IRecommendationService _recommendationService) : IReelService
+public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recommendationService, ILogger<ReelService> _logger) : IReelService
 
 {
     public async Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy)
@@ -157,6 +153,8 @@ public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager
         );
 
     }
+    private const double MinViewThresholdSeconds = 1.0; // tune this, or use a % of VideoDurationSeconds
+
     public async Task<ApiResponse<string>> TrackReelViewAsync(string userId, ReelViewReq req)
     {
         var reel = await _unitOfWork.Repository<Reel>().GetByIdAsync(req.ReelId);
@@ -169,7 +167,8 @@ public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager
             );
         }
 
-        var spec = new Specification<UserReelView>(criteria: view => view.UserId == userId && view.ReelId ==req.ReelId);
+        var spec = new Specification<UserReelView>(
+            criteria: view => view.UserId == userId && view.ReelId == req.ReelId);
 
         var existingView = await _unitOfWork.Repository<UserReelView>().GetWithSpecAsync(spec);
 
@@ -183,24 +182,63 @@ public class ReelService(IUnitOfWork _unitOfWork, UserManager<User> _userManager
                 VideoDurationSeconds = req.VideoDurationSeconds
             };
 
-            await _unitOfWork.Repository<UserReelView>().AddAsync(newView);
+            try
+            {
+                await _unitOfWork.Repository<UserReelView>().AddAsync(newView);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                // Another request inserted the same (UserId, ReelId) pair first
+                // (requires a unique index on UserId+ReelId for this to trigger reliably).
+                existingView = await _unitOfWork.Repository<UserReelView>().GetWithSpecAsync(spec);
+                if (existingView != null)
+                {
+                    existingView.WatchedDurationSeconds = Math.Max(
+                        existingView.WatchedDurationSeconds, req.WatchedDurationSeconds);
+                    existingView.VideoDurationSeconds = req.VideoDurationSeconds;
+
+                    _unitOfWork.Repository<UserReelView>().Update(existingView);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+            }
         }
         else
         {
-            existingView.WatchedDurationSeconds = req.WatchedDurationSeconds;
-            existingView.VideoDurationSeconds = req.VideoDurationSeconds;
+            var newWatchedDuration = Math.Max(existingView.WatchedDurationSeconds, req.WatchedDurationSeconds);
+            var hasChanged = newWatchedDuration != existingView.WatchedDurationSeconds
+                || existingView.VideoDurationSeconds != req.VideoDurationSeconds;
 
-            _unitOfWork.Repository<UserReelView>().Update(existingView);
+            if (hasChanged)
+            {
+                existingView.WatchedDurationSeconds = newWatchedDuration;
+                existingView.VideoDurationSeconds = req.VideoDurationSeconds;
+
+                _unitOfWork.Repository<UserReelView>().Update(existingView);
+                await _unitOfWork.SaveChangesAsync();
+            }
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        // Only feed the recommendation engine when the watch crosses a meaningful threshold
+        if (req.WatchedDurationSeconds >= MinViewThresholdSeconds)
+        {
+            var likesCount = await _unitOfWork.Repository<UserReelLike>()
+                .CountAsync(new Specification<UserReelLike>(l => l.ReelId == req.ReelId));
+            var viewsCount = await _unitOfWork.Repository<UserReelView>()
+                .CountAsync(new Specification<UserReelView>(v => v.ReelId == req.ReelId));
 
-        // Update recommendation engine with new counts
-        var likesCount = await _unitOfWork.Repository<UserReelLike>()
-            .CountAsync(new Specification<UserReelLike>(l => l.ReelId == req.ReelId));
-        var viewsCount = await _unitOfWork.Repository<UserReelView>()
-            .CountAsync(new Specification<UserReelView>(v => v.ReelId == req.ReelId));
-        _ = _recommendationService.UpdateReelMetadataAsync(req.ReelId, likesCount, viewsCount);
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _recommendationService.UpdateReelMetadataAsync(req.ReelId, likesCount, viewsCount);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to update recommendation metadata for reel {ReelId}", req.ReelId);
+                }
+            });
+        }
 
         return ApiResponse<string>.SuccessResponse(
             "View Recorded Successfully",

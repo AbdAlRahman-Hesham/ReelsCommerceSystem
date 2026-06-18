@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Http.Features;
 using ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 using ReelsCommerceSystem.Api.Middlewares;
@@ -6,7 +8,10 @@ using ReelsCommerceSystem.Api.SignalR.Hubs;
 using ReelsCommerceSystem.Api.SignalR.Senders;
 using ReelsCommerceSystem.Application.Interfaces.Senders;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Infrastructure.Services;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
+using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Utilities;
 using Serilog;
 
@@ -129,5 +134,51 @@ app.AddAppMiddleware();
 
 //    await unitOfWork.SaveChangesAsync();
 //}
+
+var initialSeedFlag = builder.Configuration["InitialSeedRecomendationSysten"];
+if (initialSeedFlag?.Equals("true", StringComparison.OrdinalIgnoreCase) == true)
+{
+    var logger = app.Services.GetRequiredService<ILogger<Program>>();
+    logger.LogInformation("InitialSeedRecomendationSysten flag is true. Starting to seed reels into recommendation system...");
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        var recommendationService = scope.ServiceProvider.GetRequiredService<IRecommendationService>();
+
+        var spec = new ReelFeedSpec();
+        var reels = await unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
+
+        logger.LogInformation("Found {Count} reels to seed into recommendation system.", reels.Count);
+
+        foreach (var reel in reels)
+        {
+            await recommendationService.ProcessReelAsync(reel);
+        }
+
+        logger.LogInformation("Successfully seeded {Count} reels into recommendation system.", reels.Count);
+    }
+
+    try
+    {
+        var appSettingsPath = Path.Combine(builder.Environment.ContentRootPath, "appsettings.json");
+        if (File.Exists(appSettingsPath))
+        {
+            var json = File.ReadAllText(appSettingsPath);
+            var jsonNode = JsonNode.Parse(json);
+            if (jsonNode is JsonObject rootObj)
+            {
+                rootObj["InitialSeedRecomendationSysten"] = JsonValue.Create(false);
+                var writeOptions = new JsonSerializerOptions { WriteIndented = true };
+                File.WriteAllText(appSettingsPath, rootObj.ToJsonString(writeOptions));
+                logger.LogInformation("Set InitialSeedRecomendationSysten flag to false in appsettings.json.");
+            }
+        }
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Failed to update InitialSeedRecomendationSysten flag in appsettings.json.");
+    }
+}
 
 app.Run();
