@@ -69,7 +69,7 @@ public class BrandService : IBrandService
         };
     }
 
-    public async Task<ApiResponse<BrandInfoRes>> GetBrandInfoAsync(int brandId)
+    public async Task<ApiResponse<BrandInfoRes>> GetBrandInfoAsync(int brandId, string? userId = null)
     {
         var brand = await _dbContext.Brands.AsNoTracking()
             .Include(b => b.Products)
@@ -94,12 +94,16 @@ public class BrandService : IBrandService
 
         var followersCount = brand.UserFollows?.Count ?? 0;
 
+        var isFollowing = userId != null &&
+            await _dbContext.UserBrandFollows.AnyAsync(f => f.BrandId == brandId && f.UserId == userId);
+
         var result = new BrandInfoRes
         {
             DisplayName = brand.DisplayName ?? string.Empty,
             LogoUrl = brand.LogoUrl ?? string.Empty,
             FollowersCount = followersCount,
-            TotalReelLikes = totalLikes
+            TotalReelLikes = totalLikes,
+            IsFollowing = isFollowing
         };
 
         return ApiResponse<BrandInfoRes>.SuccessResponse(result, HttpStatusCode.OK);

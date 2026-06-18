@@ -44,7 +44,8 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
     [HttpGet("BrandInfo/{brandId}")]
     public async Task<IActionResult> GetBrandInfo(int brandId)
     {
-        var result = await _brandService.GetBrandInfoAsync(brandId);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var result = await _brandService.GetBrandInfoAsync(brandId, userId);
         return StatusCode(result.StatusCode, result);
     }
 
