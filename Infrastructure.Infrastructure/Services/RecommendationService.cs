@@ -186,37 +186,55 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         private List<int> ParseRecommendationIds(string jsonContent)
         {
             var result = new List<int>();
+
             if (string.IsNullOrWhiteSpace(jsonContent))
                 return result;
 
             using var doc = JsonDocument.Parse(jsonContent);
             var root = doc.RootElement;
 
-            if (root.ValueKind == JsonValueKind.Array)
+            if (root.ValueKind == JsonValueKind.Object)
             {
-                ParseJsonArray(root, result);
-            }
-            else if (root.ValueKind == JsonValueKind.Object)
-            {
-                string[] potentialKeys = { "reels", "recommendations", "data", "items", "results" };
-                bool foundList = false;
+                if (root.TryGetProperty("recommendedReelIds", out var reelsArray) &&
+                    reelsArray.ValueKind == JsonValueKind.Array)
+                {
+                    ParseJsonArray(reelsArray, result);
+                    return result;
+                }
+
+                // fallback (generic search)
+                string[] potentialKeys =
+                {
+                    "reels",
+                    "recommendations",
+                    "data",
+                    "items",
+                    "results"
+                };
+
                 foreach (var key in potentialKeys)
                 {
-                    if (root.TryGetProperty(key, out var prop) && prop.ValueKind == JsonValueKind.Array)
+                    if (root.TryGetProperty(key, out var prop) &&
+                        prop.ValueKind == JsonValueKind.Array)
                     {
                         ParseJsonArray(prop, result);
-                        foundList = true;
-                        break;
+                        return result;
                     }
                 }
 
-                if (!foundList)
+                // last fallback: scan all properties
+                foreach (var property in root.EnumerateObject())
                 {
-                    if (TryExtractReelId(root, out int id))
+                    if (property.Value.ValueKind == JsonValueKind.Array)
                     {
-                        result.Add(id);
+                        ParseJsonArray(property.Value, result);
+                        return result;
                     }
                 }
+            }
+            else if (root.ValueKind == JsonValueKind.Array)
+            {
+                ParseJsonArray(root, result);
             }
 
             return result;
@@ -243,6 +261,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 }
             }
         }
+
 
         private bool TryExtractReelId(JsonElement element, out int id)
         {

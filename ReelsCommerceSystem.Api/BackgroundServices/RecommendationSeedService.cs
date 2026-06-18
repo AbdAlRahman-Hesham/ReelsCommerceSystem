@@ -40,7 +40,7 @@ public class RecommendationSeedService : BackgroundService
         {
             _logger.LogInformation("Applying pending EF Core database migrations...");
 
-            using (var scope = _scopeFactory.CreateScope())
+            await using (var scope = _scopeFactory.CreateAsyncScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 await dbContext.Database.MigrateAsync(stoppingToken);
@@ -71,7 +71,7 @@ public class RecommendationSeedService : BackgroundService
         {
             _logger.LogInformation("InitialSeedRecomendationSysten flag is true. Starting to seed reels into recommendation system...");
 
-            using (var scope = _scopeFactory.CreateScope())
+            await using (var scope = _scopeFactory.CreateAsyncScope())
             {
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var recommendationService = scope.ServiceProvider.GetRequiredService<IRecommendationService>();
