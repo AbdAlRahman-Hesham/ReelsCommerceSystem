@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using ReelsCommerceSystem.Api.Endpoints;
-using ReelsCommerceSystem.Infrastructure.Persistence;
 
 namespace ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
 
@@ -31,13 +28,6 @@ public static class AppMiddlewareExtentions
             );
         }
 
-
-        // Auto apply migrations on startup
-        using (var scope = app.Services.CreateScope())
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            dbContext.Database.Migrate();
-        }
 
         
 

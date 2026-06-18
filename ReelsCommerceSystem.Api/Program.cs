@@ -91,6 +91,8 @@ builder.Services.Configure<FormOptions>(options =>
 
 var app = builder.Build();
 
+app.Logger.LogInformation("Application startup initiated. Kestrel will begin listening immediately.");
+
 app.UseSerilogRequestLogging();
 
 app.UseExceptionHandlingMiddleware();
@@ -112,25 +114,10 @@ app.MapHub<ChatHub>("/chatHub");
 
 app.AddAppMiddleware();
 
+app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
-//await using (var scope = app.Services.CreateAsyncScope())
-//{
-//    var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-
-//    var brands = await unitOfWork.Repository<Brand>()
-//        .GetAllWithSpecAsync(new BrandWithReviewSpec());
-
-//    foreach (var brand in brands)
-//    {
-//        var reviews = brand.Reviews ?? new List<BrandReview>();
-
-//        brand.NumOfReviews = reviews.Count;
-//        brand.AverageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
-
-//        unitOfWork.Repository<Brand>().Update(brand);
-//    }
-
-//    await unitOfWork.SaveChangesAsync();
-//}
+var urls = app.Urls.Any() ? string.Join(", ", app.Urls) : "http://+:8080 (default)";
+app.Logger.LogInformation("Server listening on: {Urls}", urls);
+app.Logger.LogInformation("Application startup complete. Ready to serve requests.");
 
 app.Run();

@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 
@@ -23,9 +25,45 @@ public class RecommendationSeedService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("Background seeding service started.");
+
+        await ApplyMigrationsAsync(stoppingToken);
+
+        await SeedRecommendationSystemAsync(stoppingToken);
+
+        _logger.LogInformation("Background seeding service completed.");
+    }
+
+    private async Task ApplyMigrationsAsync(CancellationToken stoppingToken)
+    {
+        try
+        {
+            _logger.LogInformation("Applying pending EF Core database migrations...");
+
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                await dbContext.Database.MigrateAsync(stoppingToken);
+            }
+
+            _logger.LogInformation("Database migrations applied successfully.");
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Database migration was cancelled due to application shutdown.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while applying database migrations.");
+        }
+    }
+
+    private async Task SeedRecommendationSystemAsync(CancellationToken stoppingToken)
+    {
         var initialSeedFlag = _configuration["InitialSeedRecomendationSysten"];
         if (!initialSeedFlag?.Equals("true", StringComparison.OrdinalIgnoreCase) == true)
         {
+            _logger.LogInformation("InitialSeedRecomendationSysten flag is not set to true. Skipping recommendation seeding.");
             return;
         }
 
