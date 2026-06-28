@@ -5,6 +5,7 @@ using ReelsCommerceSystem.Application.DTOs.Request.TikTok;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Utilities;
 using System.Net;
 using System.Text.Json;
 using System.Web;
@@ -244,7 +245,7 @@ private async Task<(User user, string jwt, DateTime expiresAt)> ExchangeTikTokCo
                 throw new Exception("User creation failed");
 
             await _userManager.AddLoginAsync(user, new UserLoginInfo("TikTok", openId!, "TikTok"));
-            await _userManager.AddToRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, SystemRoles.User);
         }
         else
         {

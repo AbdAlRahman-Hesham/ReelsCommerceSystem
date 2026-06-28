@@ -11,6 +11,7 @@ using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Shared.Exceptions;
+using ReelsCommerceSystem.Shared.Utilities;
 
 namespace ReelsCommerceSystem.Infrastructure.Services
 {
@@ -35,7 +36,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             var roles = await _userManager.GetRolesAsync(User);
             return new UserInfoResDto
             {
-                Role= roles.FirstOrDefault() ?? "User",
+                Role= roles.FirstOrDefault() ?? SystemRoles.User,
                 FirstName = User.FirstName ?? string.Empty,
                 LastName= User.LastName ?? string.Empty,
                 Email =User.Email ?? string.Empty,

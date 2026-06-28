@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ReelsCommerceSystem.Application.Interfaces.Services;
-using ReelsCommerceSystem.Shared.Responses;
-using System.Security.Claims;
-using System.Net;
-using System.Threading.Tasks;
 using ReelsCommerceSystem.Application.DTOs.Request.Order;
+using ReelsCommerceSystem.Application.DTOs.Response.Order;
+using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Enums;
+using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Utilities;
+using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
@@ -72,6 +74,17 @@ public class OrderController : AppBaseController
 
         var summary = await _orderService.GetOrderSummaryAsync(userId, request);
         return Ok(ApiResponse<object>.SuccessResponse(summary, HttpStatusCode.OK, "Order summary retrieved successfully."));
+    }
+
+    [Authorize(Roles = SystemRoles.BrandOwner)]
+    [HttpGet("brand-orders")]
+    public async Task<IActionResult> GetBrandOrders()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var result = await _orderService.GetBrandOrdersAsync(userId);
+        return Ok(ApiResponse<BrandOrdersResDto>.SuccessResponse(result, HttpStatusCode.OK, "Orders retrieved successfully."));
     }
 }
 

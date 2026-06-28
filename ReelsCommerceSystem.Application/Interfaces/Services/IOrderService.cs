@@ -12,6 +12,7 @@ public interface IOrderService
     Task<CreateOrderRes> CreateOrderAsync(string userId, CreateOrderReq request);
     Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus newStatus);
     Task<OrderSummaryResDto> GetOrderSummaryAsync(string userId, CreateOrderReq request);
+    Task<BrandOrdersResDto> GetBrandOrdersAsync(string userId);
 }
 
 

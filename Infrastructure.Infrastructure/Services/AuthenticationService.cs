@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Utilities;
 
 namespace ReelsCommerceSystem.Infrastructure.Services;
 
@@ -85,7 +86,7 @@ public class AuthenticationService(UserManager<User> _userManager,
 
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, SystemRoles.User);
             await _otpService.SendOtpAsync(user.Email!);
 
             return new RegisterResDto();

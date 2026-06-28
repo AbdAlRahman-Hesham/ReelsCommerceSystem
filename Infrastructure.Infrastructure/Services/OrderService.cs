@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Request.Order;
 using ReelsCommerceSystem.Application.DTOs.Response.Order;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.CartEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
@@ -10,6 +12,7 @@ using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ProductSpec;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.OrderSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
@@ -474,6 +477,46 @@ public class OrderService : IOrderService
         {
             Items = items,
             Summary = summary
+        };
+    }
+
+    public async Task<BrandOrdersResDto> GetBrandOrdersAsync(string userId)
+    {
+        var brand = await _unitOfWork.Repository<Brand>()
+            .FirstOrDefaultAsync(b => b.UserId == userId);
+
+        if (brand == null)
+            return new BrandOrdersResDto();
+
+        var brandOrderProducts = await _unitOfWork.Repository<OrderProduct>().GetAllQueryable()
+            .Where(op => op.BrandId == brand.Id)
+            .Include(op => op.Order)
+                .ThenInclude(o => o.User)
+            .OrderByDescending(op => op.Order.CreatedAt)
+            .ToListAsync();
+
+        var grouped = brandOrderProducts
+            .GroupBy(op => op.OrderId)
+            .Select(g =>
+            {
+                var order = g.First().Order;
+                return new BrandOrderDto
+                {
+                    OrderId = g.Key,
+                    CreatedAt = order.CreatedAt,
+                    CustomerName = order.User?.DisplayName ?? "Unknown",
+                    ItemCount = g.Sum(op => op.Quantity),
+                    TotalAmount = order.TotalAmount,
+                    Status = order.OrderStatus,
+                    PaymentStatus = order.PaymentStatus
+                };
+            })
+            .OrderByDescending(o => o.CreatedAt)
+            .ToList();
+
+        return new BrandOrdersResDto
+        {
+            Orders = grouped
         };
     }
 

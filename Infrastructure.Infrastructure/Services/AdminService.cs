@@ -19,6 +19,7 @@ using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Utilities;
 
 
 namespace ReelsCommerceSystem.Infrastructure.Services
@@ -64,7 +65,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
            
 
-            var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            var isAdmin = await _userManager.IsInRoleAsync(user, SystemRoles.Admin);
             if (!isAdmin)
             {
                 return ApiResponse<AdminLoginResDto>.ErrorResponse(

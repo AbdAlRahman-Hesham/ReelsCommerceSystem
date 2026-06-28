@@ -12,6 +12,7 @@ using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Exceptions;
+using ReelsCommerceSystem.Shared.Utilities;
 
 
 namespace ReelsCommerceSystem.Infrastructure.Services
@@ -50,11 +51,11 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             var owner = await _userManager.FindByIdAsync(brand.UserId);
             if (owner != null)
             {
-                if (!await _userManager.IsInRoleAsync(owner, "Brand Owner"))
-                    await _userManager.AddToRoleAsync(owner, "Brand Owner");
+                if (!await _userManager.IsInRoleAsync(owner, SystemRoles.BrandOwner))
+                    await _userManager.AddToRoleAsync(owner, SystemRoles.BrandOwner);
 
-                if (!await _userManager.IsInRoleAsync(owner, "User"))
-                    await _userManager.AddToRoleAsync(owner, "User");
+                if (!await _userManager.IsInRoleAsync(owner, SystemRoles.User))
+                    await _userManager.AddToRoleAsync(owner, SystemRoles.User);
             }
 
             await _notificationService.SendBrandApprovedNotificationAsync(brand);

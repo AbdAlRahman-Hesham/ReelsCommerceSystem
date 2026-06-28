@@ -13,6 +13,7 @@ using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Notificat
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Utilities;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -345,7 +346,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
         public async Task SendBrandSubmittedNotificationAsync(Brand brand)
         {
-            var admins = await _userManager.GetUsersInRoleAsync("Admin");
+            var admins = await _userManager.GetUsersInRoleAsync(SystemRoles.Admin);
             var adminIds = admins.Select(a => a.Id).ToList();
             if (!adminIds.Any()) return;
 

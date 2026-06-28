@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.DTOs.Request.Google;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Utilities;
 using System.Net;
 using System.Text.Json;
 using System.Web;
@@ -245,7 +246,7 @@ public class GoogleAuthController : AppBaseController
                     throw new Exception("User creation failed.");
 
                 await _userManager.AddLoginAsync(user, new UserLoginInfo("Google", googleId!, "Google"));
-                await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.AddToRoleAsync(user, SystemRoles.User);
             }
         }
         else
