@@ -6,6 +6,11 @@ public class BrandDashboardRes
     public int TotalOrders { get; set; }
     public decimal TotalRevenue { get; set; }
     public decimal MonthlyRevenue { get; set; }
+    public double RevenueGrowthPercentage { get; set; }
+    public double OrdersGrowthPercentage { get; set; }
+    public int ActiveCustomers { get; set; }
+    public double CustomersGrowthPercentage { get; set; }
+    public double SalesGrowthPercentage { get; set; }
     public ReelCountsDto ReelCounts { get; set; } = new();
     public PostCountsDto PostCounts { get; set; } = new();
     public List<RecentOrderDto> RecentOrders { get; set; } = new();

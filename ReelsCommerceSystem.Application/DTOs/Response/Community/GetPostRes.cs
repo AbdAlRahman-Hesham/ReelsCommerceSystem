@@ -20,6 +20,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Community
         public int CommentsCount { get; set; }
         public int LikesCount { get; set; }
         public bool IsLiked { get; set; }
+        public bool IsByMe { get; set; }
 
     }
 

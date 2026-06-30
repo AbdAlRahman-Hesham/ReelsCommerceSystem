@@ -185,6 +185,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 CommentsCount = post.Comments.Count,
                 LikesCount = post.Likes.Count,
                 IsLiked=isLiked,
+                IsByMe = post.BrandId == brand.Id,
                 CreatedAt = post.CreatedAt
             };
 

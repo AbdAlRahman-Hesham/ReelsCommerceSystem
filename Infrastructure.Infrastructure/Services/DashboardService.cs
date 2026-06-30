@@ -180,12 +180,83 @@ public class DashboardService : IDashboardService
             }
         }
 
+        // Active Customers
+        var activeCustomers = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => deliveredOrderIds.Contains(o.Id))
+            .Select(o => o.UserId)
+            .Distinct()
+            .CountAsync();
+
+        // Previous month calculations
+        var startOfPreviousMonth = startOfMonth.AddMonths(-1);
+
+        var previousMonthRevenue = await orderProductQuery
+            .Where(op => deliveredOrderIds.Contains(op.OrderId)
+                && op.Order.CreatedAt >= startOfPreviousMonth
+                && op.Order.CreatedAt < startOfMonth)
+            .SumAsync(op => op.FinalPrice * op.Quantity);
+
+        var revenueGrowth = previousMonthRevenue > 0
+            ? Math.Round((double)((monthlyRevenue - previousMonthRevenue) / previousMonthRevenue * 100), 1)
+            : 0;
+
+        var currentMonthOrders = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => deliveredOrderIds.Contains(o.Id) && o.CreatedAt >= startOfMonth)
+            .CountAsync();
+
+        var previousMonthOrders = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => deliveredOrderIds.Contains(o.Id)
+                && o.CreatedAt >= startOfPreviousMonth
+                && o.CreatedAt < startOfMonth)
+            .CountAsync();
+
+        var ordersGrowth = previousMonthOrders > 0
+            ? Math.Round((double)(currentMonthOrders - previousMonthOrders) / previousMonthOrders * 100, 1)
+            : 0;
+
+        // Customers growth
+        var currentMonthCustomers = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => deliveredOrderIds.Contains(o.Id) && o.CreatedAt >= startOfMonth)
+            .Select(o => o.UserId)
+            .Distinct()
+            .CountAsync();
+
+        var previousMonthCustomers = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => deliveredOrderIds.Contains(o.Id)
+                && o.CreatedAt >= startOfPreviousMonth
+                && o.CreatedAt < startOfMonth)
+            .Select(o => o.UserId)
+            .Distinct()
+            .CountAsync();
+
+        var customersGrowth = previousMonthCustomers > 0
+            ? Math.Round((double)(currentMonthCustomers - previousMonthCustomers) / previousMonthCustomers * 100, 1)
+            : 0;
+
+        // Sales Growth (current year vs previous year from revenueTrend)
+        var currentYearRevenue = revenueTrend
+            .Where(r => r.Year == now.Year)
+            .Sum(r => r.Revenue);
+
+        var previousYearRevenue = revenueTrend
+            .Where(r => r.Year == now.Year - 1)
+            .Sum(r => r.Revenue);
+
+        var salesGrowth = previousYearRevenue > 0
+            ? Math.Round((double)((currentYearRevenue - previousYearRevenue) / previousYearRevenue * 100), 1)
+            : 0;
+
         return new BrandDashboardRes
         {
             TotalProducts = productCount,
             TotalOrders = totalOrders,
             TotalRevenue = totalRevenue,
             MonthlyRevenue = monthlyRevenue,
+            RevenueGrowthPercentage = revenueGrowth,
+            OrdersGrowthPercentage = ordersGrowth,
+            ActiveCustomers = activeCustomers,
+            CustomersGrowthPercentage = customersGrowth,
+            SalesGrowthPercentage = salesGrowth,
             ReelCounts = new ReelCountsDto
             {
                 All = reels.Count,
