@@ -96,16 +96,24 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     m.SenderId != userId &&
                     m.Status != MessageStatus.Seen);
 
+                var lastMessage = room.Messages
+                    .OrderByDescending(m => m.CreatedAt)
+                    .FirstOrDefault();
+
+                if (lastMessage == null) continue;
+
                 result.Add(new ChatRoomRes
                 {
                     RoomIdEnc = EncryptionHelper.Encrypt(room.Id.ToString()),
                     UserName = $"{otherUser?.FirstName} {otherUser?.LastName}",
                     UserImageUrl = otherUser?.ImageURL ?? string.Empty,
-                    UnreadCount = unread
+                    UnreadCount = unread,
+                    LastMessage = lastMessage?.Text,
+                    LastMessageAt = lastMessage?.CreatedAt
                 });
             }
 
-            return result;
+            return result.OrderByDescending(r => r.LastMessageAt);
         }
 
         public async Task<ChatRoomRes> GetRoomRes(int roomId, string userId)

@@ -259,6 +259,41 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 PostId = post.Id
             };
         }
+        public async Task<EditPostRes> UpdatePostStatusAsync(int postId, string status, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+                throw new NotFoundException("user not found");
+
+            var brandSpec = new GetBrandByUserId(userId);
+            var brand = await _unitOfWork
+                .Repository<Brand>()
+                .GetWithSpecAsync(brandSpec);
+
+            if (brand is null)
+                throw new BadRequestException("this service for brand owners only");
+
+            var postSpec = new GetPostByIdSpec(postId);
+            var post = await _unitOfWork
+                .Repository<CommunityPost>()
+                .GetWithSpecAsync(postSpec);
+
+            if (post is null)
+                throw new NotFoundException("post not found");
+
+            if (post.BrandId != brand.Id)
+                throw new UnauthorizedException();
+
+            if (!string.IsNullOrWhiteSpace(status))
+                post.Status = Enum.Parse<PostStatus>(status, true);
+
+            post.UpdatedAt = DateTime.Now;
+            _unitOfWork.Repository<CommunityPost>().Update(post);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new EditPostRes { PostId = post.Id };
+        }
+
         public async Task<bool> DeletePostAsync(int postId, string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);

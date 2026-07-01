@@ -74,6 +74,20 @@ namespace ReelsCommerceSystem.Api.Controllers
         }
 
         [Authorize]
+        [HttpPatch("Status")]
+        public async Task<IActionResult> UpdatePostStatus([FromQuery] int postId, [FromQuery] string status)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId is null)
+                return Unauthorized();
+
+            var result = await _communityService.UpdatePostStatusAsync(postId, status, userId);
+            return Ok(ApiResponse<EditPostRes>.SuccessResponse(
+                result,
+                System.Net.HttpStatusCode.OK));
+        }
+
+        [Authorize]
         [HttpDelete("{postId}")]
         public async Task<IActionResult> Delete([FromRoute] int postId)
         {

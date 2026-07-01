@@ -14,5 +14,6 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
         public Task<EditPostRes> EditPostAsync(EditPostReq req, string userId);
         public Task<bool> DeletePostAsync(int postId, string userId);
         Task<TogglePostLikeRes> TogglePostLikeAsync(int postId,string userId);
+        Task<EditPostRes> UpdatePostStatusAsync(int postId, string status, string userId);
     }
 }
