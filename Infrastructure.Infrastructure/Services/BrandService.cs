@@ -360,8 +360,9 @@ public class BrandService : IBrandService
     }
     public async Task<ApiResponse<GetMyBrandRes>> GetMyBrandAsync(string userId)
     {
-        var spec = new GetBrandByUserId(userId);
-        var brand = await _unitOfWork.Repository<Brand>().GetWithSpecAsync(spec);
+        var brand = await _dbContext.Brands
+            .Include(b => b.RejectionReason)
+            .FirstOrDefaultAsync(b => b.UserId == userId);
         if (brand == null)
         {
             return ApiResponse<GetMyBrandRes>.ErrorResponse(
@@ -382,7 +383,10 @@ public class BrandService : IBrandService
             District = brand.District,
             NumberOfEmployees = brand.NumberOfEmployees,
             Status = brand.Status.ToString(),
-            CurrentStep = brand.CurrentStep.ToString()
+            CurrentStep = brand.CurrentStep.ToString(),
+            SubmittedAt = brand.SubmittedAt,
+            LastFailedStep = brand.LastFailedStep != null ? (int)brand.LastFailedStep : null,
+            RejectionReason = brand.RejectionReason?.Description
         };
         return ApiResponse<GetMyBrandRes>.SuccessResponse
              (
@@ -458,8 +462,11 @@ public class BrandService : IBrandService
         {
             CurrentStep = (int)brand.CurrentStep,
             Status = brand.Status.ToString(),
-            RejectionReason = brand.RejectionReason?.Description
-            
+            CanResume = brand.Status == BrandStatus.REJECTED,
+            LastFailedStep = brand.LastFailedStep != null ? (int)brand.LastFailedStep : null,
+            RejectionReason = brand.RejectionReason?.Description,
+            RejectionCode = brand.RejectionReason?.Code,
+            SubmittedAt = brand.SubmittedAt
         };
         return ApiResponse<BrandRegistrationStatusRes>.SuccessResponse
             (

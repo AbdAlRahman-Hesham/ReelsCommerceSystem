@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
+using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
 using ReelsCommerceSystem.Application.DTOs.Dto;
 using ReelsCommerceSystem.Application.DTOs.Request.Notification;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
@@ -446,6 +448,166 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(brand.UserId));
             await _realtimeSender.UpdateUnreadCountAsync(brand.UserId, unreadCount);
+        }
+
+        public async Task SendBrandBannedNotificationAsync(Brand brand, string? reason = null)
+        {
+            string message = string.IsNullOrEmpty(reason)
+                ? "Your brand has been banned."
+                : $"Your brand has been banned: {reason}";
+            string messageAr = string.IsNullOrEmpty(reason)
+                ? "تم حظر البراند الخاص بك."
+                : $"تم حظر البراند الخاص بك: {reason}";
+
+            var notification = new Notification
+            {
+                UserId = brand.UserId,
+                Type = NotificationType.SYSTEM,
+                ReferenceId = brand.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            };
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.SYSTEM,
+                ReferenceId = brand.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(new List<string> { brand.UserId }, realtimeNotification);
+
+            var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(brand.UserId));
+            await _realtimeSender.UpdateUnreadCountAsync(brand.UserId, unreadCount);
+        }
+
+        public async Task SendCancellationNotificationAsync(Order order, string cancelledByUserId, string cancelledByRole)
+        {
+            string roleLabel = cancelledByRole switch
+            {
+                SystemRoles.User => "Customer",
+                string r when r == SystemRoles.BrandOwner || r == SystemRoles.BrandEmployee => "Brand",
+                _ => cancelledByRole
+            };
+
+            string message = $"Order #{order.Id} has been cancelled by {roleLabel}.";
+            string messageAr = $"تم إلغاء الطلب #{order.Id} بواسطة {roleLabel}.";
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+
+            var brandUserIds = await _unitOfWork.Repository<OrderProduct>().GetAllQueryable()
+                .Where(op => op.OrderId == order.Id)
+                .Include(op => op.Brand)
+                .Select(op => op.Brand.UserId)
+                .Distinct()
+                .ToListAsync();
+
+            var recipientIds = new List<string> { order.UserId };
+            recipientIds.AddRange(brandUserIds.Where(id => id != order.UserId));
+
+            var notifications = recipientIds.Select(uid => new Notification
+            {
+                UserId = uid,
+                Type = NotificationType.ORDER_STATUS,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            }).ToList();
+
+            await notificationRepo.AddRangeAsync(notifications);
+            await _unitOfWork.SaveChangesAsync();
+
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.ORDER_STATUS,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(recipientIds, realtimeNotification);
+
+            foreach (var uid in recipientIds)
+            {
+                var count = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(uid));
+                await _realtimeSender.UpdateUnreadCountAsync(uid, count);
+            }
+        }
+
+        public async Task SendRefundNotificationAsync(Order order)
+        {
+            string message = $"Your payment for order #{order.Id} has been refunded.";
+            string messageAr = $"تم استرداد مبلغ الدفع للطلب #{order.Id}.";
+
+            var notification = new Notification
+            {
+                UserId = order.UserId,
+                Type = NotificationType.PAYMENT,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            };
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.PAYMENT,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(new List<string> { order.UserId }, realtimeNotification);
+
+            var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(order.UserId));
+            await _realtimeSender.UpdateUnreadCountAsync(order.UserId, unreadCount);
+        }
+
+        public async Task SendAdminRefundRequestNotificationAsync(Order order)
+        {
+            var admins = await _userManager.GetUsersInRoleAsync(SystemRoles.Admin);
+            var adminIds = admins.Select(a => a.Id).ToList();
+            if (!adminIds.Any()) return;
+
+            string message = $"Refund requested for order #{order.Id}. Customer paid {order.TotalAmount:C} via {order.PaymentMethod}.";
+            string messageAr = $"طلب استرداد للطلب #{order.Id}. دفع العميل {order.TotalAmount:C} عبر {order.PaymentMethod}.";
+
+            var notifications = adminIds.Select(adminId => new Notification
+            {
+                UserId = adminId,
+                Type = NotificationType.SYSTEM,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr,
+                IsRead = false
+            }).ToList();
+
+            var notificationRepo = _unitOfWork.Repository<Notification>();
+            await notificationRepo.AddRangeAsync(notifications);
+            await _unitOfWork.SaveChangesAsync();
+
+            var realtimeNotification = new RealtimeNotificationDto
+            {
+                Type = NotificationType.SYSTEM,
+                ReferenceId = order.Id,
+                Message = message,
+                MessageAr = messageAr
+            };
+            await _realtimeSender.SendNotificationToUsersAsync(adminIds, realtimeNotification);
+
+            foreach (var adminId in adminIds)
+            {
+                var unreadCount = await notificationRepo.CountAsync(new GetUnreadNotificationSpec(adminId));
+                await _realtimeSender.UpdateUnreadCountAsync(adminId, unreadCount);
+            }
         }
     }
 }

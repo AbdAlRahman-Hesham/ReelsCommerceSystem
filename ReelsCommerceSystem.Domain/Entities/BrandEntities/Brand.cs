@@ -47,8 +47,11 @@ public class Brand:BaseEntity
     public string Governorate { get; set; } = null!;
     public string District { get; set; } = null!;
     public int NumberOfEmployees { get; set; }
-
     public BrandVerification? BrandVerification { get; set; }
-   
 
+    public BrandStep? LastFailedStep { get; set; }
+
+    public DateTime? SubmittedAt { get; set; }
 }
+
+

@@ -20,6 +20,9 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Brand
         public int NumberOfEmployees { get; set; }
 
         public string Status { get; set; }
-        public string CurrentStep { get; set; } 
+        public string CurrentStep { get; set; }
+        public DateTime? SubmittedAt { get; set; }
+        public int? LastFailedStep { get; set; }
+        public string? RejectionReason { get; set; }
     }
 }

@@ -42,24 +42,12 @@ namespace ReelsCommerceSystem.Infrastructure.Services
            
             var user = await _userManager.FindByEmailAsync(dto.Email);
 
-            if (user == null)
-            {
-                return ApiResponse<AdminLoginResDto>.ErrorResponse(
-                    HttpStatusCode.NotFound,
-                    "Email not found",
-                    "البريد الإلكتروني غير موجود"
-                );
-            }
-
-           
-            var isValidPassword = await _userManager.CheckPasswordAsync(user, dto.Password);
-
-            if (!isValidPassword)
+            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
             {
                 return ApiResponse<AdminLoginResDto>.ErrorResponse(
                     HttpStatusCode.Unauthorized,
-                    "Incorrect password",
-                    "كلمة المرور غير صحيحة"
+                    "Invalid email or password",
+                    "البريد الإلكتروني أو كلمة المرور غير صحيحة"
                 );
             }
 

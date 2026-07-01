@@ -13,10 +13,12 @@ namespace ReelsCommerceSystem.Api.Controllers;
 public class DashboardController : AppBaseController
 {
     private readonly IDashboardService _dashboardService;
+    private readonly IBrandPermissionService _brandPermissionService;
 
-    public DashboardController(IDashboardService dashboardService)
+    public DashboardController(IDashboardService dashboardService, IBrandPermissionService brandPermissionService)
     {
         _dashboardService = dashboardService;
+        _brandPermissionService = brandPermissionService;
     }
 
     [Authorize(Roles = SystemRoles.BrandOwner)]
@@ -66,6 +68,24 @@ public class DashboardController : AppBaseController
             HttpStatusCode.OK,
             "Admin dashboard data retrieved",
             "تم جلب بيانات لوحة تحكم الأدمن"
+        ));
+    }
+
+    [HttpGet("brand-status")]
+    public async Task<ActionResult<ApiResponse<object>>> GetCurrentBrandStatus()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var status = await _brandPermissionService.GetBrandStatusAsync(userId);
+        var isBanned = await _brandPermissionService.IsBannedAsync(userId);
+
+        return Ok(ApiResponse<object>.SuccessResponse(
+            new { status = status ?? "NONE", isBanned },
+            HttpStatusCode.OK,
+            "Brand status retrieved",
+            "تم جلب حالة البراند"
         ));
     }
 }
