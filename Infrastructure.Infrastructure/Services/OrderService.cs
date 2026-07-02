@@ -78,7 +78,6 @@ public class OrderService : IOrderService
         bool allowed = userRole switch
         {
             string r when r == SystemRoles.BrandOwner || r == SystemRoles.BrandEmployee => OrderStateMachine.IsBrandTransitionAllowed(order.OrderStatus, newStatus),
-            SystemRoles.Admin => true,
             _ => false
         };
 
@@ -108,6 +107,9 @@ public class OrderService : IOrderService
         if (order.OrderStatus == OrderStatus.Cancelled)
             throw new InvalidOrderTransitionException("Order is already cancelled.");
 
+        if (order.CancellationRequested)
+            throw new InvalidOrderTransitionException("Cancellation has already been requested for this order.");
+
         bool canCancel = userRole switch
         {
             SystemRoles.User => OrderStateMachine.CanUserCancel(order.OrderStatus),
@@ -123,11 +125,15 @@ public class OrderService : IOrderService
 
         if (requiresRefund)
         {
+            order.CancellationRequested = true;
+            _unitOfWork.Repository<Order>().Update(order);
+            await _unitOfWork.SaveChangesAsync();
             await _notificationService.SendAdminRefundRequestNotificationAsync(order);
             return;
         }
 
         order.OrderStatus = OrderStatus.Cancelled;
+        order.CancellationRequested = true;
         if (order.PaymentStatus == PaymentStatus.Pending && order.PaymentMethod == PaymentMethod.CashOnDelivery)
         {
             order.PaymentStatus = PaymentStatus.Pending;
@@ -156,6 +162,30 @@ public class OrderService : IOrderService
 
         await _notificationService.SendRefundNotificationAsync(order);
         await _notificationService.SendCancellationNotificationAsync(order, adminId, SystemRoles.Admin);
+    }
+
+    public async Task<List<RefundRequestDto>> GetRefundRequestsAsync()
+    {
+        var orders = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => o.CancellationRequested && o.OrderStatus != OrderStatus.Cancelled)
+            .Include(o => o.User)
+            .Include(o => o.OrderProducts)
+            .OrderByDescending(o => o.UpdatedAt)
+            .ToListAsync();
+
+        return orders.Select(o => new RefundRequestDto
+        {
+            OrderId = o.Id,
+            CustomerName = o.User?.DisplayName ?? "Unknown",
+            CustomerEmail = o.User?.Email ?? "",
+            TotalAmount = o.TotalAmount,
+            PaymentMethod = o.PaymentMethod,
+            PaymentStatus = o.PaymentStatus,
+            CreatedAt = o.CreatedAt,
+            CancellationRequestedAt = o.UpdatedAt,
+            ItemCount = o.OrderProducts.Sum(op => op.Quantity),
+            ProductNames = o.OrderProducts.Select(op => op.ProductName).ToList()
+        }).ToList();
     }
 
     public async Task<List<ReadyToShipOrderDto>> GetReadyToShipOrdersAsync()
@@ -197,7 +227,14 @@ public class OrderService : IOrderService
 
         order.OrderStatus = status;
         if (status == OrderStatus.Delivered)
+        {
             order.DeleviredDate = DateTime.UtcNow;
+            if (order.PaymentStatus != PaymentStatus.Paid)
+            {
+                order.PaymentStatus = PaymentStatus.Paid;
+                order.PaidAt = DateTime.UtcNow;
+            }
+        }
 
         _unitOfWork.Repository<Order>().Update(order);
         var result = await _unitOfWork.SaveChangesAsync();
@@ -205,6 +242,10 @@ public class OrderService : IOrderService
         if (result > 0)
         {
             await _notificationService.SendOrderStatusNotificationAsync(order, status);
+            if (status == OrderStatus.Delivered && order.PaymentStatus == PaymentStatus.Paid)
+            {
+                await _notificationService.SendPaymentNotificationAsync(order, PaymentStatus.Paid);
+            }
             return true;
         }
 

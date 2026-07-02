@@ -59,9 +59,9 @@ public class DashboardController : AppBaseController
 
     [Authorize(Roles = SystemRoles.Admin)]
     [HttpGet("admin-stats")]
-    public async Task<ActionResult<ApiResponse<AdminDashboardRes>>> GetAdminDashboard()
+    public async Task<ActionResult<ApiResponse<AdminDashboardRes>>> GetAdminDashboard([FromQuery] int? year)
     {
-        var result = await _dashboardService.GetAdminDashboardAsync();
+        var result = await _dashboardService.GetAdminDashboardAsync(year);
 
         return Ok(ApiResponse<AdminDashboardRes>.SuccessResponse(
             result,

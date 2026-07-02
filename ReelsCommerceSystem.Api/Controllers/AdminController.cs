@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Admin;
 using ReelsCommerceSystem.Application.DTOs.Response.Admin;
+using ReelsCommerceSystem.Application.DTOs.Response.Order;
 using ReelsCommerceSystem.Application.Exceptions;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Exceptions;
@@ -30,6 +31,14 @@ public class AdminController : AppBaseController
     {
         var result = await _adminService.LoginAsync(dto);
         return StatusCode(result.StatusCode, result);
+    }
+
+    [Authorize(Roles = SystemRoles.Admin)]
+    [HttpGet("orders/refund-requests")]
+    public async Task<IActionResult> GetRefundRequests()
+    {
+        var requests = await _orderService.GetRefundRequestsAsync();
+        return Ok(ApiResponse<object>.SuccessResponse(requests, HttpStatusCode.OK, "Refund requests retrieved successfully.", "تم جلب طلبات الاسترداد بنجاح."));
     }
 
     [Authorize(Roles = SystemRoles.Admin)]

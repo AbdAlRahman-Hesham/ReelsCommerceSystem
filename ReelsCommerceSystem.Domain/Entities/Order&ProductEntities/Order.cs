@@ -39,4 +39,6 @@ public class Order : BaseEntity
     public int? PaymobOrderId { get; set; }
     public string? PaymobTransactionId { get; set; }
     public DateTime? PaidAt { get; set; }
+
+    public bool CancellationRequested { get; set; } = false;
 }

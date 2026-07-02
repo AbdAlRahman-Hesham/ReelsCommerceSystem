@@ -9,9 +9,21 @@ public class AdminDashboardRes
     public int PendingRequests { get; set; }
     public int TotalOrders { get; set; }
     public decimal TotalRevenue { get; set; }
+    public int TotalProducts { get; set; }
+    public int TotalReels { get; set; }
+    public int TotalReelViews { get; set; }
+    public double EngagementRate { get; set; }
+    public decimal BrandSalesRevenue { get; set; }
+    public decimal DeliveryRevenue { get; set; }
+    public decimal AdsRevenue { get; set; }
+    public int ActiveBrands { get; set; }
+    public int ActiveUsers { get; set; }
+    public double RevenueGrowthPercentage { get; set; }
+    public double OrdersGrowthPercentage { get; set; }
     public List<MonthlyGrowthDto> BrandGrowth { get; set; } = new();
     public List<MonthlyGrowthDto> UserGrowth { get; set; } = new();
     public List<MonthlyRevenueDto> RevenueTrend { get; set; } = new();
+    public List<MonthlyGrowthDto> MonthlyOrdersTrend { get; set; } = new();
     public List<BrandDetailsDto> RecentBrandRequests { get; set; } = new();
     public List<TopBrandDto> TopBrands { get; set; } = new();
 }

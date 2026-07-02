@@ -21,6 +21,9 @@ public class OrderConfig : IEntityTypeConfiguration<Order>
                .HasConversion<string>()
                .HasMaxLength(20);
 
+        builder.Property(o => o.CancellationRequested)
+               .HasDefaultValue(false);
+
         builder.HasOne(o => o.User)
         .WithMany(u => u.Orders)
         .HasForeignKey(o => o.UserId)

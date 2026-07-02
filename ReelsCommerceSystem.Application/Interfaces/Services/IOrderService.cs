@@ -16,6 +16,7 @@ public interface IOrderService
 
     Task CancelOrderAsync(int orderId, string userId, string userRole);
     Task ProcessRefundAsync(int orderId, string adminId);
+    Task<List<RefundRequestDto>> GetRefundRequestsAsync();
 
     Task<List<ReadyToShipOrderDto>> GetReadyToShipOrdersAsync();
     Task<bool> UpdateShippingStatusAsync(int orderId, OrderStatus status);

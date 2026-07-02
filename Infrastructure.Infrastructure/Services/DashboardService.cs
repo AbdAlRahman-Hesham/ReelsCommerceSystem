@@ -279,7 +279,7 @@ public class DashboardService : IDashboardService
         };
     }
 
-    public async Task<AdminDashboardRes> GetAdminDashboardAsync()
+    public async Task<AdminDashboardRes> GetAdminDashboardAsync(int? year = null)
     {
         var totalBrands = await _unitOfWork.Repository<Brand>().GetAllQueryable().CountAsync();
 
@@ -290,14 +290,58 @@ public class DashboardService : IDashboardService
 
         var totalOrders = await _unitOfWork.Repository<Order>().GetAllQueryable().CountAsync();
 
+        var totalProducts = await _unitOfWork.Repository<Product>().GetAllQueryable().CountAsync();
+
+        var totalReels = await _unitOfWork.Repository<Reel>().GetAllQueryable().CountAsync();
+
         var now = DateTime.UtcNow;
         var twelveMonthsAgo = now.AddMonths(-12);
 
-        var totalRevenue = await _unitOfWork.Repository<OrderProduct>().GetAllQueryable()
-            .Where(op => op.Order.OrderStatus == OrderStatus.Delivered)
+        var deliveredOrderProducts = _unitOfWork.Repository<OrderProduct>().GetAllQueryable()
+            .Where(op => op.Order.OrderStatus == OrderStatus.Delivered);
+
+        var totalRevenue = await deliveredOrderProducts
             .SumAsync(op => op.FinalPrice * op.Quantity);
 
-        var brandGrowth = await _unitOfWork.Repository<Brand>().GetAllQueryable()
+        var brandSalesRevenue = totalRevenue;
+
+        var reelStats = await _unitOfWork.Repository<Reel>().GetAllQueryable()
+            .Select(r => new
+            {
+                Views = r.UserReelViews.Count,
+                Likes = r.UserReelLikes.Count,
+                Comments = r.ReelComments.Count
+            })
+            .ToListAsync();
+
+        var totalReelViews = reelStats.Sum(r => r.Views);
+        var totalReelLikes = reelStats.Sum(r => r.Likes);
+        var totalReelComments = reelStats.Sum(r => r.Comments);
+
+        var engagementRate = totalReelViews > 0
+            ? Math.Round((double)(totalReelLikes + totalReelComments) / totalReelViews * 100, 1)
+            : 0;
+
+        var activeBrands = await _unitOfWork.Repository<Brand>().GetAllQueryable()
+            .CountAsync(b => b.Status == BrandStatus.APPROVED);
+
+        var activeUsers = _userManager.Users.Count();
+
+        // Build base queries with optional year filter
+        IQueryable<Brand> brandQuery = _unitOfWork.Repository<Brand>().GetAllQueryable();
+        IQueryable<User> userQuery = _userManager.Users;
+        IQueryable<OrderProduct> orderProductQuery = deliveredOrderProducts;
+        IQueryable<Order> orderQuery = _unitOfWork.Repository<Order>().GetAllQueryable();
+
+        if (year.HasValue)
+        {
+            brandQuery = brandQuery.Where(b => b.CreatedAt.Year == year.Value);
+            userQuery = userQuery.Where(u => u.CreatedAt.Year == year.Value);
+            orderProductQuery = orderProductQuery.Where(op => op.Order.CreatedAt.Year == year.Value);
+            orderQuery = orderQuery.Where(o => o.CreatedAt.Year == year.Value);
+        }
+
+        var brandGrowth = await brandQuery
             .Where(b => b.CreatedAt >= twelveMonthsAgo)
             .GroupBy(b => new { b.CreatedAt.Year, b.CreatedAt.Month })
             .Select(g => new MonthlyGrowthDto
@@ -309,7 +353,7 @@ public class DashboardService : IDashboardService
             .OrderBy(g => g.Year).ThenBy(g => g.Month)
             .ToListAsync();
 
-        var userGrowth = await _userManager.Users
+        var userGrowth = await userQuery
             .Where(u => u.CreatedAt >= twelveMonthsAgo)
             .GroupBy(u => new { u.CreatedAt.Year, u.CreatedAt.Month })
             .Select(g => new MonthlyGrowthDto
@@ -321,9 +365,8 @@ public class DashboardService : IDashboardService
             .OrderBy(g => g.Year).ThenBy(g => g.Month)
             .ToListAsync();
 
-        var revenueTrend = await _unitOfWork.Repository<OrderProduct>().GetAllQueryable()
-            .Where(op => op.Order.OrderStatus == OrderStatus.Delivered
-                && op.Order.CreatedAt >= twelveMonthsAgo)
+        var revenueTrend = await orderProductQuery
+            .Where(op => op.Order.CreatedAt >= twelveMonthsAgo)
             .GroupBy(op => new { op.Order.CreatedAt.Year, op.Order.CreatedAt.Month })
             .Select(g => new MonthlyRevenueDto
             {
@@ -333,6 +376,46 @@ public class DashboardService : IDashboardService
             })
             .OrderBy(r => r.Year).ThenBy(r => r.Month)
             .ToListAsync();
+
+        var monthlyOrdersTrend = await orderQuery
+            .Where(o => o.CreatedAt >= twelveMonthsAgo)
+            .GroupBy(o => new { o.CreatedAt.Year, o.CreatedAt.Month })
+            .Select(g => new MonthlyGrowthDto
+            {
+                Year = g.Key.Year,
+                Month = g.Key.Month,
+                Count = g.Count()
+            })
+            .OrderBy(g => g.Year).ThenBy(g => g.Month)
+            .ToListAsync();
+
+        // Growth percentages (computed from all-time data regardless of year filter)
+        var startOfMonth = new DateTime(now.Year, now.Month, 1);
+        var startOfPreviousMonth = startOfMonth.AddMonths(-1);
+
+        var currentMonthRevenue = await deliveredOrderProducts
+            .Where(op => op.Order.CreatedAt >= startOfMonth)
+            .SumAsync(op => op.FinalPrice * op.Quantity);
+
+        var previousMonthRevenue = await deliveredOrderProducts
+            .Where(op => op.Order.CreatedAt >= startOfPreviousMonth && op.Order.CreatedAt < startOfMonth)
+            .SumAsync(op => op.FinalPrice * op.Quantity);
+
+        var revenueGrowthPercentage = previousMonthRevenue > 0
+            ? Math.Round((double)((currentMonthRevenue - previousMonthRevenue) / previousMonthRevenue * 100), 1)
+            : 0;
+
+        var currentMonthOrdersCount = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => o.CreatedAt >= startOfMonth)
+            .CountAsync();
+
+        var previousMonthOrdersCount = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => o.CreatedAt >= startOfPreviousMonth && o.CreatedAt < startOfMonth)
+            .CountAsync();
+
+        var ordersGrowthPercentage = previousMonthOrdersCount > 0
+            ? Math.Round((double)(currentMonthOrdersCount - previousMonthOrdersCount) / previousMonthOrdersCount * 100, 1)
+            : 0;
 
         var pendingBrands = await _unitOfWork.Repository<Brand>()
             .GetAllWithSpecAsync(new GetPendingBrandsSpec());
@@ -345,7 +428,7 @@ public class DashboardService : IDashboardService
                 Id = b.Id,
                 DisplayName = b.DisplayName,
                 Status = b.Status.ToString(),
-                UserName = b.user?.DisplayName
+                UserName = b.user != null ? b.user.DisplayName : null
             })
             .ToList();
 
@@ -370,9 +453,21 @@ public class DashboardService : IDashboardService
             PendingRequests = pendingCount,
             TotalOrders = totalOrders,
             TotalRevenue = totalRevenue,
+            TotalProducts = totalProducts,
+            TotalReels = totalReels,
+            TotalReelViews = totalReelViews,
+            EngagementRate = engagementRate,
+            BrandSalesRevenue = brandSalesRevenue,
+            DeliveryRevenue = 0,
+            AdsRevenue = 0,
+            ActiveBrands = activeBrands,
+            ActiveUsers = activeUsers,
+            RevenueGrowthPercentage = revenueGrowthPercentage,
+            OrdersGrowthPercentage = ordersGrowthPercentage,
             BrandGrowth = brandGrowth,
             UserGrowth = userGrowth,
             RevenueTrend = revenueTrend,
+            MonthlyOrdersTrend = monthlyOrdersTrend,
             RecentBrandRequests = recentRequests,
             TopBrands = topBrands
         };
