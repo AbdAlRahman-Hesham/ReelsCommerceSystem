@@ -348,6 +348,12 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<double>("AverageRating")
                         .HasColumnType("float");
 
+                    b.Property<string>("BankAccountNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BankCode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -392,6 +398,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.Property<int>("NumberOfEmployees")
                         .HasColumnType("int");
+
+                    b.Property<string>("PayoutPhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RejectionReasonId")
                         .HasColumnType("int");
@@ -1488,6 +1497,235 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.ToTable("ContactMessages");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.FinanceEntities.BrandSettlement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("AvailableAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("GrossAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("LastTransferAttemptAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaidByAdminId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentReference")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("PlatformCommission")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("TransferId")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TransferRawResponse")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("BrandId", "Status");
+
+                    b.ToTable("BrandSettlements", (string)null);
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.FinanceEntities.FinancialAuditLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NewValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("OldValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PerformedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Action");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("EntityType", "EntityId");
+
+                    b.ToTable("FinancialAuditLogs", (string)null);
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.FinanceEntities.ShippingSettlement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaidByAdminId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentReference")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("ShippingCompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ShippingCompanyId", "Status");
+
+                    b.ToTable("ShippingSettlements", (string)null);
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.FinanceEntities.WithdrawalRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AdminId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ApprovedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymobTransferId")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal>("RequestedAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId", "Status");
+
+                    b.ToTable("WithdrawalRequests", (string)null);
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.InterestEntities.Interest", b =>
                 {
                     b.Property<int>("Id")
@@ -1717,6 +1955,9 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("BrandAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<bool>("CancellationRequested")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -1736,6 +1977,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
 
                     b.Property<int?>("DiscountCodeId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("FinancialCalculatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsFinancialCalculated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("OrderStatus")
                         .IsRequired()
@@ -1759,6 +2008,12 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Property<string>("PaymobTransactionId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("PlatformCommission")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ProductSubtotal")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ShippingApartment")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1771,9 +2026,15 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("ShippingCompanyAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ShippingCountry")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ShippingFee")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ShippingFloor")
                         .IsRequired()
@@ -18122,6 +18383,48 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ShippingCompanyEntities.ShippingCompany", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContactEmail")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ContactPhone")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("ShippingCompanies", (string)null);
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.Address", b =>
                 {
                     b.Property<int>("Id")
@@ -19073,6 +19376,55 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                     b.Navigation("Post");
                 });
 
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.FinanceEntities.BrandSettlement", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.FinanceEntities.ShippingSettlement", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.OrderEntities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.ShippingCompanyEntities.ShippingCompany", "ShippingCompany")
+                        .WithMany("Settlements")
+                        .HasForeignKey("ShippingCompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("ShippingCompany");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.FinanceEntities.WithdrawalRequest", b =>
+                {
+                    b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.OfferEntities.Offer", b =>
                 {
                     b.HasOne("ReelsCommerceSystem.Domain.Entities.BrandEntities.Brand", "Brand")
@@ -19640,6 +19992,11 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ReelEntities.ReelCommentReply", b =>
                 {
                     b.Navigation("Loves");
+                });
+
+            modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.ShippingCompanyEntities.ShippingCompany", b =>
+                {
+                    b.Navigation("Settlements");
                 });
 
             modelBuilder.Entity("ReelsCommerceSystem.Domain.Entities.UserEntities.User", b =>

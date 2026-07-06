@@ -250,7 +250,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 !req.CommentsEnabled.HasValue)
                 throw new BadRequestException("No Changes Detected");
 
-            post.UpdatedAt = DateTime.Now;
+            post.UpdatedAt = DateTime.UtcNow;
             _unitOfWork.Repository<CommunityPost>().Update(post);
             await _unitOfWork.SaveChangesAsync();
 
@@ -287,7 +287,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             if (!string.IsNullOrWhiteSpace(status))
                 post.Status = Enum.Parse<PostStatus>(status, true);
 
-            post.UpdatedAt = DateTime.Now;
+            post.UpdatedAt = DateTime.UtcNow;
             _unitOfWork.Repository<CommunityPost>().Update(post);
             await _unitOfWork.SaveChangesAsync();
 

@@ -32,7 +32,7 @@ public class JwtService(UserManager<User> _userManager, IConfiguration _configur
             issuer: _configuration["JWTOptions:Issuer"],
             audience: _configuration["JWTOptions:Audience"],
             claims: Claims,
-            expires: DateTime.Now.AddMonths(1),
+            expires: DateTime.UtcNow.AddMonths(1),
             signingCredentials: Creds
 
             );

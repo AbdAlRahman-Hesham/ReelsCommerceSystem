@@ -13,5 +13,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
          string text,
          string fromLanguage,
          string toLanguage);
+
+        Task<DetectLanguageResponse> DetectLanguageAsync(string text);
     }
 }

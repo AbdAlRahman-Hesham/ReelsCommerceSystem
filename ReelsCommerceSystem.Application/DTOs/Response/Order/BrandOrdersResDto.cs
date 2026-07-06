@@ -16,4 +16,5 @@ public class BrandOrderDto
     public decimal TotalAmount { get; set; }
     public OrderStatus Status { get; set; }
     public PaymentStatus PaymentStatus { get; set; }
+    public List<BrandOrderItemDto> Items { get; set; } = new();
 }

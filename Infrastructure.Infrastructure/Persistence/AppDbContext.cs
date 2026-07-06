@@ -15,6 +15,8 @@ using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Domain.Entities.FinanceEntities;
+using ReelsCommerceSystem.Domain.Entities.ShippingCompanyEntities;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
 using ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
 
@@ -297,5 +299,10 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<ChatRoom> ChatRooms { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<DiscountCode> DiscountCodes { get; set; }
-  
+
+    public DbSet<BrandSettlement> BrandSettlements { get; set; }
+    public DbSet<ShippingSettlement> ShippingSettlements { get; set; }
+    public DbSet<WithdrawalRequest> WithdrawalRequests { get; set; }
+    public DbSet<FinancialAuditLog> FinancialAuditLogs { get; set; }
+    public DbSet<ShippingCompany> ShippingCompanies { get; set; }
 }

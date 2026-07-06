@@ -52,6 +52,10 @@ public class Brand:BaseEntity
     public BrandStep? LastFailedStep { get; set; }
 
     public DateTime? SubmittedAt { get; set; }
+
+    public string? PayoutPhoneNumber { get; set; }
+    public string? BankAccountNumber { get; set; }
+    public string? BankCode { get; set; }
 }
 
 

@@ -1,4 +1,5 @@
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Application.Interfaces.Services.Finance;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Enums;
@@ -15,16 +16,18 @@ public class PaymobWebhookController : AppBaseController
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<PaymobWebhookController> _logger;
     private readonly INotificationService _notificationService;
+    private readonly IFinanceService _financeService;
     private readonly string _paymobHmacSecret;
     private readonly string _redirectUrl;
 
-    public PaymobWebhookController(IUnitOfWork unitOfWork, IConfiguration config, ILogger<PaymobWebhookController> logger, INotificationService notificationService)
+    public PaymobWebhookController(IUnitOfWork unitOfWork, IConfiguration config, ILogger<PaymobWebhookController> logger, INotificationService notificationService, IFinanceService financeService)
     {
         _unitOfWork = unitOfWork;
         _logger = logger;
         _notificationService = notificationService;
         _paymobHmacSecret = config["PaymobSettings:HmacSecret"]!;
         _redirectUrl = config["PaymobSettings:RedirectUrl"]!;
+        _financeService = financeService;
 
     }
 
@@ -147,6 +150,11 @@ public class PaymobWebhookController : AppBaseController
 
         // Send Notification
         await _notificationService.SendPaymentNotificationAsync(order, order.PaymentStatus);
+
+        if (order.PaymentStatus == PaymentStatus.Paid)
+        {
+            await _financeService.CalculateAndCreateSettlementsAsync(order.Id);
+        }
 
         return Ok();
     }

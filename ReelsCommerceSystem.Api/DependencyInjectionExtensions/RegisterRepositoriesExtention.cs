@@ -1,7 +1,11 @@
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Application.Interfaces.Services.Finance;
+using ReelsCommerceSystem.Infrastructure.BackgroundServices;
 using ReelsCommerceSystem.Infrastructure.Repositories;
+using ReelsCommerceSystem.Infrastructure.Repositories.Finance;
 using ReelsCommerceSystem.Infrastructure.Services;
+using ReelsCommerceSystem.Infrastructure.Services.Finance;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 
 namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
@@ -19,11 +23,13 @@ namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddScoped<IFinanceService, FinanceService>();
+            services.AddScoped<IBrandSettlementRepository, BrandSettlementRepository>();
+            services.AddScoped<IShippingSettlementRepository, ShippingSettlementRepository>();
+            services.AddScoped<IWithdrawalRequestRepository, WithdrawalRequestRepository>();
+            services.AddScoped<IFinancialAuditLogRepository, FinancialAuditLogRepository>();
 
-
-            
-
-
+            services.AddHostedService<PayoutStatusProcessor>();
 
 
             // Transient

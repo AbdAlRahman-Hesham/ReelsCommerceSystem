@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.DTOs.Response.Order;
 using ReelsCommerceSystem.Application.DTOs.Response.Shipping;
 using ReelsCommerceSystem.Application.Exceptions;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Application.Interfaces.Services.Finance;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.CartEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
@@ -30,6 +31,7 @@ public class OrderService : IOrderService
     private readonly INotificationService _notificationService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UserManager<User> _userManager;
+    private readonly IFinanceService _financeService;
 
     private decimal CalculateShipping(DeliveryMethod method)
     {
@@ -42,13 +44,14 @@ public class OrderService : IOrderService
         };
     }
 
-    public OrderService(IUnitOfWork unitOfWork, ICartCacheService cartCache, INotificationService notificationService, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager)
+    public OrderService(IUnitOfWork unitOfWork, ICartCacheService cartCache, INotificationService notificationService, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager, IFinanceService financeService)
     {
         _unitOfWork = unitOfWork;
         _cartCache = cartCache;
         _notificationService = notificationService;
         _httpContextAccessor = httpContextAccessor;
         _userManager = userManager;
+        _financeService = financeService;
     }
 
     private string? ResolveImageUrl(string? url)
@@ -242,10 +245,25 @@ public class OrderService : IOrderService
         if (result > 0)
         {
             await _notificationService.SendOrderStatusNotificationAsync(order, status);
-            if (status == OrderStatus.Delivered && order.PaymentStatus == PaymentStatus.Paid)
+
+            if (status == OrderStatus.Delivered)
             {
-                await _notificationService.SendPaymentNotificationAsync(order, PaymentStatus.Paid);
+                if (order.IsFinancialCalculated)
+                {
+                    await _financeService.UpdateSettlementsOnDeliveryAsync(order.Id);
+                }
+                else if (order.PaymentStatus == PaymentStatus.Paid)
+                {
+                    await _financeService.CalculateAndCreateSettlementsAsync(order.Id);
+                    await _financeService.UpdateSettlementsOnDeliveryAsync(order.Id);
+                }
+
+                if (order.PaymentStatus == PaymentStatus.Paid)
+                {
+                    await _notificationService.SendPaymentNotificationAsync(order, PaymentStatus.Paid);
+                }
             }
+
             return true;
         }
 
@@ -271,6 +289,13 @@ public class OrderService : IOrderService
 
         if (result > 0)
         {
+            await _financeService.CalculateAndCreateSettlementsAsync(order.Id);
+
+            if (order.OrderStatus == OrderStatus.Delivered)
+            {
+                await _financeService.UpdateSettlementsOnDeliveryAsync(order.Id);
+            }
+
             await _notificationService.SendPaymentNotificationAsync(order, PaymentStatus.Paid);
             return true;
         }
@@ -719,7 +744,16 @@ public class OrderService : IOrderService
                     ItemCount = g.Sum(op => op.Quantity),
                     TotalAmount = order.TotalAmount,
                     Status = order.OrderStatus,
-                    PaymentStatus = order.PaymentStatus
+                    PaymentStatus = order.PaymentStatus,
+                    Items = g.Select(op => new BrandOrderItemDto
+                    {
+                        ProductName = op.ProductName,
+                        ProductImage = op.ProductMediaUrls != null && op.ProductMediaUrls.Count > 0 ? op.ProductMediaUrls[0] : null,
+                        Quantity = op.Quantity,
+                        Price = op.FinalPrice,
+                        Color = op.Color,
+                        Size = op.Size.ToString()
+                    }).ToList()
                 };
             })
             .OrderByDescending(o => o.CreatedAt)

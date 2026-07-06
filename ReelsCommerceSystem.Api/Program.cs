@@ -7,7 +7,9 @@ using ReelsCommerceSystem.Api.SignalR.Hubs;
 using ReelsCommerceSystem.Api.SignalR.Senders;
 using ReelsCommerceSystem.Application.Interfaces.Senders;
 using ReelsCommerceSystem.Application.Interfaces.Services;
+using ReelsCommerceSystem.Application.Interfaces.Services.Finance;
 using ReelsCommerceSystem.Infrastructure.Services;
+using ReelsCommerceSystem.Infrastructure.Services.Finance;
 using ReelsCommerceSystem.Shared.Utilities;
 using Serilog;
 
@@ -22,7 +24,8 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageProvider>();
 builder.Services.AddScoped<IPhotoServive, PhotoService>();
 builder.Services.AddHttpClient<ITranslationService, GeminiTranslationService>();
-builder.Services.AddScoped<IChatSender, ChatSender>();  
+builder.Services.AddScoped<IChatSender, ChatSender>();
+builder.Services.AddHttpClient<IPayoutProvider, PaymobPayoutProvider>();
 
 builder.Services.AddValidationMiddleware();
 

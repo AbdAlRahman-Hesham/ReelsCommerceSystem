@@ -166,7 +166,7 @@ graph TB
     end
 
     subgraph API["API Layer (ReelsCommerceSystem.Api)"]
-        Controllers["Controllers (34)"]
+        Controllers["Controllers (38)"]
         Hubs["SignalR Hubs<br/>ChatHub, NotificationHub"]
         Middleware["Middleware Pipeline<br/>ExceptionHandling, Validation, CORS"]
         DI["DI Extensions (7 files)"]
@@ -181,7 +181,7 @@ graph TB
     end
 
     subgraph Infrastructure["Infrastructure Layer (Infrastructure.Infrastructure)"]
-        SvcImpl["Service Implementations (47)"]
+        SvcImpl["Service Implementations (52)"]
         RepoImpl["GenericRepository&lt;T&gt;<br/>UnitOfWork"]
         DbContext["AppDbContext<br/>(EF Core + Identity)"]
         SpecImpl["Specifications (60+)<br/>SpecificationEvaluator&lt;T&gt;"]
@@ -189,7 +189,7 @@ graph TB
     end
 
     subgraph Domain["Domain Layer (ReelsCommerceSystem.Domain)"]
-        Entities["Entities (35)"]
+        Entities["Entities (40)"]
         Enums["Enums (15)"]
         BaseEntity["BaseEntity"]
     end
@@ -227,7 +227,7 @@ The architecture enforces strict layer separation: the API layer never accesses 
 
 # Core Business Modules
 
-The ReelsCommerceSystem is decomposed into ten business modules, each with clearly defined boundaries, entities, services, and controllers. The modular decomposition follows domain-driven design principles where aggregates and bounded contexts govern the separation.
+The ReelsCommerceSystem is decomposed into eleven business modules, each with clearly defined boundaries, entities, services, and controllers. The modular decomposition follows domain-driven design principles where aggregates and bounded contexts govern the separation.
 
 ## 1. User and Authentication Module
 
@@ -329,7 +329,7 @@ Product catalogue management including creation, editing, image management, cate
 ### 3.2 Key Classes
 
 **Entities:**
-- `Product` (`Domain/Entities/Products/Product.cs:7`) — Core aggregate with `Name`, `Description` (bilingual), `Price`, `DiscountPercentage`, `Rating`, `IsCustomizable`, `BrandId`, `CategoryId`.
+- `Product` (`Domain/Entities/Products/Product.cs:7`) — Core aggregate with `Name`, `Description` (English), `ArDescription` (Arabic), `Price`, `DiscountPercentage`, `Rating`, `IsCustomizable`, `BrandId`, `CategoryId`.
 - `ProductCategory` — `Name`, `ArName`, `ImageUrl`.
 - `ProductImage` — `Url`, `PublicId` (Cloudinary reference).
 - `ProductColor` — Reference entity with `Name`, `ArName`, `HexCode`.
@@ -362,6 +362,35 @@ GET /api/Product?Search=...&BrandId=...&MinPrice=...&SortBy=price&SortOrder=desc
       → Map to List<ProductResDto>
       → Return PaginationResponse<ProductResDto>
 ```
+
+### 3.4 Product Creation Flow Trace (with Auto-Translation)
+
+```
+POST /api/BrandProduct/products [Authorize]
+  → BrandProductController.AddProduct([FromBody] AddBrandProductReq)
+    → IBrandProductService.AddProductAsync(req, userId)
+      → Get brand by userId via IUnitOfWork
+      → Create Product entity (without Description assignment yet)
+      → AutoTranslateDescriptionAsync(request.Description, product):
+          → ITranslationService.DetectLanguageAsync(description)
+            → Gemini prompt: "Detect the language... reply exactly 'en' or 'ar'"
+            → Returns "en" or "ar"
+          → If detected "en":
+              → product.Description = original text
+              → ITranslationService.TranslateAsync(text, "en", "ar")
+              → product.ArDescription = translated text (if translation succeeds)
+          → If detected "ar":
+              → product.ArDescription = original text
+              → ITranslationService.TranslateAsync(text, "ar", "en")
+              → product.Description = translated text (if translation succeeds)
+          → If detection/translation fails: log warning, save with only original
+      → Assign remaining fields (Name, Price, CategoryId, Colors, Sizes, Informations)
+      → productRepo.AddAsync(product)
+      → _unitOfWork.SaveChangesAsync()
+      → Return ApiResponse<int>.SuccessResponse(product.Id)
+```
+
+See also Section 10 for the full `ITranslationService` interface documentation.
 
 ## 4. Reel Module
 
@@ -475,50 +504,280 @@ POST /api/Order [Authorize]
 ## 6. Chat and Real-Time Messaging Module
 
 ### 6.1 Module Boundary
-One-to-one real-time messaging between users and brand owners, including room management, message status tracking, and SignalR push notifications.
+One-to-one real-time messaging between users and brand owners, with room management, message status tracking (Pending → DeliveredToServer → Delivered → Seen), SignalR push notifications, and client-side encryption of all message content across the network.
 
-### 6.2 Key Classes
+### 6.2 Domain Entities
 
-**Entities:**
-- `ChatRoom` (`Domain/Entities/ChatEntities/ChatRoom.cs:7`) — Two-user conversation with `User1Id`, `User2Id`.
-- `Message` (`Domain/Entities/ChatEntities/Message.cs:9`) — `Text`, `ImageUrl`, `Status` (Pending/DeliveredToServer/Delivered/Seen), `RoomId`, `SenderId`.
+**`ChatRoom`** (`Domain/Entities/ChatEntities/ChatRoom.cs:7`)
 
-**Services:**
-- `IChatRoomService` → `ChatRoomService` — `CreateRoom`, `GetUserRooms`, `GetRoomRes`, `GetUnreadCount`, `DeleteRoom`.
-- `IChatService` → `ChatService` — `SendMessageAsync`, `GetMessagesAsync`, `DeleteMessageAsync`, `DeleteAllMessagesAsync`.
-- `IChangeMessageStatusService` → `ChangeMessageStatusService` — Update message status from Pending → Delivered → Seen.
-- `IChatSender` → `ChatSender` (Api layer) — SignalR hub proxy for real-time notifications.
+| Field | Type | Notes |
+|---|---|---|
+| `Id` | `int` (PK, from `BaseEntity`) | Auto-increment |
+| `User1Id` | `string` | FK to `Users` (Restrict delete) |
+| `User2Id` | `string` | FK to `Users` (Restrict delete) |
+| `User1` | `virtual User` | Navigation property |
+| `User2` | `virtual User` | Navigation property |
+| `Messages` | `virtual ICollection<Message>` | 1-to-many navigation collection |
+| `CreatedAt` | `DateTime` | From `BaseEntity` |
+| `UpdatedAt` | `DateTime` | From `BaseEntity` |
 
-**Hubs:**
-- `ChatHub` (`Api/SignalR/Hubs/ChatHub.cs`)
-- `NotificationHub` (`Api/SignalR/Hubs/NotificationHub.cs`)
+Duplicate rooms are prevented at the application layer: `ExistingChatRoomSpec` checks both orderings `(User1, User2)` and `(User2, User1)` before creating a new room.
 
-**Controller:** `ChatController` — REST endpoints for rooms, messages, status updates.
+**`Message`** (`Domain/Entities/ChatEntities/Message.cs:9`)
 
-### 6.4 Message Delivery Flow Trace
+| Field | Type | Notes |
+|---|---|---|
+| `Id` | `int` (PK, from `BaseEntity`) | Auto-increment |
+| `RoomId` | `int` | FK to `ChatRooms` (Cascade delete) |
+| `SenderId` | `string` | FK to `Users` (Restrict delete) |
+| `Text` | `string?` | Nullable — message can be just an image |
+| `ImageUrl` | `string?` | Nullable — message can be just text |
+| `Status` | `MessageStatus` (enum) | Defaults to `Pending` |
+| `CreatedAt` | `DateTime` | From `BaseEntity` |
+| `UpdatedAt` | `DateTime` | From `BaseEntity` |
+
+**`MessageStatus` Enum** (`Domain/Enums/MessageStatus.cs`):
+- `Pending` = 0 — Message created but not yet confirmed delivered to server
+- `DeliveredToServer` = 1 — Server has persisted the message
+- `Delivered` = 2 — Recipient's device has received it (via SignalR)
+- `Seen` = 3 — Recipient has opened/read the message
+
+### 6.3 Service Layer
+
+**`IChatRoomService`** → `ChatRoomService` (`Infrastructure/Services/ChatRoomService.cs`)
+
+| Method | Description |
+|---|---|
+| `GetUserRooms(string userId)` | Returns all rooms for a user, ordered by last message time descending. Includes other user's name/image, unread count, and last message preview. |
+| `GetUnreadCount(int roomId, string userId)` | Counts messages where `SenderId != userId && Status != Seen`. |
+| `CreateRoom(string user1, string user2)` | Checks `ExistingChatRoomSpec` for duplicates; creates new `ChatRoom` if not found; returns existing room ID otherwise (idempotent). |
+| `GetRoomRes(int roomId, string userId)` | Returns a `ChatRoomRes` DTO for a specific room. |
+| `DeleteRoom(int roomId)` | Deletes all messages then the room itself. |
+
+**`IChatService`** → `ChatService` (`Infrastructure/Services/ChatService.cs`)
+
+| Method | Description |
+|---|---|
+| `SendMessageAsync(string userId, SendMessageReq dto)` | Decrypts payload, validates room membership, creates `Message` (Pending), saves, enforces 500-message cap (deletes oldest), upgrades status to `DeliveredToServer`, pushes via SignalR via `IChatSender`. |
+| `GetMessagesAsync(string userId, string roomIdEncr, int? page, int? pageSize, bool? unreadOnly, string? afterMessageId)` | Paginated retrieval with optional cursor-based pagination (`afterMessageId`) and `unreadOnly` filter. Returns encrypted DTOs. |
+| `DeleteMessageAsync(string userId, string messageIdEnc)` | Decrypts message ID, verifies sender ownership, hard-deletes the message row, notifies recipient via SignalR. |
+| `DeleteAllMessagesAsync(string userId, string roomIdEnc)` | Decrypts room ID, hard-deletes all messages in the room, notifies recipient with `"ALL"` signal. |
+
+**`IChangeMessageStatusService`** → `ChangeMessageStatusService` (`Infrastructure/Services/ChangeMessageStatusService.cs`)
+
+| Method | Description |
+|---|---|
+| `ChangeStatusAsync(string userId, string roomIdEnc, MessageStatus status, List<string> messageIdsEncrypted)` | Decrypts IDs; if specific IDs provided fetches those, otherwise fetches all unread messages with `Status < target`. Only upgrades status (never downgrades), skips messages owned by the caller. Notifies sender via SignalR (`MessageSeen` / `MessageDelivered`) |
+
+**`IChatSender`** → `ChatSender` (`Api/SignalR/Senders/ChatSender.cs`)
+
+Adapter class bridging `IHubContext<ChatHub>` to the Application layer interface. Each method sends to both the **room group** (for active chat participants) and the **recipient's personal group** (for sidebar/unread updates):
+
+| Method | SignalR Event | Groups |
+|---|---|---|
+| `SendMessage(roomId, recipientId, message)` | `OnReceiveMessage` | Room group + recipient personal group |
+| `MessageSeen(roomId, recipientId, plainMessageIds)` | `OnMessageSeen` | Room group + recipient personal group |
+| `MessageDelivered(roomId, recipientId, plainMessageIds)` | `OnMessageDelivered` | Room group + recipient personal group |
+| `MessageDeleted(roomId, recipientId, plainMessageId)` | `OnMessageDeleted` | Room group + recipient personal group |
+| `RoomCreated(userId, room)` | `OnRoomCreated` | Personal group only |
+| `RoomDeleted(roomId, recipientId)` | `OnRoomDeleted` | Room group + recipient personal group |
+
+### 6.4 SignalR Hub — ChatHub
+
+**Mapped at:** `/chatHub` (registered in `Program.cs`)
+
+**Connection Setup (`OnConnectedAsync` override):**
+1. Extract `userId` from JWT claims (`ClaimTypes.NameIdentifier`, `"sub"`, or `"uid"`).
+2. Add the connection to a **personal group** named by `userId` — this receives sidebar updates (room creation, message previews, status notifications) even when the user is not inside a chat room.
+3. The client can additionally call `JoinRoom(encryptedRoomId)` to join a **room group** (named by plain `roomId`) for real-time message streaming within that conversation.
+
+**Hub Methods Callable from Clients:**
+
+| Method | Parameters | Behaviour |
+|---|---|---|
+| `JoinPersonalGroup()` | — | Explicitly join the user's personal group (for reconnection scenarios). |
+| `JoinRoom(string encryptedRoomId)` | Encrypted room ID | Decrypts room ID, adds connection to the room group. |
+| `SendMessage(string encryptedRoomId, string encryptedMessage)` | Encrypted room ID + message | Alternative client-to-client path (primary path is REST API). |
+| `SeenMessage(string encryptedMessageId)` | Encrypted message ID | Broadcasts `OnMessageSeen` to all clients. |
+| `MessageDelivered(string encryptedMessageId)` | Encrypted message ID | Broadcasts `OnMessageDelivered` to all clients. |
+
+**Client-Side Events (Server → Client):**
+
+| Event | Payload | Trigger |
+|---|---|---|
+| `OnReceiveMessage` | `MessageRes` object | New message sent |
+| `OnMessageSeen` | `List<string>` (plain message IDs) | Recipient read messages |
+| `OnMessageDelivered` | `List<string>` (plain message IDs) | Recipient received messages |
+| `OnMessageDeleted` | `string` (plain message ID) | A message was deleted |
+| `OnRoomCreated` | `ChatRoomRes` object | A new room was created |
+| `OnRoomDeleted` | `string` (plain room ID) | A room was deleted |
+
+### 6.5 Controller — ChatController
+
+**Base Route:** `api/Chat` (from `AppBaseController`)
+
+| HTTP | Route | Auth | Method | Description |
+|---|---|---|---|---|
+| GET | `/api/Chat/rooms` | `[Authorize]` | `GetAllRooms()` | Returns `IEnumerable<ChatRoomRes>` for the current user |
+| GET | `/api/Chat/rooms/{roomIdEncr}/messages` | `[Authorize]` | `GetMessages(roomIdEncr, page?, pageSize?, unreadOnly?, afterMessageId?)` | Paginated messages with optional cursor and unread filter |
+| GET | `/api/Chat/rooms/unreadCount/{roomIdEncr}` | `[Authorize]` | `GetUnreadCount(roomIdEncr)` | Unread count for a specific room |
+| POST | `/api/Chat/message` | `[Authorize]` | `SendMessage(SendMessageReq dto)` | Send a text/image message |
+| POST | `/api/Chat/room` | `[Authorize]` | `CreateRoom(int brandId)` | Create a room with a brand (looks up brand owner's userId) |
+| POST | `/api/Chat/status` | `[Authorize]` | `ChangeMessageStatus(ChangeMessageStatusReq)` | Mark messages as Delivered or Seen |
+| DELETE | `/api/Chat/message/{messageIdEnc}` | `[Authorize]` | `DeleteMessage(messageIdEnc)` | Delete a single owned message |
+| DELETE | `/api/Chat/room/{roomIdEnc}/messages` | `[Authorize]` | `DeleteAllMessages(roomIdEnc)` | Delete all messages in a room |
+| DELETE | `/api/Chat/room/{roomIdEncr}` | `[Authorize]` | `Delete(roomIdEncr)` | Delete an entire room (with messages) |
+
+### 6.6 Room Creation Flow
+
 ```
-Client sends message:
-  POST /api/Chat/message [Authorize]
-    → ChatController.SendMessage(SendMessageReq)
-      → IChatService.SendMessageAsync(userId, dto)
-        → Validate room membership
-        → Create Message entity with Status = Pending
-        → Save to database
-        → Return MessageRes
-    → ApiResponse<MessageRes>.SuccessResponse
-
-Real-time delivery:
-  On message save → ChatSender.SendMessage(recipientId, messageRes)
-    → ChatHub.Clients.User(recipientId).SendAsync("ReceiveMessage", messageRes)
-
-Recipient reads → status update:
-  POST /api/Chat/status [Authorize]
-    → ChatController.ChangeMessageStatus(ChangeMessageStatusReq)
-      → IChangeMessageStatusService.ChangeStatusAsync(userId, roomId, "Seen", messageIds)
-        → Decrypt message IDs
-        → Update Message.Status = Seen for owned messages
-        → Notify sender via ChatSender.MessageStatusChanged(...)
+User A clicks "Chat with Brand":
+  POST /api/Chat/room?brandId=X [Authorize]
+    → ChatController.CreateRoom(brandId)
+      → BrandRepository.GetByIdAsync(brandId)
+      → ChatRoomService.CreateRoom(userId, brand.UserId)
+        → ExistingChatRoomSpec(userId, brandUserId)
+          → If room exists → return existing room ID
+          → If not → Create ChatRoom { User1Id = userId, User2Id = brandUserId }
+        → Build ChatRoomRes for both users
+      → _chatSender.RoomCreated(brandUserId, roomForBrand)   // Notify brand owner
+      → _chatSender.RoomCreated(userId, roomForUser)          // Multi-tab sync
+    → Return encrypted room ID
 ```
+
+Both users receive `OnRoomCreated` via their personal SignalR groups, prompting the UI to add the new room to the sidebar.
+
+### 6.7 Message Status Lifecycle
+
+```
+Status: Pending (0)
+  │  Message created in memory on the server
+  │
+  ▼  First SaveChangesAsync
+Status: Pending (0) — persisted to database
+  │
+  ▼  Immediately after save, second SaveChangesAsync
+Status: DeliveredToServer (1) — server confirms receipt
+  │
+  ▼  Recipient's SignalR client receives OnReceiveMessage
+  │  Recipient client calls POST /api/Chat/status { Status: "Delivered" }
+  │  → ChangeMessageStatusService upgrades Status < Delivered → Delivered
+  │  → ChatSender.MessageDelivered() → OnMessageDelivered event
+Status: Delivered (2) — confirmed on recipient's device
+  │
+  ▼  Recipient opens/views the message
+  │  Client calls POST /api/Chat/status { Status: "Seen" }
+  │  → ChangeMessageStatusService upgrades Status < Seen → Seen
+  │  → ChatSender.MessageSeen() → OnMessageSeen event
+Status: Seen (3) — recipient has read the message
+```
+
+Rules:
+- Status can only **upgrade** (never downgrade).
+- A user **cannot** mark their own messages.
+- If no specific message IDs are provided, all unread messages with `Status < target` are updated (bulk status change).
+
+### 6.8 Complete Message Send Flow (Sequence Diagram)
+
+```mermaid
+sequenceDiagram
+    participant Sender as Sender Client
+    participant ChatCtrl as ChatController
+    participant ChatSvc as ChatService
+    participant RoomSvc as ChatRoomService
+    participant DB as Database
+    participant ChatSdr as ChatSender
+    participant ChatHub as SignalR ChatHub
+    participant Recipient as Recipient Client
+
+    Sender->>ChatCtrl: POST /api/Chat/message
+    Note over Sender: { RoomIdEncr, TextEncr, ImageUrl }
+
+    ChatCtrl->>ChatSvc: SendMessageAsync(userId, dto)
+    ChatSvc->>ChatSvc: Decrypt RoomId, Text via EncryptionHelper
+    ChatSvc->>RoomSvc: Validate room & membership
+    RoomSvc-->>ChatSvc: Room exists, user belongs
+
+    ChatSvc->>ChatSvc: Create Message { Status = Pending }
+    ChatSvc->>DB: SaveChangesAsync (insert message)
+    DB-->>ChatSvc: Message persisted (Id assigned)
+
+    ChatSvc->>ChatSvc: Check 500-message limit
+    alt Over limit
+        ChatSvc->>DB: Delete oldest message
+    end
+
+    ChatSvc->>DB: SaveChangesAsync (upgrade Status → DeliveredToServer)
+    DB-->>ChatSvc: Message.Status = 1
+
+    ChatSvc->>ChatSvc: Build MessageRes (encrypted)
+    ChatSvc->>ChatSvc: Determine recipientId
+
+    ChatSvc->>ChatSdr: SendMessage(roomId, recipientId, messageRes)
+
+    par SignalR Push to Room Group
+        ChatSdr->>ChatHub: Clients.Group(roomId)
+        ChatHub-->>Recipient: OnReceiveMessage(messageRes)
+    and SignalR Push to Personal Group
+        ChatSdr->>ChatHub: Clients.Group(recipientId)
+        ChatHub-->>Recipient: OnReceiveMessage(messageRes)
+    end
+
+    ChatSvc-->>ChatCtrl: MessageRes
+    ChatCtrl-->>Sender: 200 OK (ApiResponse<MessageRes>)
+
+    Note over Recipient: Recipient receives message via SignalR
+
+    Recipient->>ChatCtrl: POST /api/Chat/status
+    Note over Recipient: { RoomId, Status: "Delivered", MessageIds }
+
+    ChatCtrl->>ChangeMsgSvc: ChangeStatusAsync(userId, roomId, Delivered, ids)
+    ChangeMsgSvc->>DB: Update messages Status < Delivered → Delivered
+    ChangeMsgSvc->>ChatSdr: MessageDelivered(roomId, senderId, plainIds)
+    ChatSdr->>ChatHub: Clients.Group(roomId)
+    ChatHub-->>Sender: OnMessageDelivered(plainIds)
+
+    Note over Recipient: Recipient opens/reads the message
+
+    Recipient->>ChatCtrl: POST /api/Chat/status
+    Note over Recipient: { RoomId, Status: "Seen", MessageIds }
+
+    ChatCtrl->>ChangeMsgSvc: ChangeStatusAsync(userId, roomId, Seen, ids)
+    ChangeMsgSvc->>DB: Update messages Status < Seen → Seen
+    ChangeMsgSvc->>ChatSdr: MessageSeen(roomId, senderId, plainIds)
+    ChatSdr->>ChatHub: Clients.Group(roomId)
+    ChatHub-->>Sender: OnMessageSeen(plainIds)
+```
+
+### 6.9 Encryption Pattern
+
+All chat payloads crossing the network boundary are encrypted using `EncryptionHelper`:
+- **SendMessageReq**: `RoomIdEncr`, `TextEncr` (image URLs are plain).
+- **MessageRes**: `MessageIdEncr`, `RoomIdEncr`, `SenderIdEncr`, `TextEncr`, `ImageUrlEncr`.
+- **URL parameters**: Room IDs and message IDs in route parameters are encrypted.
+- Decryption in service methods applies `Uri.UnescapeDataString()` before `EncryptionHelper.Decrypt()`.
+- Hub methods replace `" "` with `"+"` in encrypted strings before decryption.
+
+### 6.10 SignalR Connection Model
+
+```
+Client connects to /chatHub (WebSocket upgrade)
+  ↓
+OnConnectedAsync:
+  ↓
+Extract userId from JWT (ClaimTypes.NameIdentifier / "sub" / "uid")
+  ↓
+Groups.AddToGroupAsync(connectionId, userId)     ← Personal group
+  ↓
+Client calls hub.JoinRoom(encryptedRoomId)
+  ↓
+Decrypt roomId
+  ↓
+Groups.AddToGroupAsync(connectionId, roomId)     ← Room group
+```
+
+- **Personal group** (`userId`): Receives sidebar updates, room creation/deletion, and message notifications when the user is not inside the chat room.
+- **Room group** (`roomId`): Receives real-time messages and status updates when the user is actively viewing the conversation.
 
 ## 7. Community Module
 
@@ -576,20 +835,113 @@ File upload, image/video processing, and cloud storage management through Cloudi
 ## 10. Translation and Recommendation Module
 
 ### 10.1 Module Boundary
-External AI-powered services for content translation and product recommendation.
+External AI-powered services for content translation, product recommendation, and cross-entity search.
 
 ### 10.2 Key Classes
 
 **Services:**
-- `ITranslationService` → `GeminiTranslationService` — Uses Google Gemini API to translate product descriptions and content between English and Arabic.
-- `IRecommendationService` → `RecommendationService` — Calls external microservice at `https://recommendation.ai.alluvo.life` to retrieve personalised product recommendations.
-- `ISearchService` → `SearchService` — Unified search across products, brands, and reels.
 
-**Controller:**
-- `TranslationController` — Translation endpoints.
-- `SearchController` — Search endpoints.
+**`ITranslationService`** → `GeminiTranslationService` (`Infrastructure/Services/GeminiTranslationService.cs`)
 
-## 11. Module Dependency Graph
+Uses the Google Gemini API (`gemini-2.5-flash`) to translate content between English and Arabic. The interface exposes two methods:
+
+| Method | Parameters | Description |
+|---|---|---|
+| `TranslateAsync` | `text`, `fromLanguage`, `toLanguage` | Translates text between specified language pairs. Sends a Gemini prompt requesting "Translate from {fromLanguage} to {toLanguage}. Return ONLY translated text." |
+| `DetectLanguageAsync` | `text` | Detects whether the input text is English or Arabic. Sends a Gemini prompt requesting "Reply with exactly 'en' or 'ar'." Returns `DetectLanguageResponse` with `Success`, `Language`, and `ErrorMessage`. |
+
+Both methods share a private `CallGeminiAsync(string prompt)` helper that constructs the HTTP request body, posts to `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}`, deserialises the `GeminiResponse`, and extracts the text from `candidates[0].content.parts[0].text`.
+
+**Integration — Product Description Auto-Translation**
+
+`BrandProductService` (`Infrastructure/Services/BrandProductService.cs`) injects `ITranslationService` and calls it during both `AddProductAsync` (creation) and `EditProductAsync` (update) via the private `AutoTranslateDescriptionAsync` method. The integration flow is:
+
+1. **Language Detection**: The service calls `DetectLanguageAsync(description)` to determine if the text is English or Arabic.
+2. **Field Assignment**: The original text is stored in the corresponding field — `Description` for English, `ArDescription` for Arabic.
+3. **Translation**: The service calls `TranslateAsync` to generate the complementary language's text.
+4. **Graceful Fallback**: If detection or translation fails, the product is saved with only the provided language and the failure is logged via `ILogger<BrandProductService>` — the operation is never blocked by a translation error.
+
+See Section 3.4 for the full product creation flow trace.
+
+**`IRecommendationService`** → `RecommendationService` — Calls external microservice at `https://recommendation.ai.alluvo.life` with a 10-second timeout to retrieve personalised product recommendations.
+
+**`ISearchService`** → `SearchService` — Unified search across products, brands, and reels.
+
+**Controllers:**
+- `TranslationController` — `POST /api/Translation` — Accepts `TranslateRequest` (Text, FromLanguage, ToLanguage), returns translated text or error response.
+- `SearchController` — `GET /api/Search` — Cross-entity search endpoint.
+
+## 11. Finance and Settlement Module
+
+### 11.1 Module Boundary
+This module manages the financial settlement lifecycle between the platform, brands, and shipping companies. It handles commission calculation, automated settlement creation, wallet balance tracking, withdrawal requests, and payout disbursement through Paymob Payouts API (a separate API from Paymob Accept, using OAuth2 password grant authentication).
+
+### 11.2 Key Classes
+
+**Entities:**
+- `BrandSettlement` (`Domain/Entities/FinanceEntities/BrandSettlement.cs`) — Tracks per-order earnings for each brand (`GrossAmount`, `PlatformCommission`, `NetAmount`); status lifecycle: `Pending` → `ReadyForWithdrawal` → `WithdrawalRequested` → `TransferInitiated` → `Processing` → `Paid`/`Failed`.
+- `ShippingSettlement` (`Domain/Entities/FinanceEntities/ShippingSettlement.cs`) — Per-order shipping fee settlement for shipping companies; lifecycle: `Pending` → `ReadyToPay` → `Paid`.
+- `WithdrawalRequest` (`Domain/Entities/FinanceEntities/WithdrawalRequest.cs`) — Brand-initiated withdrawal requests with `RequestedAmount`, linked to settlement status transitions.
+- `FinancialAuditLog` (`Domain/Entities/FinanceEntities/FinancialAuditLog.cs`) — Immutable audit trail for all financial mutations (`Action`, `EntityType`, `OldValues`, `NewValues`, `PerformedBy`, `IpAddress`).
+- `ShippingCompany` (`Domain/Entities/ShippingCompanyEntities/ShippingCompany.cs`) — Reference entity for shipping companies with contact info and `UserId` for role binding.
+
+**Enums:**
+- `SettlementStatus` — `Pending`, `ReadyForWithdrawal`, `WithdrawalRequested`, `TransferInitiated`, `Processing`, `Paid`, `Failed`
+- `ShippingSettlementStatus` — `Pending`, `ReadyToPay`, `Paid`
+- `WithdrawalRequestStatus` — `Pending`, `Approved`, `Rejected`, `Paid`
+
+**Services:**
+- `IFinanceService` → `FinanceService` (`Infrastructure/Services/Finance/FinanceService.cs`) — Orchestrates settlement creation on payment success (`CalculateAndCreateSettlementsAsync`), delivery-driven transitions (`MarkOrderAsDeliveredAsync`), wallet summaries, withdrawal lifecycle, admin payout processing, and policy retrieval. Uses `IUnitOfWork` for transactional consistency.
+- `IPayoutProvider` → `PaymobPayoutProvider` (`Infrastructure/Services/Finance/PaymobPayoutProvider.cs`) — Abstracts the Paymob Payouts API: OAuth2 password grant (Basic auth `client_id:client_secret`, POST `/o/token/`), transfer creation (POST `/disburse/`), and status inquiry (POST `/transaction/inquire/`). Each transfer uses `client_reference_id` (uuid4) for idempotency.
+- `PayoutStatusProcessor` (`Infrastructure/BackgroundServices/PayoutStatusProcessor.cs`) — Background hosted service that polls Paymob Payouts every 5 minutes for `TransferInitiated`/`Processing` settlements. Updates status to `Paid` or `Failed` based on Paymob response. Max 10 retries before marking as `Failed`.
+
+**Repositories:**
+- `IBrandSettlementRepository` → `BrandSettlementRepository`
+- `IShippingSettlementRepository` → `ShippingSettlementRepository`
+- `IWithdrawalRequestRepository` → `WithdrawalRequestRepository`
+- `IFinancialAuditLogRepository` → `FinancialAuditLogRepository`
+
+**Domain Services:**
+- `FinancialCalculator` (`Domain/Services/Finance/FinancialCalculator.cs`) — Static domain service that applies a 1% platform commission on product subtotals (`ProductSubtotal`, `PlatformCommission`, `BrandAmount`, `ShippingCompanyAmount`).
+
+**Controllers:**
+- `AdminFinanceController` — Admin dashboard: brand/shipping summaries, pay brand & shipping settlements, policy management.
+- `BrandFinanceController` — BrandOwner: wallet summary, settlement history, withdrawal creation.
+- `ShippingFinanceController` — Shipping company: wallet summary, settlement history, policy.
+- `PaymobPayoutWebhookController` — Optional callback endpoint for Paymob Payout status updates.
+
+### 11.3 Financial Calculation Flow
+
+```
+Order Paid → CalculateAndCreateSettlementsAsync
+  → Compute ProductSubtotal (sum of order product prices)
+  → Compute PlatformCommission (1% of ProductSubtotal)
+  → Compute BrandAmount (ProductSubtotal - PlatformCommission)
+  → Compute ShippingCompanyAmount (based on DeliveryMethod)
+  → Create BrandSettlement per brand involved in order
+  → Create ShippingSettlement for the shipping company
+  → Mark Order as IsFinancialCalculated = true
+```
+
+### 11.4 Settlement Lifecycle
+
+```
+Order Paid → BrandSettlement: Pending
+  → Order Delivered → BrandSettlement: ReadyForWithdrawal
+    → Brand submits WithdrawalRequest → BrandSettlement: WithdrawalRequested
+      → Admin triggers payout → BrandSettlement: TransferInitiated
+        → PayoutStatusProcessor polls Paymob → BrandSettlement: Processing (bank transfer)
+          → Paymob confirms success → BrandSettlement: Paid
+          → Paymob reports failure → BrandSettlement: Failed (retry up to 10x)
+```
+
+Shipping settlements follow a simpler flow: `Pending` → `ReadyToPay` (on delivery) → `Paid` (admin manually pays via dashboard).
+
+### 11.5 Payout Configuration
+
+Paymob Payouts credentials are configured in `PaymobPayoutSettings` section of `appsettings.json`, separate from Paymob Accept credentials. The payout API is hosted at a different base URL (`https://stagingpayouts.paymobsolutions.com/api/secure` in staging) and uses OAuth2 password grant with Basic authentication for the client credentials.
+
+## 12. Module Dependency Graph
 
 ```mermaid
 graph LR
@@ -607,6 +959,8 @@ graph LR
     Product --> Offer
     
     Order --> Payment[Payment Module]
+    Payment --> Finance[Finance & Settlement Module]
+    Order --> Finance
     
     Media[Media Module] --> Product
     Media --> Brand
@@ -616,7 +970,7 @@ graph LR
     Translation --> Brand
 ```
 
-Each module communicates through the defined service interfaces in the Application layer. Cross-module dependencies (e.g., Order referencing Cart and Product) occur through interface abstractions, ensuring that no concrete implementation details leak across module boundaries.
+Each module communicates through the defined service interfaces in the Application layer. Cross-module dependencies (e.g., Order referencing Cart and Product, or Finance consuming Payment and Order events) occur through interface abstractions, ensuring that no concrete implementation details leak across module boundaries.
 
 # Database Design
 
@@ -711,6 +1065,12 @@ erDiagram
 
     ChatRoom ||--o{ Messages : "contains"
 
+    Brand ||--o{ BrandSettlements : "has_settlements"
+    Order ||--o{ BrandSettlements : "generates"
+    Order ||--o| ShippingSettlements : "has_shipping_settlement"
+    Brand ||--o{ WithdrawalRequests : "submits"
+    ShippingCompany ||--o{ ShippingSettlements : "has_settlements"
+
     Interest ||--o{ UserInterests : "selected_by"
 
     UserInterests }o--|| Interests : "interest"
@@ -775,7 +1135,15 @@ Monetary and percentage values use explicit precision to avoid rounding errors:
 | `OrderProduct.AppliedDiscountCodeAmount` | (18, 2) |
 | `Offer.DiscountPercentage` | (18, 2) |
 
-### 3.4 Composite Keys
+### 3.4 Finance Entity Relationships
+
+- `Brand` → `BrandSettlement` — One-to-Many. A brand has many settlement records.
+- `Order` → `BrandSettlement` — One-to-Many. An order generates settlements per brand.
+- `Order` → `ShippingSettlement` — One-to-One. An order has one shipping settlement.
+- `Brand` → `WithdrawalRequest` — One-to-Many. A brand submits many withdrawal requests.
+- `ShippingCompany` → `ShippingSettlement` — One-to-Many. A shipping company has many settlements.
+
+### 3.5 Composite Keys
 
 - `OfferProduct` — Composite primary key: `(OfferId, ProductId)`
 
@@ -948,7 +1316,7 @@ Validation errors use a per-field error format:
 
 ## 2. Controller Inventory
 
-The system exposes 34 controllers with the following summary:
+The system exposes 38 controllers with the following summary:
 
 | Controller | Base Route | Auth | Key Endpoints |
 |---|---|---|---|
@@ -967,6 +1335,10 @@ The system exposes 34 controllers with the following summary:
 | `OrderController` | `api/Order` | Authorize | CreateOrder, GetOrders, GetOrderDetails, CancelOrder |
 | `PaymentController` | `api/Payment` | Authorize | InitiatePayment, GetPaymentStatus |
 | `PaymobWebhookController` | `api/PaymobWebhook` | None | TransactionCallback |
+| `AdminFinanceController` | `api/admin/finance` | Admin | GetBrandSettlements, GetShippingSettlements, GetAllWithdrawals, PayBrandSettlement, PayShippingSettlement, GetWalletSummary, GetFinancePolicy |
+| `BrandFinanceController` | `api/brand/finance` | BrandOwner | GetWalletSummary, GetSettlementHistory, CreateWithdrawalRequest, GetWithdrawalHistory, GetFinancePolicy |
+| `ShippingFinanceController` | `api/shipping/finance` | BrandOwner | GetWalletSummary, GetSettlementHistory, GetFinancePolicy |
+| `PaymobPayoutWebhookController` | `api/paymob-webhook` | None | PayoutCallback |
 | `ChatController` | `api/Chat` | Authorize | GetRooms, GetMessages, SendMessage, CreateRoom, ChangeStatus, DeleteMessage, DeleteRoom |
 | `CommunityController` | `api/Community` | Authorize | CreatePost, GetPost, GetPosts, EditPost, Delete, TogglePostLike, AddComment, DeleteComment, ToggleCommentLike |
 | `NotificationController` | `api/Notification` | Authorize | GetNotifications, MarkAsRead, MarkAllAsRead, GetUnreadCount |
@@ -1147,11 +1519,15 @@ sequenceDiagram
     alt Payment Success
         PaySvc->>OrderSvc: Notify order paid
         OrderSvc->>DB: Update OrderStatus = Processing
+        OrderSvc->>OrderSvc: CalculateAndCreateSettlementsAsync (via IFinanceService)
+        OrderSvc->>DB: Create BrandSettlements + ShippingSettlement, mark IsFinancialCalculated
         PaySvc-->>PaymobWebhook: 200 OK
     else Payment Failed
         PaySvc->>DB: Update PaymentStatus = Failed
         PaySvc-->>PaymobWebhook: 200 OK
     end
+
+Note over OrderSvc: Settlement created as Pending, transitions to ReadyForWithdrawal on delivery
 ```
 
 ## 6. Reel Feed and Interaction Sequence

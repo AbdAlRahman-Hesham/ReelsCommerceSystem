@@ -12,7 +12,7 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Offer
     public class TodayOfferSpecification: Specification<Offer>
     {
         public TodayOfferSpecification()
-         : base(o => o.CreatedAt.Date == DateTime.Today)
+         : base(o => o.CreatedAt.Date == DateTime.UtcNow.Date)
         {
             AddInclude(o => o.Brand);
             AddInclude(o => o.OfferProducts);
