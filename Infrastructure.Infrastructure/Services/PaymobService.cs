@@ -77,7 +77,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     new
                     {
                         merchant_id = _merchantId,
-                        amount_cents = (int)(order.TotalAmount * 100),
+                        amount_cents = (long)(order.TotalAmount * 100),
                         currency = "EGP"
                     }
                 );
@@ -101,7 +101,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     "https://accept.paymob.com/api/acceptance/payment_keys",
                     new
                     {
-                        amount_cents = (int)(order.TotalAmount * 100),
+                        amount_cents = (long)(order.TotalAmount * 100),
                         currency = "EGP",
                         order_id = orderData!.Id,
                         billing_data = new

@@ -72,11 +72,11 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             int paymobOrderId = await _paymobService.GetLastCreatedOrderIdAsync();
 
-            if (string.IsNullOrEmpty(paymentUrl.Data))
+            if (!paymentUrl.Success || string.IsNullOrEmpty(paymentUrl.Data))
                 return ApiResponse<PaymentResDto>.ErrorResponse(
-                    HttpStatusCode.BadRequest,
-                    "Failed to generate Paymob payment URL. Please try again later.",
-                    "تعذر إنشاء رابط الدفع عبر باي موب. يرجى المحاولة مرة أخرى."
+                    (HttpStatusCode)paymentUrl.StatusCode,
+                    paymentUrl.Message?.En ?? "Failed to generate Paymob payment URL",
+                    paymentUrl.Message?.Ar ?? "تعذر إنشاء رابط الدفع عبر باي موب"
                 );
             #endregion
 
