@@ -194,7 +194,16 @@ public class ProductService(
 
     private string BuildMediaUrl(string mediaUrl)
     {
-        return string.IsNullOrEmpty(mediaUrl) ? "" : $"{GetHostUrl()}/{mediaUrl.TrimStart('/')}";
+        if (string.IsNullOrWhiteSpace(mediaUrl))
+            return string.Empty;
+
+        if (Uri.TryCreate(mediaUrl, UriKind.Absolute, out var uri) &&
+            (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+        {
+            return mediaUrl;
+        }
+
+        return $"{GetHostUrl()}/{mediaUrl.TrimStart('/')}";
     }
 
     private GetAllProductsResponse MapToGetAllProductsResponse(Product product)
@@ -208,8 +217,12 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrls = product.Images?
-                        .Select(x => BuildMediaUrl(x.Url))
-                        .ToList() ?? new List<string>(),
+                        .Select(x => new ProductImageDto
+                        {
+                            Id = x.Id,
+                            Url = BuildMediaUrl(x.Url)
+                        })
+                        .ToList() ?? new List<ProductImageDto>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -232,8 +245,12 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrls = product.Images?
-                        .Select(x => BuildMediaUrl(x.Url))
-                        .ToList() ?? new List<string>(),
+                        .Select(x => new ProductImageDto
+                        {
+                            Id = x.Id,
+                            Url = BuildMediaUrl(x.Url)
+                        })
+                        .ToList() ?? new List<ProductImageDto>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -259,8 +276,12 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrls = product.Images?
-                        .Select(x => BuildMediaUrl(x.Url))
-                        .ToList() ?? new List<string>(),
+                        .Select(x => new ProductImageDto
+                        {
+                            Id = x.Id,
+                            Url = BuildMediaUrl(x.Url)
+                        })
+                        .ToList() ?? new List<ProductImageDto>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,

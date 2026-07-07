@@ -1,27 +1,22 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ReelsCommerceSystem.Application.DTOs.Dto;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReelsCommerceSystem.Infrastructure.Services
 {
     public class PhotoService : IPhotoServive
     {
         private readonly Cloudinary _cloudinary;
-        public PhotoService(IOptions<CloudinarySettings> config)
+        private readonly ILogger<PhotoService> _logger;
+
+        public PhotoService(IOptions<CloudinarySettings> config, ILogger<PhotoService> logger)
         {
             var settings = config.Value;
-            //Console.WriteLine("PHOTO SERVICE CALLED");
-            //Console.WriteLine("CloudName = " + settings.CloudName);
 
             var account = new Account(
                 settings.CloudName,
@@ -30,6 +25,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             );
 
             _cloudinary = new Cloudinary(account);
+            _logger = logger;
         }
 
         public async Task<string> UploadImageAsync(IFormFile file)
@@ -70,6 +66,12 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         }
         public async Task DeleteImageAsync(string publicId)
         {
+            if (string.IsNullOrWhiteSpace(publicId))
+            {
+                _logger.LogWarning("Cloudinary deletion skipped: PublicId is null or empty.");
+                return;
+            }
+
             var deletionParams = new DeletionParams(publicId);
             await _cloudinary.DestroyAsync(deletionParams);
         }

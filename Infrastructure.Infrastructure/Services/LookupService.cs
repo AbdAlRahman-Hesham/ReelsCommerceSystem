@@ -103,8 +103,23 @@ public class LookupService(HttpClient _httpClient, IMemoryCache _cache, AppDbCon
         return ApiResponse<List<ColorLookupResDto>>.SuccessResponse(colors, HttpStatusCode.OK, "Colors fetched successfully", "تم جلب الألوان بنجاح");
     }
 
-    public Task<ApiResponse<List<LookupResDto>>> GetSizesAsync() => 
-        GetCachedEnumLookup<Size>("lookup_sizes", "Sizes fetched successfully", "تم جلب الأحجام بنجاح");
+    public async Task<ApiResponse<List<LookupResDto>>> GetSizesAsync()
+    {
+        const string cacheKey = "lookup_sizes_v2";
+        if (_cache.TryGetValue(cacheKey, out List<LookupResDto>? sizes))
+        {
+            return ApiResponse<List<LookupResDto>>.SuccessResponse(sizes!, HttpStatusCode.OK, "Sizes fetched from cache", "تم جلب الأحجام من الكاش");
+        }
+
+        sizes = await _context.Set<ProductSize>().Select(s => new LookupResDto
+        {
+            Id = s.Id,
+            Name = s.Size.ToString()
+        }).ToListAsync();
+
+        _cache.Set(cacheKey, sizes, CacheDuration);
+        return ApiResponse<List<LookupResDto>>.SuccessResponse(sizes, HttpStatusCode.OK, "Sizes fetched successfully", "تم جلب الأحجام بنجاح");
+    }
 
     public Task<ApiResponse<List<LookupResDto>>> GetOrderStatusesAsync() => 
         GetCachedEnumLookup<OrderStatus>("lookup_order_statuses", "Order statuses fetched successfully", "تم جلب حالات الطلب بنجاح");

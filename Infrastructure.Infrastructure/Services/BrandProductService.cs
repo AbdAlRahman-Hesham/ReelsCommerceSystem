@@ -25,12 +25,14 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPhotoServive _photoServive;
         private readonly UserManager<User> _userManager;
+        private readonly ITranslationService _translationService;
 
-        public BrandProductService(IUnitOfWork unitOfWork, IPhotoServive photoServive, UserManager<User> userManager)
+        public BrandProductService(IUnitOfWork unitOfWork, IPhotoServive photoServive, UserManager<User> userManager, ITranslationService translationService)
         {
             _unitOfWork = unitOfWork;
             _photoServive = photoServive;
             _userManager = userManager;
+            _translationService = translationService;
         }
 
         public async Task<ApiResponse<int>> AddProductAsync(AddBrandProductReq request, string userId)
@@ -103,17 +105,72 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     {
                         Key = info.Key,
                         Value = info.Value,
-
-                        ArKey = info.ArKey,
-                        ArValue = info.ArValue,
-
                         Type = info.Type,
-
                         Group = info.Group,
-                        ArGroup = info.ArGroup,
-
                         DisplayOrder = info.DisplayOrder
                     });
+                }
+            }
+
+            #endregion
+
+            #region Auto-translate description and info fields
+
+            if (!string.IsNullOrWhiteSpace(request.Description))
+            {
+                var detected = await _translationService.DetectLanguageAsync(request.Description);
+                if (detected.Success && detected.Language != "ar")
+                {
+                    var translation = await _translationService.TranslateAsync(request.Description, detected.Language, "ar");
+                    if (translation.Success && !string.IsNullOrWhiteSpace(translation.TranslatedText))
+                    {
+                        product.ArDescription = translation.TranslatedText;
+                    }
+                }
+            }
+
+            if (request.Informations != null)
+            {
+                foreach (var info in product.ProductInformations)
+                {
+                    if (!string.IsNullOrWhiteSpace(info.Key))
+                    {
+                        var keyLang = await _translationService.DetectLanguageAsync(info.Key);
+                        if (keyLang.Success && keyLang.Language != "ar")
+                        {
+                            var t = await _translationService.TranslateAsync(info.Key, keyLang.Language, "ar");
+                            if (t.Success && !string.IsNullOrWhiteSpace(t.TranslatedText))
+                            {
+                                info.ArKey = t.TranslatedText;
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(info.Value))
+                    {
+                        var valLang = await _translationService.DetectLanguageAsync(info.Value);
+                        if (valLang.Success && valLang.Language != "ar")
+                        {
+                            var t = await _translationService.TranslateAsync(info.Value, valLang.Language, "ar");
+                            if (t.Success && !string.IsNullOrWhiteSpace(t.TranslatedText))
+                            {
+                                info.ArValue = t.TranslatedText;
+                            }
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(info.Group))
+                    {
+                        var grpLang = await _translationService.DetectLanguageAsync(info.Group);
+                        if (grpLang.Success && grpLang.Language != "ar")
+                        {
+                            var t = await _translationService.TranslateAsync(info.Group, grpLang.Language, "ar");
+                            if (t.Success && !string.IsNullOrWhiteSpace(t.TranslatedText))
+                            {
+                                info.ArGroup = t.TranslatedText;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -183,7 +240,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 return ApiResponse<bool>.ErrorResponse(HttpStatusCode.NotFound, "Image not found", "الصورة غير موجودة");
 
             // 1. delete from cloudinary
-            await _photoServive.DeleteImageAsync(image.PublicId);
+            if (!string.IsNullOrWhiteSpace(image.PublicId))
+            {
+                await _photoServive.DeleteImageAsync(image.PublicId);
+            }
 
             // 2. delete from DB
             imageRepo.Delete(image);
@@ -362,17 +422,65 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     {
                         Key = info.Key,
                         Value = info.Value,
-
-                        ArKey = info.ArKey,
-                        ArValue = info.ArValue,
-
                         Type = info.Type,
-
                         Group = info.Group,
-                        ArGroup = info.ArGroup,
-
                         DisplayOrder = info.DisplayOrder
                     });
+                }
+            }
+
+
+            // ================= AUTO-TRANSLATE =================
+
+            if (!string.IsNullOrWhiteSpace(request.Description))
+            {
+                var detected = await _translationService.DetectLanguageAsync(request.Description);
+                if (detected.Success && detected.Language != "ar")
+                {
+                    var translation = await _translationService.TranslateAsync(request.Description, detected.Language, "ar");
+                    if (translation.Success && !string.IsNullOrWhiteSpace(translation.TranslatedText))
+                    {
+                        product.ArDescription = translation.TranslatedText;
+                    }
+                }
+            }
+
+            if (request.Informations != null)
+            {
+                foreach (var info in product.ProductInformations)
+                {
+                    if (!string.IsNullOrWhiteSpace(info.Key))
+                    {
+                        var keyLang = await _translationService.DetectLanguageAsync(info.Key);
+                        if (keyLang.Success && keyLang.Language != "ar")
+                        {
+                            var t = await _translationService.TranslateAsync(info.Key, keyLang.Language, "ar");
+                            if (t.Success && !string.IsNullOrWhiteSpace(t.TranslatedText))
+                                info.ArKey = t.TranslatedText;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(info.Value))
+                    {
+                        var valLang = await _translationService.DetectLanguageAsync(info.Value);
+                        if (valLang.Success && valLang.Language != "ar")
+                        {
+                            var t = await _translationService.TranslateAsync(info.Value, valLang.Language, "ar");
+                            if (t.Success && !string.IsNullOrWhiteSpace(t.TranslatedText))
+                                info.ArValue = t.TranslatedText;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(info.Group))
+                    {
+                        var grpLang = await _translationService.DetectLanguageAsync(info.Group);
+                        if (grpLang.Success && grpLang.Language != "ar")
+                        {
+                            var t = await _translationService.TranslateAsync(info.Group, grpLang.Language, "ar");
+                            if (t.Success && !string.IsNullOrWhiteSpace(t.TranslatedText))
+                                info.ArGroup = t.TranslatedText;
+                        }
+                    }
                 }
             }
 
