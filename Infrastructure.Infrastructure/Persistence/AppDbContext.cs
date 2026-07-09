@@ -305,4 +305,5 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<WithdrawalRequest> WithdrawalRequests { get; set; }
     public DbSet<FinancialAuditLog> FinancialAuditLogs { get; set; }
     public DbSet<ShippingCompany> ShippingCompanies { get; set; }
+    public DbSet<BrandSocialLink> BrandSocialLinks { get; set; }
 }

@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
@@ -16,7 +17,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services;
 public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recommendationService, ILogger<ReelService> _logger) : IReelService
 
 {
-    public async Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy)
+    public async Task<ApiResponse<List<AllReelsInBrandRes>>> GetReelsByBrandAsync(int brandId, string? sortBy, string? userId = null)
 
     {
         var brandExists = await _unitOfWork.Repository<Brand>().GetByIdAsync(brandId);
@@ -39,7 +40,17 @@ public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recomm
         );
 
         }
-        var spec = new ReelsByBrandWithSortingSpec(brandId, sortBy);
+
+        bool includeDrafts = false;
+        if (userId is not null)
+        {
+            var brandSpec = new GetBrandByUserId(userId);
+            var userBrand = await _unitOfWork.Repository<Brand>().GetWithSpecAsync(brandSpec);
+            if (userBrand is not null && userBrand.Id == brandId)
+                includeDrafts = true;
+        }
+
+        var spec = new ReelsByBrandWithSortingSpec(brandId, sortBy, includeDrafts);
         var reels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
         var AllReels = new List<AllReelsInBrandRes>();
         foreach (var reel in reels)

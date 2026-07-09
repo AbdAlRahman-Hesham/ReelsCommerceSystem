@@ -15,6 +15,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.ReelManagement
         public string ThumbnailUrl { get; set; } = null!;
 
         public int LikesCount { get; set; }
+        public bool IsLikedByCurrentUser { get; set; }
         public int CommentsCount { get; set; }
 
         public int ProductsCount { get; set; }

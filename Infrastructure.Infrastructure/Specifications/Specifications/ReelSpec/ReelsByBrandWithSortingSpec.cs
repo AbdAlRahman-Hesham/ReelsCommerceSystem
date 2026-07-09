@@ -1,4 +1,5 @@
 ﻿using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
 
@@ -6,8 +7,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
 
 internal class ReelsByBrandWithSortingSpec : Specification<Reel>
 {
-    public ReelsByBrandWithSortingSpec(int brandId, string? sortBy = null)
-        : base(criteria: r => r.BrandId == brandId)
+    public ReelsByBrandWithSortingSpec(int brandId, string? sortBy = null, bool includeDrafts = false)
+        : base(criteria: r => r.BrandId == brandId && (includeDrafts || r.Status == ReelStatus.Published))
     {
 
         if (sortBy == "oldest")

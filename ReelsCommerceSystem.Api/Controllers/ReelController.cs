@@ -19,7 +19,8 @@ public class ReelController(
     [HttpGet("{brandId}")]
     public async Task<IActionResult> GetReelsByBrand(int brandId, [FromQuery] string? sortBy = null)
     {
-        var response = await _reelService.GetReelsByBrandAsync(brandId, sortBy);
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var response = await _reelService.GetReelsByBrandAsync(brandId, sortBy, userId);
         return StatusCode(response.StatusCode, response);
     }
 

@@ -1,6 +1,7 @@
 using MailKit.Search;
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using System;
 using System.Collections.Generic;
@@ -33,12 +34,14 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                     .ThenInclude(p => p.Images));
         }
 
-        public ReelFeedSpec() : base(orderBy: r => r.CreatedAt,
+        public ReelFeedSpec() : base(criteria: r => r.Status == ReelStatus.Published,
+        orderBy: r => r.CreatedAt,
         sortOrder: XmlSortOrder.Descending)
         {
             AddCommonIncludes();
         }
-        public ReelFeedSpec(int pageIndex, int pageSize) : base(orderBy: r => r.CreatedAt,
+        public ReelFeedSpec(int pageIndex, int pageSize) : base(criteria: r => r.Status == ReelStatus.Published,
+        orderBy: r => r.CreatedAt,
         sortOrder: XmlSortOrder.Descending)
         {
             AddCommonIncludes();
@@ -46,19 +49,19 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
         }
 
         public ReelFeedSpec(List<int> followedBrandIds) : base(criteria:
-            r => followedBrandIds.Contains(r.BrandId))
+            r => followedBrandIds.Contains(r.BrandId) && r.Status == ReelStatus.Published)
         {
             AddCommonIncludes();
         }
         public ReelFeedSpec(List<int> followedBrandIds, int pageIndex, int pageSize) : base(criteria:
-            r=>followedBrandIds.Contains(r.BrandId))
+            r => followedBrandIds.Contains(r.BrandId) && r.Status == ReelStatus.Published)
         {
             AddCommonIncludes();
             ApplyPaging(pageIndex, pageSize);
         }
 
         public ReelFeedSpec(List<int> reelIds, bool filterByReelId) : base(criteria:
-            r => reelIds.Contains(r.Id))
+            r => reelIds.Contains(r.Id) && r.Status == ReelStatus.Published)
         {
             AddCommonIncludes();
         }

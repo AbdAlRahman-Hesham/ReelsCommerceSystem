@@ -92,7 +92,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             reel.Brand = brand;
             await _unitOfWork.SaveChangesAsync();
 
-            _ = _recommendationService.ProcessReelAsync(reel);
+            if (reel.Status == ReelStatus.Published)
+                _ = _recommendationService.ProcessReelAsync(reel);
 
             return new CreateReelRes
             {
@@ -263,10 +264,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
            
 
-            if (!string.IsNullOrWhiteSpace(req.Title))
+            if (!string.IsNullOrWhiteSpace(req.Title) && req.Title != reel.Title)
             {
-                if (req.Title == reel.Title)
-                    throw new BadRequestException("New title must be different from current title");
                 reel.Title = req.Title;
             }
             if (!string.IsNullOrWhiteSpace(req.Status))
@@ -333,7 +332,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             await _unitOfWork.SaveChangesAsync();
 
-            _ = _recommendationService.ProcessReelAsync(reel);
+            if (reel.Status == ReelStatus.Published)
+                _ = _recommendationService.ProcessReelAsync(reel);
 
             return new EditReelRes
             {
@@ -366,6 +366,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 ThumbnailUrl = reel.ThumbnailUrl!,
                 VideoUrl = reel.VideoUrl,
                 LikesCount = reel.UserReelLikes.Count,
+                IsLikedByCurrentUser = reel.UserReelLikes.Any(l => l.UserId == userId),
                 CommentsCount = reel.ReelComments.Count,
                 ProductsCount = reel.ProductReels.Count,
                 Brand = new BrandForGetReelForManagementRes

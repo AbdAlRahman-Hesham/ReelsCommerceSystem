@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Response.ChatRoom;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.ChatEntities;
@@ -90,7 +91,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             foreach (var room in rooms)
             {
                 var otherUserId = room.User1Id == userId ? room.User2Id : room.User1Id;
-                var otherUser = await _userManager.FindByIdAsync(otherUserId);
+                var otherUser = await _userManager.Users
+                    .Include(u => u.Brand)
+                    .FirstOrDefaultAsync(u => u.Id == otherUserId);
 
                 var unread = room.Messages.Count(m =>
                     m.SenderId != userId &&
@@ -100,13 +103,21 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     .OrderByDescending(m => m.CreatedAt)
                     .FirstOrDefault();
 
-                if (lastMessage == null) continue;
+                if (lastMessage == null && room.CreatedAt < DateTime.UtcNow.AddMinutes(-5)) continue;
+
+                var userName = otherUser?.Brand != null
+                    ? $"{otherUser.FirstName} {otherUser.LastName} ({otherUser.Brand.DisplayName})"
+                    : $"{otherUser?.FirstName} {otherUser?.LastName}";
+
+                var userImageUrl = otherUser?.Brand != null
+                    ? otherUser.Brand.LogoUrl
+                    : otherUser?.ImageURL ?? string.Empty;
 
                 result.Add(new ChatRoomRes
                 {
                     RoomIdEnc = EncryptionHelper.Encrypt(room.Id.ToString()),
-                    UserName = $"{otherUser?.FirstName} {otherUser?.LastName}",
-                    UserImageUrl = otherUser?.ImageURL ?? string.Empty,
+                    UserName = userName,
+                    UserImageUrl = userImageUrl,
                     UnreadCount = unread,
                     LastMessage = lastMessage?.Text,
                     LastMessageAt = lastMessage?.CreatedAt
@@ -122,13 +133,23 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             if (room == null) return null;
 
             var otherUserId = room.User1Id == userId ? room.User2Id : room.User1Id;
-            var otherUser = await _userManager.FindByIdAsync(otherUserId);
+            var otherUser = await _userManager.Users
+                .Include(u => u.Brand)
+                .FirstOrDefaultAsync(u => u.Id == otherUserId);
+
+            var userName = otherUser?.Brand != null
+                ? $"{otherUser.FirstName} {otherUser.LastName} ({otherUser.Brand.DisplayName})"
+                : $"{otherUser?.FirstName} {otherUser?.LastName}";
+
+            var userImageUrl = otherUser?.Brand != null
+                ? otherUser.Brand.LogoUrl
+                : otherUser?.ImageURL ?? string.Empty;
 
             return new ChatRoomRes
             {
                 RoomIdEnc = EncryptionHelper.Encrypt(room.Id.ToString()),
-                UserName = $"{otherUser?.FirstName} {otherUser?.LastName}",
-                UserImageUrl = otherUser?.ImageURL ?? string.Empty,
+                UserName = userName,
+                UserImageUrl = userImageUrl,
                 UnreadCount = 0
             };
         }
