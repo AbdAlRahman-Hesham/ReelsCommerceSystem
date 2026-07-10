@@ -15,8 +15,10 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Community
         public string Status { get; set; } = string.Empty;
         public bool CommentsEnabled { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int BrandId { get; set; }
         public string BrandName { get; set; } = string.Empty;
         public string BrandOwnerName { get; set; } = string.Empty;
+        public string BrandLogoUrl { get; set; } = string.Empty;
         public int CommentsCount { get; set; }
         public int LikesCount { get; set; }
         public bool IsLiked { get; set; }

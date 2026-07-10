@@ -22,6 +22,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Community
         public string CoverImageUrl { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
+        public int BrandId { get; set; }
         public string BrandName { get; set; } = string.Empty;
         public string BrandOwnerName { get; set; } = string.Empty;
         public string BrandLogoUrl { get; set; } = string.Empty;

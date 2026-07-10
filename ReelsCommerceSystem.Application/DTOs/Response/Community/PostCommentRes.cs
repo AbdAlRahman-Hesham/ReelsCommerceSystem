@@ -11,6 +11,8 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Community
     {
         public int CommentId { get; set; }
 
+        public int BrandId { get; set; }
+
         public string BrandName { get; set; } = string.Empty;
 
         public string BrandOwnerName { get; set; } = string.Empty;

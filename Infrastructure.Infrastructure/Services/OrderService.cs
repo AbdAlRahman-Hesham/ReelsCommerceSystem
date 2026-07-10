@@ -728,7 +728,7 @@ public class OrderService : IOrderService
             .ToListAsync();
 
         var visibleOrderProducts = brandOrderProducts
-            .Where(op => op.Order.PaymentStatus != PaymentStatus.Failed)
+            .Where(op => op.Order.PaymentStatus != PaymentStatus.Failed && op.Order.PaymentStatus != PaymentStatus.Pending)
             .ToList();
 
         var grouped = visibleOrderProducts

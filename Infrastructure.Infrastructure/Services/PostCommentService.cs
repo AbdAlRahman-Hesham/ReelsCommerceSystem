@@ -243,6 +243,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             {
                 CommentId = comment.Id,
 
+                BrandId = comment.BrandId,
+
                 BrandName = comment.Brand?.DisplayName ?? "",
 
                 BrandOwnerName = comment.Brand?.user?.DisplayName ?? "",

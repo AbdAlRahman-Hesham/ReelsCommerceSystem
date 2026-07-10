@@ -121,10 +121,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 CoverImageUrl = p.CoverImageUrl,
                 Status = p.Status.ToString().ToLower(),
                 CreatedAt = p.CreatedAt,
+                BrandId = p.BrandId,
                 BrandName = p.Brand.DisplayName,
                 BrandOwnerName = p.Brand.user.DisplayName,
                 BrandLogoUrl = p.Brand.LogoUrl
-
             }).ToList();
 
             var totalItems = await _unitOfWork.Repository<CommunityPost>()
@@ -180,8 +180,10 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 CoverImageUrl = post.CoverImageUrl,
                 Status = post.Status.ToString().ToLower(),
                 CommentsEnabled = post.CommentsEnabled,
+                BrandId = post.BrandId,
                 BrandName = post.Brand.DisplayName,
                 BrandOwnerName = post.Brand.user.DisplayName,
+                BrandLogoUrl = post.Brand.LogoUrl,
                 CommentsCount = post.Comments.Count,
                 LikesCount = post.Likes.Count,
                 IsLiked=isLiked,
