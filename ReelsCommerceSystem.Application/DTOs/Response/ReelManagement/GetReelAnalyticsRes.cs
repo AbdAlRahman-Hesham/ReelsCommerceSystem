@@ -17,6 +17,10 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.ReelManagement
         public List<int> Years { get; set; } = [];
 
         public List<MonthlyViewsRes> MonthlyViews { get; set; } = [];
+
+        public List<DailyViewsRes> DailyViews { get; set; } = [];
+
+        public List<YearlyViewsRes> YearlyViews { get; set; } = [];
     }
 
     public class MonthlyViewsRes
@@ -25,5 +29,19 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.ReelManagement
 
         public int Views { get; set; }
 
+    }
+
+    public class DailyViewsRes
+    {
+        public string Date { get; set; } = null!;
+
+        public int Views { get; set; }
+    }
+
+    public class YearlyViewsRes
+    {
+        public int Year { get; set; }
+
+        public int Views { get; set; }
     }
 }

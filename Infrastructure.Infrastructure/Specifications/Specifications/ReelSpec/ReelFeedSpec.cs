@@ -21,6 +21,7 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
             AddInclude(r => r.ReelComments);
             AddInclude(r => r.UserReelLikes);
             AddInclude(r => r.UserReelViews);
+            AddInclude(r => r.UserReelShares);
 
             AddIncludeChain(q =>
                 q.Include(r => r.ProductReels)

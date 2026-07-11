@@ -48,8 +48,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             var totalReels = await _unitOfWork.Repository<Reel>()
                 .CountAsync(new ReelFeedSpec(followedIds));
 
-            // Get all likes for the user
-            var reelLikes = await _unitOfWork.Repository<UserReelLike>().GetAllAsync();
+            // Get likes only for the current user
+            var likesSpec = new Specification<UserReelLike>(l => l.UserId == userId);
+            var reelLikes = await _unitOfWork.Repository<UserReelLike>().GetAllWithSpecAsync(likesSpec);
 
             var reelsResult = reels.Select(r => new ReelFeedRes
             {
@@ -103,7 +104,6 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             if (recommendedIds != null && recommendedIds.Count > 0)
             {
-                totalReels = recommendedIds.Count;
                 paginatedIds = recommendedIds.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
 
                 if (paginatedIds.Count > 0)
@@ -111,11 +111,23 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     var spec = new ReelFeedSpec(paginatedIds, filterByReelId: true);
                     var dbReels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
 
-                    reels = dbReels.OrderBy(r => paginatedIds.IndexOf(r.Id)).ToList();
+                    if (dbReels.Count > 0)
+                    {
+                        reels = dbReels.OrderBy(r => paginatedIds.IndexOf(r.Id)).ToList();
+                        totalReels = await _unitOfWork.Repository<Reel>()
+                            .CountAsync(new ReelFeedSpec(paginatedIds, filterByReelId: true));
+                    }
+                    else
+                    {
+                        var fallbackSpec = new ReelFeedSpec(pageIndex, pageSize);
+                        reels = (await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(fallbackSpec)).ToList();
+                        totalReels = await _unitOfWork.Repository<Reel>().CountAsync(new ReelFeedSpec());
+                    }
                 }
                 else
                 {
                     reels = new List<Reel>();
+                    totalReels = 0;
                 }
             }
             else

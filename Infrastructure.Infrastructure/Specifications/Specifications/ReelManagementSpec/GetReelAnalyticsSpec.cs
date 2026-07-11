@@ -15,12 +15,6 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelM
             base(r=>r.Id ==reelId)
         {
             AddInclude(r => r.Brand);
-
-            AddInclude(r => r.UserReelViews);
-
-
-
-            
         }
     }
 }

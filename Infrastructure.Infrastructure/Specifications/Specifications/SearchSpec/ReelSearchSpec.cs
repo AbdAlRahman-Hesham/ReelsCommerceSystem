@@ -1,4 +1,5 @@
 ﻿using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Searc
     public class ReelSearchSpec:Specification<Reel>
     {
         public ReelSearchSpec(string searchText, int pageIndex, int pageSize)
-         : base(criteria:( r => string.IsNullOrEmpty(searchText) ||
-                     r.Title.Contains(searchText)))
+         : base(criteria:( r => (string.IsNullOrEmpty(searchText) ||
+                     r.Title.Contains(searchText)) && r.Status == ReelStatus.Published))
         {
             AddInclude(r => r.ProductReels);
             AddInclude(r => r.UserReelLikes);
@@ -23,8 +24,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Searc
             ApplyPaging(pageIndex, pageSize);
         }
         public ReelSearchSpec(string searchText)
-         : base(criteria: (r => string.IsNullOrEmpty(searchText) ||
-                     r.Title.Contains(searchText)))
+         : base(criteria: (r => (string.IsNullOrEmpty(searchText) ||
+                     r.Title.Contains(searchText)) && r.Status == ReelStatus.Published))
         {
             AddInclude(r => r.ProductReels);
             AddInclude(r => r.UserReelLikes);

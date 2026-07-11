@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Request.ReelManagement;
 using ReelsCommerceSystem.Application.DTOs.Response.PagedResponse;
 using ReelsCommerceSystem.Application.DTOs.Response.ReelManagement;
@@ -145,6 +146,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 VideoUrl = r.VideoUrl,
                 Status = r.Status.ToString().ToLower(),
                 LikesCount = r.NumOfLikes,
+                ViewsCount = r.UserReelViews.Count,
                 CommentsCount = r.ReelComments.Count,
                 SharesCount = r.NumOfShares,
                 ProductsCount = r.ProductReels.Count,
@@ -419,62 +421,80 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 throw new NotFoundException("Reel Not Found");
 
             var now = DateTime.UtcNow;
-
             var lastMonthDate = now.AddMonths(-1);
+            var sevenDaysAgo = now.Date.AddDays(-6);
+
+            var viewsQuery = _unitOfWork.Repository<UserReelView>().GetAllQueryable()
+                .Where(v => v.ReelId == reelId);
 
             // Current month views
-            var currentMonthViews = reel.UserReelViews.Count(v =>
-                v.CreatedAt.Month == now.Month &&
-                v.CreatedAt.Year == now.Year);
+            var currentMonthViews = await viewsQuery
+                .CountAsync(v => v.CreatedAt.Month == now.Month && v.CreatedAt.Year == now.Year);
 
             // Last month views
-            var lastMonthViews = reel.UserReelViews.Count(v =>
-                v.CreatedAt.Month == lastMonthDate.Month &&
-                v.CreatedAt.Year == lastMonthDate.Year);
+            var lastMonthViews = await viewsQuery
+                .CountAsync(v => v.CreatedAt.Month == lastMonthDate.Month && v.CreatedAt.Year == lastMonthDate.Year);
 
             // Growth percentage
             decimal growthPercentage = 0;
 
-            var baseViews =currentMonthViews+lastMonthViews;
-
-            if (baseViews > 0)
+            if (lastMonthViews > 0)
             {
-                decimal currentPercentage =
-                    ((decimal)currentMonthViews / baseViews) * 100;
-
-                decimal lastPercentage =
-                    ((decimal)lastMonthViews / baseViews) * 100;
-
-                growthPercentage =
-                    currentPercentage - lastPercentage;
+                growthPercentage = Math.Round(
+                    (decimal)(currentMonthViews - lastMonthViews) / lastMonthViews * 100, 0);
             }
 
-            growthPercentage = Math.Round(growthPercentage, 0);
-
-            // Monthly chart
-            var monthlyViews = reel.UserReelViews
+            // Monthly chart (DB-level GROUP BY)
+            var monthlyViewsData = await viewsQuery
                 .Where(v => v.CreatedAt.Year == year)
                 .GroupBy(v => v.CreatedAt.Month)
+                .Select(g => new { Month = g.Key, Count = g.Count() })
+                .OrderBy(g => g.Month)
+                .ToListAsync();
+
+            var monthlyViews = monthlyViewsData
                 .Select(g => new MonthlyViewsRes
                 {
                     Month = CultureInfo.CurrentCulture
                         .DateTimeFormat
-                        .GetAbbreviatedMonthName(g.Key),
-
-                    Views = g.Count()
+                        .GetAbbreviatedMonthName(g.Month),
+                    Views = g.Count
                 })
-                .OrderBy(m => DateTime.ParseExact(
-                    m.Month,
-                    "MMM",
-                    CultureInfo.CurrentCulture).Month)
                 .ToList();
 
+            // Daily chart (last 7 days, DB-level GROUP BY)
+            var dailyViewsData = await viewsQuery
+                .Where(v => v.CreatedAt.Date >= sevenDaysAgo)
+                .GroupBy(v => v.CreatedAt.Date)
+                .Select(g => new { Date = g.Key, Count = g.Count() })
+                .OrderBy(g => g.Date)
+                .ToListAsync();
+
+            var dailyViews = dailyViewsData
+                .Select(g => new DailyViewsRes
+                {
+                    Date = g.Date.ToString("MMM dd"),
+                    Views = g.Count
+                })
+                .ToList();
+
+            // Yearly chart (DB-level GROUP BY)
+            var yearlyViewsData = await viewsQuery
+                .GroupBy(v => v.CreatedAt.Year)
+                .Select(g => new YearlyViewsRes
+                {
+                    Year = g.Key,
+                    Views = g.Count()
+                })
+                .OrderBy(g => g.Year)
+                .ToListAsync();
+
             // Years dropdown
-            var years = reel.UserReelViews
+            var years = await viewsQuery
                 .Select(v => v.CreatedAt.Year)
                 .Distinct()
                 .OrderByDescending(y => y)
-                .ToList();
+                .ToListAsync();
 
             return new GetReelAnalyticsRes
             {
@@ -486,7 +506,11 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
                 Years = years,
 
-                MonthlyViews = monthlyViews
+                MonthlyViews = monthlyViews,
+
+                DailyViews = dailyViews,
+
+                YearlyViews = yearlyViewsData
             };
         }
 

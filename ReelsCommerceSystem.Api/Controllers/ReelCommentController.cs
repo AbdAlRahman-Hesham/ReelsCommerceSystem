@@ -24,13 +24,12 @@ namespace ReelsCommerceSystem.Api.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                var errorResponse = ApiResponse<string>.ErrorResponse
+                return StatusCode((int)HttpStatusCode.Unauthorized, ApiResponse<string>.ErrorResponse
                     (
                         HttpStatusCode.Unauthorized,
                         "User not authenticated",
                         "المستخدم غير مسجل دخول"
-                    );
-
+                    ));
             }
             var response = await _reelCommentService.AddCommentAsync(dto, userId);
             return StatusCode(response.StatusCode, response);

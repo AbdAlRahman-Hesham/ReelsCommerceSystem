@@ -37,6 +37,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelM
             AddInclude(r => r.ReelComments);
             AddInclude(r => r.ProductReels);
             AddInclude(r => r.UserReelLikes);
+            AddInclude(r => r.UserReelViews);
+            AddInclude(r => r.UserReelShares);
 
 
             ApplyPaging(request.PageIndex,request.PageSize);

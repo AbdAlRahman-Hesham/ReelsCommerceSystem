@@ -18,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Configure Kestrel to allow larger request bodies for video uploads
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Limits.MaxRequestBodySize = 209715200; // 200MB
+    options.Limits.MaxRequestBodySize = 1073741824; // 1GB
 });
 
 builder.Services.AddSingleton<IValidationMessageProvider, JsonValidationMessageProvider>();
@@ -88,8 +88,8 @@ builder.Services.Configure<FormOptions>(options =>
     // Raise this to stop the "1024 exceeded" error
     options.ValueCountLimit = 4096;
 
-    // Crucial for Videos: allow large files (e.g., 200MB)
-    options.MultipartBodyLengthLimit = 209715200;
+    // Crucial for Videos: allow large files (e.g., 1GB)
+    options.MultipartBodyLengthLimit = 1073741824;
 });
 
 var app = builder.Build();

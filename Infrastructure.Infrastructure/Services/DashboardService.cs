@@ -536,6 +536,68 @@ public class DashboardService : IDashboardService
             })
             .ToList();
 
+        // Daily views/likes (last 7 days) for Weekly chart
+        var sevenDaysAgo = now.Date.AddDays(-6);
+
+        var dailyViewsData = await _unitOfWork.Repository<Reel>().GetAllQueryable()
+            .Where(r => r.BrandId == brandId)
+            .SelectMany(r => r.UserReelViews)
+            .Where(v => v.CreatedAt.Date >= sevenDaysAgo)
+            .GroupBy(v => v.CreatedAt.Date)
+            .Select(g => new { Date = g.Key, Count = g.Count() })
+            .OrderBy(g => g.Date)
+            .ToListAsync();
+
+        var dailyLikesData = await _unitOfWork.Repository<Reel>().GetAllQueryable()
+            .Where(r => r.BrandId == brandId)
+            .SelectMany(r => r.UserReelLikes)
+            .Where(l => l.CreatedAt.Date >= sevenDaysAgo)
+            .GroupBy(l => l.CreatedAt.Date)
+            .Select(g => new { Date = g.Key, Count = g.Count() })
+            .OrderBy(g => g.Date)
+            .ToListAsync();
+
+        var dailyViewStats = dailyViewsData
+            .Select(g => new DailyReelStatDto
+            {
+                Date = g.Date.ToString("MMM dd"),
+                Count = g.Count
+            })
+            .ToList();
+
+        var dailyLikeStats = dailyLikesData
+            .Select(g => new DailyReelStatDto
+            {
+                Date = g.Date.ToString("MMM dd"),
+                Count = g.Count
+            })
+            .ToList();
+
+        // Yearly views/likes for Yearly chart
+        var yearlyViewsData = await _unitOfWork.Repository<Reel>().GetAllQueryable()
+            .Where(r => r.BrandId == brandId)
+            .SelectMany(r => r.UserReelViews)
+            .GroupBy(v => v.CreatedAt.Year)
+            .Select(g => new YearlyReelStatDto
+            {
+                Year = g.Key,
+                Count = g.Count()
+            })
+            .OrderBy(g => g.Year)
+            .ToListAsync();
+
+        var yearlyLikesData = await _unitOfWork.Repository<Reel>().GetAllQueryable()
+            .Where(r => r.BrandId == brandId)
+            .SelectMany(r => r.UserReelLikes)
+            .GroupBy(l => l.CreatedAt.Year)
+            .Select(g => new YearlyReelStatDto
+            {
+                Year = g.Key,
+                Count = g.Count()
+            })
+            .OrderBy(g => g.Year)
+            .ToListAsync();
+
         var currentMonthViews = viewsWithDates
             .Where(g => g.Year == now.Year && g.Month == now.Month)
             .Sum(g => g.Count);
@@ -703,6 +765,10 @@ public class DashboardService : IDashboardService
             },
             MonthlyViews = monthlyViews,
             MonthlyLikes = monthlyLikes,
+            DailyViews = dailyViewStats,
+            DailyLikes = dailyLikeStats,
+            YearlyViews = yearlyViewsData,
+            YearlyLikes = yearlyLikesData,
             TopViewedReels = topViewedReels,
             TopLikedReels = topLikedReels,
             AudienceStats = new AudienceStatsDto

@@ -9,6 +9,10 @@ public class BrandReelAnalyticsRes
     public ReelCountsDto ReelCounts { get; set; } = new();
     public List<MonthlyReelStatDto> MonthlyViews { get; set; } = new();
     public List<MonthlyReelStatDto> MonthlyLikes { get; set; } = new();
+    public List<DailyReelStatDto> DailyViews { get; set; } = new();
+    public List<DailyReelStatDto> DailyLikes { get; set; } = new();
+    public List<YearlyReelStatDto> YearlyViews { get; set; } = new();
+    public List<YearlyReelStatDto> YearlyLikes { get; set; } = new();
     public List<TopReelDto> TopViewedReels { get; set; } = new();
     public List<TopReelDto> TopLikedReels { get; set; } = new();
     public AudienceStatsDto AudienceStats { get; set; } = new();
@@ -50,4 +54,16 @@ public class DailyEngagementDto
     public int TotalViews { get; set; }
     public int TotalLikes { get; set; }
     public int TotalComments { get; set; }
+}
+
+public class DailyReelStatDto
+{
+    public string Date { get; set; } = default!;
+    public int Count { get; set; }
+}
+
+public class YearlyReelStatDto
+{
+    public int Year { get; set; }
+    public int Count { get; set; }
 }
