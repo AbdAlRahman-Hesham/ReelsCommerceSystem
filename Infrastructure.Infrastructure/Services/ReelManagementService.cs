@@ -146,6 +146,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 Status = r.Status.ToString().ToLower(),
                 LikesCount = r.NumOfLikes,
                 CommentsCount = r.ReelComments.Count,
+                SharesCount = r.NumOfShares,
                 ProductsCount = r.ProductReels.Count,
                 Products = r.ProductReels.Select(p => new ProductInReelRes{
                     Id = p.Product.Id,

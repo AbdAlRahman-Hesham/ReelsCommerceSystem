@@ -16,6 +16,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.ReelManagement
         public string Status { get; set; } = string.Empty;
         public int LikesCount { get; set; }
         public int CommentsCount { get; set; }
+        public int SharesCount { get; set; }
         public int ProductsCount { get; set; }
         public List<ProductInReelRes> Products { get; set; } = new List<ProductInReelRes>();
 

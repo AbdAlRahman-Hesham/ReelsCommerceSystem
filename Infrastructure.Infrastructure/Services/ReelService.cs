@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ReelsCommerceSystem.Application.DTOs.Request.Reel;
 using ReelsCommerceSystem.Application.DTOs.Response.Reel;
+using ReelsCommerceSystem.Application.DTOs.Response.Product;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
@@ -61,6 +62,7 @@ public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recomm
                 ThumbnailUrl= GenerateThumbnailUrl(reel.VideoUrl),
                 NumOfLikes=reel.NumOfLikes,
                 NumOfWatches=reel.NumOfWatches,
+                NumOfShares=reel.NumOfShares,
                 CreatedAt=reel.CreatedAt,
                 VideoUrl=reel.VideoUrl,
                 Title=reel.Title//////////
@@ -78,6 +80,73 @@ public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recomm
                                ar: "تم تنفيذ الطلب بنجاح."
             );
 
+    }
+
+    public async Task<ApiResponse<ReelFeedRes>> GetReelByIdAsync(int reelId, string? userId = null)
+    {
+        var spec = new ReelFeedSpec(new List<int> { reelId }, filterByReelId: true);
+        var reels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
+        var reel = reels.FirstOrDefault();
+
+        if (reel is null)
+        {
+            return ApiResponse<ReelFeedRes>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                en: "Reel not found.",
+                ar: "الريل غير موجود",
+                errors: new List<ValidationError>
+                {
+                    new ValidationError
+                    {
+                        Field = "reelId",
+                        En = "The provided reel ID does not exist.",
+                        Ar = "معرف الريل غير موجود."
+                    }
+                }
+            );
+        }
+
+        bool isLiked = false;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            var likeSpec = new Specification<UserReelLike>(l => l.UserId == userId && l.ReelId == reelId);
+            isLiked = await _unitOfWork.Repository<UserReelLike>().GetWithSpecAsync(likeSpec) != null;
+        }
+
+        var result = new ReelFeedRes
+        {
+            ReelId = reel.Id,
+            VideoUrl = reel.VideoUrl,
+            CreatedAt = reel.CreatedAt,
+            NumOfLikes = reel.NumOfLikes,
+            NumOfWatches = reel.NumOfWatches,
+            NumOfShares = reel.NumOfShares,
+            NumOfComments = reel.ReelComments.Count,
+            BrandId = reel.BrandId,
+            BrandImageUrl = reel.Brand.LogoUrl,
+            BrandName = reel.Brand.DisplayName,
+            Products = reel.ProductReels.Select(pr => pr.Product).Select(p => new ReelProductRes
+            {
+                ProductId = p.Id,
+                ProductName = p.Name,
+                Price = p.Price,
+                ProductMediaUrls = p.Images?
+                                   .Where(x => x.Url != null)
+                                   .Select(x => x.Url)
+                                   .ToList() ?? new List<string>(),
+                DiscountPercentage = p.DiscountPercentage,
+                HaveOffer = p.HaveOffer,
+                Rate = p.Reviews.Any() ? (int)Math.Round(p.Reviews.Average(rv => rv.Rating)) : 0
+            }).ToList(),
+            IsLiked = isLiked
+        };
+
+        return ApiResponse<ReelFeedRes>.SuccessResponse(
+            result,
+            HttpStatusCode.OK,
+            en: "Reel loaded successfully.",
+            ar: "تم تحميل الريل بنجاح."
+        );
     }
 
     private string GenerateThumbnailUrl(string videoUrl, int second = 1)
@@ -254,6 +323,47 @@ public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recomm
         return ApiResponse<string>.SuccessResponse(
             "View Recorded Successfully",
             HttpStatusCode.OK
+        );
+    }
+
+    public async Task<ApiResponse<int>> TrackReelShareAsync(string userId, int reelId)
+    {
+        var reel = await _unitOfWork.Repository<Reel>().GetByIdAsync(reelId);
+        if (reel == null)
+        {
+            return ApiResponse<int>.ErrorResponse(
+                HttpStatusCode.NotFound,
+                "Reel not found.",
+                "الريل غير موجود",
+                errors: new List<ValidationError>
+                {
+                    new ValidationError
+                    {
+                        Field = "reelId",
+                        En = "The provided reel ID does not exist.",
+                        Ar = "معرف الريل غير موجود."
+                    }
+                }
+            );
+        }
+
+        var newShare = new UserReelShare
+        {
+            UserId = userId,
+            ReelId = reelId
+        };
+
+        await _unitOfWork.Repository<UserReelShare>().AddAsync(newShare);
+        await _unitOfWork.SaveChangesAsync();
+
+        var shareCount = await _unitOfWork.Repository<UserReelShare>()
+            .CountAsync(new Specification<UserReelShare>(s => s.ReelId == reelId));
+
+        return ApiResponse<int>.SuccessResponse(
+            shareCount,
+            HttpStatusCode.OK,
+            en: "Share recorded successfully.",
+            ar: "تم تسجيل المشاركة بنجاح."
         );
     }
 

@@ -32,6 +32,7 @@ public class User : IdentityUser
     public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
     public ICollection<UserReelLike> UserReelLikes { get; set; } = new List<UserReelLike>();
     public ICollection<UserReelView> UserReelViews { get; set; } = new List<UserReelView>();
+    public ICollection<UserReelShare> UserReelShares { get; set; } = new List<UserReelShare>();
     public ICollection<ReelComment> ReelComments { get; set; } = new List<ReelComment>();
     public ICollection<ReelCommentLove> ReelCommentLoves { get; set; } = new List<ReelCommentLove>();
     public ICollection<ReelCommentReplyLove> reelCommentReplyLoves { get; set; }

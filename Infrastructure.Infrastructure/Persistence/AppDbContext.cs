@@ -85,6 +85,20 @@ public class AppDbContext :IdentityDbContext<User>
             .HasForeignKey(rc => rc.ReelId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        // UserReelShare - FK على Reel مع Cascade
+        modelBuilder.Entity<UserReelShare>()
+            .HasOne(s => s.Reel)
+            .WithMany(r => r.UserReelShares)
+            .HasForeignKey(s => s.ReelId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // UserReelShare - FK على User بدون Cascade
+        modelBuilder.Entity<UserReelShare>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.UserReelShares)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         // ReelComment - FK على User بدون Cascade
         modelBuilder.Entity<ReelComment>()
             .HasOne(rc => rc.User)
@@ -278,6 +292,7 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Reel> Reels { get; set; }
+    public DbSet<UserReelShare> UserReelShares { get; set; }
     public DbSet<ProductReview> Reviews { get; set; }
     public DbSet<UserInterest> UserInterests { get; set; }
     public DbSet<Interest> Interests { get; set; }

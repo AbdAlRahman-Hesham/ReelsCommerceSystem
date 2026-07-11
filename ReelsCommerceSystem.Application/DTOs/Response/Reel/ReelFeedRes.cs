@@ -15,6 +15,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.Reel
         public DateTime CreatedAt { get; set; }
         public int NumOfLikes { get; set; }
         public int NumOfWatches { get; set; }
+        public int NumOfShares { get; set; }
         public int NumOfComments { get; set; }
         public bool IsLiked { get; set; }
         public int BrandId { get; set; }

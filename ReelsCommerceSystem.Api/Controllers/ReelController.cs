@@ -24,6 +24,14 @@ public class ReelController(
         return StatusCode(response.StatusCode, response);
     }
 
+    [HttpGet("by-id/{reelId}")]
+    public async Task<IActionResult> GetReelById(int reelId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var response = await _reelService.GetReelByIdAsync(reelId, userId);
+        return StatusCode(response.StatusCode, response);
+    }
+
     [HttpGet("topbrands")]
     public async Task<IActionResult> GetTopBrands([FromQuery] int topN = 5)
     {
@@ -96,6 +104,17 @@ public class ReelController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
         var result = await _reelService.TrackReelViewAsync(userId, req);
+
+        return StatusCode(result.StatusCode, result);
+    }
+
+    [Authorize]
+    [HttpPost("track-share/{reelId}")]
+    public async Task<IActionResult> TrackReelShare(int reelId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+        var result = await _reelService.TrackReelShareAsync(userId, reelId);
 
         return StatusCode(result.StatusCode, result);
     }
