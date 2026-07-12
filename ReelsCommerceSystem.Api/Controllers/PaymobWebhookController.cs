@@ -32,7 +32,7 @@ public class PaymobWebhookController : AppBaseController
     }
 
 
-    [HttpPost("payment")]
+    [HttpGet("payment")]
     public async Task<IActionResult> HandlePayment(CancellationToken cancellationToken)
     {
         // Get HMAC from query string
