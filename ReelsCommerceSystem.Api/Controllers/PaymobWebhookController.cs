@@ -55,7 +55,7 @@ public class PaymobWebhookController : AppBaseController
         var isVoided = bool.Parse(query["is_voided"].ToString() ?? "false");
         var isRefunded = bool.Parse(query["is_refunded"].ToString() ?? "false");
         var is3dSecure = bool.Parse(query["is_3d_secure"].ToString() ?? "false");
-        var order = int.Parse(query["order"].ToString() ?? "0");
+        var paymobOrderId = int.Parse(query["order"].ToString() ?? "0");
         var owner = int.Parse(query["owner"].ToString() ?? "0");
         var createdAt = query["created_at"].ToString() ?? "";
         var currency = query["currency"].ToString() ?? "";
@@ -83,7 +83,7 @@ public class PaymobWebhookController : AppBaseController
             isRefunded.ToString().ToLower() +
             isStandalonePayment.ToString().ToLower() +
             isVoided.ToString().ToLower() +
-            order.ToString() +
+            paymobOrderId.ToString() +
             owner.ToString() +
             pending.ToString().ToLower() +
             sourceDataPan +
@@ -105,13 +105,9 @@ public class PaymobWebhookController : AppBaseController
         }
 
 
-        bool isSuccess = success;
-        bool isPending = pending;
-        bool isRefunded = isRefunded;
-        bool isCaptured = isCapture;
-        bool isVoided = isVoided;
-        long orderId = order;
+        long orderId = paymobOrderId;
         long transactionId = id;
+        bool isPending = pending;
 
 
 
