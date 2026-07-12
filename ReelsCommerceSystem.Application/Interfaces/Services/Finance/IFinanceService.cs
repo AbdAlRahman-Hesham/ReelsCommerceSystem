@@ -1,6 +1,7 @@
 using ReelsCommerceSystem.Application.DTOs.Common;
 using ReelsCommerceSystem.Application.DTOs.Request.Finance;
 using ReelsCommerceSystem.Application.DTOs.Response.Finance;
+using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Shared.Responses;
 
 namespace ReelsCommerceSystem.Application.Interfaces.Services.Finance;
@@ -26,6 +27,6 @@ public interface IFinanceService
     Task PayShippingSettlementsAsync(string adminId, PayShippingSettlementsReqDto request, string? ipAddress = null);
     Task<AdminPolicyDto> GetAdminPolicyAsync();
 
-    Task CalculateAndCreateSettlementsAsync(int orderId);
+    Task CalculateAndCreateSettlementsAsync(Order order);
     Task UpdateSettlementsOnDeliveryAsync(int orderId);
 }

@@ -161,7 +161,7 @@ public class PaymobWebhookController : AppBaseController
 
         if (order.PaymentStatus == PaymentStatus.Paid)
         {
-            await _financeService.CalculateAndCreateSettlementsAsync(order.Id);
+            await _financeService.CalculateAndCreateSettlementsAsync(order);
         }
 
         return Ok();

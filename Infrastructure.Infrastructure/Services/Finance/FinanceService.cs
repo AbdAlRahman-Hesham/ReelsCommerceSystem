@@ -50,20 +50,24 @@ public class FinanceService : IFinanceService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task CalculateAndCreateSettlementsAsync(int orderId)
+    public async Task CalculateAndCreateSettlementsAsync(Order order)
     {
-        var order = await _context.Orders
-            .Include(o => o.OrderProducts)
-            .FirstOrDefaultAsync(o => o.Id == orderId);
-
-        if (order == null)
-            throw new NotFoundException("Order not found");
-
         if (order.IsFinancialCalculated)
             return;
 
         if (order.PaymentStatus != PaymentStatus.Paid)
             return;
+
+        if (order.OrderProducts == null || !order.OrderProducts.Any())
+        {
+            var loaded = await _context.Entry(order)
+                .Collection(o => o.OrderProducts)
+                .Query()
+                .ToListAsync();
+
+            if (loaded == null || !loaded.Any())
+                return;
+        }
 
         var productSubtotal = order.OrderProducts.Sum(p => p.FinalPrice * p.Quantity);
 
@@ -77,8 +81,6 @@ public class FinanceService : IFinanceService
         order.ShippingCompanyAmount = shippingAmount;
         order.FinancialCalculatedAt = DateTime.UtcNow;
         order.IsFinancialCalculated = true;
-
-        _context.Orders.Update(order);
 
         var brandIds = order.OrderProducts
             .Select(p => p.BrandId)

@@ -254,7 +254,7 @@ public class OrderService : IOrderService
                 }
                 else if (order.PaymentStatus == PaymentStatus.Paid)
                 {
-                    await _financeService.CalculateAndCreateSettlementsAsync(order.Id);
+                    await _financeService.CalculateAndCreateSettlementsAsync(order);
                     await _financeService.UpdateSettlementsOnDeliveryAsync(order.Id);
                 }
 
@@ -289,7 +289,7 @@ public class OrderService : IOrderService
 
         if (result > 0)
         {
-            await _financeService.CalculateAndCreateSettlementsAsync(order.Id);
+            await _financeService.CalculateAndCreateSettlementsAsync(order);
 
             if (order.OrderStatus == OrderStatus.Delivered)
             {
