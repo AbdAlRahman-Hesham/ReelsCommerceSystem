@@ -7,7 +7,6 @@ using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
@@ -43,42 +42,54 @@ public class PaymobWebhookController : AppBaseController
             return BadRequest("Missing HMAC");
         }
 
-        Request.EnableBuffering();
+        var query = Request.Query;
+        
+        var id = long.Parse(query["id"].ToString() ?? "0");
+        var pending = bool.Parse(query["pending"].ToString() ?? "false");
+        var amountCents = long.Parse(query["amount_cents"].ToString() ?? "0");
+        var success = bool.Parse(query["success"].ToString() ?? "false");
+        var isSuccess = success;
+        var isAuth = bool.Parse(query["is_auth"].ToString() ?? "false");
+        var isCapture = bool.Parse(query["is_capture"].ToString() ?? "false");
+        var isStandalonePayment = bool.Parse(query["is_standalone_payment"].ToString() ?? "false");
+        var isVoided = bool.Parse(query["is_voided"].ToString() ?? "false");
+        var isRefunded = bool.Parse(query["is_refunded"].ToString() ?? "false");
+        var is3dSecure = bool.Parse(query["is_3d_secure"].ToString() ?? "false");
+        var order = int.Parse(query["order"].ToString() ?? "0");
+        var owner = int.Parse(query["owner"].ToString() ?? "0");
+        var createdAt = query["created_at"].ToString() ?? "";
+        var currency = query["currency"].ToString() ?? "";
+        var errorOccurred = bool.Parse(query["error_occured"].ToString() ?? "false");
+        var hasParentTransaction = bool.Parse(query["has_parent_transaction"].ToString() ?? "false");
+        var integrationId = long.Parse(query["integration_id"].ToString() ?? "0");
+        var profileId = long.Parse(query["profile_id"].ToString() ?? "0");
+        var sourceDataType = query["source_data.type"].ToString() ?? "";
+        var sourceDataPan = query["source_data.pan"].ToString() ?? "";
+        var sourceDataSubType = query["source_data.sub_type"].ToString() ?? "";
 
-        using var reader = new StreamReader(
-            Request.Body,
-            Encoding.UTF8,
-            leaveOpen: true);
-
-        var bodyContent = await reader.ReadToEndAsync(cancellationToken);
-        Request.Body.Position = 0;
-
-        var json = JsonDocument.Parse(bodyContent);
-        var obj = json.RootElement.GetProperty("obj");
-
-        // Build concatenated string in EXACT order from docs
+        // Build concatenated string in EXACT order from docs using query parameters
 
         var concatenatedString =
-            obj.GetProperty("amount_cents").GetInt64().ToString() +
-            obj.GetProperty("created_at").GetString() +
-            obj.GetProperty("currency").GetString() +
-            obj.GetProperty("error_occured").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("has_parent_transaction").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("id").GetInt64().ToString() +
-            obj.GetProperty("integration_id").GetInt64().ToString() +
-            obj.GetProperty("is_3d_secure").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("is_auth").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("is_capture").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("is_refunded").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("is_standalone_payment").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("is_voided").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("order").GetProperty("id").GetInt64().ToString() +
-            obj.GetProperty("owner").GetInt64().ToString() +
-            obj.GetProperty("pending").GetBoolean().ToString().ToLower() +
-            obj.GetProperty("source_data").GetProperty("pan").GetString() +
-            obj.GetProperty("source_data").GetProperty("sub_type").GetString() +
-            obj.GetProperty("source_data").GetProperty("type").GetString() +
-            obj.GetProperty("success").GetBoolean().ToString().ToLower();
+            amountCents.ToString() +
+            createdAt +
+            currency +
+            errorOccurred.ToString().ToLower() +
+            hasParentTransaction.ToString().ToLower() +
+            id.ToString() +
+            integrationId.ToString() +
+            is3dSecure.ToString().ToLower() +
+            isAuth.ToString().ToLower() +
+            isCapture.ToString().ToLower() +
+            isRefunded.ToString().ToLower() +
+            isStandalonePayment.ToString().ToLower() +
+            isVoided.ToString().ToLower() +
+            order.ToString() +
+            owner.ToString() +
+            pending.ToString().ToLower() +
+            sourceDataPan +
+            sourceDataSubType +
+            sourceDataType +
+            success.ToString().ToLower();
 
         //  Compute HMAC SHA512
         var secretBytes = Encoding.UTF8.GetBytes(_paymobHmacSecret);
@@ -93,13 +104,14 @@ public class PaymobWebhookController : AppBaseController
             return BadRequest("Invalid HMAC");
         }
 
-        bool isSuccess = obj.GetProperty("success").GetBoolean();
-        bool isPending = obj.GetProperty("pending").GetBoolean();
-        bool isRefunded = obj.GetProperty("is_refunded").GetBoolean();
-        bool isCaptured = obj.GetProperty("is_capture").GetBoolean();
-        bool isVoided = obj.GetProperty("is_voided").GetBoolean();
-        long orderId = obj.GetProperty("order").GetProperty("id").GetInt64();
-        long transactionId = obj.GetProperty("id").GetInt64();
+
+        bool isSuccess = success;
+        bool isPending = pending;
+        bool isRefunded = isRefunded;
+        bool isCaptured = isCapture;
+        bool isVoided = isVoided;
+        long orderId = order;
+        long transactionId = id;
 
 
 
