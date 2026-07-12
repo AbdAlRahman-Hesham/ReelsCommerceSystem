@@ -38,7 +38,7 @@ public class CartService : ICartService
         {
             var productSpc = new Specification<Product>(criteria: p=>p.Id == item.ProductId)
             {
-                Includes = [p => p.Category, p => p.Images]
+                Includes = [p => p.Category, p => p.Images, p => p.Brand]
             };
 
             var product = await _productRepo.GetWithSpecAsync(productSpc);
@@ -65,7 +65,10 @@ public class CartService : ICartService
                                 .ToList() ?? new List<string>(),
                     Quantity = item.Quantity,
                     Size = Enum.Parse<Domain.Enums.Size>(item.Size, true),
-                    Color = item.Color
+                    Color = item.Color,
+                    BrandId = product.BrandId,
+                    BrandName = product.Brand.DisplayName,
+                    BrandLogoUrl = product.Brand.LogoUrl
                 });
             }
         }
@@ -85,40 +88,59 @@ public class CartService : ICartService
                 ProductPrice = ci.Price,
                 Quantity = ci.Quantity,
                 Color = ci.Color ?? string.Empty,
-                Size = ci.Size.ToString()
+                Size = ci.Size.ToString(),
+                BrandId = ci.BrandId,
+                BrandName = ci.BrandName,
+                BrandLogoUrl = ci.BrandLogoUrl
             }).ToList()
         };
 
         return ApiResponse<CartRes>.SuccessResponse(cartRes, HttpStatusCode.OK, en: "Products added to cart successfully.", "تمت إضافة المنتجات إلى عربة التسوق بنجاح");
     }
 
-    public ApiResponse<CartRes> GetUserCart(string userId)
+    public ApiResponse<CartGroupedByBrandRes> GetUserCart(string userId)
     {
         var cart = _cartCache.GetCart(userId);
         if (cart == null || cart.ProductCarts == null || !cart.ProductCarts.Any())
-            return ApiResponse<CartRes>.ErrorResponse(
+            return ApiResponse<CartGroupedByBrandRes>.ErrorResponse(
                 HttpStatusCode.NotFound,
                 en: "Your cart is empty.",
                 ar: "عربة التسوق فارغة."
             );
 
-        var res = new CartRes
+        var cartItems = cart.ProductCarts.Select(ci => new CartItemRes
+        {
+            ProductId = ci.ProductId,
+            ProductName = ci.Name,
+            ProductMediaUrls = ci.MediaUrls.ToList(),
+            ProductPrice = ci.Price,
+            Quantity = ci.Quantity,
+            Color = ci.Color ?? string.Empty,
+            Size = ci.Size.ToString(),
+            BrandId = ci.BrandId,
+            BrandName = ci.BrandName,
+            BrandLogoUrl = ci.BrandLogoUrl
+        }).ToList();
+
+        var brandGroups = cartItems
+            .GroupBy(i => i.BrandId)
+            .Select(g => new CartBrandGroupRes
+            {
+                BrandId = g.Key,
+                BrandName = g.First().BrandName,
+                BrandLogoUrl = g.First().BrandLogoUrl,
+                Items = g.ToList()
+            })
+            .ToList();
+
+        var res = new CartGroupedByBrandRes
         {
             CartId = cart.Id,
             UserId = userId,
-            CartItems = cart.ProductCarts.Select(ci => new CartItemRes
-            {
-                ProductId = ci.ProductId,
-                ProductName = ci.Name,
-                ProductMediaUrls = ci.MediaUrls.ToList(),
-                ProductPrice = ci.Price,
-                Quantity = ci.Quantity,
-                Color = ci.Color ?? string.Empty,
-                Size = ci.Size.ToString()
-            }).ToList()
+            Brands = brandGroups
         };
 
-        return ApiResponse<CartRes>.SuccessResponse(res, HttpStatusCode.OK, en: "Cart fetched.", "تم جلب عربة التسوق");
+        return ApiResponse<CartGroupedByBrandRes>.SuccessResponse(res, HttpStatusCode.OK, en: "Cart fetched.", "تم جلب عربة التسوق");
     }
 
     public async Task<ApiResponse<CartRes>> UpdateCartAsync(string userId, UpdateCartReq updates)
@@ -142,7 +164,7 @@ public class CartService : ICartService
             {
                 var productSpc = new Specification<Product>(criteria: p => p.Id == update.ProductId)
                 {
-                    Includes = [p => p.Category, p => p.Images]
+                    Includes = [p => p.Category, p => p.Images, p => p.Brand]
                 };
 
                 var product = await _productRepo.GetWithSpecAsync(productSpc);
@@ -173,7 +195,9 @@ public class CartService : ICartService
                     Quantity = initialQuantity,
                     Color = update.Color,
                     Size = Enum.Parse<Domain.Enums.Size>(update.Size, true),
-                    
+                    BrandId = product.BrandId,
+                    BrandName = product.Brand.DisplayName,
+                    BrandLogoUrl = product.Brand.LogoUrl
                 });
             }
             else
@@ -205,7 +229,10 @@ public class CartService : ICartService
                 ProductPrice = ci.Price,
                 Quantity = ci.Quantity,
                 Color = ci.Color,
-                Size = ci.Size.ToString()
+                Size = ci.Size.ToString(),
+                BrandId = ci.BrandId,
+                BrandName = ci.BrandName,
+                BrandLogoUrl = ci.BrandLogoUrl
             }).ToList()
         };
 

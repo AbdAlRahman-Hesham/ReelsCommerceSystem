@@ -30,6 +30,14 @@ public class CartCacheService: ICartCacheService
     public void ClearCart(string userId)
     {
         _cache.Remove(GetCacheKey(userId));
+    }
 
+    public void ClearCartBrand(string userId, int brandId)
+    {
+        if (!_cache.TryGetValue(GetCacheKey(userId), out Cart cart) || cart == null)
+            return;
+
+        cart.ProductCarts = cart.ProductCarts.Where(p => p.BrandId != brandId).ToList();
+        SaveCart(userId, cart);
     }
 }

@@ -414,8 +414,25 @@ public class OrderService : IOrderService
                 }
             });
 
+        var filteredItems = request.BrandId.HasValue
+            ? cart.ProductCarts.Where(p => p.BrandId == request.BrandId.Value).ToList()
+            : cart.ProductCarts.ToList();
+
+        if (!filteredItems.Any())
+            throw new BadRequestException(new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Cart",
+                    En = "Cart is empty for selected brand",
+                    Ar = "عربة التسوق فارغة للعلامة التجارية المحددة"
+                }
+            });
+
+        var brandCart = new Cart { ProductCarts = filteredItems };
+
         var discountCode = await ResolveDiscountCodeAsync(request.DiscountCode);
-        var orderProducts = await BuildOrderProductsAsync(cart, discountCode?.DiscountValue);
+        var orderProducts = await BuildOrderProductsAsync(brandCart, discountCode?.DiscountValue);
         var subTotal = orderProducts.Sum(p => p.FinalPrice * p.Quantity);
         var shipping = CalculateShipping(request.DeliveryMethod);
         var discountAmount = subTotal > 0 ? orderProducts.Sum(p => p.AppliedDiscountCodeAmount * p.Quantity) : 0;
@@ -431,7 +448,10 @@ public class OrderService : IOrderService
             _unitOfWork.Repository<DiscountCode>().Update(discountCode);
         }
 
-        _cartCache.ClearCart(userId);
+        if (request.BrandId.HasValue)
+            _cartCache.ClearCartBrand(userId, request.BrandId.Value);
+        else
+            _cartCache.ClearCart(userId);
 
         await _unitOfWork.SaveChangesAsync();
 
@@ -448,19 +468,20 @@ public class OrderService : IOrderService
     {
         if (request.Address != null)
         {
+            var addr = request.Address;
             var address = new Address
             {
                 UserId = userId,
-                Name = request.Address.Name,
-                LastName = request.Address.ShippingLastName,
-                Postcode = request.Address.PostalCode,
-                Country = request.Address.Country,
-                City = request.Address.City,
-                Street = request.Address.Street,
-                PhoneNumber = request.Address.PhoneNumber,
-                Apartment = request.Address.ShippingApartment,
-                Floor = request.Address.ShippingFloor,
-                Building = request.Address.ShippingBuilding
+                Name = string.IsNullOrWhiteSpace(addr.Name) ? "N/A" : addr.Name,
+                LastName = string.IsNullOrWhiteSpace(addr.ShippingLastName) ? "N/A" : addr.ShippingLastName,
+                Postcode = string.IsNullOrWhiteSpace(addr.PostalCode) ? "N/A" : addr.PostalCode,
+                Country = string.IsNullOrWhiteSpace(addr.Country) ? "N/A" : addr.Country,
+                City = string.IsNullOrWhiteSpace(addr.City) ? "N/A" : addr.City,
+                Street = string.IsNullOrWhiteSpace(addr.Street) ? "N/A" : addr.Street,
+                PhoneNumber = string.IsNullOrWhiteSpace(addr.PhoneNumber) ? "N/A" : addr.PhoneNumber,
+                Apartment = string.IsNullOrWhiteSpace(addr.ShippingApartment) ? "N/A" : addr.ShippingApartment,
+                Floor = string.IsNullOrWhiteSpace(addr.ShippingFloor) ? "N/A" : addr.ShippingFloor,
+                Building = string.IsNullOrWhiteSpace(addr.ShippingBuilding) ? "N/A" : addr.ShippingBuilding
             };
 
             if (request.Address.SaveAddress)
@@ -661,8 +682,25 @@ public class OrderService : IOrderService
                 }
             });
 
+        var filteredItems = request.BrandId.HasValue
+            ? cart.ProductCarts.Where(p => p.BrandId == request.BrandId.Value).ToList()
+            : cart.ProductCarts.ToList();
+
+        if (!filteredItems.Any())
+            throw new BadRequestException(new List<ValidationError>
+            {
+                new ValidationError
+                {
+                    Field = "Cart",
+                    En = "Cart is empty for selected brand",
+                    Ar = "عربة التسوق فارغة للعلامة التجارية المحددة"
+                }
+            });
+
+        var brandCart = new Cart { ProductCarts = filteredItems };
+
         var discountCode = await ResolveDiscountCodeAsync(request.DiscountCode);
-        var orderProducts = await BuildOrderProductsAsync(cart, discountCode?.DiscountValue);
+        var orderProducts = await BuildOrderProductsAsync(brandCart, discountCode?.DiscountValue);
         var subTotal = orderProducts.Sum(p => p.FinalPrice * p.Quantity);
         var shipping = CalculateShipping(request.DeliveryMethod);
         var discountAmount = subTotal > 0 ? orderProducts.Sum(p => p.AppliedDiscountCodeAmount * p.Quantity) : 0;
