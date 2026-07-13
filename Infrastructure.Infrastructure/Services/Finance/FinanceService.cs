@@ -125,6 +125,10 @@ public class FinanceService : IFinanceService
             });
         }
 
+        var shippingCompanyExists = await _context.ShippingCompanies.AnyAsync(c => c.Id == 1);
+        if (!shippingCompanyExists)
+            throw new InvalidOperationException("Default shipping company (Id=1) not found. Seed the database or configure a shipping company.");
+
         var shippingSettlement = new ShippingSettlement
         {
             ShippingCompanyId = 1,
