@@ -64,6 +64,27 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 PublicId = result.PublicId
             };
         }
+        public async Task<PhotoUploadResult> UploadImageForCategoryAsync(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return null;
+
+            using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(file.FileName, stream),
+                Folder = "category-images"
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            return new PhotoUploadResult
+            {
+                Url = result.SecureUrl.ToString(),
+                PublicId = result.PublicId
+            };
+        }
         public async Task DeleteImageAsync(string publicId)
         {
             if (string.IsNullOrWhiteSpace(publicId))

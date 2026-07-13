@@ -22,7 +22,7 @@ public class UserRoleSeeding : IEntityTypeConfiguration<IdentityUserRole<string>
     {
         var records = new List<IdentityUserRole<string>>();
 
-        // Admins → Admin role + User role
+        // Admins → Admin + User + Brand Owner
         foreach (var adminId in _adminIds)
         {
             records.Add(new IdentityUserRole<string>
@@ -34,6 +34,11 @@ public class UserRoleSeeding : IEntityTypeConfiguration<IdentityUserRole<string>
             {
                 UserId = adminId,
                 RoleId = RoleSeeding.UserRoleId
+            });
+            records.Add(new IdentityUserRole<string>
+            {
+                UserId = adminId,
+                RoleId = RoleSeeding.BrandOwnerRoleId
             });
         }
 

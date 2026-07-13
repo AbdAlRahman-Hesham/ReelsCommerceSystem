@@ -14,6 +14,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services
         Task<PhotoUploadResult> UploadImageForProductAsync(IFormFile file);
         Task DeleteImageAsync(string publicId);
         Task<PhotoUploadResult> UploadImageForOfferAsync(IFormFile file);
+        Task<PhotoUploadResult> UploadImageForCategoryAsync(IFormFile file);
 
     }
 }

@@ -15,7 +15,7 @@ namespace ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding
     {
 
         private const string AdminPasswordHash =
-       "AQAAAAIAAYagAAAAEJ6h6JxGGP8vGPLjYiXfKFoLjmJKM0xMvlJCX5+2CfJxF7qbJhWGLmF5V2I0KZgQ==";
+       "AQAAAAEAACcQAAAAEIpyyMPcNeei3/WytkEumEu2aMbVRzav8jHAPUvwYnmuPbO9YJIpj1xMATiocNF4cQ==";
 
         private const string SecurityStamp = "STATIC-SECURITY-STAMP";
         private const string ConcurrencyStamp = "STATIC-CONCURRENCY-STAMP";
