@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.DTOs.Request.Brand;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -6,6 +7,7 @@ using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Persistence;
+using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
@@ -23,6 +25,83 @@ public class BrandService : IBrandService
     {
         _dbContext = dbContext;
         _unitOfWork = unitOfWork;
+    }
+
+    public async Task<ApiResponse<PaginationResponse<GetAllBrandsResponse>>> GetBrandsAsync(BrandSpecParams specParams, string? userId = null)
+    {
+        var brandRepo = _unitOfWork.Repository<Brand>();
+        var spec = new BrandListSpec(specParams);
+        var brands = await brandRepo.GetAllWithSpecAsync(spec);
+        var totalCount = await brandRepo.CountAsync(spec);
+
+        var currentPage = spec.PageIndex ?? 1;
+        var size = spec.PageSize ?? totalCount;
+        var totalPages = spec.GetTotalPages(totalCount);
+
+        var meta = new Meta
+        {
+            PageNumber = currentPage,
+            PageSize = size,
+            TotalRecords = totalCount,
+            HasPreviousPage = spec.HasPreviousPage(),
+            HasNextPage = spec.HasNextPage(totalCount)
+        };
+
+        var brandIds = brands.Select(b => b.Id).ToList();
+        var productCounts = await _dbContext.Products
+            .Where(p => brandIds.Contains(p.BrandId))
+            .GroupBy(p => p.BrandId)
+            .Select(g => new { BrandId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(g => g.BrandId, g => g.Count);
+
+        var followerCounts = await _dbContext.UserBrandFollows
+            .Where(f => brandIds.Contains(f.BrandId))
+            .GroupBy(f => f.BrandId)
+            .Select(g => new { BrandId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(g => g.BrandId, g => g.Count);
+
+        var followedBrandIds = new HashSet<int>();
+        if (!string.IsNullOrEmpty(userId))
+        {
+            followedBrandIds = await _dbContext.UserBrandFollows
+                .Where(f => f.UserId == userId && brandIds.Contains(f.BrandId))
+                .Select(f => f.BrandId)
+                .ToHashSetAsync();
+        }
+
+        var brandDtos = brands.Select(b => new GetAllBrandsResponse
+        {
+            Id = b.Id,
+            DisplayName = b.DisplayName,
+            Description = b.Description,
+            LogoUrl = b.LogoUrl,
+            CoverImageUrl = b.CoverImageUrl,
+            Category = b.Category,
+            AverageRating = b.AverageRating,
+            NumOfReviews = b.NumOfReviews,
+            ProductCount = productCounts.GetValueOrDefault(b.Id, 0),
+            FollowersCount = followerCounts.GetValueOrDefault(b.Id, 0),
+            IsFollowedByMe = followedBrandIds.Contains(b.Id)
+        }).ToList();
+
+        return PaginationResponse<GetAllBrandsResponse>.SuccessResponse(
+            data: brandDtos,
+            meta: meta,
+            statusCode: HttpStatusCode.OK
+        );
+    }
+
+    public async Task<ApiResponse<List<string>>> GetBrandCategoriesAsync()
+    {
+        var categories = await _dbContext.Brands
+            .AsNoTracking()
+            .Where(b => b.Status == BrandStatus.APPROVED)
+            .Select(b => b.Category)
+            .Distinct()
+            .OrderBy(c => c)
+            .ToListAsync();
+
+        return ApiResponse<List<string>>.SuccessResponse(categories, HttpStatusCode.OK);
     }
 
 

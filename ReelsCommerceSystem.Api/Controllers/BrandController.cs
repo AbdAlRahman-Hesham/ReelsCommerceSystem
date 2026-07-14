@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.DTOs.Request.Brand;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
@@ -15,6 +16,21 @@ namespace ReelsCommerceSystem.Api.Controllers;
 
 public class BrandController (IBrandService _brandService, IGenericRepository<BrandReview> _brandReviewRepository) : AppBaseController
 {
+    [HttpGet]
+    public async Task<IActionResult> GetBrands([FromQuery] BrandSpecParams specParams)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var response = await _brandService.GetBrandsAsync(specParams, userId);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet("categories")]
+    public async Task<IActionResult> GetBrandCategories()
+    {
+        var response = await _brandService.GetBrandCategoriesAsync();
+        return StatusCode(response.StatusCode, response);
+    }
+
     [HttpGet("BrandPolicy")]
     public async Task<IActionResult> GetBrandPolicy([FromQuery]int id)
     {
