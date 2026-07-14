@@ -17,7 +17,6 @@ public class PaymobWebhookController : AppBaseController
     private readonly INotificationService _notificationService;
     private readonly IFinanceService _financeService;
     private readonly string _paymobHmacSecret;
-    private readonly string _redirectUrl;
 
     public PaymobWebhookController(IUnitOfWork unitOfWork, IConfiguration config, ILogger<PaymobWebhookController> logger, INotificationService notificationService, IFinanceService financeService)
     {
@@ -25,7 +24,6 @@ public class PaymobWebhookController : AppBaseController
         _logger = logger;
         _notificationService = notificationService;
         _paymobHmacSecret = config["PaymobSettings:HmacSecret"]!;
-        _redirectUrl = config["PaymobSettings:RedirectUrl"]!;
         _financeService = financeService;
     }
 
@@ -172,12 +170,6 @@ public class PaymobWebhookController : AppBaseController
             _logger.LogError(ex, "Unexpected error in HandlePayment webhook");
             return Content(PaymentPageHtml("error", 0, 0, 0, "An unexpected error occurred. Please try again later."), "text/html");
         }
-    }
-
-    [HttpGet("redirect")]
-    public IActionResult HandleRedirect()
-    {
-        return Redirect(_redirectUrl);
     }
 
     private static string PaymentPageHtml(string status, long orderId, long transactionId, decimal amount, string? customMessage = null)
@@ -424,6 +416,47 @@ public class PaymobWebhookController : AppBaseController
         </div>" : "")}
 
     </div>
+
+    <script>
+        function handleAction() {{
+            if (window.opener && !window.opener.closed) {{
+                window.opener.postMessage({{
+                    type: 'PAYMENT_RESULT',
+                    status: '{status}',
+                    url: window.location.href,
+                    orderId: {orderId},
+                    transactionId: {transactionId},
+                    amount: {amount}
+                }}, '*');
+                setTimeout(function() {{ window.close(); }}, 300);
+            }} else if (window.parent && window.parent !== window) {{
+                window.parent.postMessage({{
+                    type: 'PAYMENT_RESULT',
+                    status: '{status}',
+                    url: window.location.href,
+                    orderId: {orderId},
+                    transactionId: {transactionId},
+                    amount: {amount}
+                }}, '*');
+            }} else {{
+                window.location.href = '{(status == "success" ? "/" : "/checkout")}';
+            }}
+        }}
+
+        // Auto-notify if loaded in a popup window
+        (function() {{
+            if (window.opener && !window.opener.closed) {{
+                window.opener.postMessage({{
+                    type: 'PAYMENT_RESULT',
+                    status: '{status}',
+                    url: window.location.href,
+                    orderId: {orderId},
+                    transactionId: {transactionId},
+                    amount: {amount}
+                }}, '*');
+            }}
+        }})();
+    </script>
 </body>
 </html>";
     }
