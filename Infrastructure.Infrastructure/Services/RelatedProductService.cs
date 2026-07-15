@@ -55,7 +55,7 @@ public class RelatedProductService : IRelatedProductService
                p.Id != currentProductId,pageIndex:1, pageSize:take)
         {
             
-            Includes = { p => p.Category }
+            Includes = { p => p.Category, p => p.Images }
         };
         
         
