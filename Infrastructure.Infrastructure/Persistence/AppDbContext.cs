@@ -188,6 +188,10 @@ public class AppDbContext :IdentityDbContext<User>
             .HasIndex(r => new { r.BrandId, r.UserId })
             .IsUnique();
 
+        modelBuilder.Entity<ProductReview>()
+            .HasIndex(r => new { r.ProductId, r.UserId })
+            .IsUnique();
+
 
         modelBuilder.Entity<Notification>()
               .HasOne(n => n.User)
@@ -297,6 +301,8 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<UserInterest> UserInterests { get; set; }
     public DbSet<Interest> Interests { get; set; }
     public DbSet<BrandReviewLike> BrandReviewLikes { get; set; }
+    public DbSet<ProductReviewLike> ProductReviewLikes { get; set; }
+    public DbSet<ProductReviewDislike> ProductReviewDislikes { get; set; }
     public DbSet<UserBrandFollow> UserBrandFollows { get; set; }
     public DbSet<WishlistItem> WishlistItems { get; set; }
 

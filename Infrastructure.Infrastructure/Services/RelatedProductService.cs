@@ -68,7 +68,12 @@ public class RelatedProductService : IRelatedProductService
         {
             Id = p.Id,
             PictureUrl = p.Images?
-                        .Select(i => $"{host.TrimEnd('/')}/{i.Url.TrimStart('/')}")
+                        .Select(i => i.Url)
+                        .Where(i => !string.IsNullOrWhiteSpace(i))
+                        .Select(i => Uri.TryCreate(i, UriKind.Absolute, out var uri)
+                            && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
+                            ? i
+                            : $"{host.TrimEnd('/')}/{i.TrimStart('/')}")
                         .FirstOrDefault(),
             Name = p.Name,
             Price = p.Price,
