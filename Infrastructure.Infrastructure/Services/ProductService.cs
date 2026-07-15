@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using ReelsCommerceSystem.Application.DTOs.Params;
+using ReelsCommerceSystem.Application.DTOs.Request.Product;
 using ReelsCommerceSystem.Application.DTOs.Response.Product;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -27,6 +28,7 @@ public class ProductService(
 
 ) : IProductService
 {
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IGenericRepository<Product> _productRepository = unitOfWork.Repository<Product>();
     private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(10);
    
@@ -463,6 +465,154 @@ public class ProductService(
                $"sortOrder={p.SortOrder ?? ""};" +
                $"pageIndex={p.PageIndex ?? 1};" +
                $"pageSize={p.PageSize ?? 10};";
+    }
+
+    #endregion
+
+    #region Product Reviews
+
+    public async Task<ApiResponse<string>> AddOrUpdateProductReview(int productId, string userId, ProductReviewReq dto)
+    {
+        var product = await _unitOfWork.Repository<Product>().GetByIdAsync(productId);
+        if (product == null)
+        {
+            return ApiResponse<string>.ErrorResponse(HttpStatusCode.NotFound, "Product not found.", "المنتج غير موجود.");
+        }
+
+        var existingReview = await _unitOfWork.Repository<ProductReview>().GetWithSpecAsync(new ProductReviewByUserSpec(productId, userId));
+
+        HttpStatusCode statusCode;
+        string enMessage;
+        string arMessage;
+
+        if (existingReview == null)
+        {
+            var review = new ProductReview
+            {
+                ProductId = productId,
+                UserId = userId,
+                Rating = dto.Rating,
+                Comment = dto.Comment
+            };
+
+            await _unitOfWork.Repository<ProductReview>().AddAsync(review);
+
+            product.AverageRating = (product.AverageRating * product.NumOfReviews + dto.Rating) / (product.NumOfReviews + 1);
+            product.NumOfReviews += 1;
+
+            statusCode = HttpStatusCode.Created;
+            enMessage = "Review added successfully.";
+            arMessage = "تم إضافة التقييم بنجاح.";
+        }
+        else
+        {
+            int oldRating = existingReview.Rating;
+            existingReview.Rating = dto.Rating;
+            existingReview.Comment = dto.Comment;
+
+            _unitOfWork.Repository<ProductReview>().Update(existingReview);
+
+            product.AverageRating = (product.AverageRating * product.NumOfReviews - oldRating + dto.Rating) / product.NumOfReviews;
+
+            statusCode = HttpStatusCode.OK;
+            enMessage = "Review updated successfully.";
+            arMessage = "تم تعديل التقييم بنجاح.";
+        }
+
+        _unitOfWork.Repository<Product>().Update(product);
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse<string>.SuccessResponse("Success", statusCode, enMessage, arMessage);
+    }
+
+    public async Task<ProductToggleLikeRes> ProductReviewLikeAsync(string userId, ProductToggleLikeReq req)
+    {
+        var review = await _unitOfWork.Repository<ProductReview>().GetByIdAsync(req.ReviewId);
+        if (review == null)
+            throw new Exception("Review not found.");
+
+        var reviewLike = await _unitOfWork.Repository<ProductReviewLike>().GetWithSpecAsync(new ProductReviewLikeSpec(userId, req));
+
+        bool isLiked;
+
+        if (reviewLike == null)
+        {
+            var newLike = new ProductReviewLike
+            {
+                ReviewId = req.ReviewId,
+                UserId = userId
+            };
+
+            await _unitOfWork.Repository<ProductReviewLike>().AddAsync(newLike);
+            review.NumOfLikes += 1;
+            isLiked = true;
+        }
+        else
+        {
+            _unitOfWork.Repository<ProductReviewLike>().Delete(reviewLike);
+            review.NumOfLikes = Math.Max(0, review.NumOfLikes - 1);
+            isLiked = false;
+        }
+
+        _unitOfWork.Repository<ProductReview>().Update(review);
+        await _unitOfWork.SaveChangesAsync();
+
+        return new ProductToggleLikeRes
+        {
+            ReviewId = req.ReviewId,
+            IsLiked = isLiked,
+            TotalLikes = review.NumOfLikes
+        };
+    }
+
+    public async Task<ProductToggleDislikeRes> ProductReviewDislikeAsync(string userId, ProductToggleDislikeReq req)
+    {
+        var review = await _unitOfWork.Repository<ProductReview>().GetByIdAsync(req.ReviewId);
+        if (review == null)
+            throw new Exception("Review not found.");
+
+        var reviewDislike = await _unitOfWork.Repository<ProductReviewDislike>().GetWithSpecAsync(new ProductReviewDislikeSpec(userId, req));
+
+        bool isDisliked;
+
+        if (reviewDislike == null)
+        {
+            var newDislike = new ProductReviewDislike
+            {
+                ReviewId = req.ReviewId,
+                UserId = userId
+            };
+
+            await _unitOfWork.Repository<ProductReviewDislike>().AddAsync(newDislike);
+            review.NumOfDislikes += 1;
+            isDisliked = true;
+        }
+        else
+        {
+            _unitOfWork.Repository<ProductReviewDislike>().Delete(reviewDislike);
+            review.NumOfDislikes = Math.Max(0, review.NumOfDislikes - 1);
+            isDisliked = false;
+        }
+
+        _unitOfWork.Repository<ProductReview>().Update(review);
+        await _unitOfWork.SaveChangesAsync();
+
+        return new ProductToggleDislikeRes
+        {
+            ReviewId = req.ReviewId,
+            IsDisliked = isDisliked,
+            TotalDislikes = review.NumOfDislikes
+        };
+    }
+
+    public async Task<ApiResponse<double>> GetProductAverageRating(int productId)
+    {
+        var product = await _unitOfWork.Repository<Product>().GetByIdAsync(productId);
+        if (product == null)
+            return ApiResponse<double>.ErrorResponse(HttpStatusCode.NotFound, "Product not found.", "المنتج غير موجود.");
+
+        double avg = product.NumOfReviews > 0 ? product.AverageRating : 0;
+        return ApiResponse<double>.SuccessResponse(avg, HttpStatusCode.OK);
     }
 
     #endregion

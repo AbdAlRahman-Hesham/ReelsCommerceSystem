@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.DTOs.Request.Product;
 using ReelsCommerceSystem.Application.DTOs.Response.Product;
@@ -8,6 +10,7 @@ using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.Products;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ProductSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Shared.Responses;
@@ -26,13 +29,17 @@ namespace ReelsCommerceSystem.Infrastructure.Services
         private readonly IPhotoServive _photoServive;
         private readonly UserManager<User> _userManager;
         private readonly ITranslationService _translationService;
+        private readonly IMemoryCache _memoryCache;
+        private readonly AppDbContext _dbContext;
 
-        public BrandProductService(IUnitOfWork unitOfWork, IPhotoServive photoServive, UserManager<User> userManager, ITranslationService translationService)
+        public BrandProductService(IUnitOfWork unitOfWork, IPhotoServive photoServive, UserManager<User> userManager, ITranslationService translationService, IMemoryCache memoryCache, AppDbContext dbContext)
         {
             _unitOfWork = unitOfWork;
             _photoServive = photoServive;
             _userManager = userManager;
             _translationService = translationService;
+            _memoryCache = memoryCache;
+            _dbContext = dbContext;
         }
 
         public async Task<ApiResponse<int>> AddProductAsync(AddBrandProductReq request, string userId)
@@ -180,6 +187,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             await _unitOfWork.SaveChangesAsync();
 
+            _memoryCache.Remove($"product:{product.Id}");
+
             return ApiResponse<int>.SuccessResponse(
                 product.Id,
                 HttpStatusCode.Created,
@@ -217,6 +226,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             await _unitOfWork.SaveChangesAsync();
 
+            _memoryCache.Remove($"product:{productId}");
+
             return ApiResponse<bool>.SuccessResponse(
                 true,
                 HttpStatusCode.OK,
@@ -249,6 +260,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             imageRepo.Delete(image);
 
             await _unitOfWork.SaveChangesAsync();
+
+            _memoryCache.Remove($"product:{productId}");
 
             return ApiResponse<bool>.SuccessResponse(
                 true,
@@ -290,6 +303,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             productRepo.Delete(product);
 
             await _unitOfWork.SaveChangesAsync();
+
+            _memoryCache.Remove($"product:{productId}");
 
             return ApiResponse<bool>.SuccessResponse(
                 true,
@@ -387,6 +402,17 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             // ================= COLORS + SIZES =================
             if (request.Colors != null)
             {
+                var oldColors = product.AvailableColors.ToList();
+                foreach (var oldColor in oldColors)
+                {
+                    var oldSizes = oldColor.AvailableSizes.ToList();
+                    foreach (var oldSize in oldSizes)
+                    {
+                        _dbContext.Set<ProductSizeMapping>().Remove(oldSize);
+                    }
+                    _dbContext.Set<ProductColorMapping>().Remove(oldColor);
+                }
+
                 product.AvailableColors.Clear();
 
                 foreach (var color in request.Colors)
@@ -414,6 +440,12 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             // ================= PRODUCT INFORMATIONS =================
             if (request.Informations != null)
             {
+                var oldInfos = product.ProductInformations.ToList();
+                foreach (var oldInfo in oldInfos)
+                {
+                    _dbContext.Set<ProductInformation>().Remove(oldInfo);
+                }
+
                 product.ProductInformations.Clear();
 
                 foreach (var info in request.Informations)
@@ -488,6 +520,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             // ================= SAVE =================
             productRepo.Update(product);
             await _unitOfWork.SaveChangesAsync();
+
+            _memoryCache.Remove($"product:{request.ProductId}");
 
             return ApiResponse<bool>.SuccessResponse(
                 true,
