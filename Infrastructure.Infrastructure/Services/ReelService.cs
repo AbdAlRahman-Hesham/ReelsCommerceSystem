@@ -63,9 +63,10 @@ public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recomm
                 NumOfLikes=reel.NumOfLikes,
                 NumOfWatches=reel.NumOfWatches,
                 NumOfShares=reel.NumOfShares,
+                IsLiked= userId is not null && reel.UserReelLikes.Any(l => l.UserId == userId),
                 CreatedAt=reel.CreatedAt,
                 VideoUrl=reel.VideoUrl,
-                Title=reel.Title//////////
+                Title=reel.Title
 
             };
             AllReels.Add(result);
@@ -116,7 +117,9 @@ public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recomm
         var result = new ReelFeedRes
         {
             ReelId = reel.Id,
+            Title = reel.Title,
             VideoUrl = reel.VideoUrl,
+            ThumbnailUrl = reel.ThumbnailUrl ?? GenerateThumbnailUrl(reel.VideoUrl),
             CreatedAt = reel.CreatedAt,
             NumOfLikes = reel.NumOfLikes,
             NumOfWatches = reel.NumOfWatches,

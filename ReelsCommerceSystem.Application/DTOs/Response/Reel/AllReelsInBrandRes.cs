@@ -9,6 +9,7 @@ public class AllReelsInBrandRes
     public int NumOfWatches { get; set; }
     public int NumOfLikes { get; set; }
     public int NumOfShares { get; set; }
+    public bool IsLiked { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public string VideoUrl { get; set; } = null!;
 
