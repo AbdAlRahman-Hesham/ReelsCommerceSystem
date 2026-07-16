@@ -724,4 +724,29 @@ public class FinanceService : IFinanceService
             CreatedAt = s.CreatedAt
         };
     }
+
+    public async Task<PagedResult<FinancialAuditLogDto>> GetAuditLogsAsync(AuditLogFilterDto filter)
+    {
+        var (items, totalCount) = await _auditLogRepo.GetPagedAsync(filter);
+
+        return new PagedResult<FinancialAuditLogDto>
+        {
+            Items = items.Select(x => new FinancialAuditLogDto
+            {
+                Id = x.Id,
+                Action = x.Action,
+                EntityType = x.EntityType,
+                EntityId = x.EntityId,
+                OldValues = x.OldValues,
+                NewValues = x.NewValues,
+                PerformedBy = x.PerformedBy,
+                IpAddress = x.IpAddress,
+                Notes = x.Notes,
+                CreatedAt = x.CreatedAt
+            }).ToList(),
+            TotalCount = totalCount,
+            PageIndex = filter.PageIndex,
+            PageSize = filter.PageSize
+        };
+    }
 }

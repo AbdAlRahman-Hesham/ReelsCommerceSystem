@@ -26,6 +26,7 @@ public interface IFinanceService
     Task PayBrandSettlementsAsync(string adminId, PayBrandSettlementsReqDto request, string? ipAddress = null);
     Task PayShippingSettlementsAsync(string adminId, PayShippingSettlementsReqDto request, string? ipAddress = null);
     Task<AdminPolicyDto> GetAdminPolicyAsync();
+    Task<PagedResult<FinancialAuditLogDto>> GetAuditLogsAsync(AuditLogFilterDto filter);
 
     Task CalculateAndCreateSettlementsAsync(Order order);
     Task UpdateSettlementsOnDeliveryAsync(int orderId);

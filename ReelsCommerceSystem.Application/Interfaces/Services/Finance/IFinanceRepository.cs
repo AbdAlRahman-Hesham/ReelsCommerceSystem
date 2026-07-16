@@ -7,6 +7,7 @@ namespace ReelsCommerceSystem.Application.Interfaces.Services.Finance;
 public interface IFinancialAuditLogRepository
 {
     Task AddAsync(FinancialAuditLog log);
+    Task<(List<FinancialAuditLog> Items, int TotalCount)> GetPagedAsync(AuditLogFilterDto filter);
 }
 
 public interface IBrandSettlementRepository

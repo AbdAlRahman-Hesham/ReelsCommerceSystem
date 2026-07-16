@@ -10,6 +10,7 @@ using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
 using ReelsCommerceSystem.Infrastructure.UnitOfWorks;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             var reelsResult = reels.Select(r => new ReelFeedRes
             {
                 ReelId = r.Id,
+                Title = r.Title,
                 VideoUrl = r.VideoUrl,
+                ThumbnailUrl = r.ThumbnailUrl ?? FileHelper.GenerateThumbnailUrl(r.VideoUrl),
                 CreatedAt = r.CreatedAt,
                 NumOfLikes = r.NumOfLikes,
                 NumOfWatches = r.NumOfWatches,
@@ -144,7 +147,9 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             var reelsResult = reels.Select(r => new ReelFeedRes
             {
                 ReelId = r.Id,
+                Title = r.Title,
                 VideoUrl = r.VideoUrl,
+                ThumbnailUrl = r.ThumbnailUrl ?? FileHelper.GenerateThumbnailUrl(r.VideoUrl),
                 CreatedAt = r.CreatedAt,
                 NumOfLikes = r.NumOfLikes,
                 NumOfWatches = r.NumOfWatches,
