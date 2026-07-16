@@ -80,4 +80,11 @@ public class AdminFinanceController : AppBaseController
         var data = await _financeService.GetAdminPolicyAsync();
         return Ok(ApiResponse<object>.SuccessResponse(data, HttpStatusCode.OK));
     }
+
+    [HttpGet("audit-logs")]
+    public async Task<IActionResult> GetAuditLogs([FromQuery] AuditLogFilterDto filter)
+    {
+        var data = await _financeService.GetAuditLogsAsync(filter);
+        return Ok(ApiResponse<object>.SuccessResponse(data, HttpStatusCode.OK));
+    }
 }
