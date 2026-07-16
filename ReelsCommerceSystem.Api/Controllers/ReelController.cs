@@ -61,11 +61,10 @@ public class ReelController(
         return StatusCode(response.StatusCode, response);
     }
 
-    [Authorize]
     [HttpGet("forYou")]
     public async Task<IActionResult> GetForYou([FromQuery] int pageIndex = 1, int pageSize = 10)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         var reels = await _reelFeedService.ReelsWithRecommendationSystemAsync(userId, pageIndex, pageSize);
 

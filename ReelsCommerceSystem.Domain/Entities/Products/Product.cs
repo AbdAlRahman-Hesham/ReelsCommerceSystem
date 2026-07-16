@@ -7,6 +7,7 @@ using ReelsCommerceSystem.Domain.Entities.Products;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReelsCommerceSystem.Domain.Entities.ProductEntites;
 
@@ -35,10 +36,12 @@ public class Product : BaseEntity
     public int CategoryId { get; set; }
     public ProductCategory Category { get; set; }
 
+    [NotMapped]
+    public double AverageRating { get; set; } = 0;
+    [NotMapped]
+    public int NumOfReviews { get; set; } = 0;
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
-    public double AverageRating { get; set; } = 0;
-    public int NumOfReviews { get; set; } = 0;
     public ICollection<ProductReels> ProductReels { get; set; } = new List<ProductReels>();
     public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
 
