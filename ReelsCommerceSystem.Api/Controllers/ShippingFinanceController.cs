@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Application.DTOs.Request.Finance;
 using ReelsCommerceSystem.Application.Interfaces.Services.Finance;
 using ReelsCommerceSystem.Infrastructure.Persistence;
+using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
 using ReelsCommerceSystem.Shared.Utilities;
 using System.Net;
@@ -25,10 +26,10 @@ public class ShippingFinanceController : AppBaseController
     private async Task<int> GetCurrentShippingCompanyIdAsync()
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null) throw new UnauthorizedAccessException();
+        if (userId == null) throw new UnauthorizedException("User is not authenticated");
 
         var company = _context.ShippingCompanies.FirstOrDefault(c => c.UserId == userId);
-        return company?.Id ?? throw new UnauthorizedAccessException("User is not associated with a shipping company");
+        return company?.Id ?? throw new UnauthorizedException("User is not associated with a shipping company");
     }
 
     [HttpGet("summary")]

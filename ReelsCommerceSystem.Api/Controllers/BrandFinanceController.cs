@@ -4,6 +4,7 @@ using ReelsCommerceSystem.Application.DTOs.Request.Finance;
 using ReelsCommerceSystem.Application.Interfaces.Services.Finance;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Infrastructure.Persistence;
+using ReelsCommerceSystem.Shared.Exceptions;
 using ReelsCommerceSystem.Shared.Responses;
 using ReelsCommerceSystem.Shared.Utilities;
 using System.Net;
@@ -26,10 +27,10 @@ public class BrandFinanceController : AppBaseController
     private async Task<int> GetCurrentBrandIdAsync()
     {
         var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (userId == null) throw new UnauthorizedAccessException();
+        if (userId == null) throw new UnauthorizedException("User is not authenticated");
 
         var brandEntity = await Task.FromResult(_context.Brands.FirstOrDefault(b => b.UserId == userId));
-        return brandEntity?.Id ?? throw new UnauthorizedAccessException("User is not associated with a brand");
+        return brandEntity?.Id ?? throw new UnauthorizedException("User is not associated with a brand");
     }
 
     [HttpGet("summary")]
