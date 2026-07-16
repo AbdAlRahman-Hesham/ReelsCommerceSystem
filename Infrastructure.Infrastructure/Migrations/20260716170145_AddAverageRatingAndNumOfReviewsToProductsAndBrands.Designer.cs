@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ReelsCommerceSystem.Infrastructure.Persistence;
 namespace ReelsCommerceSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260716170145_AddAverageRatingAndNumOfReviewsToProductsAndBrands")]
+    partial class AddAverageRatingAndNumOfReviewsToProductsAndBrands
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2366,7 +2369,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(125),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 401, DateTimeKind.Utc).AddTicks(8897),
                             Description = "Breathable organic cotton tee for everyday comfort.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -2374,7 +2377,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 180.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(127)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 401, DateTimeKind.Utc).AddTicks(8902)
                         },
                         new
                         {
@@ -2382,7 +2385,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2719),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2109),
                             Description = "Stylish recycled denim jacket for a sustainable look.",
                             DiscountPercentage = 20m,
                             IsCustomizable = true,
@@ -2390,7 +2393,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 420.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2720)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2110)
                         },
                         new
                         {
@@ -2398,7 +2401,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 1,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2725),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2149),
                             Description = "Lightweight sneakers made from recycled fibers.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -2406,7 +2409,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 360.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2725)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2149)
                         },
                         new
                         {
@@ -2414,7 +2417,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2729),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2153),
                             Description = "Soft hoodie crafted from sustainable bamboo fabric.",
                             DiscountPercentage = 40m,
                             IsCustomizable = true,
@@ -2422,7 +2425,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 280.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2729)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2153)
                         },
                         new
                         {
@@ -2430,14 +2433,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 1,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2732),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2158),
                             Description = "Eco-friendly tote bag with minimalist design.",
                             IsCustomizable = false,
                             Name = "ReLeaf Tote Bag",
                             NumOfReviews = 0,
                             Price = 150.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2732)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2159)
                         },
                         new
                         {
@@ -2445,14 +2448,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 1,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2735),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2162),
                             Description = "Comfortable pants made from recycled polyester.",
                             IsCustomizable = false,
                             Name = "NatureFlow Pants",
                             NumOfReviews = 0,
                             Price = 310.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2735)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2162)
                         },
                         new
                         {
@@ -2460,7 +2463,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 2,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2738),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2191),
                             Description = "Fast-charging braided USB-C cable with smart chip.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -2468,7 +2471,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 180.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2738)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2191)
                         },
                         new
                         {
@@ -2476,7 +2479,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 2,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2741),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2194),
                             Description = "Multi-device charging dock with wireless pad.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -2484,7 +2487,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 420.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2741)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2195)
                         },
                         new
                         {
@@ -2492,7 +2495,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 2,
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2744),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2198),
                             Description = "Noise-cancelling Bluetooth earbuds with 24h battery.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -2500,7 +2503,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 540.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2744)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2199)
                         },
                         new
                         {
@@ -2508,7 +2511,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 2,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2747),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2202),
                             Description = "Smart magnetic car mount with auto-lock system.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -2516,7 +2519,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 190.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2747)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2202)
                         },
                         new
                         {
@@ -2524,14 +2527,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 2,
                             CategoryId = 6,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2750),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2206),
                             Description = "Fitness smartwatch with heart-rate and sleep tracking.",
                             IsCustomizable = false,
                             Name = "PulseTrack Watch",
                             NumOfReviews = 0,
                             Price = 690.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2750)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2206)
                         },
                         new
                         {
@@ -2539,14 +2542,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 2,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2753),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2209),
                             Description = "MagSafe-compatible slim phone case.",
                             IsCustomizable = false,
                             Name = "GlideCase",
                             NumOfReviews = 0,
                             Price = 160.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2753)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2210)
                         },
                         new
                         {
@@ -2554,7 +2557,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2785),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2212),
                             Description = "Vitamin C serum that brightens and smooths skin.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -2562,7 +2565,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 250.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2785)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2213)
                         },
                         new
                         {
@@ -2570,7 +2573,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2788),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2237),
                             Description = "Gentle cleanser with aloe and green tea.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -2578,7 +2581,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 180.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2789)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2238)
                         },
                         new
                         {
@@ -2586,7 +2589,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2804),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2241),
                             Description = "Hydrating toner that refines pores naturally.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -2594,7 +2597,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 210.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2805)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2241)
                         },
                         new
                         {
@@ -2602,7 +2605,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2808),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2245),
                             Description = "Rich moisturizer for overnight skin repair.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -2610,7 +2613,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 330.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2808)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2245)
                         },
                         new
                         {
@@ -2618,14 +2621,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2811),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2248),
                             Description = "SPF 50 mineral sunscreen with lightweight feel.",
                             IsCustomizable = false,
                             Name = "GlowShield Sunscreen",
                             NumOfReviews = 0,
                             Price = 290.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2811)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2249)
                         },
                         new
                         {
@@ -2633,14 +2636,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 3,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2813),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2251),
                             Description = "All-day hydration for sensitive skin.",
                             IsCustomizable = false,
                             Name = "SilkTouch Moisturizer",
                             NumOfReviews = 0,
                             Price = 270.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2814)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2252)
                         },
                         new
                         {
@@ -2648,7 +2651,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2816),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2254),
                             Description = "Oversized hoodie with minimalist street-style logo.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -2656,7 +2659,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 320.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2817)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2255)
                         },
                         new
                         {
@@ -2664,7 +2667,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2819),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2258),
                             Description = "Slim-fit joggers for comfort and performance.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -2672,7 +2675,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 270.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2820)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2259)
                         },
                         new
                         {
@@ -2680,7 +2683,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 4,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2823),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2262),
                             Description = "Modern street sneakers with breathable mesh upper.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -2688,7 +2691,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 540.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2823)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2262)
                         },
                         new
                         {
@@ -2696,7 +2699,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 4,
                             CategoryId = 8,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2826),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2273),
                             Description = "Lightweight windbreaker with waterproof coating.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -2704,7 +2707,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 620.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2826)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2273)
                         },
                         new
                         {
@@ -2712,14 +2715,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 4,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2829),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2277),
                             Description = "Classic snapback cap with embroidered logo.",
                             IsCustomizable = false,
                             Name = "SnapEdge Cap",
                             NumOfReviews = 0,
                             Price = 180.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2829)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2277)
                         },
                         new
                         {
@@ -2727,14 +2730,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 4,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2852),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2280),
                             Description = "Soft cotton tee with subtle reflective branding.",
                             IsCustomizable = false,
                             Name = "MetroLayer Tee",
                             NumOfReviews = 0,
                             Price = 190.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2852)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2280)
                         },
                         new
                         {
@@ -2742,7 +2745,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 5,
                             CategoryId = 9,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2855),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2283),
                             Description = "Premium non-slip yoga mat made with eco rubber.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -2750,7 +2753,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 350.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2855)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2284)
                         },
                         new
                         {
@@ -2758,7 +2761,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 5,
                             CategoryId = 10,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2858),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2308),
                             Description = "Ultrasonic diffuser with ambient lighting.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -2766,7 +2769,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 290.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2858)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2309)
                         },
                         new
                         {
@@ -2774,7 +2777,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 5,
                             CategoryId = 11,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2861),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2312),
                             Description = "Soy candle infused with lavender and chamomile.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -2782,7 +2785,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 170.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2861)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2312)
                         },
                         new
                         {
@@ -2790,7 +2793,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 5,
                             CategoryId = 10,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2864),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2316),
                             Description = "Glass water bottle with bamboo lid and sleeve.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -2798,7 +2801,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 210.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2864)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2316)
                         },
                         new
                         {
@@ -2806,14 +2809,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 5,
                             CategoryId = 12,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2867),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2319),
                             Description = "Guided journal for mindfulness and productivity.",
                             IsCustomizable = false,
                             Name = "Focus Journal",
                             NumOfReviews = 0,
                             Price = 150.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2867)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2320)
                         },
                         new
                         {
@@ -2821,14 +2824,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 5,
                             CategoryId = 10,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2875),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2323),
                             Description = "Natural lavender mist for better sleep.",
                             IsCustomizable = false,
                             Name = "Serenity Pillow Spray",
                             NumOfReviews = 0,
                             Price = 180.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2876)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2323)
                         },
                         new
                         {
@@ -2836,7 +2839,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 6,
                             CategoryId = 6,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2878),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2326),
                             Description = "Fitness tracker with pulse and oxygen monitoring.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -2844,7 +2847,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 540.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2879)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2326)
                         },
                         new
                         {
@@ -2852,7 +2855,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 6,
                             CategoryId = 13,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2882),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2329),
                             Description = "Adjustable dumbbells for home strength training.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -2860,7 +2863,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 720.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2882)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2330)
                         },
                         new
                         {
@@ -2868,7 +2871,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 6,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2885),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2333),
                             Description = "Heart-rate strap compatible with popular apps.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -2876,7 +2879,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 210.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2885)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2334)
                         },
                         new
                         {
@@ -2884,7 +2887,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 6,
                             CategoryId = 9,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2888),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2337),
                             Description = "High-density mat ideal for HIIT and yoga.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -2892,7 +2895,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 250.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2888)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2337)
                         },
                         new
                         {
@@ -2900,14 +2903,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 6,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2910),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2340),
                             Description = "Smart bottle that tracks hydration levels.",
                             IsCustomizable = false,
                             Name = "HydraFuel Bottle",
                             NumOfReviews = 0,
                             Price = 170.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2910)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2341)
                         },
                         new
                         {
@@ -2915,14 +2918,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 6,
                             CategoryId = 14,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2913),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2343),
                             Description = "Lightweight shorts with moisture-wicking tech.",
                             IsCustomizable = false,
                             Name = "TrainLite Shorts",
                             NumOfReviews = 0,
                             Price = 260.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2913)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2344)
                         },
                         new
                         {
@@ -2930,7 +2933,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 7,
                             CategoryId = 15,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2916),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2373),
                             Description = "Bamboo desk lamp with rechargeable LED bulb.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -2938,7 +2941,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 250.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2916)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2374)
                         },
                         new
                         {
@@ -2946,7 +2949,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 7,
                             CategoryId = 11,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2919),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2377),
                             Description = "Soft throw blanket made from recycled cotton.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -2954,7 +2957,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 320.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2919)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2378)
                         },
                         new
                         {
@@ -2962,7 +2965,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 7,
                             CategoryId = 16,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2922),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2381),
                             Description = "Biodegradable planters perfect for indoor herbs.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -2970,7 +2973,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 180.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2922)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2381)
                         },
                         new
                         {
@@ -2978,7 +2981,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 7,
                             CategoryId = 17,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2925),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2385),
                             Description = "Natural reed diffuser with citrus essential oils.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -2986,7 +2989,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 210.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2925)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2385)
                         },
                         new
                         {
@@ -2994,14 +2997,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 7,
                             CategoryId = 18,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2928),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2388),
                             Description = "Reusable air filter system for cleaner home air.",
                             IsCustomizable = false,
                             Name = "PureBreeze Air Filter",
                             NumOfReviews = 0,
                             Price = 640.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2928)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2389)
                         },
                         new
                         {
@@ -3009,14 +3012,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 7,
                             CategoryId = 16,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2931),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2391),
                             Description = "Cork coasters made from renewable materials.",
                             IsCustomizable = false,
                             Name = "Harmony Coasters",
                             NumOfReviews = 0,
                             Price = 160.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2931)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2392)
                         },
                         new
                         {
@@ -3024,7 +3027,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 8,
                             CategoryId = 4,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2934),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2395),
                             Description = "High-speed GaN charger with dual USB-C output.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -3032,7 +3035,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 280.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2934)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2395)
                         },
                         new
                         {
@@ -3040,7 +3043,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 8,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2937),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2398),
                             Description = "Ergonomic wireless mouse with silent clicks.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -3048,7 +3051,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 240.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2937)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2399)
                         },
                         new
                         {
@@ -3056,7 +3059,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 8,
                             CategoryId = 18,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2945),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2402),
                             Description = "Shockproof case for portable SSDs.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -3064,7 +3067,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 190.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2945)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2402)
                         },
                         new
                         {
@@ -3072,7 +3075,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 8,
                             CategoryId = 5,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2948),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2405),
                             Description = "Compact true wireless earbuds with clear audio.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -3080,7 +3083,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 420.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2948)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2406)
                         },
                         new
                         {
@@ -3088,14 +3091,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 8,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2970),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2409),
                             Description = "Color-coded USB-C and Lightning cable pack.",
                             IsCustomizable = false,
                             Name = "NeonLink Cable Set",
                             NumOfReviews = 0,
                             Price = 160.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2971)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2410)
                         },
                         new
                         {
@@ -3103,14 +3106,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 8,
                             CategoryId = 19,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2973),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2433),
                             Description = "Foldable aluminum laptop stand with cooling vents.",
                             IsCustomizable = false,
                             Name = "GlideStand Laptop Dock",
                             NumOfReviews = 0,
                             Price = 360.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2974)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2434)
                         },
                         new
                         {
@@ -3118,7 +3121,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2976),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2436),
                             Description = "Refreshing foaming cleanser for daily use.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -3126,7 +3129,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 180.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2976)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2437)
                         },
                         new
                         {
@@ -3134,7 +3137,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2979),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2440),
                             Description = "Lightweight daily cream with niacinamide for radiant skin.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -3142,7 +3145,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 220.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2979)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2441)
                         },
                         new
                         {
@@ -3150,7 +3153,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2982),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2444),
                             Description = "Detoxifying clay mask that purifies pores naturally.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -3158,7 +3161,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 240.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2982)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2444)
                         },
                         new
                         {
@@ -3166,7 +3169,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2985),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2454),
                             Description = "Deep hydration serum enriched with hyaluronic acid.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -3174,7 +3177,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 390.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2986)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2454)
                         },
                         new
                         {
@@ -3182,14 +3185,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2989),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2457),
                             Description = "Nourishing night cream with plant-based peptides.",
                             IsCustomizable = false,
                             Name = "VitaLush Night Cream",
                             NumOfReviews = 0,
                             Price = 260.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2989)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2458)
                         },
                         new
                         {
@@ -3197,14 +3200,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 9,
                             CategoryId = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2991),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2460),
                             Description = "Balancing toner that smooths skin and reduces shine.",
                             IsCustomizable = false,
                             Name = "FreshTone Toner",
                             NumOfReviews = 0,
                             Price = 210.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2992)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2461)
                         },
                         new
                         {
@@ -3212,7 +3215,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 10,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2994),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2463),
                             Description = "Chic velvet dress perfect for evening occasions.",
                             DiscountPercentage = 10m,
                             IsCustomizable = false,
@@ -3220,7 +3223,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 780.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2994)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2464)
                         },
                         new
                         {
@@ -3228,7 +3231,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 10,
                             CategoryId = 8,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2997),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2467),
                             Description = "Metallic cropped jacket for a bold statement look.",
                             DiscountPercentage = 20m,
                             IsCustomizable = false,
@@ -3236,7 +3239,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 650.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(2997)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2467)
                         },
                         new
                         {
@@ -3244,7 +3247,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 10,
                             CategoryId = 2,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(3000),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2471),
                             Description = "Color-shifting sneakers that stand out everywhere.",
                             DiscountPercentage = 30m,
                             IsCustomizable = false,
@@ -3252,7 +3255,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 540.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(3001)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2471)
                         },
                         new
                         {
@@ -3260,7 +3263,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 10,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(3003),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2474),
                             Description = "Elegant faux-leather handbag with gold accents.",
                             DiscountPercentage = 40m,
                             IsCustomizable = false,
@@ -3268,7 +3271,7 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             NumOfReviews = 0,
                             Price = 720.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(3004)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2475)
                         },
                         new
                         {
@@ -3276,14 +3279,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 10,
                             CategoryId = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(3006),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2478),
                             Description = "Trendy cropped top for modern streetwear style.",
                             IsCustomizable = false,
                             Name = "PulseFit Crop Top",
                             NumOfReviews = 0,
                             Price = 190.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(3007)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2478)
                         },
                         new
                         {
@@ -3291,14 +3294,14 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                             AverageRating = 0.0,
                             BrandId = 10,
                             CategoryId = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(3015),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2481),
                             Description = "Retro-futuristic shades with UV400 protection.",
                             IsCustomizable = false,
                             Name = "NeoAura Sunglasses",
                             NumOfReviews = 0,
                             Price = 350.00m,
                             Rating = 0,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 916, DateTimeKind.Utc).AddTicks(3015)
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 402, DateTimeKind.Utc).AddTicks(2482)
                         });
                 });
 
@@ -10463,481 +10466,481 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(5506),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(268),
                             ProductId = 1,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(5508),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(271),
                             Url = "Products/Brand1/EcoFlex T-Shirt.png"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6123),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1615),
                             ProductId = 2,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6123),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1616),
                             Url = "Products/Brand1/ReVibe Denim Jacket.jfif"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6126),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1621),
                             ProductId = 3,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6127),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1622),
                             Url = "Products/Brand1/EcoStride Sneakers.jfif"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6128),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1624),
                             ProductId = 4,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6128),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1624),
                             Url = "Products/Brand1/Bamboo Breeze Hoodie.png"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6129),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1626),
                             ProductId = 5,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6130),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1626),
                             Url = "Products/Brand1/ReLeaf Tote Bag.jfif"
                         },
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6131),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1628),
                             ProductId = 6,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6131),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1628),
                             Url = "Products/Brand1/NatureFlow Pants.webp"
                         },
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6132),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1630),
                             ProductId = 7,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6133),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1630),
                             Url = "Products/Brand2/SyncCharge Cable.jfif"
                         },
                         new
                         {
                             Id = 8,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6134),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1632),
                             ProductId = 8,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6134),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1632),
                             Url = "Products/Brand2/SmartDock Pro.jfif"
                         },
                         new
                         {
                             Id = 9,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6135),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1634),
                             ProductId = 9,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6135),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1634),
                             Url = "Products/Brand2/AirPulse Earbuds.jfif"
                         },
                         new
                         {
                             Id = 10,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6137),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1636),
                             ProductId = 10,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6137),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1636),
                             Url = "Products/Brand2/MagGrip Phone Mount.jfif"
                         },
                         new
                         {
                             Id = 11,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6138),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1638),
                             ProductId = 11,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6138),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1638),
                             Url = "Products/Brand2/PulseTrack Watch.jfif"
                         },
                         new
                         {
                             Id = 12,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6140),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1640),
                             ProductId = 12,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6140),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1640),
                             Url = "Products/Brand2/GlideCase.jfif"
                         },
                         new
                         {
                             Id = 13,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6141),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1642),
                             ProductId = 13,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6141),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1642),
                             Url = "Products/Brand3/HydraBloom Serum.jpg"
                         },
                         new
                         {
                             Id = 14,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6143),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1644),
                             ProductId = 14,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6143),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1644),
                             Url = "Products/Brand3/PureDew Cleanser.png"
                         },
                         new
                         {
                             Id = 15,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6144),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1646),
                             ProductId = 15,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6144),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1646),
                             Url = "Products/Brand3/LumiMist Toner.webp"
                         },
                         new
                         {
                             Id = 16,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6145),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1648),
                             ProductId = 16,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6146),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1648),
                             Url = "Products/Brand3/Radiant Night Cream.webp"
                         },
                         new
                         {
                             Id = 17,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6147),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1650),
                             ProductId = 17,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6147),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1650),
                             Url = "Products/Brand3/GlowShield Sunscreen.jpg"
                         },
                         new
                         {
                             Id = 18,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6176),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1653),
                             ProductId = 18,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6176),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1653),
                             Url = "Products/Brand3/SilkTouch Moisturizer.png"
                         },
                         new
                         {
                             Id = 19,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6177),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1655),
                             ProductId = 19,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6178),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1655),
                             Url = "Products/Brand4/StreetCore Hoodie.png"
                         },
                         new
                         {
                             Id = 20,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6179),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1701),
                             ProductId = 20,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6179),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1701),
                             Url = "Products/Brand4/UrbanFlex Joggers.png"
                         },
                         new
                         {
                             Id = 21,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6180),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1703),
                             ProductId = 21,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6181),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1703),
                             Url = "Products/Brand4/FuelRunner Sneakers.png"
                         },
                         new
                         {
                             Id = 22,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6195),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1705),
                             ProductId = 22,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6195),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1705),
                             Url = "Products/Brand4/CityWave Jacket.png"
                         },
                         new
                         {
                             Id = 23,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6197),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1707),
                             ProductId = 23,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6197),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1707),
                             Url = "Products/Brand4/SnapEdge Cap.webp"
                         },
                         new
                         {
                             Id = 24,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6198),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1709),
                             ProductId = 24,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6198),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1709),
                             Url = "Products/Brand4/MetroLayer Tee.jpg"
                         },
                         new
                         {
                             Id = 25,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6199),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1711),
                             ProductId = 25,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6200),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1711),
                             Url = "Products/Brand5/ZenMat.webp"
                         },
                         new
                         {
                             Id = 26,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6201),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1713),
                             ProductId = 26,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6201),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1714),
                             Url = "Products/Brand5/AromaBliss Diffuser.webp"
                         },
                         new
                         {
                             Id = 27,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6202),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1715),
                             ProductId = 27,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6203),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1715),
                             Url = "Products/Brand5/CalmWave Candle.webp"
                         },
                         new
                         {
                             Id = 28,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6204),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1717),
                             ProductId = 28,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6204),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1718),
                             Url = "Products/Brand5/Balance Bottle.webp"
                         },
                         new
                         {
                             Id = 29,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6205),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1719),
                             ProductId = 29,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6206),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1720),
                             Url = "Products/Brand5/Focus Journal.webp"
                         },
                         new
                         {
                             Id = 30,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6207),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1721),
                             ProductId = 30,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6207),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1721),
                             Url = "Products/Brand5/Serenity Pillow Spray.jpg"
                         },
                         new
                         {
                             Id = 31,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6208),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1723),
                             ProductId = 31,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6208),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1723),
                             Url = "Products/Brand6/AeroTrack Smart Band.png"
                         },
                         new
                         {
                             Id = 32,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6209),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1725),
                             ProductId = 32,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6210),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1726),
                             Url = "Products/Brand6/bowflex-dumbbells.jpg"
                         },
                         new
                         {
                             Id = 33,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6211),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1727),
                             ProductId = 33,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6211),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1728),
                             Url = "Products/Brand6/PulsePro Chest Strap.webp"
                         },
                         new
                         {
                             Id = 34,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6212),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1729),
                             ProductId = 34,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6213),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1730),
                             Url = "Products/Brand6/AeroMat Trainer.webp"
                         },
                         new
                         {
                             Id = 35,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6214),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1731),
                             ProductId = 35,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6214),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1732),
                             Url = "Products/Brand6/HydraFuel Bottle.jfif"
                         },
                         new
                         {
                             Id = 36,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6215),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1733),
                             ProductId = 36,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6216),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1734),
                             Url = "Products/Brand6/TrainLite Shorts.jpg"
                         },
                         new
                         {
                             Id = 37,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6217),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1735),
                             ProductId = 37,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6217),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1736),
                             Url = "Products/Brand7/EcoGlow Lamp.webp"
                         },
                         new
                         {
                             Id = 38,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6218),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1737),
                             ProductId = 38,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6218),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1738),
                             Url = "Products/Brand7/GreenWave Blanket.jfif"
                         },
                         new
                         {
                             Id = 39,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6220),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1739),
                             ProductId = 39,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6220),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1740),
                             Url = "Products/Brand7/PlantPure Planter Set.jpg"
                         },
                         new
                         {
                             Id = 40,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6221),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1742),
                             ProductId = 40,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6221),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1742),
                             Url = "Products/Brand7/EcoFresh Diffuser.webp"
                         },
                         new
                         {
                             Id = 41,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6223),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1744),
                             ProductId = 41,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6223),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1744),
                             Url = "Products/Brand7/PureBreeze Air Filter.webp"
                         },
                         new
                         {
                             Id = 42,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6224),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1773),
                             ProductId = 42,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6224),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1773),
                             Url = "Products/Brand7/Harmony Coasters.jfif"
                         },
                         new
                         {
                             Id = 43,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6226),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1775),
                             ProductId = 43,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6226),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1775),
                             Url = "Products/Brand8/VoltSync Charger.webp"
                         },
                         new
                         {
                             Id = 44,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6227),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1777),
                             ProductId = 44,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6227),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1777),
                             Url = "Products/Brand8/StreamPad Mouse.jpg"
                         },
                         new
                         {
                             Id = 45,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6228),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1779),
                             ProductId = 45,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6229),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1779),
                             Url = "Products/Brand8/DataShell SSD Case.jpg"
                         },
                         new
                         {
                             Id = 46,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6230),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1781),
                             ProductId = 46,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6230),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1781),
                             Url = "Products/Brand8/WavePods Mini.jpg"
                         },
                         new
                         {
                             Id = 47,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6231),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1783),
                             ProductId = 47,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6232),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1783),
                             Url = "Products/Brand8/NeonLink Cable Set.webp"
                         },
                         new
                         {
                             Id = 48,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6233),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1785),
                             ProductId = 48,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6233),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1785),
                             Url = "Products/Brand8/GlideStand Laptop Dock.jpg"
                         },
                         new
                         {
                             Id = 49,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6234),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1787),
                             ProductId = 49,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6235),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1788),
                             Url = "Products/Brand9/AquaRenew Cleanser.png"
                         },
                         new
                         {
                             Id = 50,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6236),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1790),
                             ProductId = 50,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6236),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1790),
                             Url = "Products/Brand9/BrightVeil Moisturizer.png"
                         },
                         new
                         {
                             Id = 51,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6237),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1792),
                             ProductId = 51,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6237),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1792),
                             Url = "Products/Brand9/PureCure Mask.jpg"
                         },
                         new
                         {
                             Id = 52,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6239),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1794),
                             ProductId = 52,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6239),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1795),
                             Url = "Products/Brand9/GlowHydra Serum.webp"
                         },
                         new
                         {
                             Id = 53,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6240),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1796),
                             ProductId = 53,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6240),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1797),
                             Url = "Products/Brand9/VitaLush Night Cream.webp"
                         },
                         new
                         {
                             Id = 54,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6242),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1799),
                             ProductId = 54,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6242),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1800),
                             Url = "Products/Brand9/FreshTone Toner.webp"
                         },
                         new
                         {
                             Id = 55,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6243),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1801),
                             ProductId = 55,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6243),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1802),
                             Url = "Products/Brand10/VelvetEdge Dress.webp"
                         },
                         new
                         {
                             Id = 56,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6245),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1803),
                             ProductId = 56,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6245),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1804),
                             Url = "Products/Brand10/UrbanGleam Jacket.jfif"
                         },
                         new
                         {
                             Id = 57,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6246),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1805),
                             ProductId = 57,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6246),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1806),
                             Url = "Products/Brand10/ChromaSneak Shoes.webp"
                         },
                         new
                         {
                             Id = 58,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6247),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1807),
                             ProductId = 58,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6248),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1808),
                             Url = "Products/Brand10/LuxeLine Handbag.jfif"
                         },
                         new
                         {
                             Id = 59,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6249),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1809),
                             ProductId = 59,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6249),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1810),
                             Url = "Products/Brand10/PulseFit Crop Top.webp"
                         },
                         new
                         {
                             Id = 60,
-                            CreatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6250),
+                            CreatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1812),
                             ProductId = 60,
-                            UpdatedAt = new DateTime(2026, 7, 16, 17, 4, 52, 909, DateTimeKind.Utc).AddTicks(6251),
+                            UpdatedAt = new DateTime(2026, 7, 16, 17, 1, 40, 393, DateTimeKind.Utc).AddTicks(1812),
                             Url = "Products/Brand10/NeoAura Sunglasses.jfif"
                         });
                 });
