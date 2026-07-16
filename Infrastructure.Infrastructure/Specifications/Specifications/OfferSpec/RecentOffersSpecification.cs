@@ -1,6 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Domain.Entities.OfferEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
-using System;
 
 namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.OfferSpec
 {
@@ -9,8 +9,10 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.Offer
         public RecentOffersSpecification(int takeN) : base(o => true)
         {
             AddInclude(o => o.Brand);
-            AddInclude(o => o.OfferProducts);
-            AddInclude($"{nameof(Offer.OfferProducts)}.{nameof(OfferProduct.Product)}");
+            AddIncludeChain(q => q
+                .Include(o => o.OfferProducts)
+                    .ThenInclude(op => op.Product)
+                        .ThenInclude(p => p.Images));
             
             AddOrderByDescending(o => o.CreatedAt);
             ApplyPaging(1, takeN);
