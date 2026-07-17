@@ -363,7 +363,7 @@ public class BrandService : IBrandService
             arMessage = "تم تعديل التقييم بنجاح.";
         }
 
-
+        _unitOfWork.Repository<Brand>().Update(brand);
         await _unitOfWork.SaveChangesAsync();
 
         return ApiResponse<string>.SuccessResponse(
