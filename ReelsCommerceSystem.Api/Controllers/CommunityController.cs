@@ -60,7 +60,6 @@ namespace ReelsCommerceSystem.Api.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Consumes("multipart/form-data")]
         public async Task<IActionResult> EditPost([FromQuery] EditPostReq req)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
