@@ -76,6 +76,33 @@ public class EmailService(IOptions<EmailSettings> options) : IEmailService
     }
 
 
+    public async Task<bool> SendContactEmailAsync(string name, string email, string message)
+    {
+        try
+        {
+            var mimeMessage = new MimeMessage();
+            mimeMessage.From.Add(new MailboxAddress(_options.UserName, _options.Email));
+            mimeMessage.To.Add(new MailboxAddress("ALLUVO Support", _options.Email));
+            mimeMessage.Subject = $"New Contact Message from {name}";
+
+            var htmlBody = $@"<!DOCTYPE html><html><head><meta charset='UTF-8'/><title>New Contact Message</title><style>body{{font-family:Arial,sans-serif;line-height:1.6;color:#333333;margin:0;padding:0;background-color:#f2f2f7}}.container{{max-width:600px;margin:40px auto;background-color:#ffffff;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.08);overflow:hidden}}.header{{background-color:#1b2351;background-image:linear-gradient(to right,#1b2351,#47c0d2);color:#ffffff;padding:25px 20px;text-align:center}}.header h1{{margin:0;font-size:24px;letter-spacing:1px}}.content{{padding:30px 25px;background-color:#fdfdfd}}.content h2{{color:#1b2351;margin-top:0}}.content p{{font-size:15px;margin-bottom:16px}}.field-label{{font-weight:700;color:#1b2351;font-size:14px;margin-bottom:4px}}.field-value{{background-color:#f0faff;border:1px solid #47c0d2;border-radius:8px;padding:14px;margin-bottom:16px;font-size:15px;color:#333333;white-space:pre-wrap}}.footer{{background-color:#f8f8f8;text-align:center;padding:15px;font-size:12px;color:#888888;border-top:1px solid #e0e0e0}}</style></head><body><div class='container'><div class='header'><h1>New Contact Message</h1></div><div class='content'><h2>You have a new message from the contact form</h2><div class='field-label'>Name</div><div class='field-value'>{System.Net.WebUtility.HtmlEncode(name)}</div><div class='field-label'>Email</div><div class='field-value'>{System.Net.WebUtility.HtmlEncode(email)}</div><div class='field-label'>Message</div><div class='field-value'>{System.Net.WebUtility.HtmlEncode(message)}</div><p style='margin-top:25px;'>Best regards,<br/><strong>ALLUVO System</strong></p></div><div class='footer'><p>This is an automated message from the ALLUVO contact form.</p></div></div></body></html>";
+
+            mimeMessage.Body = new TextPart("html") { Text = htmlBody };
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(_options.Server, _options.Port, false);
+            await client.AuthenticateAsync(_options.Email, _options.Password);
+            await client.SendAsync(mimeMessage);
+            await client.DisconnectAsync(true);
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public async void SendAsync(Email email)
     {
         var message = new MimeMessage();

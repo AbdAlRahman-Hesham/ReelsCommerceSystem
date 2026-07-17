@@ -15,10 +15,11 @@ namespace ReelsCommerceSystem.Infrastructure.Services
     public class ContactService : IContactService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ContactService(IUnitOfWork unitOfWork)
+        private readonly IEmailService _emailService;
+        public ContactService(IUnitOfWork unitOfWork, IEmailService emailService)
         {
             _unitOfWork = unitOfWork;
-            
+            _emailService = emailService;
         }
 
         public async Task<ApiResponse<string>> SendMessageAsync(ContactMessageReq request, string? userId)
@@ -34,12 +35,21 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             await _unitOfWork.Repository<ContactMessage>().AddAsync(message);
             await _unitOfWork.SaveChangesAsync();
 
+            try
+            {
+                await _emailService.SendContactEmailAsync(request.Name, request.Email, request.Message);
+            }
+            catch
+            {
+                // Email failure should not break the contact form submission
+            }
+
             return ApiResponse<string>.SuccessResponse
                 (
                        "Message sent successfully",
                         HttpStatusCode.OK,
                        "Message sent successfully.",
-                        "تم إرسال الرسالة بنجاح."
+                       "تم إرسال الرسالة بنجاح."
                 );
         }
     }

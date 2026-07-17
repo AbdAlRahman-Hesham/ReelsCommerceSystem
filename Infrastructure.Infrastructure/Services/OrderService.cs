@@ -194,7 +194,7 @@ public class OrderService : IOrderService
     public async Task<List<ReadyToShipOrderDto>> GetReadyToShipOrdersAsync()
     {
         var orders = await _unitOfWork.Repository<Order>().GetAllQueryable()
-            .Where(o => o.OrderStatus == OrderStatus.Packed)
+            .Where(o => o.OrderStatus == OrderStatus.Packed || o.OrderStatus == OrderStatus.Shipped)
             .Include(o => o.OrderProducts)
             .ToListAsync();
 
@@ -209,6 +209,7 @@ public class OrderService : IOrderService
             ShippingCountry = o.ShippingCountry,
             ShippingPostalCode = o.ShippingPostalCode,
             ShippingPhoneNumber = o.ShippingPhoneNumber,
+            OrderStatus = o.OrderStatus,
             PaymentMethod = o.PaymentMethod,
             PaymentStatus = o.PaymentStatus,
             Items = o.OrderProducts.Select(op => new ReadyToShipOrderItemDto

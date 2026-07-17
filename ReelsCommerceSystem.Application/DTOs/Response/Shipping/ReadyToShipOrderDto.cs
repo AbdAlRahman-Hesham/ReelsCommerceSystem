@@ -14,6 +14,7 @@ public class ReadyToShipOrderDto
     public string ShippingPostalCode { get; set; } = null!;
     public string ShippingPhoneNumber { get; set; } = null!;
     public PaymentMethod PaymentMethod { get; set; }
+    public OrderStatus OrderStatus { get; set; }
     public PaymentStatus PaymentStatus { get; set; }
     public List<ReadyToShipOrderItemDto> Items { get; set; } = new();
 }
