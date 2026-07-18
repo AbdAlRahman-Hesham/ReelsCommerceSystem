@@ -1,4 +1,4 @@
-﻿using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
@@ -21,6 +21,8 @@ internal class ReelsByBrandWithSortingSpec : Specification<Reel>
             AddOrderByDescending(r => r.CreatedAt); // default: newest first
 
         AddInclude(r => r.UserReelLikes);
+        AddInclude(r => r.UserReelViews);
+        AddInclude(r => r.UserReelShares);
     }
 }
 
