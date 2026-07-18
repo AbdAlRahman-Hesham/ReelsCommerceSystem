@@ -128,6 +128,7 @@ public class OrderService : IOrderService
 
         if (requiresRefund)
         {
+            order.OrderStatus = OrderStatus.PendingCancellation;
             order.CancellationRequested = true;
             _unitOfWork.Repository<Order>().Update(order);
             await _unitOfWork.SaveChangesAsync();
@@ -170,7 +171,7 @@ public class OrderService : IOrderService
     public async Task<List<RefundRequestDto>> GetRefundRequestsAsync()
     {
         var orders = await _unitOfWork.Repository<Order>().GetAllQueryable()
-            .Where(o => o.CancellationRequested && o.OrderStatus != OrderStatus.Cancelled)
+            .Where(o => o.OrderStatus == OrderStatus.PendingCancellation)
             .Include(o => o.User)
             .Include(o => o.OrderProducts)
             .OrderByDescending(o => o.UpdatedAt)
@@ -637,7 +638,7 @@ public class OrderService : IOrderService
     {
         var paymentStatus = request.PaymentMethod switch
         {
-            PaymentMethod.CashOnDelivery => PaymentStatus.Pending,
+            PaymentMethod.CashOnDelivery => PaymentStatus.PayOnDelivery,
             _ => PaymentStatus.Pending
         };
 
@@ -767,7 +768,8 @@ public class OrderService : IOrderService
             .ToListAsync();
 
         var visibleOrderProducts = brandOrderProducts
-            .Where(op => op.Order.PaymentStatus != PaymentStatus.Failed && op.Order.PaymentStatus != PaymentStatus.Pending)
+            .Where(op => op.Order.PaymentStatus != PaymentStatus.Failed
+                && !(op.Order.PaymentStatus == PaymentStatus.Pending && op.Order.PaymentMethod != PaymentMethod.CashOnDelivery))
             .ToList();
 
         var grouped = visibleOrderProducts
@@ -784,6 +786,7 @@ public class OrderService : IOrderService
                     TotalAmount = order.TotalAmount,
                     Status = order.OrderStatus,
                     PaymentStatus = order.PaymentStatus,
+                    PaymentMethod = order.PaymentMethod,
                     Items = g.Select(op => new BrandOrderItemDto
                     {
                         ProductName = op.ProductName,

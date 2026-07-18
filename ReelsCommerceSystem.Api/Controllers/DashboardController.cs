@@ -88,4 +88,22 @@ public class DashboardController : AppBaseController
             "تم جلب حالة البراند"
         ));
     }
+
+    [Authorize(Roles = SystemRoles.BrandOwner)]
+    [HttpGet("orders-by-region")]
+    public async Task<ActionResult<ApiResponse<OrdersByRegionRes>>> GetOrdersByRegion()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _dashboardService.GetOrdersByRegionAsync(userId);
+
+        return Ok(ApiResponse<OrdersByRegionRes>.SuccessResponse(
+            result,
+            HttpStatusCode.OK,
+            "Orders by region retrieved",
+            "تم جلب الطلبات حسب المنطقة"
+        ));
+    }
 }

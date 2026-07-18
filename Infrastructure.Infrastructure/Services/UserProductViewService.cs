@@ -42,6 +42,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             if (existingView != null)
             {
                 existingView.UpdatedAt = DateTime.UtcNow;
+                _userProductViewRepository.Update(existingView);
                 await _unitOfWork.SaveChangesAsync();
                 return;
             }

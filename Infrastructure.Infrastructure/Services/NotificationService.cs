@@ -254,6 +254,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 OrderStatus.Shipped => "Your order has been shipped!",
                 OrderStatus.Delivered => "Your order has been delivered! Enjoy!",
                 OrderStatus.Cancelled => "Your order has been cancelled.",
+                OrderStatus.PendingCancellation => "Your cancellation request is pending admin approval.",
                 _ => $"Your order status has changed to {newStatus}."
             };
 
@@ -266,6 +267,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                 OrderStatus.Shipped => "تم شحن طلبك!",
                 OrderStatus.Delivered => "تم توصيل طلبك! استمتع به!",
                 OrderStatus.Cancelled => "تم إلغاء طلبك.",
+                OrderStatus.PendingCancellation => "طلب الإلغاء الخاص بك في انتظار موافقة المدير.",
                 _ => $"تغيرت حالة طلبك إلى {newStatus}."
             };
 

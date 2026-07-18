@@ -12,7 +12,8 @@ public static class OrderStateMachine
         [OrderStatus.Packed] = new() { OrderStatus.Shipped },
         [OrderStatus.Shipped] = new() { OrderStatus.Delivered },
         [OrderStatus.Delivered] = new(),
-        [OrderStatus.Cancelled] = new()
+        [OrderStatus.Cancelled] = new(),
+        [OrderStatus.PendingCancellation] = new()
     };
 
     public static bool CanTransition(OrderStatus from, OrderStatus to)
@@ -44,7 +45,7 @@ public static class OrderStateMachine
 
     public static bool IsTerminal(OrderStatus status)
     {
-        return status is OrderStatus.Delivered or OrderStatus.Cancelled;
+        return status is OrderStatus.Delivered or OrderStatus.Cancelled or OrderStatus.PendingCancellation;
     }
 
     public static bool IsVisibleToRole(PaymentStatus paymentStatus, string role)

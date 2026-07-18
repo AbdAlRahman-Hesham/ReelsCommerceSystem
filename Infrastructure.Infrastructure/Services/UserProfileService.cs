@@ -123,11 +123,15 @@ public class UserProfileService : IUserProfileService
                                        && a.Id != address.Id);
 
             if (existingDefault != null)
+            {
                 existingDefault.IsDefault = false;
+                _unitOfWork.Repository<Address>().Update(existingDefault);
+            }
 
             address.IsDefault = true;
         }
 
+        _unitOfWork.Repository<Address>().Update(address);
         await _unitOfWork.SaveChangesAsync();
 
         return address;
@@ -154,6 +158,7 @@ public class UserProfileService : IUserProfileService
             if (anotherAddress != null)
             {
                 anotherAddress.IsDefault = true;
+                _unitOfWork.Repository<Address>().Update(anotherAddress);
                 await _unitOfWork.SaveChangesAsync();
             }
         }

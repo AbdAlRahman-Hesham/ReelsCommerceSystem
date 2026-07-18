@@ -794,4 +794,38 @@ public class DashboardService : IDashboardService
             EngagementRate = engagementRate
         };
     }
+
+    public async Task<OrdersByRegionRes> GetOrdersByRegionAsync(string userId)
+    {
+        var brand = await _unitOfWork.Repository<Brand>()
+            .FirstOrDefaultAsync(b => b.UserId == userId);
+
+        if (brand == null)
+            return new OrdersByRegionRes();
+
+        var orderProducts = _unitOfWork.Repository<OrderProduct>().GetAllQueryable()
+            .Where(op => op.BrandId == brand.Id);
+
+        var orderIds = await orderProducts
+            .Select(op => op.OrderId)
+            .Distinct()
+            .ToListAsync();
+
+        var regionData = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => orderIds.Contains(o.Id))
+            .GroupBy(o => o.ShippingCity ?? "Unknown")
+            .Select(g => new RegionOrderCount
+            {
+                City = g.Key,
+                OrderCount = g.Count()
+            })
+            .OrderByDescending(r => r.OrderCount)
+            .ToListAsync();
+
+        return new OrdersByRegionRes
+        {
+            TotalOrders = orderIds.Count,
+            Regions = regionData
+        };
+    }
 }
