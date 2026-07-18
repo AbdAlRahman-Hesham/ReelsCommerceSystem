@@ -13,19 +13,20 @@ using System.Net;
 
 namespace ReelsCommerceSystem.Api.Controllers;
 
-public class ProductController(IGenericRepository<ProductReview> productReviewRepository, IProductService productService, IRelatedProductService relatedProductService, IUserProductViewService userProductViewService) : AppBaseController
+public class ProductController(IGenericRepository<ProductReview> productReviewRepository, IProductService productService, IRelatedProductService relatedProductService, IUserProductViewService userProductViewService, IProductRecommendationService productRecommendationService) : AppBaseController
 {
     private readonly IProductService _productService = productService;
     private readonly IRelatedProductService _relatedProductService = relatedProductService;
     private readonly IUserProductViewService _userProductViewService = userProductViewService;
     private readonly IGenericRepository<ProductReview> _productReviewRepository = productReviewRepository;
+    private readonly IProductRecommendationService _productRecommendationService = productRecommendationService;
 
 
  
     [HttpGet]
     public async Task<IActionResult> GetAllProducts([FromQuery] ProductSpecParams specParams)
     {
-        var response = await _productService.GetProductsAsync(specParams);
+        var response = await _productService.GetProductsWithRecommendationsAsync(specParams);
         return StatusCode(response.StatusCode, response);
     }
     [HttpGet("GetAllForAi")]
@@ -33,6 +34,19 @@ public class ProductController(IGenericRepository<ProductReview> productReviewRe
     {
         var response = await _productService.GetAllProductsForAiAsync();
         return StatusCode(response.StatusCode, response);
+    }
+    [HttpGet("our-favourites")]
+    public async Task<IActionResult> GetOurFavourites()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var recommendedProducts = await _productRecommendationService.GetRecommendedProductsAsync(userId, 20);
+
+        var response = ApiResponse<List<GetAllProductsResponse>>.SuccessResponse(
+            recommendedProducts,
+            HttpStatusCode.OK
+        );
+
+        return Ok(response);
     }
     [HttpGet("{productId}")]
     public async Task<IActionResult> GetProduct(int productId)

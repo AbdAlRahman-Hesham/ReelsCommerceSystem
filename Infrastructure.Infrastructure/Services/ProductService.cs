@@ -23,13 +23,14 @@ public class ProductService(
     IMemoryCache memoryCache,
     IHttpContextAccessor httpContextAccessor,
     IUnitOfWork unitOfWork,
-    IRelatedProductService relatedProductService
-   
+    IRelatedProductService relatedProductService,
+    IProductRecommendationService productRecommendationService
 
 ) : IProductService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IGenericRepository<Product> _productRepository = unitOfWork.Repository<Product>();
+    private readonly IProductRecommendationService _productRecommendationService = productRecommendationService;
     private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(10);
    
 
@@ -80,6 +81,37 @@ public class ProductService(
             statusCode: HttpStatusCode.OK
         );
     }
+
+    public async Task<ApiResponse<ProductsWithRecommendations>> GetProductsWithRecommendationsAsync(ProductSpecParams productSpecParams)
+    {
+        var productsResponse = await GetProductsAsync(productSpecParams);
+
+        if (!productsResponse.Success)
+        {
+            return ApiResponse<ProductsWithRecommendations>.ErrorResponse(
+                (HttpStatusCode)productsResponse.StatusCode,
+                "Failed to fetch products.",
+                "فشل في جلب المنتجات."
+            );
+        }
+
+        var userId = httpContextAccessor.HttpContext?.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        var recommendedProducts = await _productRecommendationService.GetRecommendedProductsAsync(userId, 10);
+
+        var paginatedProductIds = productsResponse.Data.Data.Select(p => p.Id).ToHashSet();
+        var filteredRecommended = recommendedProducts.Where(p => !paginatedProductIds.Contains(p.Id)).ToList();
+
+        return ApiResponse<ProductsWithRecommendations>.SuccessResponse(
+            new ProductsWithRecommendations
+            {
+                Products = productsResponse.Data,
+                RecommendedProducts = filteredRecommended
+            },
+            HttpStatusCode.OK
+        );
+    }
+
     public async Task<ApiResponse<PaginationResponse<GetAllProductsForAiResponse>>> GetAllProductsForAiAsync()
     {
         var productSpecParams = new ProductSpecParams

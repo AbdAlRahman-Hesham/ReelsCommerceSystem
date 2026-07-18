@@ -15,4 +15,5 @@ public interface IProductService
     Task<ProductToggleLikeRes> ProductReviewLikeAsync(string userId, ProductToggleLikeReq req);
     Task<ProductToggleDislikeRes> ProductReviewDislikeAsync(string userId, ProductToggleDislikeReq req);
     Task<ApiResponse<double>> GetProductAverageRating(int productId);
+    Task<ApiResponse<ProductsWithRecommendations>> GetProductsWithRecommendationsAsync(ProductSpecParams productSpecParams);
 }
