@@ -419,7 +419,10 @@ public class FinanceService : IFinanceService
         {
             var pending = await _brandSettlementRepo.GetSumByBrandAndStatusAsync(brand.Id, SettlementStatus.Pending);
             var available = await _brandSettlementRepo.GetSumByBrandAndStatusAsync(brand.Id, SettlementStatus.ReadyForWithdrawal);
+            var requested = await _brandSettlementRepo.GetSumByBrandAndStatusAsync(brand.Id, SettlementStatus.WithdrawalRequested);
             var paid = await _brandSettlementRepo.GetSumByBrandAndStatusAsync(brand.Id, SettlementStatus.Paid);
+            var totalSettlements = await _brandSettlementRepo.GetCountByBrandIdAsync(brand.Id);
+            var pendingWithdrawals = await _withdrawalRequestRepo.GetCountByBrandAndStatusAsync(brand.Id, WithdrawalRequestStatus.Pending);
 
             result.Add(new AdminBrandFinanceSummaryDto
             {
@@ -427,8 +430,10 @@ public class FinanceService : IFinanceService
                 BrandName = brand.DisplayName,
                 PendingBalance = pending,
                 AvailableBalance = available,
+                RequestedBalance = requested,
                 PaidBalance = paid,
-                TotalLifetime = pending + available + paid
+                TotalSettlements = totalSettlements,
+                PendingWithdrawals = pendingWithdrawals
             });
         }
 

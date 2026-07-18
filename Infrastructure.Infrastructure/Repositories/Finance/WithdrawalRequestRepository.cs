@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.Interfaces.Services.Finance;
 using ReelsCommerceSystem.Domain.Entities.FinanceEntities;
+using ReelsCommerceSystem.Domain.Enums.Finance;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 
 namespace ReelsCommerceSystem.Infrastructure.Repositories.Finance;
@@ -27,6 +28,13 @@ public class WithdrawalRequestRepository : IWithdrawalRequestRepository
         return await _context.WithdrawalRequests
             .Include(x => x.Brand)
             .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<int> GetCountByBrandAndStatusAsync(int brandId, WithdrawalRequestStatus status)
+    {
+        return await _context.WithdrawalRequests
+            .Where(x => x.BrandId == brandId && x.Status == status)
+            .CountAsync();
     }
 
     public async Task AddAsync(WithdrawalRequest request)

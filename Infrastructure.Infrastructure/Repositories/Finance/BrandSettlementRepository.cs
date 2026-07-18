@@ -48,8 +48,6 @@ public class BrandSettlementRepository : IBrandSettlementRepository
     public async Task<List<BrandSettlement>> GetByIdsAsync(List<int> ids)
     {
         return await _context.BrandSettlements
-            .Include(x => x.Brand)
-            .Include(x => x.Order)
             .Where(x => ids.Contains(x.Id))
             .ToListAsync();
     }
@@ -75,6 +73,13 @@ public class BrandSettlementRepository : IBrandSettlementRepository
         return await _context.BrandSettlements
             .Where(x => x.BrandId == brandId && x.Status == status)
             .SumAsync(x => x.NetAmount);
+    }
+
+    public async Task<int> GetCountByBrandIdAsync(int brandId)
+    {
+        return await _context.BrandSettlements
+            .Where(x => x.BrandId == brandId)
+            .CountAsync();
     }
 
     public async Task AddAsync(BrandSettlement settlement)

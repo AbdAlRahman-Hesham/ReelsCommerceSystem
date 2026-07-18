@@ -11,6 +11,7 @@ public class BrandSettlementDto
     public decimal PlatformCommission { get; set; }
     public decimal NetAmount { get; set; }
     public SettlementStatus Status { get; set; }
+    public string StatusString => Status.ToString();
     public DateTime? AvailableAt { get; set; }
     public DateTime? PaidAt { get; set; }
     public string? TransferId { get; set; }

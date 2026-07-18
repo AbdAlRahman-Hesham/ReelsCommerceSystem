@@ -18,6 +18,7 @@ public interface IBrandSettlementRepository
     Task<List<BrandSettlement>> GetByOrderIdAsync(int orderId);
     Task<List<BrandSettlement>> GetPendingTransferAsync(int maxRetries = 3);
     Task<decimal> GetSumByBrandAndStatusAsync(int brandId, SettlementStatus status);
+    Task<int> GetCountByBrandIdAsync(int brandId);
     Task AddAsync(BrandSettlement settlement);
     void Update(BrandSettlement settlement);
     void UpdateRange(List<BrandSettlement> settlements);
@@ -41,6 +42,7 @@ public interface IWithdrawalRequestRepository
 {
     Task<List<WithdrawalRequest>> GetByBrandIdAsync(int brandId);
     Task<WithdrawalRequest?> GetByIdAsync(int id);
+    Task<int> GetCountByBrandAndStatusAsync(int brandId, WithdrawalRequestStatus status);
     Task AddAsync(WithdrawalRequest request);
     void Update(WithdrawalRequest request);
     Task<int> SaveChangesAsync();

@@ -885,6 +885,10 @@ namespace ReelsCommerceSystem.Infrastructure.Migrations
                 columns: new[] { "CreatedAt", "UpdatedAt" },
                 values: new object[] { new DateTime(2026, 7, 18, 5, 21, 6, 473, DateTimeKind.Utc).AddTicks(6255), new DateTime(2026, 7, 18, 5, 21, 6, 473, DateTimeKind.Utc).AddTicks(6257) });
 
+            migrationBuilder.DropIndex(
+                name: "IX_UserProductView_UserId_ProductId",
+                table: "UserProductView");
+
             migrationBuilder.CreateIndex(
                 name: "IX_UserProductView_UserId_ProductId",
                 table: "UserProductView",

@@ -48,8 +48,6 @@ public class ShippingSettlementRepository : IShippingSettlementRepository
     public async Task<List<ShippingSettlement>> GetByIdsAsync(List<int> ids)
     {
         return await _context.ShippingSettlements
-            .Include(x => x.ShippingCompany)
-            .Include(x => x.Order)
             .Where(x => ids.Contains(x.Id))
             .ToListAsync();
     }

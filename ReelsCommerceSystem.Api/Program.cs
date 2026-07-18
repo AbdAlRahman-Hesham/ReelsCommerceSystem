@@ -12,6 +12,7 @@ using ReelsCommerceSystem.Infrastructure.Services;
 using ReelsCommerceSystem.Infrastructure.Services.Finance;
 using ReelsCommerceSystem.Shared.Utilities;
 using Serilog;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,12 @@ builder.Services.AddApplicationDBConfig(builder.Configuration);
 builder.Services.AddRepositoriesAndServices();
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<INotificationRealtimeSender, NotificationRealtimeSender>();
