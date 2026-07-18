@@ -37,6 +37,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             var brandRepo = _unitOfWork.Repository<Brand>();
             var productRepo = _unitOfWork.Repository<Product>();
             var offerRepo = _unitOfWork.Repository<Offer>();
+            var offerProductRepo = _unitOfWork.Repository<OfferProduct>();
 
             //  Get Brand
             var brand = await brandRepo.GetWithSpecAsync(new GetBrandByUserId(userId));
@@ -73,12 +74,39 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                         "في منتجات مش تابعة للبراند");
                 }
 
+                // Remove products from any existing offers and update their discount
+                var existingOfferProducts = offerProductRepo.GetAllQueryable()
+                    .Where(op => request.ProductIds.Contains(op.ProductId))
+                    .ToList();
+
+                var affectedOfferIds = existingOfferProducts.Select(op => op.OfferId).Distinct().ToList();
+
+                foreach (var existingOp in existingOfferProducts)
+                {
+                    offerProductRepo.Delete(existingOp);
+                }
+
                 foreach (var product in products)
                 {
+                    product.DiscountPercentage = request.DiscountPercentage;
+                    productRepo.Update(product);
+
                     offer.OfferProducts.Add(new OfferProduct
                     {
                         ProductId = product.Id
                     });
+                }
+
+                // Delete offers that are now empty (no products)
+                if (affectedOfferIds.Any())
+                {
+                    var emptyOffers = offerRepo.GetAllQueryable()
+                        .Where(o => affectedOfferIds.Contains(o.Id) && !o.OfferProducts.Any())
+                        .ToList();
+                    foreach (var emptyOffer in emptyOffers)
+                    {
+                        offerRepo.Delete(emptyOffer);
+                    }
                 }
             }
 
@@ -131,6 +159,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                         Id = op.Product.Id,
                         Name = op.Product.Name,
                         Price = op.Product.Price,
+                        DiscountPercentage = op.Product.DiscountPercentage ?? 0,
+                        DiscountedPrice = op.Product.Price * (1 - (op.Product.DiscountPercentage ?? 0) / 100m),
                         ProductMediaUrls = op.Product.Images?
                                            .Select(x => x.Url)
                                            .ToList() ?? new List<string>()

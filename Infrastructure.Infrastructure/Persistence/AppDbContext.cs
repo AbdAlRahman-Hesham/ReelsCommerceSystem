@@ -268,6 +268,11 @@ public class AppDbContext :IdentityDbContext<User>
         {
             b.Property(o => o.DiscountPercentage).HasPrecision(18, 2);
         });
+
+        modelBuilder.Entity<OfferProduct>(b =>
+        {
+            b.Property(op => op.DiscountPercentage).HasPrecision(18, 2);
+        });
     }
 
     public override async Task<int> SaveChangesAsync(
