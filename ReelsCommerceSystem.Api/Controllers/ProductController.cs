@@ -26,7 +26,7 @@ public class ProductController(IGenericRepository<ProductReview> productReviewRe
     [HttpGet]
     public async Task<IActionResult> GetAllProducts([FromQuery] ProductSpecParams specParams)
     {
-        var response = await _productService.GetProductsWithRecommendationsAsync(specParams);
+        var response = await _productService.GetProductsAsync(specParams);
         return StatusCode(response.StatusCode, response);
     }
     [HttpGet("GetAllForAi")]

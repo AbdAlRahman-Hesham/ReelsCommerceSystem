@@ -62,6 +62,14 @@ public class ProductService(
 
         var productDtos = products.Select(MapToGetAllProductsResponse).ToList();
 
+        var recommendedProducts = await _productRecommendationService.GetRecommendedProductsAsync(userId, 10);
+        if (recommendedProducts.Count > 0)
+        {
+            var normalProductIds = productDtos.Select(p => p.Id).ToHashSet();
+            var filteredRecommended = recommendedProducts.Where(p => !normalProductIds.Contains(p.Id)).ToList();
+            productDtos = filteredRecommended.Concat(productDtos).ToList();
+        }
+
         // If user is authenticated, mark wishlist status for each product
         if (!string.IsNullOrEmpty(userId))
         {
@@ -79,36 +87,6 @@ public class ProductService(
             data: productDtos,
             meta: meta,
             statusCode: HttpStatusCode.OK
-        );
-    }
-
-    public async Task<ApiResponse<ProductsWithRecommendations>> GetProductsWithRecommendationsAsync(ProductSpecParams productSpecParams)
-    {
-        var productsResponse = await GetProductsAsync(productSpecParams);
-
-        if (!productsResponse.Success)
-        {
-            return ApiResponse<ProductsWithRecommendations>.ErrorResponse(
-                (HttpStatusCode)productsResponse.StatusCode,
-                "Failed to fetch products.",
-                "فشل في جلب المنتجات."
-            );
-        }
-
-        var userId = httpContextAccessor.HttpContext?.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
-        var recommendedProducts = await _productRecommendationService.GetRecommendedProductsAsync(userId, 10);
-
-        var paginatedProductIds = productsResponse.Data.Data.Select(p => p.Id).ToHashSet();
-        var filteredRecommended = recommendedProducts.Where(p => !paginatedProductIds.Contains(p.Id)).ToList();
-
-        return ApiResponse<ProductsWithRecommendations>.SuccessResponse(
-            new ProductsWithRecommendations
-            {
-                Products = productsResponse.Data,
-                RecommendedProducts = filteredRecommended
-            },
-            HttpStatusCode.OK
         );
     }
 
