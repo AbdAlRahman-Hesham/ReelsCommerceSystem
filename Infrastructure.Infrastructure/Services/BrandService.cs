@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.DTOs.Request.Brand;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
@@ -151,9 +151,6 @@ public class BrandService : IBrandService
     public async Task<ApiResponse<BrandInfoRes>> GetBrandInfoAsync(int brandId, string? userId = null)
     {
         var brand = await _dbContext.Brands.AsNoTracking()
-            .Include(b => b.Products)
-                .ThenInclude(p => p.ProductReels)
-                .ThenInclude(pr => pr.Reel)
             .Include(b => b.UserFollows)
             .FirstOrDefaultAsync(b => b.Id == brandId);
 
@@ -166,10 +163,12 @@ public class BrandService : IBrandService
             );
         }
 
-        var totalLikes = brand.Products
-                         .SelectMany(p => p.ProductReels)
-                         .Select(pr => pr.Reel)
-                         .Sum(r => r.NumOfLikes);
+        // Count likes directly from the UserReelLike table via Reel.BrandId
+        // This avoids loading all reels + likes into memory (the old approach
+        // forgot to include UserReelLikes, so NumOfLikes was always 0).
+        var totalLikes = await _dbContext.Set<UserReelLike>()
+            .Where(l => l.Reel.BrandId == brandId)
+            .CountAsync();
 
         var followersCount = brand.UserFollows?.Count ?? 0;
 
