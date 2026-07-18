@@ -15,14 +15,12 @@ internal class ReelsByBrandWithSortingSpec : Specification<Reel>
             AddOrderBy(r => r.CreatedAt);
 
         else if (sortBy == "popular")
-            AddOrderByDescending(r => r.NumOfLikes);
+            AddOrderByDescending(r => r.CreatedAt); // Client-side sort by NumOfLikes in service
 
         else
             AddOrderByDescending(r => r.CreatedAt); // default: newest first
 
         AddInclude(r => r.UserReelLikes);
-        AddInclude(r => r.UserReelViews);
-
     }
 }
 

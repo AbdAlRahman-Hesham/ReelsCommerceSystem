@@ -53,6 +53,12 @@ public class ReelService(IUnitOfWork _unitOfWork, IRecommendationService _recomm
 
         var spec = new ReelsByBrandWithSortingSpec(brandId, sortBy, includeDrafts);
         var reels = await _unitOfWork.Repository<Reel>().GetAllWithSpecAsync(spec);
+
+        if (sortBy == "popular")
+        {
+            reels = reels.OrderByDescending(r => r.NumOfLikes).ToList();
+        }
+
         var AllReels = new List<AllReelsInBrandRes>();
         foreach (var reel in reels)
         {

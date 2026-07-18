@@ -45,9 +45,76 @@ public class ProductService(
     public async Task<ApiResponse<PaginationResponse<GetAllProductsResponse>>> GetProductsAsync(ProductSpecParams productSpecParams)
     {
         var userId = httpContextAccessor.HttpContext?.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        bool hasFilters = productSpecParams.BrandId.HasValue
+                       || productSpecParams.CategoryIds?.Count > 0
+                       || productSpecParams.Colors?.Count > 0
+                       || productSpecParams.Sizes?.Count > 0
+                       || !string.IsNullOrEmpty(productSpecParams.Search)
+                       || productSpecParams.MinPrice.HasValue
+                       || productSpecParams.MaxPrice.HasValue
+                       || productSpecParams.HaveOffer.HasValue
+                       || !string.IsNullOrEmpty(productSpecParams.StockStatus);
+
+        List<GetAllProductsResponse> recommendedProducts = new();
+        if (!hasFilters)
+        {
+            recommendedProducts = await _productRecommendationService.GetRecommendedProductsAsync(userId, 20);
+        }
+
+        if (recommendedProducts.Count > 0)
+        {
+            var noPageParams = productSpecParams with { PageIndex = null, PageSize = null };
+            var noPageSpec = new ProductSpec(noPageParams);
+            var allNormals = await _productRepository.GetAllWithSpecAsync(noPageSpec);
+
+            var recIds = recommendedProducts.Select(r => r.Id).ToHashSet();
+            var filteredNormals = allNormals
+                .Where(p => !recIds.Contains(p.Id))
+                .Select(MapToGetAllProductsResponse)
+                .ToList();
+
+            var combinedList = recommendedProducts.Concat(filteredNormals).ToList();
+
+            int pageIndex = productSpecParams.PageIndex ?? 1;
+            int pageSize = productSpecParams.PageSize ?? 10;
+            var pagedList = combinedList
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            int totalCount = combinedList.Count;
+            var meta = new Meta
+            {
+                PageNumber = pageIndex,
+                PageSize = pageSize,
+                TotalRecords = totalCount,
+                HasPreviousPage = pageIndex > 1,
+                HasNextPage = pageIndex * pageSize < totalCount
+            };
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var wishlistSpec = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId);
+                var wishlistItems = await unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem>().GetAllWithSpecAsync(wishlistSpec);
+                var lovedIds = wishlistItems?.Select(w => w.ProductId).ToHashSet() ?? new HashSet<int>();
+
+                foreach (var dto in pagedList)
+                {
+                    dto.IsInWishlist = lovedIds.Contains(dto.Id);
+                }
+            }
+
+            return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
+                data: pagedList,
+                meta: meta,
+                statusCode: HttpStatusCode.OK
+            );
+        }
+
         var cacheKey = GenerateCacheKey(productSpecParams);
 
-        var (products, meta) = await GetOrSetCacheAsync(
+        var (products, normalMeta) = await GetOrSetCacheAsync(
             cacheKey,
             async () =>
             {
@@ -62,15 +129,6 @@ public class ProductService(
 
         var productDtos = products.Select(MapToGetAllProductsResponse).ToList();
 
-        var recommendedProducts = await _productRecommendationService.GetRecommendedProductsAsync(userId, 10);
-        if (recommendedProducts.Count > 0)
-        {
-            var normalProductIds = productDtos.Select(p => p.Id).ToHashSet();
-            var filteredRecommended = recommendedProducts.Where(p => !normalProductIds.Contains(p.Id)).ToList();
-            productDtos = filteredRecommended.Concat(productDtos).ToList();
-        }
-
-        // If user is authenticated, mark wishlist status for each product
         if (!string.IsNullOrEmpty(userId))
         {
             var wishlistSpec = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId);
@@ -85,7 +143,7 @@ public class ProductService(
 
         return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
             data: productDtos,
-            meta: meta,
+            meta: normalMeta,
             statusCode: HttpStatusCode.OK
         );
     }
