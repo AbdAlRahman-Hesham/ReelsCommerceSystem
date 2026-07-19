@@ -66,11 +66,7 @@ builder.Services.AddRepositoriesAndServices();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    });
+builder.Services.AddControllers();
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<INotificationRealtimeSender, NotificationRealtimeSender>();

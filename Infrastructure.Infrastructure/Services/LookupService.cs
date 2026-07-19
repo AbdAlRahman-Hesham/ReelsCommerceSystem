@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.DTOs.Response.Lookup;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Enums;
+using ReelsCommerceSystem.Domain.Enums.Finance;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Shared.Responses;
 
@@ -141,6 +142,12 @@ public class LookupService(HttpClient _httpClient, IMemoryCache _cache, AppDbCon
 
     public Task<ApiResponse<List<LookupResDto>>> GetReelStatusesAsync() => 
         GetCachedEnumLookup<ReelStatus>("lookup_reel_statuses", "Reel statuses fetched successfully", "تم جلب حالات الفيديو بنجاح");
+
+    public Task<ApiResponse<List<LookupResDto>>> GetSettlementStatusesAsync() =>
+        GetCachedEnumLookup<SettlementStatus>("lookup_settlement_statuses", "Settlement statuses fetched successfully", "تم جلب حالات التسوية بنجاح");
+
+    public Task<ApiResponse<List<LookupResDto>>> GetWithdrawalRequestStatusesAsync() =>
+        GetCachedEnumLookup<WithdrawalRequestStatus>("lookup_withdrawal_request_statuses", "Withdrawal request statuses fetched successfully", "تم جلب حالات طلبات السحب بنجاح");
 
     public async Task<ApiResponse<List<DeliveryMethodLookupResDto>>> GetDeliveryMethodsAsync()
     {

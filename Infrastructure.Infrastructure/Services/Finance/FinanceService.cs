@@ -657,6 +657,17 @@ public class FinanceService : IFinanceService
             }
         }
 
+        if (request.WithdrawalRequestId.HasValue)
+        {
+            var wr = await _withdrawalRequestRepo.GetByIdAsync(request.WithdrawalRequestId.Value);
+            if (wr != null && (wr.Status == WithdrawalRequestStatus.Pending || wr.Status == WithdrawalRequestStatus.Approved))
+            {
+                wr.Status = WithdrawalRequestStatus.Paid;
+                wr.PaidAt = DateTime.UtcNow;
+                _withdrawalRequestRepo.Update(wr);
+            }
+        }
+
         await _unitOfWork.SaveChangesAsync();
     }
 
