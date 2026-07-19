@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.DTOs.Response.Order;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Domain.Entities.CommunityEntities;
+using ReelsCommerceSystem.Domain.Entities.FinanceEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderProductEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
@@ -545,6 +546,11 @@ public class DashboardService : IDashboardService
                 : 0
         }).ToList();
 
+        var deliveryRevenue = await _unitOfWork.Repository<ShippingSettlement>()
+            .GetAllQueryable()
+            .Where(s => s.ShippingCompanyId == 1)
+            .SumAsync(s => s.Amount);
+
         return new AdminDashboardRes
         {
             TotalBrands = totalBrands,
@@ -557,7 +563,7 @@ public class DashboardService : IDashboardService
             TotalReelViews = totalReelViews,
             EngagementRate = engagementRate,
             BrandSalesRevenue = brandSalesRevenue,
-            DeliveryRevenue = 0,
+            DeliveryRevenue = deliveryRevenue,
             AdsRevenue = 0,
             ActiveBrands = activeBrands,
             ActiveUsers = activeUsers,
