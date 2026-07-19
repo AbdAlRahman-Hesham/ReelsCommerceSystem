@@ -26,6 +26,7 @@ public class AdminDashboardRes
     public List<MonthlyGrowthDto> MonthlyOrdersTrend { get; set; } = new();
     public List<BrandDetailsDto> RecentBrandRequests { get; set; } = new();
     public List<TopBrandDto> TopBrands { get; set; } = new();
+    public List<MonthlyEngagementDto> MonthlyEngagementTrend { get; set; } = new();
 }
 
 public class MonthlyGrowthDto
@@ -41,4 +42,14 @@ public class TopBrandDto
     public string BrandName { get; set; } = default!;
     public decimal TotalRevenue { get; set; }
     public int TotalOrders { get; set; }
+}
+
+public class MonthlyEngagementDto
+{
+    public int Year { get; set; }
+    public int Month { get; set; }
+    public int Views { get; set; }
+    public int Likes { get; set; }
+    public int Comments { get; set; }
+    public double EngagementRate { get; set; }
 }

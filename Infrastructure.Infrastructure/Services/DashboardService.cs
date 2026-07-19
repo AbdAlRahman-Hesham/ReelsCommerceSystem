@@ -246,6 +246,56 @@ public class DashboardService : IDashboardService
             ? Math.Round((double)((currentYearRevenue - previousYearRevenue) / previousYearRevenue * 100), 1)
             : 0;
 
+        // Order Status Overview (all orders for this brand, grouped by time window)
+        var startOfWeek = now.Date.AddDays(-(int)now.DayOfWeek);
+        var startOfYear = new DateTime(now.Year, 1, 1);
+
+        var allBrandOrders = await _unitOfWork.Repository<Order>().GetAllQueryable()
+            .Where(o => orderIds.Contains(o.Id))
+            .Select(o => new { o.OrderStatus, o.CreatedAt })
+            .ToListAsync();
+
+        var thisWeekOrders = allBrandOrders.Where(o => o.CreatedAt >= startOfWeek).ToList();
+        var thisMonthOrders = allBrandOrders.Where(o => o.CreatedAt >= startOfMonth).ToList();
+        var thisYearOrders = allBrandOrders.Where(o => o.CreatedAt >= startOfYear).ToList();
+
+        var orderStatusOverview = new OrderStatusOverviewDto
+        {
+            ThisWeek = new OrderStatusCounts
+            {
+                Pending = thisWeekOrders.Count(o => o.OrderStatus == OrderStatus.Pending),
+                Processing = thisWeekOrders.Count(o => o.OrderStatus == OrderStatus.Processing),
+                Preparing = thisWeekOrders.Count(o => o.OrderStatus == OrderStatus.Preparing),
+                Packed = thisWeekOrders.Count(o => o.OrderStatus == OrderStatus.Packed),
+                Shipped = thisWeekOrders.Count(o => o.OrderStatus == OrderStatus.Shipped),
+                Delivered = thisWeekOrders.Count(o => o.OrderStatus == OrderStatus.Delivered),
+                Cancelled = thisWeekOrders.Count(o => o.OrderStatus == OrderStatus.Cancelled),
+                PendingCancellation = thisWeekOrders.Count(o => o.OrderStatus == OrderStatus.PendingCancellation)
+            },
+            ThisMonth = new OrderStatusCounts
+            {
+                Pending = thisMonthOrders.Count(o => o.OrderStatus == OrderStatus.Pending),
+                Processing = thisMonthOrders.Count(o => o.OrderStatus == OrderStatus.Processing),
+                Preparing = thisMonthOrders.Count(o => o.OrderStatus == OrderStatus.Preparing),
+                Packed = thisMonthOrders.Count(o => o.OrderStatus == OrderStatus.Packed),
+                Shipped = thisMonthOrders.Count(o => o.OrderStatus == OrderStatus.Shipped),
+                Delivered = thisMonthOrders.Count(o => o.OrderStatus == OrderStatus.Delivered),
+                Cancelled = thisMonthOrders.Count(o => o.OrderStatus == OrderStatus.Cancelled),
+                PendingCancellation = thisMonthOrders.Count(o => o.OrderStatus == OrderStatus.PendingCancellation)
+            },
+            ThisYear = new OrderStatusCounts
+            {
+                Pending = thisYearOrders.Count(o => o.OrderStatus == OrderStatus.Pending),
+                Processing = thisYearOrders.Count(o => o.OrderStatus == OrderStatus.Processing),
+                Preparing = thisYearOrders.Count(o => o.OrderStatus == OrderStatus.Preparing),
+                Packed = thisYearOrders.Count(o => o.OrderStatus == OrderStatus.Packed),
+                Shipped = thisYearOrders.Count(o => o.OrderStatus == OrderStatus.Shipped),
+                Delivered = thisYearOrders.Count(o => o.OrderStatus == OrderStatus.Delivered),
+                Cancelled = thisYearOrders.Count(o => o.OrderStatus == OrderStatus.Cancelled),
+                PendingCancellation = thisYearOrders.Count(o => o.OrderStatus == OrderStatus.PendingCancellation)
+            }
+        };
+
         return new BrandDashboardRes
         {
             TotalProducts = productCount,
@@ -275,7 +325,8 @@ public class DashboardService : IDashboardService
             TotalReelViews = totalReelViews,
             TotalReelLikes = totalReelLikes,
             TopViewedReels = topViewedReels,
-            TopLikedReels = topLikedReels
+            TopLikedReels = topLikedReels,
+            OrderStatusOverview = orderStatusOverview
         };
     }
 
@@ -446,6 +497,54 @@ public class DashboardService : IDashboardService
             .Take(5)
             .ToListAsync();
 
+        // Monthly engagement trend (reel views/likes/comments grouped by month)
+        var monthlyViewsData = await _unitOfWork.Repository<Reel>().GetAllQueryable()
+            .SelectMany(r => r.UserReelViews)
+            .Where(v => v.CreatedAt >= twelveMonthsAgo)
+            .GroupBy(v => new { v.CreatedAt.Year, v.CreatedAt.Month })
+            .Select(g => new { g.Key.Year, g.Key.Month, Views = g.Count() })
+            .OrderBy(g => g.Year).ThenBy(g => g.Month)
+            .ToListAsync();
+
+        var monthlyLikesData = await _unitOfWork.Repository<Reel>().GetAllQueryable()
+            .SelectMany(r => r.UserReelLikes)
+            .Where(l => l.CreatedAt >= twelveMonthsAgo)
+            .GroupBy(l => new { l.CreatedAt.Year, l.CreatedAt.Month })
+            .Select(g => new { g.Key.Year, g.Key.Month, Likes = g.Count() })
+            .OrderBy(g => g.Year).ThenBy(g => g.Month)
+            .ToListAsync();
+
+        var monthlyCommentsData = await _unitOfWork.Repository<Reel>().GetAllQueryable()
+            .SelectMany(r => r.ReelComments)
+            .Where(c => c.CreatedAt >= twelveMonthsAgo)
+            .GroupBy(c => new { c.CreatedAt.Year, c.CreatedAt.Month })
+            .Select(g => new { g.Key.Year, g.Key.Month, Comments = g.Count() })
+            .OrderBy(g => g.Year).ThenBy(g => g.Month)
+            .ToListAsync();
+
+        var allMonths = monthlyViewsData
+            .Select(g => new { g.Year, g.Month })
+            .Union(monthlyLikesData.Select(g => new { g.Year, g.Month }))
+            .Union(monthlyCommentsData.Select(g => new { g.Year, g.Month }))
+            .Distinct()
+            .OrderBy(m => m.Year).ThenBy(m => m.Month)
+            .ToList();
+
+        var monthlyEngagementTrend = allMonths.Select(m => new MonthlyEngagementDto
+        {
+            Year = m.Year,
+            Month = m.Month,
+            Views = monthlyViewsData.FirstOrDefault(v => v.Year == m.Year && v.Month == m.Month)?.Views ?? 0,
+            Likes = monthlyLikesData.FirstOrDefault(l => l.Year == m.Year && l.Month == m.Month)?.Likes ?? 0,
+            Comments = monthlyCommentsData.FirstOrDefault(c => c.Year == m.Year && c.Month == m.Month)?.Comments ?? 0,
+            EngagementRate = (monthlyViewsData.FirstOrDefault(v => v.Year == m.Year && v.Month == m.Month)?.Views ?? 0) > 0
+                ? Math.Round(
+                    (double)(((monthlyLikesData.FirstOrDefault(l => l.Year == m.Year && l.Month == m.Month)?.Likes ?? 0)
+                    + (monthlyCommentsData.FirstOrDefault(c => c.Year == m.Year && c.Month == m.Month)?.Comments ?? 0))
+                    / (monthlyViewsData.FirstOrDefault(v => v.Year == m.Year && v.Month == m.Month)?.Views ?? 1) * 100), 1)
+                : 0
+        }).ToList();
+
         return new AdminDashboardRes
         {
             TotalBrands = totalBrands,
@@ -469,7 +568,8 @@ public class DashboardService : IDashboardService
             RevenueTrend = revenueTrend,
             MonthlyOrdersTrend = monthlyOrdersTrend,
             RecentBrandRequests = recentRequests,
-            TopBrands = topBrands
+            TopBrands = topBrands,
+            MonthlyEngagementTrend = monthlyEngagementTrend
         };
     }
 

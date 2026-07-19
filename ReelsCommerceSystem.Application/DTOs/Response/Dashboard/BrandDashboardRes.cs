@@ -20,6 +20,7 @@ public class BrandDashboardRes
     public int TotalReelLikes { get; set; }
     public List<TopReelDto> TopViewedReels { get; set; } = new();
     public List<TopReelDto> TopLikedReels { get; set; } = new();
+    public OrderStatusOverviewDto OrderStatusOverview { get; set; } = new();
 }
 
 public class ReelCountsDto
