@@ -57,7 +57,7 @@ public class ProductService(
                        || !string.IsNullOrEmpty(productSpecParams.StockStatus);
 
         List<GetAllProductsResponse> recommendedProducts = new();
-        if (!hasFilters)
+        if (!hasFilters && string.IsNullOrEmpty(productSpecParams.SortBy))
         {
             recommendedProducts = await _productRecommendationService.GetRecommendedProductsAsync(userId, 20);
         }
