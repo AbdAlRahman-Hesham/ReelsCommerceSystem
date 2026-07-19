@@ -33,6 +33,8 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
                 q.Include(r => r.ProductReels)
                  .ThenInclude(pr => pr.Product)
                     .ThenInclude(p => p.Images));
+
+            AsSplitQuery();
         }
 
         public ReelFeedSpec() : base(criteria: r => r.Status == ReelStatus.Published,
@@ -67,7 +69,26 @@ namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelS
             AddCommonIncludes();
         }
 
+        public ReelFeedSpec(HashSet<int> excludeIds) : base(criteria:
+            r => r.Status == ReelStatus.Published && !excludeIds.Contains(r.Id),
+            orderBy: r => r.CreatedAt,
+            sortOrder: System.Xml.XPath.XmlSortOrder.Descending)
+        {
+            AddCommonIncludes();
+        }
 
+        public ReelFeedSpec(HashSet<int> excludeIds, int pageIndex, int pageSize) : base(criteria:
+            r => r.Status == ReelStatus.Published && !excludeIds.Contains(r.Id),
+            orderBy: r => r.CreatedAt,
+            sortOrder: System.Xml.XPath.XmlSortOrder.Descending)
+        {
+            AddCommonIncludes();
+            ApplyPaging(pageIndex, pageSize);
+        }
+
+        public ReelFeedSpec(bool countOnly) : base(criteria: r => r.Status == ReelStatus.Published)
+        {
+        }
     }
 }
 

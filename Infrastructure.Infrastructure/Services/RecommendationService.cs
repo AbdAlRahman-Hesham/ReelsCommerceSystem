@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ReelsCommerceSystem.Infrastructure.Services
@@ -160,7 +161,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     }).ToList()
                 };
 
-                var response = await _httpClient.PostAsJsonAsync($"/api/users/recommend?top_k={topK}", userPayload);
+                var response = await _httpClient.PostAsJsonAsync($"/api/users/recommend?top_k={topK}", userPayload,
+                    new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token);
 
                 if (!response.IsSuccessStatusCode)
                 {

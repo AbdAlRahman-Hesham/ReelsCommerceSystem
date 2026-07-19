@@ -56,65 +56,78 @@ public class ProductService(
                        || productSpecParams.HaveOffer.HasValue
                        || !string.IsNullOrEmpty(productSpecParams.StockStatus);
 
-        List<GetAllProductsResponse> recommendedProducts = new();
         if (!hasFilters && string.IsNullOrEmpty(productSpecParams.SortBy))
         {
-            recommendedProducts = await _productRecommendationService.GetRecommendedProductsAsync(userId, 20);
+            return await GetRecommendedProductsPageAsync(userId, productSpecParams);
         }
 
-        if (recommendedProducts.Count > 0)
+        return await GetFilteredProductsPageAsync(productSpecParams, userId);
+    }
+
+    private async Task<ApiResponse<PaginationResponse<GetAllProductsResponse>>> GetRecommendedProductsPageAsync(
+        string? userId, ProductSpecParams productSpecParams)
+    {
+        int pageIndex = productSpecParams.PageIndex ?? 1;
+        int pageSize = productSpecParams.PageSize ?? 10;
+
+        var recCacheKey = $"products:rec:{userId ?? "anon"}";
+        var recommendedProducts = await GetOrSetCacheAsync(
+            recCacheKey,
+            () => _productRecommendationService.GetRecommendedProductsAsync(userId, 20),
+            TimeSpan.FromMinutes(2));
+
+        var recIds = recommendedProducts.Select(r => r.Id).ToHashSet();
+
+        var recSkip = (pageIndex - 1) * pageSize;
+        var pageRecs = recommendedProducts.Skip(recSkip).Take(pageSize).ToList();
+        var remainingSlots = pageSize - pageRecs.Count;
+
+        List<GetAllProductsResponse> normalPage = new();
+        int totalNormalCount = 0;
+
+        if (remainingSlots > 0)
         {
-            var noPageParams = productSpecParams with { PageIndex = null, PageSize = null };
-            var noPageSpec = new ProductSpec(noPageParams);
-            var allNormals = await _productRepository.GetAllWithSpecAsync(noPageSpec);
+            var spec = new ProductSpec();
+            var baseQuery = _unitOfWork.Repository<Product>().GetAllQueryable();
+            var query = spec.ApplySpecification(baseQuery, applyPaging: false);
+            query = query.Where(p => !recIds.Contains(p.Id));
 
-            var recIds = recommendedProducts.Select(r => r.Id).ToHashSet();
-            var filteredNormals = allNormals
-                .Where(p => !recIds.Contains(p.Id))
-                .Select(MapToGetAllProductsResponse)
-                .ToList();
+            totalNormalCount = await query.CountAsync();
 
-            var combinedList = recommendedProducts.Concat(filteredNormals).ToList();
-
-            int pageIndex = productSpecParams.PageIndex ?? 1;
-            int pageSize = productSpecParams.PageSize ?? 10;
-            var pagedList = combinedList
+            var normalProducts = await query
+                .OrderByDescending(p => p.Id)
                 .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+                .Take(remainingSlots)
+                .ToListAsync();
 
-            int totalCount = combinedList.Count;
-            var meta = new Meta
+            normalPage = normalProducts.Select(MapToGetAllProductsResponse).ToList();
+        }
+
+        var combinedList = pageRecs.Concat(normalPage).ToList();
+        int totalCount = recommendedProducts.Count + totalNormalCount;
+
+        await MarkWishlistAsync(combinedList, userId);
+
+        return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
+            data: combinedList,
+            meta: new Meta
             {
                 PageNumber = pageIndex,
                 PageSize = pageSize,
                 TotalRecords = totalCount,
                 HasPreviousPage = pageIndex > 1,
                 HasNextPage = pageIndex * pageSize < totalCount
-            };
+            },
+            statusCode: HttpStatusCode.OK
+        );
+    }
 
-            if (!string.IsNullOrEmpty(userId))
-            {
-                var wishlistSpec = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId);
-                var wishlistItems = await unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem>().GetAllWithSpecAsync(wishlistSpec);
-                var lovedIds = wishlistItems?.Select(w => w.ProductId).ToHashSet() ?? new HashSet<int>();
-
-                foreach (var dto in pagedList)
-                {
-                    dto.IsInWishlist = lovedIds.Contains(dto.Id);
-                }
-            }
-
-            return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
-                data: pagedList,
-                meta: meta,
-                statusCode: HttpStatusCode.OK
-            );
-        }
-
+    private async Task<ApiResponse<PaginationResponse<GetAllProductsResponse>>> GetFilteredProductsPageAsync(
+        ProductSpecParams productSpecParams, string? userId)
+    {
         var cacheKey = GenerateCacheKey(productSpecParams);
 
-        var (products, normalMeta) = await GetOrSetCacheAsync(
+        var (productDtos, normalMeta) = await GetOrSetCacheAsync(
             cacheKey,
             async () =>
             {
@@ -122,30 +135,43 @@ public class ProductService(
                 var products = await _productRepository.GetAllWithSpecAsync(spec);
                 var totalCount = await _productRepository.CountAsync(spec);
                 var meta = CreatePaginationMeta(totalCount, spec);
+                var dtos = products.Select(MapToGetAllProductsResponse).ToList();
+                return (dtos, meta);
+            });
 
-                return (products, meta);
-            }
-        );
-
-        var productDtos = products.Select(MapToGetAllProductsResponse).ToList();
-
-        if (!string.IsNullOrEmpty(userId))
-        {
-            var wishlistSpec = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId);
-            var wishlistItems = await unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem>().GetAllWithSpecAsync(wishlistSpec);
-            var lovedIds = wishlistItems?.Select(w => w.ProductId).ToHashSet() ?? new HashSet<int>();
-
-            foreach (var dto in productDtos)
-            {
-                dto.IsInWishlist = lovedIds.Contains(dto.Id);
-            }
-        }
+        await MarkWishlistAsync(productDtos, userId);
 
         return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
             data: productDtos,
             meta: normalMeta,
             statusCode: HttpStatusCode.OK
         );
+    }
+
+    private async Task MarkWishlistAsync(List<GetAllProductsResponse> products, string? userId)
+    {
+        if (string.IsNullOrEmpty(userId) || products.Count == 0) return;
+
+        var lovedIds = await GetCachedWishlistIdsAsync(userId);
+
+        foreach (var dto in products)
+        {
+            dto.IsInWishlist = lovedIds.Contains(dto.Id);
+        }
+    }
+
+    private async Task<HashSet<int>> GetCachedWishlistIdsAsync(string userId)
+    {
+        var cacheKey = $"wishlist:{userId}";
+        return await GetOrSetCacheAsync(
+            cacheKey,
+            async () =>
+            {
+                var spec = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId);
+                var items = await unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem>().GetAllWithSpecAsync(spec);
+                return items?.Select(w => w.ProductId).ToHashSet() ?? new HashSet<int>();
+            },
+            TimeSpan.FromSeconds(30));
     }
 
     public async Task<ApiResponse<PaginationResponse<GetAllProductsForAiResponse>>> GetAllProductsForAiAsync()
@@ -242,7 +268,7 @@ public class ProductService(
 
     #region Private Helper Methods
 
-    private async Task<T> GetOrSetCacheAsync<T>(string cacheKey, Func<Task<T>> factory)
+    private async Task<T> GetOrSetCacheAsync<T>(string cacheKey, Func<Task<T>> factory, TimeSpan? expiration = null)
     {
         if (memoryCache.TryGetValue(cacheKey, out T cachedValue))
         {
@@ -250,7 +276,7 @@ public class ProductService(
         }
 
         var value = await factory();
-        var cacheOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(_cacheExpiration);
+        var cacheOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(expiration ?? _cacheExpiration);
         memoryCache.Set(cacheKey, value, cacheOptions);
 
         return value;
