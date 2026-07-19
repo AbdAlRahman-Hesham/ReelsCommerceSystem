@@ -17,4 +17,6 @@ public interface ILookupService
     Task<ApiResponse<List<LookupResDto>>> GetDisputeStatusesAsync();
     Task<ApiResponse<List<LookupResDto>>> GetReelStatusesAsync();
     Task<ApiResponse<List<DeliveryMethodLookupResDto>>> GetDeliveryMethodsAsync();
+    Task<ApiResponse<List<LookupResDto>>> GetSettlementStatusesAsync();
+    Task<ApiResponse<List<LookupResDto>>> GetWithdrawalRequestStatusesAsync();
 }

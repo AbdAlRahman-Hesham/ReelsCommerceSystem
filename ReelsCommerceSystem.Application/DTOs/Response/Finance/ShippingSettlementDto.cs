@@ -9,6 +9,7 @@ public class ShippingSettlementDto
     public string OrderReference { get; set; } = null!;
     public decimal Amount { get; set; }
     public ShippingSettlementStatus Status { get; set; }
+    public string StatusString => Status.ToString();
     public DateTime? PaidAt { get; set; }
     public string? PaymentReference { get; set; }
     public string? Notes { get; set; }

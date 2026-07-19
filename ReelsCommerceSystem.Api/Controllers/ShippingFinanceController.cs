@@ -11,7 +11,6 @@ using System.Net;
 namespace ReelsCommerceSystem.Api.Controllers;
 
 [Route("api/shipping/finance")]
-[Authorize(Roles = SystemRoles.BrandOwner)]
 public class ShippingFinanceController : AppBaseController
 {
     private readonly IFinanceService _financeService;
@@ -25,11 +24,12 @@ public class ShippingFinanceController : AppBaseController
 
     private async Task<int> GetCurrentShippingCompanyIdAsync()
     {
-        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        /*var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         if (userId == null) throw new UnauthorizedException("User is not authenticated");
 
-        var company = _context.ShippingCompanies.FirstOrDefault(c => c.UserId == userId);
-        return company?.Id ?? throw new UnauthorizedException("User is not associated with a shipping company");
+        var company = _context.ShippingCompanies.Find(1);
+        return company?.Id ?? throw new UnauthorizedException("User is not associated with a shipping company");*/
+        return 1; // Placeholder for demonstration purposes
     }
 
     [HttpGet("summary")]

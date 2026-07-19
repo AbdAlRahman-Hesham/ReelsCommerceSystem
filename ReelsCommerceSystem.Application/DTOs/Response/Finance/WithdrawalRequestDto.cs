@@ -7,6 +7,7 @@ public class WithdrawalRequestDto
     public int Id { get; set; }
     public decimal RequestedAmount { get; set; }
     public WithdrawalRequestStatus Status { get; set; }
+    public string StatusString => Status.ToString();
     public DateTime CreatedAt { get; set; }
     public DateTime? ApprovedAt { get; set; }
     public DateTime? PaidAt { get; set; }

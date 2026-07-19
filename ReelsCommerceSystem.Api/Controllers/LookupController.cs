@@ -89,6 +89,20 @@ namespace ReelsCommerceSystem.Api.Controllers
             var result = await _lookupService.GetDeliveryMethodsAsync();
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("settlement-statuses")]
+        public async Task<IActionResult> GetSettlementStatuses()
+        {
+            var result = await _lookupService.GetSettlementStatusesAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("withdrawal-request-statuses")]
+        public async Task<IActionResult> GetWithdrawalRequestStatuses()
+        {
+            var result = await _lookupService.GetWithdrawalRequestStatusesAsync();
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }
 
