@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ReelsCommerceSystem.Api.Controllers;
 using ReelsCommerceSystem.Application.DTOs.Request.TikTok;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
 using ReelsCommerceSystem.Shared.Responses;
+using ReelsCommerceSystem.Shared.Utilities;
 using System.Net;
 using System.Text.Json;
 using System.Web;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace ReelsCommerceSystem.API.Controllers;
 
@@ -17,22 +19,22 @@ public class TikTokAuthController : AppBaseController
     private readonly HttpClient _httpClient;
     private readonly UserManager<User> _userManager;
     private readonly IJwtService _jwtService;
+    private readonly IMemoryCache _cache;
 
-    // State tracking in memory (for demo; move to Redis/DB for scale)
-    private static readonly Dictionary<string, DateTime> _validStates = new();
-    private static readonly Dictionary<string, string> _stateSuccessRedirects = new();
-    private static readonly Dictionary<string, string> _stateFailRedirects = new();
+    private record OAuthState(string SuccessUrl, string FailUrl);
 
     public TikTokAuthController(
         IConfiguration config,
         IHttpClientFactory httpClientFactory,
         UserManager<User> userManager,
-        IJwtService jwtService)
+        IJwtService jwtService,
+        IMemoryCache cache)
     {
         _config = config;
         _httpClient = httpClientFactory.CreateClient();
         _userManager = userManager;
         _jwtService = jwtService;
+        _cache = cache;
     }
 
     [HttpGet("login")]
@@ -46,9 +48,12 @@ public class TikTokAuthController : AppBaseController
         var finalRedirectUri = redirectUri ?? defaultRedirectUri;
 
         var state = Guid.NewGuid().ToString("N");
-        _validStates[state] = DateTime.UtcNow.AddMinutes(5);
-        _stateSuccessRedirects[state] = frontendLoginSuccessUrl;
-        _stateFailRedirects[state] = frontendLoginFailUrl;
+        var stateData = new OAuthState(frontendLoginSuccessUrl, frontendLoginFailUrl);
+        _cache.Set(state, stateData, TimeSpan.FromHours(1));
+
+        // Store these as defaults for this provider
+        _cache.Set("TikTokAuth:DefaultSuccessUrl", frontendLoginSuccessUrl, TimeSpan.FromHours(1));
+        _cache.Set("TikTokAuth:DefaultFailUrl", frontendLoginFailUrl, TimeSpan.FromHours(1));
 
         var url = $"https://www.tiktok.com/v2/auth/authorize/?" +
                   $"client_key={clientKey}&" +
@@ -64,15 +69,13 @@ public class TikTokAuthController : AppBaseController
     [HttpGet("callback")]
     public async Task<IActionResult> TikTokCallback(string? code, string? state, string? error)
     {
-        if (string.IsNullOrEmpty(state) || !_validStates.ContainsKey(state))
+        if (string.IsNullOrEmpty(state) || !_cache.TryGetValue(state, out OAuthState? stateData))
             return Redirect(GetFailRedirect(state, "Invalid state — possible CSRF attack"));
 
-        var successUrl = _stateSuccessRedirects.GetValueOrDefault(state) ?? _config["TikTokAuth:DefaultSuccessUrl"];
-        var failUrl = _stateFailRedirects.GetValueOrDefault(state) ?? _config["TikTokAuth:DefaultFailUrl"];
+        var successUrl = stateData?.SuccessUrl ?? _cache.Get<string>("TikTokAuth:DefaultSuccessUrl") ?? _config["TikTokAuth:DefaultSuccessUrl"];
+        var failUrl = stateData?.FailUrl ?? _cache.Get<string>("TikTokAuth:DefaultFailUrl") ?? _config["TikTokAuth:DefaultFailUrl"];
 
-        _validStates.Remove(state);
-        _stateSuccessRedirects.Remove(state);
-        _stateFailRedirects.Remove(state);
+        _cache.Remove(state);
 
         if (!string.IsNullOrEmpty(error))
             return Redirect($"{failUrl}?error={Uri.EscapeDataString(error)}");
@@ -84,8 +87,8 @@ public class TikTokAuthController : AppBaseController
             // Store in cookies for web
             Response.Cookies.Append("auth_token", jwt, new CookieOptions
             {
-                HttpOnly = true,
-                Secure = true,
+                HttpOnly = false,
+                Secure = true, // Must be true for SameSite = None
                 SameSite = SameSiteMode.None,
                 Expires = expiresAt
             });
@@ -93,12 +96,20 @@ public class TikTokAuthController : AppBaseController
             Response.Cookies.Append("auth_expiry", expiresAt.ToString("o"), new CookieOptions
             {
                 HttpOnly = false,
-                Secure = true,
+                Secure = true, // Must be true for SameSite = None
                 SameSite = SameSiteMode.None,
                 Expires = expiresAt
             });
 
-            return Redirect(successUrl!);
+            // If frontend is on a different domain, cookies might not be accessible.
+            // It's safer to also pass the token in the query string.
+            var redirectUrl = successUrl;
+            if (redirectUrl.Contains("?"))
+                redirectUrl += $"&token={jwt}";
+            else
+                redirectUrl += $"?token={jwt}";
+
+            return Redirect(redirectUrl);
         }
         catch (Exception ex)
         {
@@ -119,16 +130,16 @@ public async Task<IActionResult> ExchangeCode([FromBody] TikTokExchangeReq reque
         ));
     }
 
-    if (!_validStates.ContainsKey(request.State))
-    {
-        return BadRequest(ApiResponse<object>.ErrorResponse(
-            HttpStatusCode.BadRequest,
-            en: "Invalid or expired state.",
-            ar: "رمز الحالة غير صالح أو منتهي الصلاحية."
-        ));
-    }
+        if (!_cache.TryGetValue(request.State, out _))
+        {
+            return BadRequest(ApiResponse<object>.ErrorResponse(
+                HttpStatusCode.BadRequest,
+                en: "Invalid or expired state.",
+                ar: "رمز الحالة غير صالح أو منتهي الصلاحية."
+            ));
+        }
 
-    _validStates.Remove(request.State);
+        _cache.Remove(request.State);
 
     try
     {
@@ -223,7 +234,6 @@ private async Task<(User user, string jwt, DateTime expiresAt)> ExchangeTikTokCo
             user = new User
             {
                 EmailConfirmed = true,
-                Role = Domain.Enums.Role.Customer,
                 UserName = $"tiktok_{openId}",
                 Email = $"{openId}@tiktok.local",
                 DisplayName = displayName ?? "TikTok User",
@@ -235,6 +245,7 @@ private async Task<(User user, string jwt, DateTime expiresAt)> ExchangeTikTokCo
                 throw new Exception("User creation failed");
 
             await _userManager.AddLoginAsync(user, new UserLoginInfo("TikTok", openId!, "TikTok"));
+            await _userManager.AddToRoleAsync(user, SystemRoles.User);
         }
         else
         {
@@ -249,13 +260,13 @@ private async Task<(User user, string jwt, DateTime expiresAt)> ExchangeTikTokCo
 
     private string GetFailRedirect(string? state, string message)
     {
-        if (state != null && _stateFailRedirects.TryGetValue(state, out var failUrl))
+        if (state != null && _cache.TryGetValue(state, out OAuthState? stateData))
         {
-            _stateFailRedirects.Remove(state);
-            return $"{failUrl}?error={Uri.EscapeDataString(message)}";
+            _cache.Remove(state);
+            return $"{stateData.FailUrl}?error={Uri.EscapeDataString(message)}";
         }
 
-        var defaultFail = _config["TikTokAuth:DefaultFailUrl"] ?? "https://localhost:4200/login/tiktok/fail";
+        var defaultFail = _cache.Get<string>("TikTokAuth:DefaultFailUrl") ?? _config["TikTokAuth:DefaultFailUrl"] ?? "https://localhost:4200/login/tiktok/fail";
         return $"{defaultFail}?error={Uri.EscapeDataString(message)}";
     }
 }

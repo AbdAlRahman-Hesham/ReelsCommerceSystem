@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ReelsCommerceSystem.Application.DTOs.Params;
 using ReelsCommerceSystem.Application.DTOs.Request.Brand;
 using ReelsCommerceSystem.Application.DTOs.Response.Brand;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
 using ReelsCommerceSystem.Infrastructure.Specifications.Specifications;
+using ReelsCommerceSystem.Infrastructure.Specifications.Specifications.BrandSpec;
 using ReelsCommerceSystem.Shared.Responses;
 using System.Net;
 using System.Security.Claims;
@@ -14,6 +16,21 @@ namespace ReelsCommerceSystem.Api.Controllers;
 
 public class BrandController (IBrandService _brandService, IGenericRepository<BrandReview> _brandReviewRepository) : AppBaseController
 {
+    [HttpGet]
+    public async Task<IActionResult> GetBrands([FromQuery] BrandSpecParams specParams)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var response = await _brandService.GetBrandsAsync(specParams, userId);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet("categories")]
+    public async Task<IActionResult> GetBrandCategories()
+    {
+        var response = await _brandService.GetBrandCategoriesAsync();
+        return StatusCode(response.StatusCode, response);
+    }
+
     [HttpGet("BrandPolicy")]
     public async Task<IActionResult> GetBrandPolicy([FromQuery]int id)
     {
@@ -43,13 +60,17 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
     [HttpGet("BrandInfo/{brandId}")]
     public async Task<IActionResult> GetBrandInfo(int brandId)
     {
-        var result = await _brandService.GetBrandInfoAsync(brandId);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var result = await _brandService.GetBrandInfoAsync(brandId, userId);
         return StatusCode(result.StatusCode, result);
     }
-        
+
     [HttpGet("GetReviewsForBrand")]
     public async Task<IActionResult> GetReviewsForBrand(int brandId)
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        //Console.WriteLine("UserID = " + userId);
+
         var result = await _brandReviewRepository.GetAllWithSpecAsync(new ReviewsPerBrandSpec(brandId));
 
         var res = result.Select(r => new BrandReviewRes
@@ -61,7 +82,9 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
             NumOfLikes = r.NumOfLikes,
             NumOfDislikes = r.NumOfDislikes,
             UserDisplayName = r.User.DisplayName,
-            UserImageUrl = r.User.ImageURL
+            UserImageUrl = r.User.ImageURL,
+            IsLike = userId != null && r.Likes.Any(l => l.UserId == userId),
+            IsDislike = userId != null && r.Dislikes.Any(d => d.UserId == userId)
         }).ToList();
 
 
@@ -125,8 +148,8 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
     [HttpPost("ToggleFollow/{brandId}")]
     public async Task<IActionResult> ToggleFollowBrand(int brandId)
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;  ////
 
-        var userId = User.FindFirst("sub")?.Value;
 
         if (string.IsNullOrEmpty(userId))
         {
@@ -138,6 +161,112 @@ public class BrandController (IBrandService _brandService, IGenericRepository<Br
 
         return StatusCode(response.StatusCode, response);
     }
+
+    [Authorize]
+    [HttpPost("{brandId}/review")]
+    public async Task<IActionResult> AddOrUpdateReview(
+        int brandId,
+        [FromBody] BrandReviewReq dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
         
+        var result = await _brandService
+           .AddOrUpdateReview(brandId, userId, dto);
+
+        return StatusCode(result.StatusCode, result);
+
+    }
+    [HttpGet("{brandId}/average-rating")]
+    public async Task<IActionResult> GetAverageRating(int brandId)
+    {
+        var result = await _brandService.GetAverageRating(brandId);
+        return StatusCode(result.StatusCode, result);
+    }
+    [Authorize]
+    [HttpPost ("BrandInfo")]
+    public async Task<IActionResult> CreateBrand(CreateBrandReq dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
+
+        var result = await _brandService.CreateBrandAsync(userId!, dto);
+
+        return StatusCode(result.StatusCode, result);
+    }
+    [Authorize]
+    [HttpGet("my")]
+    public async Task<IActionResult> GetMyBrand()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
+
+        var result = await _brandService.GetMyBrandAsync(userId);
+
+        return StatusCode(result.StatusCode, result);
+    }
+    [Authorize]
+    [HttpGet("FollowedBrands")]
+    public async Task<IActionResult> GetFollowedBrands()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
+
+        var result = await _brandService.GetFollowedBrandsAsync(userId);
+        return Ok(result);
+    }
+
+    [Authorize]
+    [HttpGet("/api/brand-registration/status")]
+    public async Task<IActionResult> GetBrandStatus()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(
+                ApiResponse<string>.ErrorResponse(
+                    HttpStatusCode.Unauthorized,
+                    "Unauthorized.",
+                    "غير مصرح."
+                ));
+        }
+
+        var result = await _brandService.GetBrandStatusAsync(userId!);
+
+        return StatusCode(result.StatusCode, result);
+    }
+
 
 }

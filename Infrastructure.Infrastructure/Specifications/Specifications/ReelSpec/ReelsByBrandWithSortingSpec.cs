@@ -1,30 +1,28 @@
-﻿using MailKit.Search;
-using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
+using ReelsCommerceSystem.Domain.Enums;
 using ReelsCommerceSystem.Infrastructure.Specifications.Common;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.XPath;
 
-namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec
+
+namespace ReelsCommerceSystem.Infrastructure.Specifications.Specifications.ReelSpec;
+
+internal class ReelsByBrandWithSortingSpec : Specification<Reel>
 {
-    internal class ReelsByBrandWithSortingSpec : Specification<Reel>
+    public ReelsByBrandWithSortingSpec(int brandId, string? sortBy = null, bool includeDrafts = false)
+        : base(criteria: r => r.BrandId == brandId && (includeDrafts || r.Status == ReelStatus.Published))
     {
-        public ReelsByBrandWithSortingSpec(int brandId, string? SortBy = null)
-            : base(criteria: r => r.BrandId == brandId,
-                   includes: [r => r.Product])
-        {
-            {
 
-                if (SortBy == "oldest")
-                    AddOrderBy(r => r.CreatedAt);
-                else if (SortBy == "popular")
-                    AddOrderByDescending(r => r.NumOfLikes);
-            }
-        }
+        if (sortBy == "oldest")
+            AddOrderBy(r => r.CreatedAt);
+
+        else if (sortBy == "popular")
+            AddOrderByDescending(r => r.CreatedAt); // Client-side sort by NumOfLikes in service
+
+        else
+            AddOrderByDescending(r => r.CreatedAt); // default: newest first
+
+        AddInclude(r => r.UserReelLikes);
+        AddInclude(r => r.UserReelViews);
+        AddInclude(r => r.UserReelShares);
     }
 }
+

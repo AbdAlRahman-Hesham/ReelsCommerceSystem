@@ -1,21 +1,22 @@
-﻿using System.Runtime;
+﻿using ReelsCommerceSystem.Domain.Common;
 
-namespace ReelsCommerceSystem.Domain.Entities.UserEntities
+namespace ReelsCommerceSystem.Domain.Entities.UserEntities;
+
+public class Address : BaseEntity
 {
-    public class Address
-    {
-        public int Id { get; set; }
-        public string FirstName { get; set; } = default!;
-        public string LastName { get; set; } = default!;
-        public string Street { get; set; } = default!;
-        public string City { get; set; } = default!;
-        public string Country { get; set; } = default!;
-        public User user { get; set; } = default!;
-        public string UserId { get; set; } = default!;
+    public string Name { get; set; } = default!;
+    public string Postcode { get; set; } = null!;
+    public string Country { get; set; } = default!;
+    public string Street { get; set; } = default!;
+    public string City { get; set; } = default!;
+    public User user { get; set; } = default!;
+    public string UserId { get; set; } = default!;
+    public string PhoneNumber { get; set; } = default!;
+    public bool IsDefault { get; set; } = false;
 
+    public string? LastName { get; set; }
+    public string? Building { get; set; }
+    public string? Floor { get; set; }
+    public string? Apartment { get; set; }
 
-
-
-
-    }
 }

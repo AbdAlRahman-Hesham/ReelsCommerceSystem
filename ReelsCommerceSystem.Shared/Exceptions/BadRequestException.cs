@@ -16,5 +16,12 @@ namespace ReelsCommerceSystem.Shared.Exceptions
         {
             Errors = errors;
         }
+
+        public BadRequestException(string message)
+     : base(message)
+        {
+            Errors = new List<ValidationError>();
+        }
+
     }
 }

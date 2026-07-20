@@ -1,0 +1,27 @@
+[
+  {
+    "User1Id": "user_1",
+    "User2Id": "user_2",
+    "CreatedAt": "2026-04-25T19:42:52.085873Z"
+  },
+  {
+    "User1Id": "user_1",
+    "User2Id": "user_3",
+    "CreatedAt": "2026-04-25T18:12:52.085916Z"
+  },
+  {
+    "User1Id": "user_2",
+    "User2Id": "user_4",
+    "CreatedAt": "2026-04-24T20:12:52.085939Z"
+  },
+  {
+    "User1Id": "user_5",
+    "User2Id": "user_1",
+    "CreatedAt": "2026-04-22T20:12:52.0859396Z"
+  },
+  {
+    "User1Id": "user_6",
+    "User2Id": "user_7",
+    "CreatedAt": "2026-04-25T20:07:52.0859397Z"
+  }
+]

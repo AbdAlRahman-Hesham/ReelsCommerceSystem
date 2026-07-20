@@ -10,11 +10,14 @@ public class ReviewsPerBrandSpec : Specification<BrandReview>
     public ReviewsPerBrandSpec(int brandId):
         base(
             criteria: p => p.BrandId == brandId,
-            includes: [p => p.Brand, p=>p.User],
             orderBy: p => p.CreatedAt,
             sortOrder: XmlSortOrder.Descending
         )
     {
+        AddInclude( p => p.Brand );
+        AddInclude( p => p.User );
+        AddInclude(p => p.Likes);
+        AddInclude(p => p.Dislikes);
 
     }
 }

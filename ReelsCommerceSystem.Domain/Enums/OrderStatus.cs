@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +10,11 @@ namespace ReelsCommerceSystem.Domain.Enums
     {
         Pending,
         Processing,
+        Preparing,
+        Packed,
         Shipped,
-        Deliverd,
-        Cancelled
-
+        Delivered,
+        Cancelled,
+        PendingCancellation
     }
 }

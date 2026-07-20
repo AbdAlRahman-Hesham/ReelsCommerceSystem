@@ -5,31 +5,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ReelsCommerceSystem.Infrastructure.Specifications.Common;
 
-public abstract class Specification<T>(
+public class Specification<T>(
                             Expression<Func<T, bool>>? criteria = null,
-                            List<Expression<Func<T, object>>>? includes = null,
                             Expression<Func<T, object>>? orderBy = null, 
                             XmlSortOrder sortOrder = XmlSortOrder.Ascending,
                             int? pageIndex = null, 
                             int? pageSize = null
                             ) : ISpecification<T> where T : BaseEntity
 {
-    
+
 
     #region Properties
+    public List<Func<IQueryable<T>, IQueryable<T>>> QueryModifiers { get; } = new();
     public Expression<Func<T, bool>>? Criteria { get; private set; } = criteria;
-    public List<Expression<Func<T, object>>>? Includes { get; private set; } = includes;
+    public List<Expression<Func<T, object>>> Includes { get; set; } = new();
+    public List<string> IncludeStrings { get; } = new List<string>();
     public Expression<Func<T, object>>? OrderBy { get; private set; } = orderBy;
     public XmlSortOrder SortOrder { get; set; } = sortOrder;
     public int? PageSize { get; private set; } = pageSize;
     public int? PageIndex { get; private set; } = pageIndex;
     public bool IsPagingEnabled => PageSize.HasValue && PageIndex.HasValue;
+    public List<Func<IQueryable<T>, IQueryable<T>>> IncludeChains { get; } = new();//////////
     #endregion
 
     #region Builder Helpers
     protected void AddCriteria(Expression<Func<T, bool>> criteria) => Criteria = criteria;
 
-    protected void AddInclude(Expression<Func<T, object>> includeExpression) => Includes?.Add(includeExpression);
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }
+    protected void AddInclude(string includeString)
+    {
+        IncludeStrings.Add(includeString);
+    }
 
     protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
     {
@@ -49,6 +58,14 @@ public abstract class Specification<T>(
         PageSize = pageSize;
     }
     #endregion
+    protected void AsSplitQuery()
+    {
+        QueryModifiers.Add(q => q.AsSplitQuery());
+    }
+    protected void AddIncludeChain(Func<IQueryable<T>, IQueryable<T>> includeChain)
+    {
+        IncludeChains.Add(includeChain);
+    }/////////////
 
     #region Pagination Helpers
     public int GetCount(IQueryable<T> query)
@@ -88,7 +105,7 @@ public abstract class Specification<T>(
 
     public bool HasPreviousPage()
     {
-        return IsPagingEnabled && PageIndex!.Value > 0;
+        return IsPagingEnabled && PageIndex!.Value > 1;
     }
     #endregion
 

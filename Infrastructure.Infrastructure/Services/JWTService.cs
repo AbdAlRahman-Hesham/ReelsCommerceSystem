@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -18,7 +18,7 @@ public class JwtService(UserManager<User> _userManager, IConfiguration _configur
         {
            new(ClaimTypes.Email,user.Email!),
            new(ClaimTypes.Name,user.UserName!),
-           new(ClaimTypes.NameIdentifier,user.Id)
+           new(ClaimTypes.NameIdentifier,user.Id),
         };
         var Roles = await _userManager.GetRolesAsync(user);
         foreach (var role in Roles)
@@ -32,7 +32,7 @@ public class JwtService(UserManager<User> _userManager, IConfiguration _configur
             issuer: _configuration["JWTOptions:Issuer"],
             audience: _configuration["JWTOptions:Audience"],
             claims: Claims,
-            expires: DateTime.Now.AddMonths(1),
+            expires: DateTime.UtcNow.AddMonths(1),
             signingCredentials: Creds
 
             );

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Shared.Responses;
@@ -35,13 +35,30 @@ public static class AddAppAuthentication
             {
                 OnMessageReceived = context =>
                 {
-                    var token = context.Request.Headers["Authorization"].FirstOrDefault();
-                    if (!string.IsNullOrWhiteSpace(token))
+                    // For SignalR, the token is sent in the query string
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+
+                    if (!string.IsNullOrEmpty(accessToken) && 
+                        (path.StartsWithSegments("/chatHub") || path.StartsWithSegments("/notificationHub")))
                     {
-                        token = token.Replace("Bearer ", "").Trim();
-                        context.Token = token;
-                        context.HttpContext.Items["RawJwtToken"] = token;
+                        context.Token = accessToken;
                     }
+                    else
+                    {
+                        var token = context.Request.Headers["Authorization"].FirstOrDefault();
+                        if (!string.IsNullOrWhiteSpace(token))
+                        {
+                            token = token.Replace("Bearer ", "").Trim();
+                            context.Token = token;
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(context.Token))
+                    {
+                        context.HttpContext.Items["RawJwtToken"] = context.Token;
+                    }
+
                     return Task.CompletedTask;
                 },
 

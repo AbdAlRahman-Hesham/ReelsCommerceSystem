@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.HttpOverrides;
 using ReelsCommerceSystem.Api.Endpoints;
-using ReelsCommerceSystem.Infrastructure.Persistence;
 
 namespace ReelsCommerceSystem.Api.Middlewares.MiddlewaresExtensions;
 
@@ -8,20 +7,27 @@ public static class AppMiddlewareExtentions
 {
     public static IApplicationBuilder AddAppMiddleware(this WebApplication app)
     {
-        if (true /*app.Environment.IsDevelopment()*/)
+        if (/*app.Environment.IsDevelopment()*/ true)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                     | ForwardedHeaders.XForwardedProto
+                     | ForwardedHeaders.XForwardedHost
+            });
+
             app.MapOpenApi();
+
             app.UseSwaggerUI(op =>
-            op.SwaggerEndpoint("/openapi/v1.json", "ReelsCommerceSystem"));
+            {
+
+                op.DisplayRequestDuration();
+                op.SwaggerEndpoint("/openapi/v1.json", "Reels Commerce System Enviroment " + Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
+            }
+
+            );
         }
 
-
-        // Auto apply migrations on startup
-        using (var scope = app.Services.CreateScope())
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            dbContext.Database.Migrate();
-        }
 
         
 
@@ -34,6 +40,21 @@ public static class AppMiddlewareExtentions
         });
 
         app.UseCors("AppCorsPolicy");
+
+        app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = registration => registration.Tags.Contains("live")
+        });
+
+        app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = registration => registration.Tags.Contains("ready")
+        });
+
+        app.MapHealthChecks("/health/details", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            ResponseWriter = HealthChecks.UI.Client.UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         app.MapWelcomeEndpoint();
 
