@@ -161,7 +161,6 @@ public class FinanceService : IFinanceService
         {
             s.Status = SettlementStatus.ReadyForWithdrawal;
             s.AvailableAt = DateTime.UtcNow;
-            _brandSettlementRepo.Update(s);
 
             await _auditLogRepo.AddAsync(new FinancialAuditLog
             {
@@ -179,7 +178,6 @@ public class FinanceService : IFinanceService
         foreach (var s in shippingSettlements.Where(s => s.Status == ShippingSettlementStatus.Pending))
         {
             s.Status = ShippingSettlementStatus.ReadyToPay;
-            _shippingSettlementRepo.Update(s);
 
             await _auditLogRepo.AddAsync(new FinancialAuditLog
             {
