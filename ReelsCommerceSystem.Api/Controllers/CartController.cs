@@ -44,14 +44,17 @@ public class CartController(ICartService _cartservice,ICartCacheService _cartCac
         return StatusCode(response.StatusCode, response);
     }
     [HttpDelete]
-    public IActionResult ClearCart()
+    public IActionResult ClearCart([FromQuery] int? brandId = null)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
-        _cartCacheService.ClearCart(userId);
+        if (brandId.HasValue)
+            _cartCacheService.ClearCartBrand(userId, brandId.Value);
+        else
+            _cartCacheService.ClearCart(userId);
 
         return Ok(ApiResponse<object>.SuccessResponse(
             null,

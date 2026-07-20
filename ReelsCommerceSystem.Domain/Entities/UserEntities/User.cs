@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
+using ReelsCommerceSystem.Domain.Entities.CommunityEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
 using ReelsCommerceSystem.Domain.Entities.OrderEntities;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
-using ReelsCommerceSystem.Domain.Enums;
 
 namespace ReelsCommerceSystem.Domain.Entities.UserEntities;
 
@@ -20,7 +20,6 @@ public class User : IdentityUser
 
     public Otp? Otp { get; set; }
 
-    public Role Role { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Gender { get; set; } = string.Empty; 
@@ -33,11 +32,14 @@ public class User : IdentityUser
     public virtual ICollection<WishlistItem>? WishlistItems { get; set; } = new HashSet<WishlistItem>();
     public ICollection<UserReelLike> UserReelLikes { get; set; } = new List<UserReelLike>();
     public ICollection<UserReelView> UserReelViews { get; set; } = new List<UserReelView>();
+    public ICollection<UserReelShare> UserReelShares { get; set; } = new List<UserReelShare>();
     public ICollection<ReelComment> ReelComments { get; set; } = new List<ReelComment>();
     public ICollection<ReelCommentLove> ReelCommentLoves { get; set; } = new List<ReelCommentLove>();
     public ICollection<ReelCommentReplyLove> reelCommentReplyLoves { get; set; }
     public ICollection<UserProductView> UserProductViews { get; set; } = new List<UserProductView>();
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+   
     public Brand? Brand { get; set; }
 
     public bool IsBanned { get; set; } = false;

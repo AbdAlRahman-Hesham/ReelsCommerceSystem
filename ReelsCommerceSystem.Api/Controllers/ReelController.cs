@@ -19,7 +19,16 @@ public class ReelController(
     [HttpGet("{brandId}")]
     public async Task<IActionResult> GetReelsByBrand(int brandId, [FromQuery] string? sortBy = null)
     {
-        var response = await _reelService.GetReelsByBrandAsync(brandId, sortBy);
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var response = await _reelService.GetReelsByBrandAsync(brandId, sortBy, userId);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet("by-id/{reelId}")]
+    public async Task<IActionResult> GetReelById(int reelId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var response = await _reelService.GetReelByIdAsync(reelId, userId);
         return StatusCode(response.StatusCode, response);
     }
 
@@ -47,26 +56,15 @@ public class ReelController(
         if (string.IsNullOrEmpty(userId))
             return Unauthorized("User not authenticated");
 
-        var result = await _reelService.ToggleReelLikeAsync(userId, reelId);
+        var response = await _reelService.ToggleReelLikeAsync(userId, reelId);
 
-        var messageEn = result ? "Like added successfully." : "Like removed successfully.";
-        var messageAr = result ? "تم إضافة الإعجاب بنجاح." : "تم إزالة الإعجاب بنجاح.";
-
-        var response = ApiResponse<bool>.SuccessResponse(
-            result,
-            HttpStatusCode.OK,
-            messageEn,
-            messageAr
-        );
-
-        return Ok(response);
+        return StatusCode(response.StatusCode, response);
     }
 
-    [Authorize]
     [HttpGet("forYou")]
     public async Task<IActionResult> GetForYou([FromQuery] int pageIndex = 1, int pageSize = 10)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         var reels = await _reelFeedService.ReelsWithRecommendationSystemAsync(userId, pageIndex, pageSize);
 
@@ -105,6 +103,17 @@ public class ReelController(
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
         var result = await _reelService.TrackReelViewAsync(userId, req);
+
+        return StatusCode(result.StatusCode, result);
+    }
+
+    [Authorize]
+    [HttpPost("track-share/{reelId}")]
+    public async Task<IActionResult> TrackReelShare(int reelId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+        var result = await _reelService.TrackReelShareAsync(userId, reelId);
 
         return StatusCode(result.StatusCode, result);
     }

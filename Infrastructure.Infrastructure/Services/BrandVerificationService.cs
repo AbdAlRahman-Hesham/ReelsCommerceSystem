@@ -119,6 +119,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
 
             brand.Status = BrandStatus.PENDING_APPROVAL;
             brand.CurrentStep = BrandStep.PENDING_REVIEW;
+            brand.SubmittedAt = DateTime.UtcNow;
 
             _unitOfWork.Repository<Brand>().Update(brand);
 

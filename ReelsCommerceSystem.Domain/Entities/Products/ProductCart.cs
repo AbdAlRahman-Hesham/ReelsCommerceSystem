@@ -21,4 +21,8 @@ public class CartProduct : BaseEntity
     public List<string>? MediaUrls { get; set; } = new();
 
     public decimal FinalPrice { get; set; }
+
+    public int BrandId { get; set; }
+    public string BrandName { get; set; } = string.Empty;
+    public string? BrandLogoUrl { get; set; }
 }

@@ -15,5 +15,6 @@ namespace ReelsCommerceSystem.Application.DTOs.Request.Order
         public PaymentMethod PaymentMethod { get; set; }
         public DeliveryMethod DeliveryMethod { get; set; }
         public string? DiscountCode { get; set; }
+        public int? BrandId { get; set; }
     }
 }

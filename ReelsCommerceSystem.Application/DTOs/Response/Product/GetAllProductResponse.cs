@@ -23,8 +23,7 @@ public class GetAllProductsResponse
     }
     public decimal? DiscountPercentage { get; set; }
     public int Quantity { get; set; }
-    public string MediaUrl { get; set; } = null!;
-    public List<string> MediaUrls { get; set; } = new();
+    public List<ProductImageDto> MediaUrls { get; set; } = new();
     public bool IsCustomizable { get; set; }
     public string StockStatus { get; set; }
 

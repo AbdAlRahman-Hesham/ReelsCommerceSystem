@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReelsCommerceSystem.Application.DTOs.Response.Brand;
-using ReelsCommerceSystem.Domain.Entities.BrandEntities;
+﻿using ReelsCommerceSystem.Application.DTOs.Response.Admin;
 
 namespace ReelsCommerceSystem.Application.Interfaces.Services
 {
     public interface IAdminBrandService
     {
-        Task<List<BrandDetailsDto>> GetPendingAsync();
-        Task<BrandDetailsDto>GetDetailsAsync(int id);
-
+        Task<PagedResponse<BrandRequestListDto>> GetBrandRequestsAsync(
+            string? status = null,
+            string? search = null,
+            int page = 1,
+            int pageSize = 20);
+        Task<BrandRequestDetailsDto> GetDetailsAsync(int id);
         Task ApproveAsync(int id);
         Task RejectAsync(int id, int reasonId);
         Task BanUserAsync(int id);
+        Task<int> GetPendingCountAsync();
     }
 }

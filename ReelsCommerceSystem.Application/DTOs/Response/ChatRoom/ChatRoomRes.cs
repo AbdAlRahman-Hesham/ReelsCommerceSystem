@@ -12,5 +12,7 @@ namespace ReelsCommerceSystem.Application.DTOs.Response.ChatRoom
         public string UserName { get; set; } = null!;
         public string UserImageUrl { get; set; } = null!;
         public int UnreadCount { get; set; }
+        public string? LastMessage { get; set; }
+        public DateTime? LastMessageAt { get; set; }
     }
 }

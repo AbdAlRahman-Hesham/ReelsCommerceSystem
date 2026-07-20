@@ -1,8 +1,11 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ReelsCommerceSystem.Domain.Common;
 using ReelsCommerceSystem.Domain.Entities;
 using ReelsCommerceSystem.Domain.Entities.BrandEntities;
+using ReelsCommerceSystem.Domain.Entities.ChatEntities;
 using ReelsCommerceSystem.Domain.Entities.InterestEntities;
 using ReelsCommerceSystem.Domain.Entities.OfferEntities;
 using ReelsCommerceSystem.Domain.Entities.Order_ProductEntities;
@@ -12,10 +15,10 @@ using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Entities.UserEntities;
+using ReelsCommerceSystem.Domain.Entities.FinanceEntities;
+using ReelsCommerceSystem.Domain.Entities.ShippingCompanyEntities;
 using ReelsCommerceSystem.Domain.Entities.UserInterestEntities;
-using ReelsCommerceSystem.Domain.Entities.ChatEntities;
 using ReelsCommerceSystem.Infrastructure.Persistence.DataSeeding;
-using System.Reflection;
 
 namespace ReelsCommerceSystem.Infrastructure.Persistence;
 
@@ -27,7 +30,8 @@ public class AppDbContext :IdentityDbContext<User>
     {
         base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-        optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning));
+        optionsBuilder.ConfigureWarnings(w => w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.MultipleCollectionIncludeWarning)
+            .Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -80,6 +84,20 @@ public class AppDbContext :IdentityDbContext<User>
             .WithMany(r => r.ReelComments) // أو Navigation Property المناسب
             .HasForeignKey(rc => rc.ReelId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // UserReelShare - FK على Reel مع Cascade
+        modelBuilder.Entity<UserReelShare>()
+            .HasOne(s => s.Reel)
+            .WithMany(r => r.UserReelShares)
+            .HasForeignKey(s => s.ReelId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // UserReelShare - FK على User بدون Cascade
+        modelBuilder.Entity<UserReelShare>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.UserReelShares)
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // ReelComment - FK على User بدون Cascade
         modelBuilder.Entity<ReelComment>()
@@ -170,6 +188,10 @@ public class AppDbContext :IdentityDbContext<User>
             .HasIndex(r => new { r.BrandId, r.UserId })
             .IsUnique();
 
+        modelBuilder.Entity<ProductReview>()
+            .HasIndex(r => new { r.ProductId, r.UserId })
+            .IsUnique();
+
 
         modelBuilder.Entity<Notification>()
               .HasOne(n => n.User)
@@ -241,16 +263,51 @@ public class AppDbContext :IdentityDbContext<User>
         {
             b.Property(op => op.AppliedDiscountCodeAmount).HasPrecision(18, 2);
         });
+
+        modelBuilder.Entity<Offer>(b =>
+        {
+            b.Property(o => o.DiscountPercentage).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<OfferProduct>(b =>
+        {
+            b.Property(op => op.DiscountPercentage).HasPrecision(18, 2);
+        });
+    }
+
+    public override async Task<int> SaveChangesAsync(
+    CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker
+            .Entries<BaseEntity>();
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedAt = DateTime.UtcNow;
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
     }
     public DbSet<Product> Products { get; set; }
     public DbSet<Brand> Brands { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderProduct> OrderProducts { get; set; }
     public DbSet<Reel> Reels { get; set; }
+    public DbSet<UserReelShare> UserReelShares { get; set; }
     public DbSet<ProductReview> Reviews { get; set; }
     public DbSet<UserInterest> UserInterests { get; set; }
     public DbSet<Interest> Interests { get; set; }
     public DbSet<BrandReviewLike> BrandReviewLikes { get; set; }
+    public DbSet<ProductReviewLike> ProductReviewLikes { get; set; }
+    public DbSet<ProductReviewDislike> ProductReviewDislikes { get; set; }
     public DbSet<UserBrandFollow> UserBrandFollows { get; set; }
     public DbSet<WishlistItem> WishlistItems { get; set; }
 
@@ -268,4 +325,11 @@ public class AppDbContext :IdentityDbContext<User>
     public DbSet<ChatRoom> ChatRooms { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<DiscountCode> DiscountCodes { get; set; }
+
+    public DbSet<BrandSettlement> BrandSettlements { get; set; }
+    public DbSet<ShippingSettlement> ShippingSettlements { get; set; }
+    public DbSet<WithdrawalRequest> WithdrawalRequests { get; set; }
+    public DbSet<FinancialAuditLog> FinancialAuditLogs { get; set; }
+    public DbSet<ShippingCompany> ShippingCompanies { get; set; }
+    public DbSet<BrandSocialLink> BrandSocialLinks { get; set; }
 }

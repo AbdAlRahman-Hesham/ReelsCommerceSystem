@@ -10,4 +10,7 @@ public class CartItemRes
     public string Color { get; set; } = string.Empty;
     public string Size { get; set; } = string.Empty;
     public int Quantity { get; set; }
+    public int BrandId { get; set; }
+    public string BrandName { get; set; } = string.Empty;
+    public string? BrandLogoUrl { get; set; }
 }

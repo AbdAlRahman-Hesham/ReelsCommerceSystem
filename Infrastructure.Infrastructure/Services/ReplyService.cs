@@ -59,7 +59,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             {
                 Id = r.Id,
                 Content = r.Content,
-                UserName = r.User.UserName,
+                UserName = r.User.DisplayName,
                 UserImage = r.User.ImageURL,
                 LikeCount = r.Loves.Count(),
                 IsLovedByCurrentUser = r.Loves.Any(l => l.UserId == currentUserId),
@@ -147,8 +147,8 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                         UserId = commentOwnerId,
                         Type = NotificationType.CommentReply,
                         ReferenceId = comment.Id,
-                        Message = $"{user.UserName} replied to your comment",
-                        MessageAr = $"{user.UserName} رد على تعليقك",
+                        Message = $"{user.DisplayName} replied to your comment",
+                        MessageAr = $"{user.DisplayName} رد على تعليقك",
                         IsRead = false
                     };
 
@@ -180,7 +180,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     Id = reply.Id,
                     Content = reply.Content,
                     UserId = userId,
-                    UserName = user.UserName!,
+                    UserName = user.DisplayName,
                     CreatedAt = reply.CreatedAt
                 };
 

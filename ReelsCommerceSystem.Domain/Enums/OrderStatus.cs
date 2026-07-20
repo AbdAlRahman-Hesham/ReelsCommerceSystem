@@ -14,8 +14,7 @@ namespace ReelsCommerceSystem.Domain.Enums
         Packed,
         Shipped,
         Delivered,
-        Cancelled
-
-
+        Cancelled,
+        PendingCancellation
     }
 }

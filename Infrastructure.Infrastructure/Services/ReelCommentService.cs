@@ -78,7 +78,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
                     Id = comment.Id,
                     Content = comment.Content,
                     UserId = comment.UserId,
-                    UserName = user.UserName,
+                    UserName = user.DisplayName,
                     CreatedAt = comment.CreatedAt
                 };
 
@@ -129,7 +129,7 @@ namespace ReelsCommerceSystem.Infrastructure.Services
             {
                 Id = c.Id,
                 Content = c.Content,
-                UserName = c.User.UserName,
+                UserName = c.User.DisplayName,
                 UserImage = c.User.ImageURL,
                 CreatedAt = c.CreatedAt,
                 CommentLikeCount = c.Loves.Count,

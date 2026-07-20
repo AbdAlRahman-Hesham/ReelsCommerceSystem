@@ -76,11 +76,33 @@ namespace ReelsCommerceSystem.Api.Controllers
             return StatusCode(result.StatusCode, result);
         }
 
+        [HttpGet("reel-statuses")]
+        public async Task<IActionResult> GetReelStatuses()
+        {
+            var result = await _lookupService.GetReelStatusesAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+
         [HttpGet("delivery-methods")]
         public async Task<IActionResult> GetDeliveryMethods()
         {
             var result = await _lookupService.GetDeliveryMethodsAsync();
             return StatusCode(result.StatusCode, result);
         }
+
+        [HttpGet("settlement-statuses")]
+        public async Task<IActionResult> GetSettlementStatuses()
+        {
+            var result = await _lookupService.GetSettlementStatusesAsync();
+            return StatusCode(result.StatusCode, result);
+        }
+
+        [HttpGet("withdrawal-request-statuses")]
+        public async Task<IActionResult> GetWithdrawalRequestStatuses()
+        {
+            var result = await _lookupService.GetWithdrawalRequestStatusesAsync();
+            return StatusCode(result.StatusCode, result);
+        }
     }
 }
+

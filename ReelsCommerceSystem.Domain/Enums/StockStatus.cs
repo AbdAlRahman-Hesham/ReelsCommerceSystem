@@ -2,6 +2,6 @@
 
 public enum StockStatus
 {
-    InStock,
+    InStock=1,
     OutOfStock
 }

@@ -12,7 +12,7 @@ namespace ReelsCommerceSystem.Domain.Entities.Products
     public class ProductImage :BaseEntity
     {
         public string Url { get; set; } = null!;
-
+        public string ? PublicId { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; } = null!;
     }

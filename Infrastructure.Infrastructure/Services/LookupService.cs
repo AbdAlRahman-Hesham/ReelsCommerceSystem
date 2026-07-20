@@ -6,6 +6,7 @@ using ReelsCommerceSystem.Application.DTOs.Response.Lookup;
 using ReelsCommerceSystem.Application.Interfaces.Services;
 using ReelsCommerceSystem.Domain.Entities.ProductEntites;
 using ReelsCommerceSystem.Domain.Enums;
+using ReelsCommerceSystem.Domain.Enums.Finance;
 using ReelsCommerceSystem.Infrastructure.Persistence;
 using ReelsCommerceSystem.Shared.Responses;
 
@@ -103,8 +104,23 @@ public class LookupService(HttpClient _httpClient, IMemoryCache _cache, AppDbCon
         return ApiResponse<List<ColorLookupResDto>>.SuccessResponse(colors, HttpStatusCode.OK, "Colors fetched successfully", "تم جلب الألوان بنجاح");
     }
 
-    public Task<ApiResponse<List<LookupResDto>>> GetSizesAsync() => 
-        GetCachedEnumLookup<Size>("lookup_sizes", "Sizes fetched successfully", "تم جلب الأحجام بنجاح");
+    public async Task<ApiResponse<List<LookupResDto>>> GetSizesAsync()
+    {
+        const string cacheKey = "lookup_sizes_v2";
+        if (_cache.TryGetValue(cacheKey, out List<LookupResDto>? sizes))
+        {
+            return ApiResponse<List<LookupResDto>>.SuccessResponse(sizes!, HttpStatusCode.OK, "Sizes fetched from cache", "تم جلب الأحجام من الكاش");
+        }
+
+        sizes = await _context.Set<ProductSize>().Select(s => new LookupResDto
+        {
+            Id = s.Id,
+            Name = s.Size.ToString()
+        }).ToListAsync();
+
+        _cache.Set(cacheKey, sizes, CacheDuration);
+        return ApiResponse<List<LookupResDto>>.SuccessResponse(sizes, HttpStatusCode.OK, "Sizes fetched successfully", "تم جلب الأحجام بنجاح");
+    }
 
     public Task<ApiResponse<List<LookupResDto>>> GetOrderStatusesAsync() => 
         GetCachedEnumLookup<OrderStatus>("lookup_order_statuses", "Order statuses fetched successfully", "تم جلب حالات الطلب بنجاح");
@@ -123,6 +139,15 @@ public class LookupService(HttpClient _httpClient, IMemoryCache _cache, AppDbCon
 
     public Task<ApiResponse<List<LookupResDto>>> GetDisputeStatusesAsync() => 
         GetCachedEnumLookup<DisputeStatus>("lookup_dispute_statuses", "Dispute statuses fetched successfully", "تم جلب حالات النزاع بنجاح");
+
+    public Task<ApiResponse<List<LookupResDto>>> GetReelStatusesAsync() => 
+        GetCachedEnumLookup<ReelStatus>("lookup_reel_statuses", "Reel statuses fetched successfully", "تم جلب حالات الفيديو بنجاح");
+
+    public Task<ApiResponse<List<LookupResDto>>> GetSettlementStatusesAsync() =>
+        GetCachedEnumLookup<SettlementStatus>("lookup_settlement_statuses", "Settlement statuses fetched successfully", "تم جلب حالات التسوية بنجاح");
+
+    public Task<ApiResponse<List<LookupResDto>>> GetWithdrawalRequestStatusesAsync() =>
+        GetCachedEnumLookup<WithdrawalRequestStatus>("lookup_withdrawal_request_statuses", "Withdrawal request statuses fetched successfully", "تم جلب حالات طلبات السحب بنجاح");
 
     public async Task<ApiResponse<List<DeliveryMethodLookupResDto>>> GetDeliveryMethodsAsync()
     {

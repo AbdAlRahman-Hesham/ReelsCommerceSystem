@@ -7,12 +7,14 @@ using ReelsCommerceSystem.Domain.Entities.Products;
 using ReelsCommerceSystem.Domain.Entities.ReelEntities;
 using ReelsCommerceSystem.Domain.Entities.Reviews;
 using ReelsCommerceSystem.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReelsCommerceSystem.Domain.Entities.ProductEntites;
 
 public class Product : BaseEntity
 {
     public string Name { get; set; } = null!;
+    public int Rating { get; set; } = 0;
 
     public string Description { get; set; } = null!;
     public string? ArDescription { get; set; }
@@ -34,6 +36,10 @@ public class Product : BaseEntity
     public int CategoryId { get; set; }
     public ProductCategory Category { get; set; }
 
+    [NotMapped]
+    public double AverageRating { get; set; } = 0;
+    [NotMapped]
+    public int NumOfReviews { get; set; } = 0;
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     public ICollection<ProductReview> Reviews { get; set; } = new List<ProductReview>();
     public ICollection<ProductReels> ProductReels { get; set; } = new List<ProductReels>();

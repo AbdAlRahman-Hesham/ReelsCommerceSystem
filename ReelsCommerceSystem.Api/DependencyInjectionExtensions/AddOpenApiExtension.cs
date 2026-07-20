@@ -1,4 +1,6 @@
-﻿namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions;
+﻿using Microsoft.OpenApi.Models;
+
+namespace ReelsCommerceSystem.Api.DependencyInjectionExtensions;
 
 public static class AddOpenApiExtension
 {
@@ -58,6 +60,62 @@ public static class AddOpenApiExtension
 
                 return Task.CompletedTask;
             });
+            options.AddSchemaTransformer((schema, context, cancellationToken) =>
+            {
+                void CleanSchema(OpenApiSchema s)
+                {
+                    if (s == null)
+                        return;
+
+                    // Remove ONLY swagger-generated enum regex patterns
+                    if (IsSwaggerGeneratedEnumPattern(s))
+                    {
+                        s.Pattern = null;
+                        s.MinLength = null;
+                    }
+
+                    // nested properties
+                    if (s.Properties != null)
+                    {
+                        foreach (var property in s.Properties.Values)
+                        {
+                            CleanSchema(property);
+                        }
+                    }
+
+                    // arrays
+                    if (s.Items != null)
+                    {
+                        CleanSchema(s.Items);
+                    }
+                }
+
+                CleanSchema(schema);
+
+                return Task.CompletedTask;
+            });
         }); 
+    }
+
+    static bool IsSwaggerGeneratedEnumPattern(OpenApiSchema schema)
+    {
+        if (string.IsNullOrWhiteSpace(schema.Pattern))
+            return false;
+
+        // swagger enum patterns usually:
+        // ^(asc|desc)$
+        // ^(draft|published|all)$
+
+        bool looksLikeEnumRegex =
+            schema.Pattern.StartsWith("^(") &&
+            schema.Pattern.EndsWith(")$") &&
+            schema.Pattern.Contains("|");
+
+        // custom regex validations usually don't have enum values
+        bool hasEnum =
+            schema.Enum != null &&
+            schema.Enum.Count > 0;
+
+        return looksLikeEnumRegex || hasEnum;
     }
 }

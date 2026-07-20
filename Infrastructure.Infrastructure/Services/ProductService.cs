@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using ReelsCommerceSystem.Application.DTOs.Params;
+using ReelsCommerceSystem.Application.DTOs.Request.Product;
 using ReelsCommerceSystem.Application.DTOs.Response.Product;
 using ReelsCommerceSystem.Application.Interfaces.Repositories;
 using ReelsCommerceSystem.Application.Interfaces.Services;
@@ -22,12 +23,14 @@ public class ProductService(
     IMemoryCache memoryCache,
     IHttpContextAccessor httpContextAccessor,
     IUnitOfWork unitOfWork,
-    IRelatedProductService relatedProductService
-   
+    IRelatedProductService relatedProductService,
+    IProductRecommendationService productRecommendationService
 
 ) : IProductService
 {
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IGenericRepository<Product> _productRepository = unitOfWork.Repository<Product>();
+    private readonly IProductRecommendationService _productRecommendationService = productRecommendationService;
     private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(10);
    
 
@@ -42,9 +45,89 @@ public class ProductService(
     public async Task<ApiResponse<PaginationResponse<GetAllProductsResponse>>> GetProductsAsync(ProductSpecParams productSpecParams)
     {
         var userId = httpContextAccessor.HttpContext?.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        bool hasFilters = productSpecParams.BrandId.HasValue
+                       || productSpecParams.CategoryIds?.Count > 0
+                       || productSpecParams.Colors?.Count > 0
+                       || productSpecParams.Sizes?.Count > 0
+                       || !string.IsNullOrEmpty(productSpecParams.Search)
+                       || productSpecParams.MinPrice.HasValue
+                       || productSpecParams.MaxPrice.HasValue
+                       || productSpecParams.HaveOffer.HasValue
+                       || !string.IsNullOrEmpty(productSpecParams.StockStatus);
+
+        if (!hasFilters && string.IsNullOrEmpty(productSpecParams.SortBy))
+        {
+            return await GetRecommendedProductsPageAsync(userId, productSpecParams);
+        }
+
+        return await GetFilteredProductsPageAsync(productSpecParams, userId);
+    }
+
+    private async Task<ApiResponse<PaginationResponse<GetAllProductsResponse>>> GetRecommendedProductsPageAsync(
+        string? userId, ProductSpecParams productSpecParams)
+    {
+        int pageIndex = productSpecParams.PageIndex ?? 1;
+        int pageSize = productSpecParams.PageSize ?? 10;
+
+        var recCacheKey = $"products:rec:{userId ?? "anon"}";
+        var recommendedProducts = await GetOrSetCacheAsync(
+            recCacheKey,
+            () => _productRecommendationService.GetRecommendedProductsAsync(userId, 20),
+            TimeSpan.FromMinutes(2));
+
+        var recIds = recommendedProducts.Select(r => r.Id).ToHashSet();
+
+        var recSkip = (pageIndex - 1) * pageSize;
+        var pageRecs = recommendedProducts.Skip(recSkip).Take(pageSize).ToList();
+        var remainingSlots = pageSize - pageRecs.Count;
+
+        List<GetAllProductsResponse> normalPage = new();
+        int totalNormalCount = 0;
+
+        if (remainingSlots > 0)
+        {
+            var spec = new ProductSpec();
+            var baseQuery = _unitOfWork.Repository<Product>().GetAllQueryable();
+            var query = spec.ApplySpecification(baseQuery, applyPaging: false);
+            query = query.Where(p => !recIds.Contains(p.Id));
+
+            totalNormalCount = await query.CountAsync();
+
+            var normalProducts = await query
+                .OrderByDescending(p => p.Id)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(remainingSlots)
+                .ToListAsync();
+
+            normalPage = normalProducts.Select(MapToGetAllProductsResponse).ToList();
+        }
+
+        var combinedList = pageRecs.Concat(normalPage).ToList();
+        int totalCount = recommendedProducts.Count + totalNormalCount;
+
+        await MarkWishlistAsync(combinedList, userId);
+
+        return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
+            data: combinedList,
+            meta: new Meta
+            {
+                PageNumber = pageIndex,
+                PageSize = pageSize,
+                TotalRecords = totalCount,
+                HasPreviousPage = pageIndex > 1,
+                HasNextPage = pageIndex * pageSize < totalCount
+            },
+            statusCode: HttpStatusCode.OK
+        );
+    }
+
+    private async Task<ApiResponse<PaginationResponse<GetAllProductsResponse>>> GetFilteredProductsPageAsync(
+        ProductSpecParams productSpecParams, string? userId)
+    {
         var cacheKey = GenerateCacheKey(productSpecParams);
 
-        var (products, meta) = await GetOrSetCacheAsync(
+        var (productDtos, normalMeta) = await GetOrSetCacheAsync(
             cacheKey,
             async () =>
             {
@@ -52,32 +135,45 @@ public class ProductService(
                 var products = await _productRepository.GetAllWithSpecAsync(spec);
                 var totalCount = await _productRepository.CountAsync(spec);
                 var meta = CreatePaginationMeta(totalCount, spec);
+                var dtos = products.Select(MapToGetAllProductsResponse).ToList();
+                return (dtos, meta);
+            });
 
-                return (products, meta);
-            }
-        );
-
-        var productDtos = products.Select(MapToGetAllProductsResponse).ToList();
-
-        // If user is authenticated, mark wishlist status for each product
-        if (!string.IsNullOrEmpty(userId))
-        {
-            var wishlistSpec = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId);
-            var wishlistItems = await unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem>().GetAllWithSpecAsync(wishlistSpec);
-            var lovedIds = wishlistItems?.Select(w => w.ProductId).ToHashSet() ?? new HashSet<int>();
-
-            foreach (var dto in productDtos)
-            {
-                dto.IsInWishlist = lovedIds.Contains(dto.Id);
-            }
-        }
+        await MarkWishlistAsync(productDtos, userId);
 
         return PaginationResponse<GetAllProductsResponse>.SuccessResponse(
             data: productDtos,
-            meta: meta,
+            meta: normalMeta,
             statusCode: HttpStatusCode.OK
         );
     }
+
+    private async Task MarkWishlistAsync(List<GetAllProductsResponse> products, string? userId)
+    {
+        if (string.IsNullOrEmpty(userId) || products.Count == 0) return;
+
+        var lovedIds = await GetCachedWishlistIdsAsync(userId);
+
+        foreach (var dto in products)
+        {
+            dto.IsInWishlist = lovedIds.Contains(dto.Id);
+        }
+    }
+
+    private async Task<HashSet<int>> GetCachedWishlistIdsAsync(string userId)
+    {
+        var cacheKey = $"wishlist:{userId}";
+        return await GetOrSetCacheAsync(
+            cacheKey,
+            async () =>
+            {
+                var spec = new ReelsCommerceSystem.Infrastructure.Specifications.Specifications.WishlistSpec.WishlistItemSpec(userId);
+                var items = await unitOfWork.Repository<ReelsCommerceSystem.Domain.Entities.Order_ProductEntities.WishlistItem>().GetAllWithSpecAsync(spec);
+                return items?.Select(w => w.ProductId).ToHashSet() ?? new HashSet<int>();
+            },
+            TimeSpan.FromSeconds(30));
+    }
+
     public async Task<ApiResponse<PaginationResponse<GetAllProductsForAiResponse>>> GetAllProductsForAiAsync()
     {
         var productSpecParams = new ProductSpecParams
@@ -172,7 +268,7 @@ public class ProductService(
 
     #region Private Helper Methods
 
-    private async Task<T> GetOrSetCacheAsync<T>(string cacheKey, Func<Task<T>> factory)
+    private async Task<T> GetOrSetCacheAsync<T>(string cacheKey, Func<Task<T>> factory, TimeSpan? expiration = null)
     {
         if (memoryCache.TryGetValue(cacheKey, out T cachedValue))
         {
@@ -180,7 +276,7 @@ public class ProductService(
         }
 
         var value = await factory();
-        var cacheOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(_cacheExpiration);
+        var cacheOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(expiration ?? _cacheExpiration);
         memoryCache.Set(cacheKey, value, cacheOptions);
 
         return value;
@@ -194,7 +290,16 @@ public class ProductService(
 
     private string BuildMediaUrl(string mediaUrl)
     {
-        return string.IsNullOrEmpty(mediaUrl) ? "" : $"{GetHostUrl()}/{mediaUrl.TrimStart('/')}";
+        if (string.IsNullOrWhiteSpace(mediaUrl))
+            return string.Empty;
+
+        if (Uri.TryCreate(mediaUrl, UriKind.Absolute, out var uri) &&
+            (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+        {
+            return mediaUrl;
+        }
+
+        return $"{GetHostUrl()}/{mediaUrl.TrimStart('/')}";
     }
 
     private GetAllProductsResponse MapToGetAllProductsResponse(Product product)
@@ -208,8 +313,12 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrls = product.Images?
-                        .Select(x => BuildMediaUrl(x.Url))
-                        .ToList() ?? new List<string>(),
+                        .Select(x => new ProductImageDto
+                        {
+                            Id = x.Id,
+                            Url = BuildMediaUrl(x.Url)
+                        })
+                        .ToList() ?? new List<ProductImageDto>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -232,8 +341,12 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrls = product.Images?
-                        .Select(x => BuildMediaUrl(x.Url))
-                        .ToList() ?? new List<string>(),
+                        .Select(x => new ProductImageDto
+                        {
+                            Id = x.Id,
+                            Url = BuildMediaUrl(x.Url)
+                        })
+                        .ToList() ?? new List<ProductImageDto>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -259,8 +372,12 @@ public class ProductService(
             Price = product.Price,
             Quantity = product.Quantity,
             MediaUrls = product.Images?
-                        .Select(x => BuildMediaUrl(x.Url))
-                        .ToList() ?? new List<string>(),
+                        .Select(x => new ProductImageDto
+                        {
+                            Id = x.Id,
+                            Url = BuildMediaUrl(x.Url)
+                        })
+                        .ToList() ?? new List<ProductImageDto>(),
             IsCustomizable = product.IsCustomizable,
             DiscountPercentage = product.DiscountPercentage,
             HaveOffer = product.HaveOffer,
@@ -430,7 +547,7 @@ public class ProductService(
     {
         return $"products:" +
                $"search={p.Search ?? ""};" +
-               $"category={p.Category ?? ""};" +
+               $"categoryIds={(p.CategoryIds != null ? string.Join(",", p.CategoryIds) : "")};" +
                $"color={(p.Colors != null ? string.Join(",", p.Colors) : "")};" +
                $"size={(p.Sizes != null ? string.Join(",", p.Sizes) : "")};" +
                $"status={p.StockStatus ?? ""};" +
@@ -442,6 +559,154 @@ public class ProductService(
                $"sortOrder={p.SortOrder ?? ""};" +
                $"pageIndex={p.PageIndex ?? 1};" +
                $"pageSize={p.PageSize ?? 10};";
+    }
+
+    #endregion
+
+    #region Product Reviews
+
+    public async Task<ApiResponse<string>> AddOrUpdateProductReview(int productId, string userId, ProductReviewReq dto)
+    {
+        var product = await _unitOfWork.Repository<Product>().GetByIdAsync(productId);
+        if (product == null)
+        {
+            return ApiResponse<string>.ErrorResponse(HttpStatusCode.NotFound, "Product not found.", "المنتج غير موجود.");
+        }
+
+        var existingReview = await _unitOfWork.Repository<ProductReview>().GetWithSpecAsync(new ProductReviewByUserSpec(productId, userId));
+
+        HttpStatusCode statusCode;
+        string enMessage;
+        string arMessage;
+
+        if (existingReview == null)
+        {
+            var review = new ProductReview
+            {
+                ProductId = productId,
+                UserId = userId,
+                Rating = dto.Rating,
+                Comment = dto.Comment
+            };
+
+            await _unitOfWork.Repository<ProductReview>().AddAsync(review);
+
+            product.AverageRating = (product.AverageRating * product.NumOfReviews + dto.Rating) / (product.NumOfReviews + 1);
+            product.NumOfReviews += 1;
+
+            statusCode = HttpStatusCode.Created;
+            enMessage = "Review added successfully.";
+            arMessage = "تم إضافة التقييم بنجاح.";
+        }
+        else
+        {
+            int oldRating = existingReview.Rating;
+            existingReview.Rating = dto.Rating;
+            existingReview.Comment = dto.Comment;
+
+            _unitOfWork.Repository<ProductReview>().Update(existingReview);
+
+            product.AverageRating = (product.AverageRating * product.NumOfReviews - oldRating + dto.Rating) / product.NumOfReviews;
+
+            statusCode = HttpStatusCode.OK;
+            enMessage = "Review updated successfully.";
+            arMessage = "تم تعديل التقييم بنجاح.";
+        }
+
+        _unitOfWork.Repository<Product>().Update(product);
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse<string>.SuccessResponse("Success", statusCode, enMessage, arMessage);
+    }
+
+    public async Task<ProductToggleLikeRes> ProductReviewLikeAsync(string userId, ProductToggleLikeReq req)
+    {
+        var review = await _unitOfWork.Repository<ProductReview>().GetByIdAsync(req.ReviewId);
+        if (review == null)
+            throw new Exception("Review not found.");
+
+        var reviewLike = await _unitOfWork.Repository<ProductReviewLike>().GetWithSpecAsync(new ProductReviewLikeSpec(userId, req));
+
+        bool isLiked;
+
+        if (reviewLike == null)
+        {
+            var newLike = new ProductReviewLike
+            {
+                ReviewId = req.ReviewId,
+                UserId = userId
+            };
+
+            await _unitOfWork.Repository<ProductReviewLike>().AddAsync(newLike);
+            review.NumOfLikes += 1;
+            isLiked = true;
+        }
+        else
+        {
+            _unitOfWork.Repository<ProductReviewLike>().Delete(reviewLike);
+            review.NumOfLikes = Math.Max(0, review.NumOfLikes - 1);
+            isLiked = false;
+        }
+
+        _unitOfWork.Repository<ProductReview>().Update(review);
+        await _unitOfWork.SaveChangesAsync();
+
+        return new ProductToggleLikeRes
+        {
+            ReviewId = req.ReviewId,
+            IsLiked = isLiked,
+            TotalLikes = review.NumOfLikes
+        };
+    }
+
+    public async Task<ProductToggleDislikeRes> ProductReviewDislikeAsync(string userId, ProductToggleDislikeReq req)
+    {
+        var review = await _unitOfWork.Repository<ProductReview>().GetByIdAsync(req.ReviewId);
+        if (review == null)
+            throw new Exception("Review not found.");
+
+        var reviewDislike = await _unitOfWork.Repository<ProductReviewDislike>().GetWithSpecAsync(new ProductReviewDislikeSpec(userId, req));
+
+        bool isDisliked;
+
+        if (reviewDislike == null)
+        {
+            var newDislike = new ProductReviewDislike
+            {
+                ReviewId = req.ReviewId,
+                UserId = userId
+            };
+
+            await _unitOfWork.Repository<ProductReviewDislike>().AddAsync(newDislike);
+            review.NumOfDislikes += 1;
+            isDisliked = true;
+        }
+        else
+        {
+            _unitOfWork.Repository<ProductReviewDislike>().Delete(reviewDislike);
+            review.NumOfDislikes = Math.Max(0, review.NumOfDislikes - 1);
+            isDisliked = false;
+        }
+
+        _unitOfWork.Repository<ProductReview>().Update(review);
+        await _unitOfWork.SaveChangesAsync();
+
+        return new ProductToggleDislikeRes
+        {
+            ReviewId = req.ReviewId,
+            IsDisliked = isDisliked,
+            TotalDislikes = review.NumOfDislikes
+        };
+    }
+
+    public async Task<ApiResponse<double>> GetProductAverageRating(int productId)
+    {
+        var product = await _unitOfWork.Repository<Product>().GetByIdAsync(productId);
+        if (product == null)
+            return ApiResponse<double>.ErrorResponse(HttpStatusCode.NotFound, "Product not found.", "المنتج غير موجود.");
+
+        double avg = product.NumOfReviews > 0 ? product.AverageRating : 0;
+        return ApiResponse<double>.SuccessResponse(avg, HttpStatusCode.OK);
     }
 
     #endregion
